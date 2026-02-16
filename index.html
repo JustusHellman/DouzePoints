@@ -10,11 +10,6 @@
     <meta name="keywords" content="Eurovision, Song Contest, Games, Trivia, Music Games, Fan Games, The Greenroom, Douze Points">
     <meta name="author" content="Euro Fan Community">
     
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Douze Points | The Greenroom">
-    <meta property="og:description" content="Can you get Douze Points? Five daily mini-games for the ultimate song contest enthusiast.">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
@@ -74,6 +69,13 @@
       }
       .glow-text {
         text-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+      }
+      .page-fade {
+        animation: fadeIn 0.4s ease-out forwards;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
       }
     </style>
 

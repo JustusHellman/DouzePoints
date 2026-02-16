@@ -16,7 +16,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["vite/client", "node"]
+    "types": ["vite/client"]
   },
   "include": [
     "index.tsx",
@@ -35,6 +35,8 @@
     "node_modules",
     "dist",
     "games/wordle",
-    "games/links"
+    "games/links",
+    "types.ts",
+    "constants.tsx"
   ]
 }
