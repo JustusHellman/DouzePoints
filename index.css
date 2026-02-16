@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-euro-dark text-white min-h-screen overflow-x-hidden;
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  input {
+    color-scheme: dark;
+  }
+}
+
+/* Ambient Background */
+.euro-bg {
+  @apply fixed inset-0 -z-10;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(236, 72, 153, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+    #050510;
+}
+
+.euro-grid {
+  @apply fixed inset-0 -z-10;
+  background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), 
+                    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(circle at center, black, transparent 80%);
+}
+
+/* Robust Page Transition */
+.page-fade {
+  @apply animate-fade-in;
+}
+
+::-webkit-scrollbar {
+  @apply w-1.5;
+}
+::-webkit-scrollbar-track {
+  @apply bg-white/5;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-white/10 rounded-full;
+}
+
+/* Specific Glow Styles */
+.glow-text {
+  text-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+}

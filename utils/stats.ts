@@ -1,0 +1,135 @@
+
+import { GlobalStats, DetailedStats, GameType } from '../data/types.ts';
+import { getDayString } from './daily.ts';
+
+export const RANK_TIERS = [
+  { threshold: 0, title: "First-Time Voter" },
+  { threshold: 24, title: "Backing Vocalist" },
+  { threshold: 60, title: "National Finalist" },
+  { threshold: 120, title: "Semi-Final Qualifier" },
+  { threshold: 250, title: "Grand Finalist" },
+  { threshold: 500, title: "Top 10 Contender" },
+  { threshold: 1000, title: "Podium Finish" },
+  { threshold: 2500, title: "Winner" },
+  { threshold: 5000, title: "Multi-Winner" },
+  { threshold: 8500, title: "Hall of Famer" },
+  { threshold: 12000, title: "Eurovision Legend" }
+];
+
+const emptyStats = (): DetailedStats => ({ 
+  played: 0, 
+  wins: 0, 
+  perfectGames: 0, 
+  currentStreak: 0, 
+  maxStreak: 0, 
+  distribution: [0, 0, 0, 0, 0, 0], 
+  lastPlayed: "" 
+});
+
+export const initialGlobalStats: GlobalStats = { 
+  word_game: emptyStats(), 
+  artists: emptyStats(),
+  links: emptyStats(), 
+  guesser: emptyStats(), 
+  arena: emptyStats(),
+  totalPoints: 0, 
+  totalDouzePoints: 0 
+};
+
+export const getStoredStats = (): GlobalStats => {
+  try {
+    const saved = localStorage.getItem('euro-stats-v2');
+    if (!saved) return initialGlobalStats;
+    const parsed = JSON.parse(saved);
+    
+    return {
+      ...initialGlobalStats,
+      ...parsed,
+      word_game: parsed.word_game || parsed.wordle ? { ...emptyStats(), ...(parsed.word_game || parsed.wordle) } : emptyStats(),
+      artists: parsed.artists ? { ...emptyStats(), ...parsed.artists } : emptyStats(),
+      links: parsed.links || parsed.linksgame ? { ...emptyStats(), ...(parsed.links || parsed.linksgame) } : emptyStats(),
+      guesser: parsed.guesser ? { ...emptyStats(), ...parsed.guesser } : emptyStats(),
+      arena: parsed.arena ? { ...emptyStats(), ...parsed.arena } : emptyStats(),
+    };
+  } catch (e) {
+    return initialGlobalStats;
+  }
+};
+
+export const updateGameStats = (gameType: GameType, won: boolean, performanceMetrics: any) => {
+  const stats = getStoredStats();
+  const today = getDayString();
+  
+  let gameKey: 'word_game' | 'artists' | 'links' | 'guesser' | 'arena';
+  switch(gameType) {
+    case GameType.WORD_GAME: gameKey = 'word_game'; break;
+    case GameType.ARTIST_WORD_GAME: gameKey = 'artists'; break;
+    case GameType.LINKS_GAME: gameKey = 'links'; break;
+    case GameType.GUESSER: gameKey = 'guesser'; break;
+    case GameType.ARENA: gameKey = 'arena'; break;
+    default: return stats;
+  }
+  
+  if (stats[gameKey].lastPlayed === today) return stats;
+
+  stats[gameKey].played += 1;
+  stats[gameKey].lastPlayed = today;
+
+  if (won) {
+    stats[gameKey].wins += 1;
+    stats[gameKey].currentStreak += 1;
+    stats[gameKey].maxStreak = Math.max(stats[gameKey].maxStreak, stats[gameKey].currentStreak);
+
+    let pointsEarned = 0;
+    let isPerfect = false;
+
+    if (gameType === GameType.WORD_GAME || gameType === GameType.ARTIST_WORD_GAME) {
+      const attempts = performanceMetrics.attempts;
+      if (stats[gameKey].distribution) {
+        stats[gameKey].distribution[attempts - 1] = (stats[gameKey].distribution[attempts - 1] || 0) + 1;
+      }
+      const pointsMap = [12, 10, 8, 6, 4, 2];
+      pointsEarned = pointsMap[attempts - 1] || 0;
+      if (attempts === 1) isPerfect = true;
+    } 
+    else if (gameType === GameType.LINKS_GAME) {
+      const mistakes = performanceMetrics.mistakes;
+      const pointsMap = [12, 10, 8, 6, 4, 2];
+      pointsEarned = pointsMap[mistakes] || 0;
+      if (stats[gameKey].distribution) {
+        stats[gameKey].distribution[mistakes] = (stats[gameKey].distribution[mistakes] || 0) + 1;
+      }
+      if (mistakes === 0) isPerfect = true;
+    }
+    else if (gameType === GameType.GUESSER || gameType === GameType.ARENA) {
+      const attemptsCount = performanceMetrics.attempts;
+      const pointsMap = [12, 10, 8, 6, 4, 2];
+      pointsEarned = pointsMap[attemptsCount - 1] || 0;
+      if (stats[gameKey].distribution) {
+        stats[gameKey].distribution[attemptsCount - 1] = (stats[gameKey].distribution[attemptsCount - 1] || 0) + 1;
+      }
+      if (attemptsCount === 1) isPerfect = true;
+    }
+
+    stats.totalPoints += pointsEarned;
+    if (isPerfect) {
+      stats[gameKey].perfectGames += 1;
+      stats.totalDouzePoints += 1;
+    }
+  } else {
+    stats[gameKey].currentStreak = 0;
+  }
+
+  try {
+    localStorage.setItem('euro-stats-v2', JSON.stringify(stats));
+  } catch (e) {}
+  return stats;
+};
+
+export const getCurrentRank = (points: number) => {
+  return [...RANK_TIERS].reverse().find(tier => points >= tier.threshold) || RANK_TIERS[0];
+};
+
+export const getNextRank = (points: number) => {
+  return RANK_TIERS.find(tier => tier.threshold > points);
+};
