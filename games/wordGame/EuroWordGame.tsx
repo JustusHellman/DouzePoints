@@ -33,7 +33,6 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
   const { t } = useTranslation();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
 
-  // Automated scroll nudge to position the board under the header (Instant scroll)
   useLayoutEffect(() => {
     const timer = requestAnimationFrame(() => {
       window.scrollTo(0, 60);
@@ -50,6 +49,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
 
   const song = useMemo(() => {
     const salt = `DAILY-V3-${gameType}-${gameId}-SALT-VERIFIED`;
+    // Fix: Pass validPool directly instead of validPool.length
     const idx = getDailyIndex(validPool, salt);
     return validPool[idx];
   }, [validPool, gameId, gameType]);
@@ -262,7 +262,6 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
   const handleShare = () => {
     const shareText = `${won ? '🏆' : '❌'} ${title} • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')} • ${guesses.length}/${MAX_ATTEMPTS} ${t('common.attempts')}\n\n${historyEmoji}\n\n#DouzePoints #Eurovision`;
     navigator.clipboard.writeText(shareText);
-    alert(t('common.copied'));
   };
 
   const getTileClass = (status: LetterStatus) => {
@@ -414,7 +413,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
         <GameScoreCard 
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
           historyEmoji={historyEmoji} gameTitle={title} song={song} attempts={guesses.length} maxAttempts={MAX_ATTEMPTS}
-          onClose={() => setShowModal(false)} onReturn={onReturn}
+          onClose={() => setShowModal(false)} onReturn={onReturn} onShare={handleShare}
         />
       )}
 
