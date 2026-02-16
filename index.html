@@ -19,7 +19,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CDN for instant development visuals -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -43,68 +42,56 @@
                 'from': { opacity: '0', transform: 'translateY(8px)' },
                 'to': { opacity: '1', transform: 'translateY(0)' },
               }
-            },
-            boxShadow: {
-              '3xl': '0 35px 60px -15px rgba(0, 0, 0, 0.3)',
             }
           }
         }
       }
     </script>
-
+    
     <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: #050510;
-            color: white;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        
-        .euro-bg {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(236, 72, 153, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
-                #050510;
-        }
-
-        .euro-grid {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), 
-                              linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            mask-image: radial-gradient(circle at center, black, transparent 80%);
-        }
-
-        .page-fade {
-            animation: fadeIn 0.4s ease-out forwards;
-        }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
-        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
-
-        @layer base {
-          input { color-scheme: dark; }
-        }
+      body {
+        background: #050510;
+        color: white;
+        font-family: 'Montserrat', sans-serif;
+      }
+      .euro-bg {
+        position: fixed;
+        inset: 0;
+        z-index: -10;
+        background: 
+          radial-gradient(circle at 20% 30%, rgba(236, 72, 153, 0.08) 0%, transparent 40%),
+          radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+          #050510;
+      }
+      .euro-grid {
+        position: fixed;
+        inset: 0;
+        z-index: -10;
+        background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), 
+                          linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        mask-image: radial-gradient(circle at center, black, transparent 80%);
+      }
+      .glow-text {
+        text-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+      }
     </style>
 
     <script type="importmap">
-    {
-      "imports": {
-        "react": "https://esm.sh/react@19.0.0",
-        "react-dom": "https://esm.sh/react-dom@19.0.0",
-        "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-        "react-router-dom": "https://esm.sh/react-router-dom@7.2.0?external=react,react-dom",
-        "canvas-confetti": "https://esm.sh/canvas-confetti@1.9.3?external=react,react-dom"
-      }
-    }
-    </script>
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "react-router-dom": "https://esm.sh/react-router-dom@7.2.0?external=react,react-dom",
+    "canvas-confetti": "https://esm.sh/canvas-confetti@1.9.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.4"
+  }
+}
+</script>
 <link rel="stylesheet" href="/index.css">
 </head>
 <body>

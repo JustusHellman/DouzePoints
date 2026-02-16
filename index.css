@@ -6,14 +6,10 @@
   body {
     @apply bg-euro-dark text-white min-h-screen overflow-x-hidden;
     font-family: 'Montserrat', sans-serif;
-  }
-  
-  input {
-    color-scheme: dark;
+    background: #050510;
   }
 }
 
-/* Ambient Background */
 .euro-bg {
   @apply fixed inset-0 -z-10;
   background: 
@@ -30,22 +26,30 @@
   mask-image: radial-gradient(circle at center, black, transparent 80%);
 }
 
-/* Robust Page Transition */
 .page-fade {
   @apply animate-fade-in;
 }
 
-::-webkit-scrollbar {
-  @apply w-1.5;
-}
-::-webkit-scrollbar-track {
-  @apply bg-white/5;
-}
-::-webkit-scrollbar-thumb {
-  @apply bg-white/10 rounded-full;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Specific Glow Styles */
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
 .glow-text {
   text-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
 }

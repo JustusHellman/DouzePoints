@@ -16,8 +16,25 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["vite/client"]
+    "types": ["vite/client", "node"]
   },
-  "include": ["./**/*.ts", "./**/*.tsx"],
-  "exclude": ["vite.config.ts", "dist", "node_modules"]
+  "include": [
+    "index.tsx",
+    "App.tsx",
+    "components/**/*",
+    "context/**/*",
+    "data/**/*",
+    "utils/**/*",
+    "locales/**/*",
+    "games/wordGame/EuroWordGame.tsx",
+    "games/linksgame/EuroLinks.tsx",
+    "games/guesser/EuroGuess.tsx",
+    "games/arena/EuroArena.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "games/wordle",
+    "games/links"
+  ]
 }
