@@ -242,12 +242,11 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
                     </div>
                     <div className="text-[10px] font-black text-emerald-500 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 shrink-0">#{guesses.length - idx}</div>
                  </div>
-                 <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3">
+                <div className="grid grid-cols-3 gap-2 sm:gap-4">
                     <ComparisonBox label={t('arena.labels.year')} value={g.year} status={getStatus('year', g.year, g)} arrow={g.year < target.year ? 'up' : g.year > target.year ? 'down' : undefined} delay={idx === 0 ? 100 : 0} />
                     <ComparisonBox label={t('arena.labels.rank')} value={`#${g.placing}`} status={getStatus('placing', g.placing, g)} arrow={g.placing > target.placing ? 'up' : g.placing < target.placing ? 'down' : undefined} delay={idx === 0 ? 250 : 0} />
                     <ComparisonBox label={t('arena.labels.country')} value={t(`metadata.countries.${g.country}`)} status={getStatus('country', g.country, g)} delay={idx === 0 ? 400 : 0} />
                     <ComparisonBox label={t('arena.labels.genre')} value={translateGenre(g.genre)} status={getStatus('genre', g.genre, g)} delay={idx === 0 ? 550 : 0} />
-                    <ComparisonBox label={t('arena.labels.size')} value={getMemberLabel(g.members)} status={getStatus('members', g.members, g)} delay={idx === 0 ? 700 : 0} />
                     <ComparisonBox label={t('arena.labels.size')} value={getMemberLabel(g.members)} status={getStatus('members', g.members, g)} delay={idx === 0 ? 700 : 0} />
                     <ComparisonBox label={t('arena.labels.sex')} value={t(`metadata.sex.${g.sex}`)} status={getStatus('sex', g.sex, g)} delay={idx === 0 ? 850 : 0} />
                  </div>
