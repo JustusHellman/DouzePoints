@@ -24,7 +24,8 @@ export const en: TranslationSchema = {
     mistakesLeft: "Mistakes Left",
     howToPlay: "How to play",
     close: "Close",
-    selectLanguage: "Select Language"
+    selectLanguage: "Select Language",
+    stats: "Stats"
   },
   greenroom: {
     greenroom: "The Greenroom",
@@ -32,7 +33,7 @@ export const en: TranslationSchema = {
     dailyProgress: "Daily Progress",
     qualified: "✨ Grand Final Qualified ✨",
     finishedToday: "Finished Today",
-    statsButton: "Grand Final Record",
+    statsButton: "Stats",
     careerStats: "Stats",
     todayScore: "Today's Score"
   },
@@ -101,8 +102,8 @@ export const en: TranslationSchema = {
     }
   },
   stats: {
-    totalRecord: "The Grand Final Record",
-    voterBreakdown: "Voter Breakdown",
+    totalRecord: "Stats",
+    voterBreakdown: "Stats",
     howToWin: "How to Win",
     earnPoints: "Earn Rank Points",
     earnPointsDesc: "Accumulate points to climb the leaderboard. Flawless victories give higher scores.",
@@ -177,18 +178,18 @@ export const en: TranslationSchema = {
     },
     genres: {
       "Drum and Bass": "Drum and Bass", "Opera": "Opera", "Drum and Bass / Opera": "Drum and Bass / Opera",
-      "Pop": "Pop", "Party Metal": "Party Metal", "Ballad": "Ballad", "Rock": "Rock", "Industrial Rock": "Industrial Rock", 
+      "Pop": "Pop", "Party Metal": "Party Metal", "Ballad": "Ballade", "Rock": "Rock", "Industrial Rock": "Industrial Rock", 
       "Glam Rock": "Rock", "Folk-Hop": "Folk-Hop", "Jazz": "Jazz", "Europop": "Europop", "Hard Rock": "Hard Rock",
       "Folk-Pop": "Folk-Pop", "Folk": "Folk", "Comedy Pop": "Comedy Pop", "Latin Pop": "Latin Pop",
       "R&B": "R&B", "Orchestral Pop": "Orchestral Pop", "Dance Pop": "Dance Pop", "Synthpop": "Synthpop",
       "Indie Pop": "Indie Pop", "Ethno-Pop": "Ethno-Pop", "Soul": "Soul", "Other": "Other", "Ouija Pop": "Ouija Pop",
       "Electro-Folk": "Electro-Folk", "Synth-Pop": "Synth-Pop", "Alternative": "Alternative", "Electropop": "Electropop",
-      "Chanson": "Chanson", "Pop Ballad": "Pop Ballad", "Electronic": "Electronic", "Industrial Techno": "Industrial Techno",
+      "Chanson": "Chanson", "Pop Ballad": "Ballade Pop", "Electronic": "Electronic", "Industrial Techno": "Techno Industrial",
       "Metalcore": "Metalcore", "Soul / Jazz": "Soul / Jazz", "Art Pop": "Art Pop", "Ska / Folk": "Ska / Folk",
       "Folk-Dance": "Folk-Dance", "Nu-Metal": "Nu-Metal", "Ethno-Hip-Hop": "Ethno-Hip-Hop", "Punk": "Punk",
       "Ska": "Ska", "Hardcore": "Hardcore", "Folk-Rap": "Folk-Rap", "Yé-yé": "Yé-yé", "Schlager": "Schlager",
-      "Neoclassical": "Neoclassical", "Folk Ballad": "Folk Ballad", "Pop Rock": "Pop Rock", "Soft Rock": "Soft Rock",
-      "Celtic Folk": "Celtic Folk", "Balkan Ballad": "Balkan Ballad", "Disco": "Disco"
+      "Neoclassical": "Neoclassique", "Folk Ballad": "Ballade Folk", "Pop Rock": "Pop Rock", "Soft Rock": "Soft Rock",
+      "Celtic Folk": "Folk Celtique", "Balkan Ballad": "Ballade Balkanique", "Disco": "Disco"
     },
     sex: {
       "Male": "Male", "Female": "Female", "Mixed": "Mixed", "Other": "Other"

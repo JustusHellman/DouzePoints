@@ -24,7 +24,9 @@ export const de: TranslationSchema = {
     mistakesLeft: "Fehler verbleibend",
     howToPlay: "Spielanleitung",
     close: "Schließen",
-    selectLanguage: "Sprache Wählen"
+    selectLanguage: "Sprache Wählen",
+    // Adding missing stats key
+    stats: "Statistiken"
   },
   greenroom: {
     greenroom: "Der Greenroom",
@@ -179,7 +181,7 @@ export const de: TranslationSchema = {
       "Drum and Bass": "Drum and Bass", "Opera": "Oper", "Drum and Bass / Opera": "Drum and Bass / Oper",
       "Pop": "Pop", "Party Metal": "Party Metal", "Ballad": "Ballade", "Rock": "Rock", "Industrial Rock": "Industrial Rock", 
       "Glam Rock": "Glam Rock", "Folk-Hop": "Folk-Hop", "Jazz": "Jazz", "Europop": "Europop", "Hard Rock": "Hard Rock",
-      "Folk-Pop": "Folk-Pop", "Folk": "Folk", "Comedy Pop": "Comedy Pop", "Latin Pop": "Latin Pop",
+      "Folk-Pop": "Folk-Pop", "Folk": "Folk", "Comedy Pop": "Comedy Pop", "Latin Pop": "Pop Latino",
       "R&B": "R&B", "Orchestral Pop": "Orchestral Pop", "Dance Pop": "Dance Pop", "Synthpop": "Synthpop",
       "Indie Pop": "Indie Pop", "Ethno-Pop": "Ethno-Pop", "Soul": "Soul", "Other": "Andere", "Ouija Pop": "Ouija Pop",
       "Electro-Folk": "Electro-Folk", "Synth-Pop": "Synth-Pop", "Alternative": "Alternative", "Electropop": "Electropop",

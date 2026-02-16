@@ -337,29 +337,28 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen relative flex flex-col">
       <ScrollToTop />
-      <header className="px-4 py-2 border-b border-white/5 backdrop-blur-xl sticky top-0 z-[100] flex items-center justify-between bg-black/60 h-14">
-        <div className="flex items-center gap-3">
+      <header className="px-6 md:px-12 py-2 border-b border-white/5 backdrop-blur-xl sticky top-0 z-[100] flex items-center justify-between bg-black/60 h-14 md:h-24">
+        <div className="flex items-center gap-4">
            {!isLobby && (
-             <button onClick={handleReturn} className="p-1.5 hover:bg-white/10 rounded-xl transition-all text-white bg-white/5 border border-white/10 active:scale-90">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"/></svg>
+             <button onClick={handleReturn} className="p-2 hover:bg-white/10 rounded-xl transition-all text-white bg-white/5 border border-white/10 active:scale-90">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"/></svg>
              </button>
            )}
-           <Link to="/" className="text-base md:text-lg font-black tracking-tighter bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent uppercase italic pr-[0.2em] hover:opacity-80 transition-opacity whitespace-nowrap">
+           <Link to="/" className="text-xl md:text-3xl font-black tracking-tighter bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent uppercase italic pr-[0.2em] hover:opacity-80 transition-opacity whitespace-nowrap">
              Douze Points
            </Link>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <button 
             onClick={() => setShowLang(true)}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all active:scale-95 group overflow-hidden"
+            className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all active:scale-95 group overflow-hidden"
           >
-            <span className="text-xl group-hover:scale-125 transition-transform duration-300">{currentFlag}</span>
+            <span className="text-xl md:text-2xl group-hover:scale-125 transition-transform duration-300">{currentFlag}</span>
           </button>
           
-          <button onClick={() => { setStats(getStoredStats()); setShowStats(true); }} className="flex items-center gap-2 px-3 py-1.5 hover:bg-white/10 rounded-full transition-all text-white bg-white/5 border border-white/10 active:scale-95 outline-none">
-            <div className="w-1.5 h-1.5 rounded-full bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.5)]"></div>
-            <span className="text-[8px] font-black uppercase tracking-widest hidden sm:inline">{currentGameType === 'TOTAL' ? t('greenroom.statsButton') : `${currentGameType.replace('_WORD_GAME', '').charAt(0) + currentGameType.replace('_WORD_GAME', '').slice(1).toLowerCase()} ${t('greenroom.careerStats')}`}</span>
-            <span className="text-[8px] font-black uppercase tracking-widest inline sm:hidden">{t('greenroom.careerStats')}</span>
+          <button onClick={() => { setStats(getStoredStats()); setShowStats(true); }} className="flex items-center gap-3 px-4 md:px-6 py-2 md:py-3 hover:bg-white/10 rounded-full transition-all text-white bg-white/5 border border-white/10 active:scale-95 outline-none">
+            <div className="w-2 h-2 rounded-full bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.5)]"></div>
+            <span className="text-[10px] md:text-[12px] font-black uppercase tracking-widest">{t('common.stats')}</span>
           </button>
         </div>
       </header>

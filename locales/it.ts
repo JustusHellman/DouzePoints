@@ -24,7 +24,9 @@ export const it: TranslationSchema = {
     mistakesLeft: "Errori rimasti",
     howToPlay: "Come giocare",
     close: "Chiudi",
-    selectLanguage: "Seleziona Lingua"
+    selectLanguage: "Seleziona Lingua",
+    // Adding missing stats key
+    stats: "Stats"
   },
   greenroom: {
     greenroom: "La Greenroom",
@@ -169,7 +171,7 @@ export const it: TranslationSchema = {
       "Switzerland": "Svizzera", "Sweden": "Svezia", "Finland": "Finlandia", "Netherlands": "Paesi Bassi",
       "Italy": "Italia", "Croatia": "Croazia", "United Kingdom": "Regno Unito", "Ukraine": "Ucraina",
       "Israel": "Israele", "Portugal": "Portogallo", "Denmark": "Danimarca", "Norway": "Norvegia", "Spain": "Spagna",
-      "Austria": "Austria", "Cyprus": "Cipro", "Iceland": "Islanda", "Germany": "Germania", "Azerbaijan": "Azerbaigian",
+      "Austria": "Austria", "Cyprus": "Chipre", "Iceland": "Islanda", "Germany": "Germania", "Azerbaijan": "Azerbaigian",
       "Serbia": "Serbia", "Australia": "Australia", "Greece": "Grecia", "Moldova": "Moldavia", "Belgium": "Belgio",
       "Poland": "Polonia", "Slovenia": "Slovenia", "Ireland": "Irlanda", "Luxembourg": "Lussemburgo", "Albania": "Albania",
       "Bulgaria": "Bulgaria", "Estonia": "Estonia", "Russia": "Russia", "Turkey": "Turchia", "Bosnia & Herzegovina": "Bosnia ed Erzegovina",

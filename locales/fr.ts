@@ -24,7 +24,9 @@ export const fr: TranslationSchema = {
     mistakesLeft: "Erreurs restantes",
     howToPlay: "Comment jouer",
     close: "Fermer",
-    selectLanguage: "Choisir la Langue"
+    selectLanguage: "Choisir la Langue",
+    // Adding missing stats key
+    stats: "Stats"
   },
   greenroom: {
     greenroom: "Le Greenroom",
