@@ -17,6 +17,7 @@ interface GameScoreCardProps {
   maxAttempts: number;
   onClose: () => void;
   onReturn: () => void;
+  onShare?: () => void;
   extraInfo?: React.ReactNode;
 }
 
@@ -113,6 +114,7 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
   maxAttempts,
   onClose,
   onReturn,
+  onShare,
   extraInfo
 }) => {
   const { t } = useTranslation();
@@ -123,6 +125,13 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
   )).join(' ');
 
   const handleShare = () => {
+    if (onShare) {
+      onShare();
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 2000);
+      return;
+    }
+
     let headline = "";
     if (!won) headline = t('scorecard.headlines.nulPoints');
     else if (points === 12) headline = t('scorecard.headlines.douzePoints');
