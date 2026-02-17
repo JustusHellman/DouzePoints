@@ -1,712 +1,604 @@
 import { ConnectionsGroup } from './types.ts';
 
-/**
- * 100 Hand-crafted daily puzzles for EuroLinks.
- * Logic Rule: Puzzles include "Red Herrings" where an item seems to fit a theme but 
- * only fits one category name factually, ensuring a unique solution.
- */
 export const PUZZLES: ConnectionsGroup[][] = [
-  // Board 1: Nordic Logic
   [
-    { category: "Nordic Winners", items: ["SWEDEN", "NORWAY", "FINLAND", "DENMARK"], difficulty: "easy" },
-    { category: "Island Nations", items: ["ICELAND", "CYPRUS", "MALTA", "AUSTRALIA"], difficulty: "medium" },
-    { category: "Stage Props", items: ["PIANO", "STAIRS", "FIRE", "BATHTUB"], difficulty: "hard" },
-    { category: "Colors in Titles", items: ["DOOMSDAY BLUE", "BLACK SMOKE", "WHITE AND BLACK BLUES", "BLACKBIRD"], difficulty: "expert" }
-    // Red Herring: Iceland is Nordic, but never won. It must go to Island Nations.
+    { category: "Eurovision winners (2010s)", items: ["EUPHORIA", "HEROES", "TOY", "ARCADE"], difficulty: "easy" },
+    { category: "Countries that have hosted 3+ times", items: ["UNITED KINGDOM", "IRELAND", "SWEDEN", "ISRAEL"], difficulty: "medium" },
+    { category: "Countries that have participated but never won (as of 2024)", items: ["ICELAND", "LITHUANIA", "MALTA", "SAN MARINO"], difficulty: "hard" },
+    { category: "Winners performed in a language other than English (2000–2023)", items: ["MOLITVA", "AMAR PELOS DOIS", "ZITTI E BUONI", "STEFANIA"], difficulty: "expert" }
   ],
-  // Board 2: Loreen and Co
   [
-    { category: "One-Name Winners", items: ["LOREEN", "NETTA", "LENA", "RUSLANA"], difficulty: "easy" },
-    { category: "Big Five Nations", items: ["UK", "FRANCE", "SPAIN", "ITALY"], difficulty: "medium" },
-    { category: "Words in 'Waterloo'", items: ["HISTORY", "DEFEAT", "PROMISE", "BATTLE"], difficulty: "hard" },
-    { category: "Instruments on Stage", items: ["VIOLIN", "GUITAR", "DRUMS", "FLUTE"], difficulty: "expert" }
-    // Red Herring: Germany is a Big Five country but omitted here.
+    { category: "Winning songs with one-word titles", items: ["TATTOO", "SATELLITE", "FAIRYTALE", "BELIEVE"], difficulty: "easy" },
+    { category: "BBC-hosted editions outside London", items: ["BRIGHTON", "HARROGATE", "BIRMINGHAM", "LIVERPOOL"], difficulty: "medium" },
+    { category: "Countries debuting after Yugoslavia's breakup", items: ["BOSNIA AND HERZEGOVINA", "CROATIA", "SLOVENIA", "NORTH MACEDONIA"], difficulty: "hard" },
+    { category: "Countries winning with non-English songs (since 2000)", items: ["SERBIA", "PORTUGAL", "ITALY", "UKRAINE"], difficulty: "expert" }
   ],
-  // Board 3: 2024 Final
   [
-    { category: "2024 Top 5", items: ["SWITZERLAND", "CROATIA", "UKRAINE", "FRANCE"], difficulty: "easy" },
-    { category: "Host Cities (Sweden)", items: ["STOCKHOLM", "MALMÖ", "GOTHENBURG", "UPPSALA"], difficulty: "medium" },
-    { category: "Rim Tim Tagi Dim Items", items: ["LACE", "NEON", "CAT", "COW"], difficulty: "hard" },
-    { category: "Solo Male Ballads", items: ["ARCADE", "MON AMOUR", "TOUT L'UNIVERS", "GROW"], difficulty: "expert" }
+    { category: "Bands/collectives that won Eurovision", items: ["ABBA", "LORDI", "MANESKIN", "KALUSH ORCHESTRA"], difficulty: "easy" },
+    { category: "Titles with repeated syllables", items: ["CHA CHA CHA", "HABA HABA", "LOCO LOCO", "LA LA LOVE"], difficulty: "medium" },
+    { category: "Host cities beginning with 'M'", items: ["MALMO", "MOSCOW", "MUNICH", "MADRID"], difficulty: "hard" },
+    { category: "3rd-place finishers in the 2010s (song titles)", items: ["PLAYING WITH FIRE", "POPULAR", "NIJE LJUBAV STVAR", "UNDO"], difficulty: "expert" }
   ],
-  // Board 4: Ex-Soviet Nations
   [
-    { category: "Ex-Soviet Winners", items: ["ESTONIA", "LATVIA", "UKRAINE", "AZERBAIJAN"], difficulty: "easy" },
-    { category: "Former Soviet Republics", items: ["MOLDOVA", "GEORGIA", "ARMENIA", "BELARUS"], difficulty: "medium" },
-    { category: "Titles with Numbers", items: ["1944", "ONE", "SEVEN", "TEN"], difficulty: "hard" },
-    { category: "Onomatopoeia", items: ["DING-A-DONG", "LA LA LA", "BUM-BUM", "DIGGI-LOO"], difficulty: "expert" }
+    { category: "Eurovision slogans", items: ["COME TOGETHER", "DARE TO DREAM", "OPEN UP", "UNITED BY MUSIC"], difficulty: "easy" },
+    { category: "Cities that have hosted multiple times", items: ["DUBLIN", "STOCKHOLM", "COPENHAGEN", "OSLO"], difficulty: "medium" },
+    { category: "Artists who performed barefoot on the ESC stage", items: ["LOREEN", "EMMELIE DE FOREST", "SANDIE SHAW", "REMEDIOS AMAYA"], difficulty: "hard" },
+    { category: "National selection shows", items: ["MELODIFESTIVALEN", "SANREMO", "MELODI GRAND PRIX", "DORA"], difficulty: "expert" }
   ],
-  // Board 5: Balkan Puzzles
   [
-    { category: "Ex-Yugoslavia Republics", items: ["SLOVENIA", "MONTENEGRO", "BOSNIA", "NORTH MACEDONIA"], difficulty: "easy" },
-    { category: "Balkan Nations", items: ["ALBANIA", "GREECE", "BULGARIA", "ROMANIA"], difficulty: "medium" },
-    { category: "Animal Songs", items: ["WOLF", "TURTLE", "BIRD", "SNAKE"], difficulty: "hard" },
-    { category: "Solo Male Winners", items: ["SALVADOR", "DUNCAN", "MÅNS", "RYBAK"], difficulty: "expert" }
-    // Red Herring: Serbia/Croatia are Ex-Yu and Balkan, but excluded to avoid overlap.
+    { category: "1970s Eurovision-winning songs", items: ["WATERLOO", "SAVE YOUR KISSES FOR ME", "A-BA-NI-BI", "HALLELUJAH"], difficulty: "easy" },
+    { category: "National finals (names)", items: ["FESTIVAL DA CANCAO", "SONGVAKEPPNIN", "SUPERNOVA", "EESTI LAUL"], difficulty: "medium" },
+    { category: "Countries that debuted in 1994", items: ["ESTONIA", "HUNGARY", "POLAND", "RUSSIA"], difficulty: "hard" },
+    { category: "Countries that have hosted exactly once in the 21st century", items: ["GERMANY", "PORTUGAL", "NETHERLANDS", "ITALY"], difficulty: "expert" }
   ],
-  // Board 6: Iconic Props
   [
-    { category: "Stage Effects", items: ["FOG", "LASERS", "CONFETTI", "FIREWORKS"], difficulty: "easy" },
-    { category: "UK Host Cities", items: ["LONDON", "LIVERPOOL", "BIRMINGHAM", "BRIGHTON"], difficulty: "medium" },
-    { category: "Titles starting with 'A'", items: ["ARCADE", "AMAR", "ADRENALINA", "ALCOHOL"], difficulty: "hard" },
-    { category: "Barefoot Performers", items: ["SANDIE SHAW", "EMMELIE", "CORNELIA", "RENEE"], difficulty: "expert" }
+    { category: "Host cities that are national capitals", items: ["KYIV", "ATHENS", "BAKU", "BELGRADE"], difficulty: "easy" },
+    { category: "Non-French countries with French-titled entries", items: ["NE PARTEZ PAS SANS MOI", "L'AMOUR EST BLEU", "APRES TOI", "POUPEE DE CIRE, POUPEE DE SON"], difficulty: "medium" },
+    { category: "Host broadcasters (2018–2023)", items: ["RTP", "KAN", "AVROTROS", "BBC"], difficulty: "hard" },
+    { category: "Entries with numbers in the title", items: ["ONE LIFE", "THREE MINUTES TO EARTH", "ZERO GRAVITY", "1944"], difficulty: "expert" }
   ],
-  // Board 7: Royalty
   [
-    { category: "Titles with Royalty", items: ["QUEEN", "KING", "CROWN", "EMPIRE"], difficulty: "easy" },
-    { category: "Mediterranean Islands", items: ["CYPRUS", "MALTA", "SICILY", "CRETE"], difficulty: "medium" },
-    { category: "Titles with 'Moon'", items: ["MOON", "MOONLIGHT", "MOONRISE", "MOONSHINE"], difficulty: "hard" },
-    { category: "Acts with Hats", items: ["KÄÄRIJÄ", "VERKA", "ZDOB SI ZDUB", "JOHNNY"], difficulty: "expert" }
+    { category: "Song titles including 'Love'", items: ["LOVE SHINE A LIGHT", "LOVE INJECTED", "LOVEWAVE", "LOVE KILLS"], difficulty: "easy" },
+    { category: "Artists with numerals in their name", items: ["3+2", "4FUN", "OG3NE", "2B"], difficulty: "medium" },
+    { category: "Host venues (arenas)", items: ["OLYMPIAHALLE", "B&W HALLERNE", "WIENER STADTHALLE", "ALTICE ARENA"], difficulty: "hard" },
+    { category: "2010s entries performed mostly in a non-English language", items: ["SUUS", "KEDVESEM", "LA FORZA", "SOLDI"], difficulty: "expert" }
   ],
-  // Board 8: Heroes
   [
-    { category: "Winning Genres", items: ["ROCK", "POP", "JAZZ", "BALLAD"], difficulty: "easy" },
-    { category: "Words in 'Heroes'", items: ["DANCING", "DEMONS", "HEROES", "CRICKET"], difficulty: "medium" },
-    { category: "Voting Parts", items: ["JURY", "TELEVOTE", "SPOKESPERSON", "PUBLIC"], difficulty: "hard" },
-    { category: "Baltic Nations", items: ["ESTONIA", "LATVIA", "LITHUANIA", "POLAND"], difficulty: "expert" }
+    { category: "Teenage Eurovision winners (artists)", items: ["SANDRA KIM", "LENA", "NICOLE", "GIGLIOLA CINQUETTI"], difficulty: "easy" },
+    { category: "Duos that won Eurovision", items: ["BOBBYSOX!", "SECRET GARDEN", "OLSEN BROTHERS", "ELL & NIKKI"], difficulty: "medium" },
+    { category: "Titles with 'Dance/Dancing'", items: ["DANCING LASHA TUMBAI", "DANCE YOU OFF", "DANCING IN THE RAIN", "DANCE ALONE"], difficulty: "hard" },
+    { category: "Host cities in the former USSR", items: ["MOSCOW", "KYIV", "BAKU", "TALLINN"], difficulty: "expert" }
   ],
-  // Board 9: Modern Masters
   [
-    { category: "2020s Winning Songs", items: ["ZITTI", "STEFANIA", "TATTOO", "THE CODE"], difficulty: "easy" },
-    { category: "Non-European Winners", items: ["ISRAEL", "AZERBAIJAN", "TURKEY", "RUSSIA"], difficulty: "medium" },
-    { category: "Titles with 'No'", items: ["NO PREJUDICE", "NO DEGREE", "NO NO NEVER", "NOT ALONE"], difficulty: "hard" },
-    { category: "Cities that Hosted Twice", items: ["JERUSALEM", "MALMÖ", "DUBLIN", "CANNES"], difficulty: "expert" }
+    { category: "Big Five countries", items: ["FRANCE", "GERMANY", "ITALY", "SPAIN", "UNITED KINGDOM"], difficulty: "easy" },
+    { category: "Participants outside geographical Europe", items: ["ISRAEL", "AZERBAIJAN", "ARMENIA", "AUSTRALIA"], difficulty: "medium" },
+    { category: "Exclamation marks in the song title", items: ["HEY MAMMA!", "YODEL IT!", "OPA!", "HVALA, NE!"], difficulty: "hard" },
+    { category: "Host cities beginning with 'B'", items: ["BELGRADE", "BAKU", "BIRMINGHAM", "BERGEN"], difficulty: "expert" }
   ],
-  // Board 10: Urban Grid
   [
-    { category: "Urban Genres", items: ["RAP", "HIP-HOP", "R&B", "TRAP"], difficulty: "easy" },
-    { category: "Oceania/Exotic Acts", items: ["GUY SEBASTIAN", "DAMI IM", "KATE MILLER", "VOYAGER"], difficulty: "medium" },
-    { category: "Winning Host Cities", items: ["PARIS", "LONDON", "DUBLIN", "JERUSALEM"], difficulty: "hard" },
-    { category: "Words in 'The Code'", items: ["NEMO", "BROKEN", "TRUTH", "CODE"], difficulty: "expert" }
+    { category: "Host cities beginning with 'L'", items: ["LISBON", "LONDON", "LAUSANNE", "LUGANO"], difficulty: "easy" },
+    { category: "Color words in the title", items: ["GOLDEN BOY", "BLACKBIRD", "BLUE AND RED", "BLACK SMOKE"], difficulty: "medium" },
+    { category: "Countries with wins both before and after 1990", items: ["IRELAND", "UNITED KINGDOM", "SWEDEN", "ISRAEL"], difficulty: "hard" },
+    { category: "1950s debutants that still compete", items: ["SWITZERLAND", "NETHERLANDS", "GERMANY", "BELGIUM"], difficulty: "expert" }
   ],
-  // Board 11: Food & Drink
   [
-    { category: "Food in Titles", items: ["CAKE", "HONEY", "CHEESECAKE", "WINE"], difficulty: "easy" },
-    { category: "Winning Duos", items: ["BOBBYSOX", "SECRET GARDEN", "ELL & NIKKI", "RIVA"], difficulty: "medium" },
-    { category: "Western Founding Nations", items: ["GERMANY", "AUSTRIA", "SWITZERLAND", "NETHERLANDS"], difficulty: "hard" },
-    { category: "Lyrics in 'Euphoria'", items: ["HIGHER", "ETERNITY", "HEAVEN", "EUPHORIA"], difficulty: "expert" }
+    { category: "Eurovision winners (2000–2009)", items: ["EVERYWAY THAT I CAN", "WILD DANCES", "BELIEVE", "FAIRYTALE"], difficulty: "easy" },
+    { category: "Countries with consecutive wins", items: ["IRELAND", "LUXEMBOURG", "ISRAEL", "SPAIN"], difficulty: "medium" },
+    { category: "Countries that debuted in the 2000s", items: ["ALBANIA", "ANDORRA", "AZERBAIJAN", "SERBIA AND MONTENEGRO"], difficulty: "hard" },
+    { category: "Staging built around projections/LED interaction", items: ["HEROES", "YOU ARE THE ONLY ONE", "LA FORZA", "O MIE"], difficulty: "expert" }
   ],
-  // Board 12: Weather
   [
-    { category: "Weather in Titles", items: ["STORM", "RAIN", "THUNDER", "LIGHTNING"], difficulty: "easy" },
-    { category: "Former Soviet Winners", items: ["UKRAINE", "ESTONIA", "LATVIA", "AZERBAIJAN"], difficulty: "medium" },
-    { category: "Solo Male Ballads", items: ["MON AMOUR", "TOUT L'UNIVERS", "GROW", "ARCADE"], difficulty: "hard" },
-    { category: "Acts with DJs", items: ["LUMX", "DARUDE", "JOWST", "GROOVEEBEE"], difficulty: "expert" }
+    { category: "Returning artists for the same country", items: ["LOREEN", "DIMA BILAN", "IRA LOSCO", "VALENTINA MONETTA"], difficulty: "easy" },
+    { category: "Countries whose first win was in the 21st century", items: ["UKRAINE", "AZERBAIJAN", "PORTUGAL", "SERBIA"], difficulty: "medium" },
+    { category: "Titles about space/physics", items: ["SPACE", "SPACE MAN", "LAIKA PARTY", "GRAVITY"], difficulty: "hard" },
+    { category: "Countries absent from Eurovision 2022–2024", items: ["TURKEY", "HUNGARY", "BELARUS", "RUSSIA"], difficulty: "expert" }
   ],
-  // Board 13: Winners Group
   [
-    { category: "Groups that Won", items: ["ABBA", "MANESKIN", "KALUSH", "LORDI"], difficulty: "easy" },
-    { category: "Micro-States", items: ["SAN MARINO", "ANDORRA", "MONACO", "LUXEMBOURG"], difficulty: "medium" },
-    { category: "Nature Titles", items: ["BIRD", "SNAKE", "TURTLE", "WOLF"], difficulty: "hard" },
-    { category: "Words starting 'Euro'", items: ["EUROCLUB", "EUROFEST", "EUROPROPS", "EUROPAPA"], difficulty: "expert" }
+    { category: "1969 four-way tie winners (song titles)", items: ["BOOM BANG-A-BANG", "DE TROUBADOUR", "UN JOUR, UN ENFANT", "VIVO CANTANDO"], difficulty: "easy" },
+    { category: "Countries with population under 1 million", items: ["ICELAND", "MALTA", "SAN MARINO", "MONTENEGRO"], difficulty: "medium" },
+    { category: "Titles with repeated/nonsense syllables", items: ["DIGGI-LOO DIGGI-LEY", "DING-A-DONG", "A-BA-NI-BI", "LA LA LOVE"], difficulty: "hard" },
+    { category: "Former Yugoslav republics", items: ["SLOVENIA", "CROATIA", "BOSNIA AND HERZEGOVINA", "NORTH MACEDONIA"], difficulty: "expert" }
   ],
-  // Board 14: Historical Firsts
   [
-    { category: "Debut Winners", items: ["SWITZERLAND", "NETHERLANDS", "FRANCE", "SERBIA"], difficulty: "easy" },
-    { category: "Host Cities (Germany)", items: ["BERLIN", "MUNICH", "FRANKFURT", "DUSSELDORF"], difficulty: "medium" },
-    { category: "Titles with 'Life'", items: ["J'AIME LA VIE", "THIS IS MY LIFE", "LOVE IS LIFE", "LIFE"], difficulty: "hard" },
-    { category: "French Score Terms", items: ["DOUZE", "DIX", "HUIT", "SEPT"], difficulty: "expert" }
+    { category: "Eurovision winners (1990s)", items: ["ROCK 'N' ROLL KIDS", "NOCTURNE", "LOVE SHINE A LIGHT", "TAKE ME TO YOUR HEAVEN"], difficulty: "easy" },
+    { category: "National selection shows", items: ["UMK", "A DAL", "BEOVIZIJA", "DESTINATION EUROVISION"], difficulty: "medium" },
+    { category: "Sibling acts at Eurovision", items: ["OLSEN BROTHERS", "TOLMACHEVY SISTERS", "JEDWARD", "TURALTURANX"], difficulty: "hard" },
+    { category: "Titles with numbers spelled out", items: ["ONE LIFE", "ONE THING I SHOULD HAVE DONE", "TEN YEARS", "THREE MINUTES TO EARTH"], difficulty: "expert" }
   ],
-  // Board 15: Iconic Props II
   [
-    { category: "Props on Stage", items: ["WIND MACHINE", "LED SCREEN", "TREADMILL", "BOX"], difficulty: "easy" },
-    { category: "Mediterranean Coasts", items: ["PORTUGAL", "SPAIN", "ITALY", "ISRAEL"], difficulty: "medium" },
-    { category: "Titles with 'Fire'", items: ["FUEGO", "FIRE", "FIREFLY", "FIREWORKS"], difficulty: "hard" },
-    { category: "2024 Final Girls", items: ["TERESA", "MARIA", "ZARI", "VERONIKA"], difficulty: "expert" }
+    { category: "2020 entries that never got to compete", items: ["THINK ABOUT THINGS", "FAI RUMORE", "TEARS GETTING SOBER", "UNO"], difficulty: "easy" },
+    { category: "Countries currently inactive as of 2024", items: ["TURKEY", "ANDORRA", "BOSNIA AND HERZEGOVINA", "MONACO"], difficulty: "medium" },
+    { category: "Founding participants in 1956", items: ["NETHERLANDS", "SWITZERLAND", "FRANCE", "ITALY"], difficulty: "hard" },
+    { category: "National-final winners that didn't make the ESC stage", items: ["MOMENT OF SILENCE", "SIREN SONG", "FLAME IS BURNING", "YA NAUCHU TEBYA"], difficulty: "expert" }
   ],
-  // Board 16: Female Power
   [
-    { category: "One-Name Female Acts", items: ["MARINA", "OLIVIA", "MUSTII", "SILIA"], difficulty: "easy" },
-    { category: "Northern Winners", items: ["IRELAND", "SWEDEN", "NORWAY", "DENMARK"], difficulty: "medium" },
-    { category: "Nature Elements", items: ["MOUNTAIN", "RIVER", "OCEAN", "DESERT"], difficulty: "hard" },
-    { category: "Winning Years (90s)", items: ["1992", "1993", "1994", "1996"], difficulty: "expert" }
+    { category: "Grand Final runners-up (2021–2024)", items: ["VOILA", "SPACE MAN", "CHA CHA CHA", "RIM TIM TAGI DIM"], difficulty: "easy" },
+    { category: "Participating countries in Western Asia", items: ["ISRAEL", "AZERBAIJAN", "ARMENIA", "GEORGIA"], difficulty: "medium" },
+    { category: "Countries whose capitals have hosted Eurovision", items: ["GREECE", "SERBIA", "NORWAY", "PORTUGAL"], difficulty: "hard" },
+    { category: "Song titles with a question mark", items: ["WHY ME?", "IS IT TRUE?", "WHERE ARE YOU?", "WHAT ABOUT MY DREAMS?"], difficulty: "expert" }
   ],
-  // Board 17: Color Theory
   [
-    { category: "Winning Colors", items: ["GOLD", "SILVER", "WHITE", "BLUE"], difficulty: "easy" },
-    { category: "Host Cities (Italy)", items: ["TURIN", "ROME", "NAPLES", "MILAN"], difficulty: "medium" },
-    { category: "Titles with 'Sing'", items: ["SING", "SINGING", "SING LITTLE", "SINGALONG"], difficulty: "hard" },
-    { category: "2023 Semi 1 Acts", items: ["FINLAND", "SWEDEN", "ISRAEL", "NORWAY"], difficulty: "expert" }
+    { category: "Non-capital host cities", items: ["BRIGHTON", "HARROGATE", "MALMO", "THE HAGUE"], difficulty: "easy" },
+    { category: "Countries bordering the Baltic Sea", items: ["ESTONIA", "LATVIA", "LITHUANIA", "POLAND"], difficulty: "medium" },
+    { category: "Countries with 'land' in their English name", items: ["FINLAND", "ICELAND", "IRELAND", "NETHERLANDS"], difficulty: "hard" },
+    { category: "Song titles containing 'Light'", items: ["LOVE SHINE A LIGHT", "CITY LIGHTS", "LIGHTS OFF", "LIGHT ME UP"], difficulty: "expert" }
   ],
-  // Board 18: Parts of Show
   [
-    { category: "Show Segments", items: ["POSTCARD", "INTERVAL", "OPENING", "VOTING"], difficulty: "easy" },
-    { category: "Western Europe Winners", items: ["BELGIUM", "FRANCE", "UK", "IRELAND"], difficulty: "medium" },
-    { category: "Titles with 'Time'", items: ["TIME", "TIMELINE", "TIMESTOP", "TIMING"], difficulty: "hard" },
-    { category: "Acts with Strings", items: ["RYBAK", "LUMX", "GRIFFITH", "VOYAGER"], difficulty: "expert" }
+    { category: "Eurovision winners (2021–2024)", items: ["ZITTI E BUONI", "STEFANIA", "TATTOO", "THE CODE"], difficulty: "easy" },
+    { category: "Countries that have won exactly once (as of 2024)", items: ["GREECE", "TURKEY", "PORTUGAL", "AZERBAIJAN"], difficulty: "medium" },
+    { category: "Acts who competed at both Junior Eurovision and Eurovision", items: ["DESTINY", "TOLMACHEVY SISTERS", "STEFANIA", "NEVENA BOZOVIC"], difficulty: "hard" },
+    { category: "Countries that have participated but never won (as of 2024)", items: ["CYPRUS", "ARMENIA", "ROMANIA", "GEORGIA"], difficulty: "expert" }
   ],
-  // Board 19: Emoji Vibe
   [
-    { category: "Nature Imagery", items: ["TREE", "FLOWER", "SUN", "STARS"], difficulty: "easy" },
-    { category: "Host Cities (UK)", items: ["LONDON", "LIVERPOOL", "BIRMINGHAM", "BRIGHTON"], difficulty: "medium" },
-    { category: "Winning Years (70s)", items: ["1974", "1975", "1978", "1979"], difficulty: "hard" },
-    { category: "Lyrics in 'Tattoo'", items: ["FOREVER", "VOICE", "LOUD", "TATTOO"], difficulty: "expert" }
+    { category: "National selection shows (Nordic focus)", items: ["MELODIFESTIVALEN", "MELODI GRAND PRIX", "UMK", "SONGVAKEPPNIN"], difficulty: "easy" },
+    { category: "Countries first appearing in the 1990s", items: ["SLOVENIA", "CROATIA", "BOSNIA AND HERZEGOVINA", "NORTH MACEDONIA"], difficulty: "medium" },
+    { category: "Entries notable for instrumental solos on stage", items: ["FAIRYTALE", "BELIEVE", "NOCTURNE", "LOVEWAVE"], difficulty: "hard" },
+    { category: "Countries with both a win and a hosting in the 2010s", items: ["SWEDEN", "AZERBAIJAN", "ISRAEL", "PORTUGAL"], difficulty: "expert" }
   ],
-  // Board 20: The Final Lobby
   [
-    { category: "ESC Roles", items: ["ARTIST", "HOST", "SPOKESPERSON", "DIRECTOR"], difficulty: "easy" },
-    { category: "Winning Years (2010s)", items: ["2012", "2014", "2015", "2016"], difficulty: "medium" },
-    { category: "Titles starting 'T'", items: ["TOY", "TATTOO", "TIME", "THE CODE"], difficulty: "hard" },
-    { category: "2024 Semi 2 Acts", items: ["MALTA", "ALBANIA", "GREECE", "SWITZERLAND"], difficulty: "expert" }
+    { category: "Host cities beginning with 'T'", items: ["TEL AVIV", "TURIN", "TALLINN", "THE HAGUE"], difficulty: "easy" },
+    { category: "Countries using Cyrillic as an official script", items: ["RUSSIA", "BELARUS", "SERBIA", "NORTH MACEDONIA"], difficulty: "medium" },
+    { category: "Countries whose capitals begin with 'B'", items: ["GERMANY", "ROMANIA", "AZERBAIJAN", "SERBIA"], difficulty: "hard" },
+    { category: "Folk meets pop: entries blending traditional elements", items: ["SHUM", "SPIRIT IN THE SKY", "BOONIKA BATE DOBA", "TRENULETUL"], difficulty: "expert" }
   ],
-  // Board 21: Big 5 Countries
   [
-    { category: "The Big 5", items: ["UK", "FRANCE", "ITALY", "GERMANY"], difficulty: "easy" },
-    { category: "Host Cities (Benelux)", items: ["AMSTERDAM", "ROTTERDAM", "BRUSSELS", "LUXEMBOURG"], difficulty: "medium" },
-    { category: "Titles with 'Dream'", items: ["DREAM", "DREAMER", "DREAMS", "DREAMING"], difficulty: "hard" },
-    { category: "Words in 'Europapa'", items: ["EURO", "PAPA", "WELKOM", "EUROPA"], difficulty: "expert" }
+    { category: "Eurovision winners (1980s)", items: ["MAKING YOUR MIND UP", "HOLD ME NOW", "NE PARTEZ PAS SANS MOI", "EIN BISSCHEN FRIEDEN"], difficulty: "easy" },
+    { category: "Netta song words", items: ["TOY", "CHICKEN", "STUPID", "BOY"], difficulty: "medium" },
+    { category: "Mixed-gender duos at Eurovision (artists)", items: ["ELL & NIKKI", "THE COMMON LINNETS", "KOIT TOOME & LAURA", "STIG RASTA & ELINA BORN"], difficulty: "hard" },
+    { category: "Countries with Eurovision wins both before and after 2000", items: ["SWEDEN", "ISRAEL", "ITALY", "NETHERLANDS"], difficulty: "expert" }
   ],
-  // Board 22: Classic Genres
   [
-    { category: "Popular Genres", items: ["ROCK", "POP", "JAZZ", "FOLK"], difficulty: "easy" },
-    { category: "Host Cities (Spain)", items: ["MADRID", "BARCELONA", "VALENCIA", "SEVILLE"], difficulty: "medium" },
-    { category: "Titles with 'Gold'", items: ["GOLD", "GOLDEN BOY", "GOLDEN", "GOOSEBUMPS"], difficulty: "hard" },
-    { category: "Acts with Props", items: ["KÄÄRIJÄ", "VERKA", "ZDOB", "JOHNNY"], difficulty: "expert" }
+    { category: "Eurovision winners (2000s)", items: ["FLY ON THE WINGS OF LOVE", "I WANNA", "MY NUMBER ONE", "HARD ROCK HALLELUJAH"], difficulty: "easy" },
+    { category: "Participating countries in the Caucasus region", items: ["ARMENIA", "AZERBAIJAN", "GEORGIA", "RUSSIA"], difficulty: "medium" },
+    { category: "Entries disqualified/removed", items: ["JOOST KLEIN", "ANNA ODOBESCU", "THE SOCIAL NETWORK SONG", "DON'T PLAY THAT SONG AGAIN"], difficulty: "hard" },
+    { category: "Host cities on a sea coast", items: ["LISBON", "TEL AVIV", "BAKU", "CANNES"], difficulty: "expert" }
   ],
-  // Board 23: Live Music
   [
-    { category: "Instruments", items: ["VIOLIN", "GUITAR", "DRUMS", "PIANO"], difficulty: "easy" },
-    { category: "Host Cities (Norway)", items: ["OSLO", "BERGEN", "TRONDHEIM", "STAVANGER"], difficulty: "medium" },
-    { category: "Titles with 'Stars'", items: ["STARS", "GUIDING STAR", "STAR", "STARRY"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["IRELAND", "LUXEMBOURG", "LITHUANIA", "AUSTRALIA"], difficulty: "expert" }
+    { category: "Eurovision winners (2010s)", items: ["ONLY TEARDROPS", "RISE LIKE A PHOENIX", "HEROES", "ARCADE"], difficulty: "easy" },
+    { category: "Eurovision slogans (set)", items: ["SHARE THE MOMENT", "FEEL YOUR HEART BEAT!", "JOIN US", "UNITED BY MUSIC"], difficulty: "medium" },
+    { category: "Returning artists (second attempt or more)", items: ["ZELJKO JOKSIMOVIC", "ALEXANDER RYBAK", "IRA LOSCO", "VALENTINA MONETTA"], difficulty: "hard" },
+    { category: "Winners who topped both jury and televote (since 2009)", items: ["EUPHORIA", "SATELLITE", "AMAR PELOS DOIS", "TATTOO"], difficulty: "expert" }
   ],
-  // Board 24: Common Themes
   [
-    { category: "Lyric Themes", items: ["LOVE", "PEACE", "HOPE", "DANCE"], difficulty: "easy" },
-    { category: "Host Cities (Israel)", items: ["JERUSALEM", "TEL AVIV", "HAIFA", "EILAT"], difficulty: "medium" },
-    { category: "Titles with 'Light'", items: ["LIGHT", "LIGHTNING", "SUNLIGHT", "MOONLIGHT"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["LATVIA", "SAN MARINO", "GEORGIA", "BELGIUM"], difficulty: "expert" }
+    { category: "Grand Final runners-up (2010s)", items: ["WE COULD BE THE SAME", "MADNESS OF LOVE", "PARTY FOR EVERYBODY", "A MILLION VOICES"], difficulty: "easy" },
+    { category: "Mediterranean-bordering countries that have won Eurovision", items: ["SPAIN", "ITALY", "FRANCE", "ISRAEL"], difficulty: "medium" },
+    { category: "Balkan national selection shows", items: ["BEOVIZIJA", "DORA", "FESTIVALI I KENGES", "MONTEVIZIJA"], difficulty: "hard" },
+    { category: "Host cities beginning with 'B'", items: ["BELGRADE", "BAKU", "BIRMINGHAM", "BERGEN"], difficulty: "expert" }
   ],
-  // Board 25: Performer Roles
   [
-    { category: "On-Stage Roles", items: ["SINGER", "DANCER", "MUSICIAN", "HOST"], difficulty: "easy" },
-    { category: "Host Cities (Denmark)", items: ["COPENHAGEN", "ODENSE", "AARHUS", "HERNING"], difficulty: "medium" },
-    { category: "Titles with 'Night'", items: ["NIGHT", "STARRY NIGHT", "ONE NIGHT", "IN THE NIGHT"], difficulty: "hard" },
-    { category: "2024 Winners", items: ["THE CODE", "NEMO", "BROKEN", "TRUTH"], difficulty: "expert" }
+    { category: "Eurovision winners (1960s)", items: ["NON HO L'ETA", "POUPEE DE CIRE, POUPEE DE SON", "MERCI, CHERIE", "LA, LA, LA"], difficulty: "easy" },
+    { category: "Titles with 'Dance/Dancing'", items: ["DANCE YOU OFF", "DANCING LASHA TUMBAI", "DANCING IN THE RAIN", "DANCE ALONE"], difficulty: "medium" },
+    { category: "Artists with diacritics in their credited name", items: ["MANS ZELMERLOW", "DADI FREYR", "SEBASTIEN TELLIER", "ZELJKO JOKSIMOVIC"], difficulty: "hard" },
+    { category: "Countries that debuted in the 1990s", items: ["SLOVENIA", "CROATIA", "BOSNIA AND HERZEGOVINA", "NORTH MACEDONIA"], difficulty: "expert" }
   ],
-  // Board 26: Hardware
   [
-    { category: "Stage Tech", items: ["MICROPHONE", "LIGHTS", "CAMERA", "STAGE"], difficulty: "easy" },
-    { category: "Host Cities (Austria)", items: ["VIENNA", "INNSBRUCK", "SALZBURG", "LINZ"], difficulty: "medium" },
-    { category: "Titles with 'Rain'", items: ["RAIN", "RAINBOW", "RAINDROPS", "RAINING"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["CZECHIA", "AUSTRIA", "DENMARK", "ARMENIA"], difficulty: "expert" }
+    { category: "Host cities that are national capitals (set 2)", items: ["OSLO", "ATHENS", "VIENNA", "BAKU"], difficulty: "easy" },
+    { category: "Titles beginning with 'If'", items: ["IF LOVE WAS A CRIME", "IF I HAD YOUR LOVE", "IF I WERE SORRY", "IF WE ALL GIVE A LITTLE"], difficulty: "medium" },
+    { category: "Countries with a Black Sea coastline", items: ["BULGARIA", "ROMANIA", "GEORGIA", "UKRAINE"], difficulty: "hard" },
+    { category: "Eurovision editions with three presenters", items: ["OSLO 2010", "DUSSELDORF 2011", "VIENNA 2015", "KYIV 2017"], difficulty: "expert" }
   ],
-  // Board 27: Voting Logic
   [
-    { category: "Voting Data", items: ["VOTE", "SCORE", "JURY", "PUBLIC"], difficulty: "easy" },
-    { category: "Host Cities (Russia)", items: ["MOSCOW", "ST. PETERSBURG", "KAZAN", "SOCHI"], difficulty: "medium" },
-    { category: "Titles with 'Voice'", items: ["VOICE", "THE VOICE", "VOICES", "VOICEMAIL"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SLOVENIA", "FINLAND", "MOLDOVA", "AZERBAIJAN"], difficulty: "expert" }
+    { category: "Eurovision winners (2020s)", items: ["ZITTI E BUONI", "STEFANIA", "TATTOO", "THE CODE"], difficulty: "easy" },
+    { category: "Song titles with 'Light/Lights'", items: ["CITY LIGHTS", "LIGHTS OFF", "LIGHT ME UP", "LOVE SHINE A LIGHT"], difficulty: "medium" },
+    { category: "Entries featuring rap sections", items: ["YODEL IT!", "IGRANKA", "TRENULETUL", "CHA CHA CHA"], difficulty: "hard" },
+    { category: "Countries that have participated but never won (as of 2024)", items: ["CYPRUS", "ROMANIA", "ICELAND", "MALTA"], difficulty: "expert" }
   ],
-  // Board 28: Event Types
   [
-    { category: "Broadcast Types", items: ["SEMI 1", "SEMI 2", "FINAL", "GRAND FINAL"], difficulty: "easy" },
-    { category: "Host Cities (Finland)", items: ["HELSINKI", "TAMPERE", "TURKU", "ESPOO"], difficulty: "medium" },
-    { category: "Titles with 'Day'", items: ["DAY", "DAILY", "DAYLIGHT", "DAYBREAK"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["LATVIA", "SAN MARINO", "GEORGIA", "BELGIUM"], difficulty: "expert" }
+    { category: "Winning songs with one-word titles (set)", items: ["TATTOO", "ARCADE", "HEROES", "SATELLITE"], difficulty: "easy" },
+    { category: "Cities that have hosted multiple times (set)", items: ["JERUSALEM", "COPENHAGEN", "STOCKHOLM", "DUBLIN"], difficulty: "medium" },
+    { category: "Titles with 'Run/Running'", items: ["RUN AWAY", "RUNNING SCARED", "RUNNING", "RUN WITH THE LIONS"], difficulty: "hard" },
+    { category: "Countries with non-Indo-European official languages", items: ["FINLAND", "HUNGARY", "ESTONIA", "GEORGIA"], difficulty: "expert" }
   ],
-  // Board 29: Locations
   [
-    { category: "Venue Names", items: ["ARENA", "HALL", "STADIUM", "THEATRE"], difficulty: "easy" },
-    { category: "Host Cities (Ireland)", items: ["DUBLIN", "CORK", "LIMERICK", "GALWAY"], difficulty: "medium" },
-    { category: "Titles with 'Way'", items: ["WAY", "EVERYWAY", "MY WAY", "THE WAY"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["PORTUGAL", "LUXEMBOURG", "AUSTRALIA", "ICELAND"], difficulty: "expert" }
+    { category: "Eurovision winners (1990s)", items: ["INSIEME: 1992", "ROCK 'N' ROLL KIDS", "NOCTURNE", "LOVE SHINE A LIGHT"], difficulty: "easy" },
+    { category: "Song titles with a question mark", items: ["WHY ME?", "IS IT TRUE?", "WHAT ABOUT MY DREAMS?", "WHERE ARE YOU?"], difficulty: "medium" },
+    { category: "Titles starting with 'You'", items: ["YOU", "YOU ARE THE ONLY ONE", "YOU LET ME WALK ALONE", "YOU AND ME"], difficulty: "hard" },
+    { category: "Countries that have won exactly once (as of 2024)", items: ["FINLAND", "ESTONIA", "LATVIA", "RUSSIA"], difficulty: "expert" }
   ],
-  // Board 30: Stage Direction
   [
-    { category: "Stage Positions", items: ["FRONT", "BACK", "LEFT", "RIGHT"], difficulty: "easy" },
-    { category: "Host Cities (Greece)", items: ["ATHENS", "THESSALONIKI", "PATRAS", "HERAKLION"], difficulty: "medium" },
-    { category: "Titles with 'Heart'", items: ["HEART", "OPEN HEART", "HEARTBEAT", "IN MY HEART"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["MALTA", "ALBANIA", "GREECE", "SWITZERLAND"], difficulty: "expert" }
+    { category: "Eurovision winners that also hit UK No.1", items: ["WATERLOO", "PUPPET ON A STRING", "SAVE YOUR KISSES FOR ME", "MAKING YOUR MIND UP"], difficulty: "easy" },
+    { category: "Song titles with 'Heart'", items: ["MY HEART GOES BOOM", "MY HEART IS YOURS", "YOUR HEART BELONGS TO ME", "HEARTBEAT"], difficulty: "medium" },
+    { category: "Iberian national selections", items: ["BENIDORM FEST", "FESTIVAL DA CANCAO", "OBJETIVO EUROVISION", "OPERACION TRIUNFO"], difficulty: "hard" },
+    { category: "Countries with a land border to exactly one Eurovision country", items: ["PORTUGAL", "IRELAND", "DENMARK", "SAN MARINO"], difficulty: "expert" }
   ],
-  // Board 31: Official Terms
   [
-    { category: "Scoring Terms", items: ["DOUZE", "NUL", "POINTS", "SCORE"], difficulty: "easy" },
-    { category: "Host Cities (Turkey)", items: ["ISTANBUL", "ANKARA", "IZMIR", "ANTALYA"], difficulty: "medium" },
-    { category: "Titles with 'Moon'", items: ["MOON", "FULL MOON", "MOONLIGHT", "NEW MOON"], difficulty: "hard" },
-    { category: "2024 Finalists", items: ["SERBIA", "UKRAINE", "CYPRUS", "IRELAND"], difficulty: "expert" }
+    { category: "Eurovision acts that went viral/meme status", items: ["SUNSTROKE PROJECT", "VERKA SERDUCHKA", "BURANOVSKIYE BABUSHKI", "DADI OG GAGNAMAGNID"], difficulty: "easy" },
+    { category: "Cities that hosted both Eurovision and the Olympics", items: ["ATHENS", "MOSCOW", "LONDON", "TURIN"], difficulty: "medium" },
+    { category: "Titles referencing fire", items: ["PLAYING WITH FIRE", "FUEGO", "ON FIRE", "THE FIRE IN YOUR EYES"], difficulty: "hard" },
+    { category: "Winners with major international chart success", items: ["ABBA", "CELINE DION", "MANESKIN", "LOREEN"], difficulty: "expert" }
   ],
-  // Board 32: Song Structure
   [
-    { category: "Musical Parts", items: ["INTRO", "OUTRO", "CHORUS", "VERSE"], difficulty: "easy" },
-    { category: "Host Cities (Portugal)", items: ["LISBON", "PORTO", "COIMBRA", "FARO"], difficulty: "medium" },
-    { category: "Titles with 'Love'", items: ["LOVE", "ONLY LOVE", "MY LOVE", "TRUE LOVE"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["CZECHIA", "AUSTRIA", "DENMARK", "ARMENIA"], difficulty: "expert" }
+    { category: "Winners with titles starting with 'A'", items: ["ARCADE", "AMAR PELOS DOIS", "A-BA-NI-BI", "ALL KINDS OF EVERYTHING"], difficulty: "easy" },
+    { category: "Song titles beginning with 'We'", items: ["WE ARE THE WINNERS", "WE COULD BE THE SAME", "WE GOT LOVE", "WE ARE THE HEROES"], difficulty: "medium" },
+    { category: "Eurovision winners who returned as contestants", items: ["JOHNNY LOGAN", "LOREEN", "ALEXANDER RYBAK", "DANA INTERNATIONAL"], difficulty: "hard" },
+    { category: "Televote winners who didn't win overall", items: ["GRANDE AMORE", "YOU ARE THE ONLY ONE", "SPIRIT IN THE SKY", "RIM TIM TAGI DIM"], difficulty: "expert" }
   ],
-  // Board 33: Elements
   [
-    { category: "Natural Elements", items: ["WATER", "FIRE", "EARTH", "AIR"], difficulty: "easy" },
-    { category: "Host Cities (Belgium)", items: ["BRUSSELS", "ANTWERP", "GHENT", "LIEGE"], difficulty: "medium" },
-    { category: "Titles with 'Bird'", items: ["BIRD", "BIRDS", "EAGLE", "SWAN"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SLOVENIA", "FINLAND", "MOLDOVA", "AZERBAIJAN"], difficulty: "expert" }
+    { category: "Eurovision winners 2000s", items: ["EVERYBODY", "WILD DANCES", "MY NUMBER ONE", "HARD ROCK HALLELUJAH"], difficulty: "easy" },
+    { category: "Countries that won within five contests of debut", items: ["SERBIA", "UKRAINE", "AZERBAIJAN", "LATVIA"], difficulty: "medium" },
+    { category: "Songs that got zero points", items: ["DSCHINGHIS KHAN", "A MESSAGE TO YOUR HEART", "LADIES FIRST", "ENCORE"], difficulty: "hard" },
+    { category: "Countries with consecutive wins", items: ["IRELAND", "LUXEMBOURG", "ISRAEL", "SPAIN"], difficulty: "expert" }
   ],
-  // Board 34: Feelings
   [
-    { category: "Emotions in Titles", items: ["JOY", "SORROW", "ANGER", "FEAR"], difficulty: "easy" },
-    { category: "Host Cities (Switzerland)", items: ["LUGANO", "LAUSANNE", "BASEL", "GENEVA"], difficulty: "medium" },
-    { category: "Titles with 'Space'", items: ["SPACE", "SATELLITE", "STARS", "MOON"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["LATVIA", "SAN MARINO", "GEORGIA", "BELGIUM"], difficulty: "expert" }
+    { category: "Eurovision slogans", items: ["BUILDING BRIDGES", "COME TOGETHER", "DARE TO DREAM", "OPEN UP"], difficulty: "easy" },
+    { category: "Nordic participating countries", items: ["DENMARK", "FINLAND", "ICELAND", "NORWAY"], difficulty: "medium" },
+    { category: "Folk meets pop on the ESC stage", items: ["SHUM", "ORO", "LANE MOJE", "SPIRIT IN THE SKY"], difficulty: "hard" },
+    { category: "Countries with five or more wins", items: ["IRELAND", "SWEDEN", "UNITED KINGDOM", "FRANCE"], difficulty: "expert" }
   ],
-  // Board 35: Items
   [
-    { category: "Visual Elements", items: ["SCREEN", "LIGHT", "WIRE", "EFFECT"], difficulty: "easy" },
-    { category: "Host Cities (Luxembourg)", items: ["LUXEMBOURG CITY", "ESCH", "DIFFERDANGE", "DUDELANGE"], difficulty: "medium" },
-    { category: "Titles with 'Life'", items: ["LIFE", "MY LIFE", "LOVE LIFE", "NEW LIFE"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["PORTUGAL", "LUXEMBOURG", "AUSTRALIA", "ICELAND"], difficulty: "expert" }
+    { category: "Eurovision winners 2010s", items: ["ONLY TEARDROPS", "RISE LIKE A PHOENIX", "AMAR PELOS DOIS", "TOY"], difficulty: "easy" },
+    { category: "Song titles with Heart", items: ["HEARTBEAT", "LISTEN TO YOUR HEARTBEATS", "MY HEART IS YOURS", "MY HEART GOES BOOM"], difficulty: "medium" },
+    { category: "Countries whose capital host city is coastal", items: ["GREECE", "DENMARK", "PORTUGAL", "AZERBAIJAN"], difficulty: "hard" },
+    { category: "Artists who performed barefoot on stage", items: ["EMMELIE DE FOREST", "LOREEN", "SANDIE SHAW", "DIMA BILAN"], difficulty: "expert" }
   ],
-  // Board 36: Actions
   [
-    { category: "Performance Verbs", items: ["SING", "DANCE", "JUMP", "RUN"], difficulty: "easy" },
-    { category: "Host Cities (Ukraine)", items: ["KYIV", "LVIV", "ODESSA", "KHARKIV"], difficulty: "medium" },
-    { category: "Titles with 'Color'", items: ["BLUE", "BLACK", "WHITE", "RED"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["MALTA", "ALBANIA", "GREECE", "SWITZERLAND"], difficulty: "expert" }
+    { category: "Host cities beginning with M", items: ["MALMO", "MOSCOW", "MADRID", "MUNICH"], difficulty: "easy" },
+    { category: "Countries participating in Western Asia", items: ["ISRAEL", "AZERBAIJAN", "ARMENIA", "GEORGIA"], difficulty: "medium" },
+    { category: "Countries that debuted in 1994", items: ["ESTONIA", "HUNGARY", "LITHUANIA", "POLAND"], difficulty: "hard" },
+    { category: "Entries featuring rap sections", items: ["IGRANKA", "YODEL IT!", "LIE TO ME", "TRENULETUL"], difficulty: "expert" }
   ],
-  // Board 37: Sound
   [
-    { category: "Audio Terms", items: ["NOTE", "CHORD", "BEAT", "TUNE"], difficulty: "easy" },
-    { category: "Host Cities (Sweden)", items: ["STOCKHOLM", "MALMÖ", "GOTHENBURG", "UPPSALA"], difficulty: "medium" },
-    { category: "Titles with 'Night'", items: ["NIGHT", "MIDNIGHT", "ONE NIGHT", "IN THE NIGHT"], difficulty: "hard" },
-    { category: "Acts from 2024 Final", items: ["SERBIA", "UKRAINE", "CYPRUS", "IRELAND"], difficulty: "expert" }
+    { category: "Eurovision winners 1960s", items: ["NON HO L'ETA", "POUPEE DE CIRE, POUPEE DE SON", "PUPPET ON A STRING", "BOOM BANG-A-BANG"], difficulty: "easy" },
+    { category: "Host cities that are national capitals", items: ["DUBLIN", "JERUSALEM", "ROME", "MOSCOW"], difficulty: "medium" },
+    { category: "Countries that hosted multiple times", items: ["IRELAND", "UNITED KINGDOM", "SWEDEN", "NETHERLANDS"], difficulty: "hard" },
+    { category: "Countries currently inactive as of 2024", items: ["TURKEY", "ANDORRA", "BOSNIA AND HERZEGOVINA", "MONACO"], difficulty: "expert" }
   ],
-  // Board 38: Places
   [
-    { category: "Geographic Terms", items: ["CITY", "TOWN", "STATE", "NATION"], difficulty: "easy" },
-    { category: "Host Cities (Serbia)", items: ["BELGRADE", "NOVI SAD", "NIS", "KRAGUJEVAC"], difficulty: "medium" },
-    { category: "Titles starting 'F'", items: ["FIRE", "FUEGO", "FLY", "FACE"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["CZECHIA", "AUSTRIA", "DENMARK", "ARMENIA"], difficulty: "expert" }
+    { category: "Eurovision winning duos", items: ["ELL & NIKKI", "OLSEN BROTHERS", "BOBBYSOX!", "SECRET GARDEN"], difficulty: "easy" },
+    { category: "Titles beginning with My", items: ["MY NUMBER ONE", "MY LUCKY DAY", "MY FRIEND", "MY STAR"], difficulty: "medium" },
+    { category: "Countries with population under one million", items: ["ICELAND", "MALTA", "SAN MARINO", "MONTENEGRO"], difficulty: "hard" },
+    { category: "Countries that have never won", items: ["ARMENIA", "CYPRUS", "ROMANIA", "GEORGIA"], difficulty: "expert" }
   ],
-  // Board 39: Body
   [
-    { category: "Body Parts in Lyrics", items: ["HAND", "FOOT", "HEAD", "ARM"], difficulty: "easy" },
-    { category: "Host Cities (Estonia)", items: ["TALLINN", "TARTU", "NARVA", "PARNU"], difficulty: "medium" },
-    { category: "Titles starting 'G'", items: ["GOLD", "GIRL", "GOD", "GREEN"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SLOVENIA", "FINLAND", "MOLDOVA", "AZERBAIJAN"], difficulty: "expert" }
+    { category: "Participants outside geographical Europe", items: ["ISRAEL", "AZERBAIJAN", "ARMENIA", "AUSTRALIA"], difficulty: "easy" },
+    { category: "Viral or meme-status Eurovision acts", items: ["SUNSTROKE PROJECT", "VERKA SERDUCHKA", "DADI OG GAGNAMAGNID", "BURANOVSKIYE BABUSHKI"], difficulty: "medium" },
+    { category: "Bird or creature themed titles", items: ["BIRDS", "BLACKBIRD", "BUTTERFLIES", "RISE LIKE A PHOENIX"], difficulty: "hard" },
+    { category: "Countries bordering the Baltic Sea", items: ["ESTONIA", "LATVIA", "LITHUANIA", "POLAND"], difficulty: "expert" }
   ],
-  // Board 40: Sound
   [
-    { category: "Volume Levels", items: ["LOUD", "SOFT", "HIGH", "LOW"], difficulty: "easy" },
-    { category: "Host Cities (Latvia)", items: ["RIGA", "DAUGAVPILS", "LIEPAJA", "JELGAVA"], difficulty: "medium" },
-    { category: "Titles starting 'H'", items: ["HALLELUJAH", "HEROES", "HEART", "HEAVEN"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["LATVIA", "SAN MARINO", "GEORGIA", "BELGIUM"], difficulty: "expert" }
+    { category: "Winning songs with one-word titles", items: ["ARCADE", "EUPHORIA", "SATELLITE", "TATTOO"], difficulty: "easy" },
+    { category: "Countries using Cyrillic as an official script", items: ["RUSSIA", "BELARUS", "SERBIA", "NORTH MACEDONIA"], difficulty: "medium" },
+    { category: "Titles with Run or Running", items: ["RUN AWAY", "RUN WITH THE LIONS", "RUNNING", "RUNNING SCARED"], difficulty: "hard" },
+    { category: "Countries with wins before and after 2000", items: ["SWEDEN", "NETHERLANDS", "ISRAEL", "ITALY"], difficulty: "expert" }
   ],
-  // Board 41: Space
   [
-    { category: "Celestial Items", items: ["SUN", "MOON", "STAR", "PLANET"], difficulty: "easy" },
-    { category: "Host Cities (Azerbaijan)", items: ["BAKU", "GANJA", "SUMQAYIT", "LANKARAN"], difficulty: "medium" },
-    { category: "Titles starting 'I'", items: ["I CAN", "I WILL", "I BELIEVE", "I FEEL"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["PORTUGAL", "LUXEMBOURG", "AUSTRALIA", "ICELAND"], difficulty: "expert" }
+    { category: "Eurovision winners 1990s", items: ["INSIEME 1992", "ROCK 'N' ROLL KIDS", "NOCTURNE", "LOVE SHINE A LIGHT"], difficulty: "easy" },
+    { category: "Top five countries in 2021", items: ["ITALY", "FRANCE", "SWITZERLAND", "UKRAINE"], difficulty: "medium" },
+    { category: "Titles beginning with Love", items: ["LOVE INJECTED", "LOVE KILLS", "LOVE IS BLIND", "LOVE ME BACK"], difficulty: "hard" },
+    { category: "Televote winners who did not win overall", items: ["GRANDE AMORE", "YOU ARE THE ONLY ONE", "SPIRIT IN THE SKY", "RIM TIM TAGI DIM"], difficulty: "expert" }
   ],
-  // Board 42: Time
   [
-    { category: "Duration Words", items: ["HOUR", "DAY", "WEEK", "YEAR"], difficulty: "easy" },
-    { category: "Host Cities (Sweden)", items: ["STOCKHOLM", "MALMÖ", "GOTHENBURG", "UPPSALA"], difficulty: "medium" },
-    { category: "Titles starting 'J'", items: ["JURY", "JOY", "JAZZ", "JUST"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["MALTA", "ALBANIA", "GREECE", "SWITZERLAND"], difficulty: "expert" }
+    { category: "Host cities beginning with B", items: ["BAKU", "BELGRADE", "BIRMINGHAM", "BERGEN"], difficulty: "easy" },
+    { category: "Countries with population under one million", items: ["ICELAND", "MALTA", "SAN MARINO", "MONTENEGRO"], difficulty: "medium" },
+    { category: "Titles with Time", items: ["TIME", "IT'S MY TME", "THIS TIME", "A MATTER OF TIME"], difficulty: "hard" },
+    { category: "Founding participants in 1956", items: ["NETHERLANDS", "SWITZERLAND", "FRANCE", "ITALY"], difficulty: "expert" }
   ],
-  // Board 43: Direction
   [
-    { category: "Directional Words", items: ["UP", "DOWN", "LEFT", "RIGHT"], difficulty: "easy" },
-    { category: "Host Cities (Germany)", items: ["BERLIN", "MUNICH", "FRANKFURT", "DUSSELDORF"], difficulty: "medium" },
-    { category: "Titles starting 'K'", items: ["KALUSH", "KÄÄRIJÄ", "KING", "KISS"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SERBIA", "UKRAINE", "CYPRUS", "IRELAND"], difficulty: "expert" }
+    { category: "Eurovision winner bands and collectives", items: ["TEACH-IN", "BROTHERHOOD OF MAN", "BUCKS FIZZ", "KALUSH ORCHESTRA"], difficulty: "easy" },
+    { category: "Returning artists for the same country", items: ["ZELJKO JOKSIMOVIC", "CAROLA", "IRA LOSCO", "VALENTINA MONETTA"], difficulty: "medium" },
+    { category: "Color words in the title", items: ["GOLDEN BOY", "BLACK SMOKE", "BLUE AND RED", "BLACKBIRD"], difficulty: "hard" },
+    { category: "Countries winning with non-English songs since 2000", items: ["SERBIA", "PORTUGAL", "ITALY", "UKRAINE"], difficulty: "expert" }
   ],
-  // Board 44: Weather
   [
-    { category: "Weather Conditions", items: ["RAIN", "SNOW", "WIND", "SUN"], difficulty: "easy" },
-    { category: "Host Cities (UK)", items: ["LONDON", "LIVERPOOL", "BIRMINGHAM", "BRIGHTON"], difficulty: "medium" },
-    { category: "Titles starting 'N'", items: ["NEMO", "NOCTURNE", "NETTA", "NO"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["CZECHIA", "AUSTRIA", "DENMARK", "ARMENIA"], difficulty: "expert" }
+    { category: "Winners topping both jury and televote since 2009", items: ["FAIRYTALE", "EUPHORIA", "SATELLITE", "TATTOO"], difficulty: "easy" },
+    { category: "Countries that have won exactly once", items: ["FINLAND", "ESTONIA", "LATVIA", "RUSSIA"], difficulty: "medium" },
+    { category: "Acts performing with face coverings", items: ["LORDI", "HATARI", "SUBWOOLFER", "WHO SEE"], difficulty: "hard" },
+    { category: "Finals with zero points since 2000", items: ["CRY BABY", "I AM YOURS", "BLACK SMOKE", "EMBERS"], difficulty: "expert" }
   ],
-  // Board 45: Emotion
   [
-    { category: "Moods in Songs", items: ["HAPPY", "SAD", "ANGRY", "CALM"], difficulty: "easy" },
-    { category: "Host Cities (Italy)", items: ["TURIN", "ROME", "NAPLES", "MILAN"], difficulty: "medium" },
-    { category: "Titles starting 'O'", items: ["ONE", "ONLY", "OUT", "ORO"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SLOVENIA", "FINLAND", "MOLDOVA", "AZERBAIJAN"], difficulty: "expert" }
+    { category: "Host cities beginning with L", items: ["LISBON", "LONDON", "LAUSANNE", "LUGANO"], difficulty: "easy" },
+    { category: "Light themed titles", items: ["CITY LIGHTS", "LIGHTS OFF", "LIGHT ME UP", "LOVE SHINE A LIGHT"], difficulty: "medium" },
+    { category: "Artists who later hosted Eurovision", items: ["MANS ZELMERLOW", "SAKIS ROUVAS", "ELDAR GASIMOV", "NIGAR JAMAL"], difficulty: "hard" },
+    { category: "Mediterranean countries that have won", items: ["SPAIN", "ITALY", "FRANCE", "ISRAEL"], difficulty: "expert" }
   ],
-  // Board 46: Animals
   [
-    { category: "Animal Names", items: ["BIRD", "CAT", "DOG", "FISH"], difficulty: "easy" },
-    { category: "Host Cities (Netherlands)", items: ["AMSTERDAM", "ROTTERDAM", "HAGUE", "HILVERSUM"], difficulty: "medium" },
-    { category: "Titles starting 'P'", items: ["PARIS", "PEACE", "POP", "PHOENIX"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["LATVIA", "SAN MARINO", "GEORGIA", "BELGIUM"], difficulty: "expert" }
+    { category: "Eurovision winners 1950s", items: ["REFRAIN", "NET ALS TOEN", "DORS MON AMOUR", "EEN BEETJE"], difficulty: "easy" },
+    { category: "National selection shows", items: ["BENIDORM FEST", "EESTI LAUL", "SUPERNOVA", "FESTIVAL DA CANCAO"], difficulty: "medium" },
+    { category: "Onomatopoeic or repeated-syllable titles", items: ["DIGGI-LOO DIGGI-LEY", "DING-A-DONG", "BOOM BANG-A-BANG", "LA LA LOVE"], difficulty: "hard" },
+    { category: "Countries that debuted in the 2000s", items: ["ALBANIA", "ANDORRA", "AZERBAIJAN", "SERBIA AND MONTENEGRO"], difficulty: "expert" }
   ],
-  // Board 47: Food
   [
-    { category: "Food in Lyrics", items: ["CAKE", "PIZZA", "BREAD", "FRUIT"], difficulty: "easy" },
-    { category: "Host Cities (Spain)", items: ["MADRID", "BARCELONA", "VALENCIA", "SEVILLE"], difficulty: "medium" },
-    { category: "Titles starting 'Q'", items: ["QUEEN", "QUEST", "QUICK", "QUALIFY"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["PORTUGAL", "LUXEMBOURG", "AUSTRALIA", "ICELAND"], difficulty: "expert" }
+    { category: "Eurovision winners 2021 to 2024", items: ["ZITTI E BUONI", "STEFANIA", "TATTOO", "THE CODE"], difficulty: "easy" },
+    { category: "Cities that hosted both Eurovision and the Olympics", items: ["ATHENS", "MOSCOW", "LONDON", "TURIN"], difficulty: "medium" },
+    { category: "Titles referring to life", items: ["THIS IS MY LIFE", "C'EST LA VIE", "ONE LIFE", "1 LIFE"], difficulty: "hard" },
+    { category: "Entries in minority or regional languages", items: ["VIVER SENZA TEI", "MAMA CORSICA", "1944", "FULENN"], difficulty: "expert" }
   ],
-  // Board 48: Drink
   [
-    { category: "Drinks in Songs", items: ["WATER", "WINE", "COFFEE", "TEA"], difficulty: "easy" },
-    { category: "Host Cities (Norway)", items: ["OSLO", "BERGEN", "TRONDHEIM", "STAVANGER"], difficulty: "medium" },
-    { category: "Titles starting 'R'", items: ["RISE", "ROCK", "RAIN", "RIVER"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["MALTA", "ALBANIA", "GREECE", "SWITZERLAND"], difficulty: "expert" }
+    { category: "Solo female Eurovision winners", items: ["LOREEN", "NETTA", "CONCHITA WURST", "JAMALA"], difficulty: "easy" },
+    { category: "Animal themed titles", items: ["WOLVES OF THE SEA", "BIRDS", "BLACKBIRD", "BUTTERFLIES"], difficulty: "medium" },
+    { category: "Countries with a top three finish on debut", items: ["SERBIA", "LATVIA", "POLAND", "SWITZERLAND"], difficulty: "hard" },
+    { category: "Barbara Dex Award winners", items: ["DUSTIN THE TURKEY", "VERKA SERDUCHKA", "KALOMIRA", "AMINATA"], difficulty: "expert" }
   ],
-  // Board 49: Clothes
   [
-    { category: "Clothing in Songs", items: ["HAT", "SHIRT", "PANTS", "SHOES"], difficulty: "easy" },
-    { category: "Host Cities (Israel)", items: ["JERUSALEM", "TEL AVIV", "HAIFA", "EILAT"], difficulty: "medium" },
-    { category: "Titles starting 'U'", items: ["UKRAINE", "UNDER", "UP", "UN BANC"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SERBIA", "UKRAINE", "CYPRUS", "IRELAND"], difficulty: "expert" }
+    { category: "Grand Final runners-up", items: ["A MILLION VOICES", "CALM AFTER THE STORM", "SOUND OF SILENCE", "CHA CHA CHA"], difficulty: "easy" },
+    { category: "Fire-themed titles", items: ["FUEGO", "PLAYING WITH FIRE", "ON FIRE", "START A FIRE"], difficulty: "medium" },
+    { category: "Entries with prominent whistling", items: ["IF LOVE WAS A CRIME", "J'AI CHERCHE", "CAROBAN", "AVEN ROMALE"], difficulty: "hard" },
+    { category: "Staging with kinetic props", items: ["I CAN'T GO ON", "RUNNING", "THE CODE", "SPACE MAN"], difficulty: "expert" }
   ],
-  // Board 50: Colors
   [
-    { category: "Colors in Songs", items: ["RED", "BLUE", "GREEN", "YELLOW"], difficulty: "easy" },
-    { category: "Host Cities (Denmark)", items: ["COPENHAGEN", "ODENSE", "AARHUS", "HERNING"], difficulty: "medium" },
-    { category: "Titles starting 'V'", items: ["VOICE", "VOICES", "VOLARE", "VERKA"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["CZECHIA", "AUSTRIA", "DENMARK", "ARMENIA"], difficulty: "expert" }
+    { category: "Eurovision winners 1990s", items: ["FANGAD AV EN STORMVIND", "IN YOUR EYES", "THE VOICE", "LOVE SHINE A LIGHT"], difficulty: "easy" },
+    { category: "Titles starting with I", items: ["I CAN'T GO ON", "I FEED YOU MY LOVE", "I STAND", "I DO"], difficulty: "medium" },
+    { category: "Returning artists who improved their result", items: ["CAROLA", "DIMA BILAN", "ELENA PAPARIZOU", "MARCO MENGONI"], difficulty: "hard" },
+    { category: "Popera or classical-crossover entries", items: ["LA FORZA", "IT'S MY LIFE", "MY FRIEND", "GRANDE AMORE"], difficulty: "expert" }
   ],
-  // Board 51: Numbers
   [
-    { category: "Winning Numbers", items: ["ONE", "TWO", "THREE", "FOUR"], difficulty: "easy" },
-    { category: "Host Cities (Austria)", items: ["VIENNA", "INNSBRUCK", "SALZBURG", "LINZ"], difficulty: "medium" },
-    { category: "Titles starting 'W'", items: ["WATERLOO", "WOLF", "WHITE", "WILD"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SLOVENIA", "FINLAND", "MOLDOVA", "AZERBAIJAN"], difficulty: "expert" }
+    { category: "Host cities that are Nordic capitals", items: ["STOCKHOLM", "COPENHAGEN", "HELSINKI", "OSLO"], difficulty: "easy" },
+    { category: "Celestial titles", items: ["SATELLITE", "FALLING STARS", "MY STAR", "THE MOON IS RISING"], difficulty: "medium" },
+    { category: "Grand Final opening songs", items: ["TICK-TOCK", "HERE FOR YOU", "L'ENFER ET MOI", "EL DIABLO"], difficulty: "hard" },
+    { category: "Hosts that won on home soil", items: ["IRELAND", "LUXEMBOURG", "ISRAEL", "SPAIN"], difficulty: "expert" }
   ],
-  // Board 52: Logo Shapes
   [
-    { category: "Logo Shapes", items: ["HEART", "STAR", "BUTTERFLY", "FLOWER"], difficulty: "easy" },
-    { category: "Host Cities (Russia)", items: ["MOSCOW", "ST. PETERSBURG", "KAZAN", "SOCHI"], difficulty: "medium" },
-    { category: "Titles starting 'Y'", items: ["YES", "YOU", "YEAR", "YESTERDAY"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["LATVIA", "SAN MARINO", "GEORGIA", "BELGIUM"], difficulty: "expert" }
+    { category: "Eurovision winners 1980s", items: ["WHAT'S ANOTHER YEAR", "LA DET SWINGE", "EIN BISSCHEN FRIEDEN", "NE PARTEZ PAS SANS MOI"], difficulty: "easy" },
+    { category: "Imperative titles", items: ["SHAKE IT", "RUN AWAY", "YODEL IT!", "SAY NA NA NA"], difficulty: "medium" },
+    { category: "Entries with violins on stage", items: ["FAIRYTALE", "BELIEVE", "TIME", "LANE MOJE"], difficulty: "hard" },
+    { category: "Jury winners who didn't win overall", items: ["MADNESS OF LOVE", "SOUND OF SILENCE", "NOBODY BUT YOU", "TOUT L'UNIVERS"], difficulty: "expert" }
   ],
-  // Board 53: Size
   [
-    { category: "Group Sizes", items: ["SOLO", "DUO", "TRIO", "QUARTET"], difficulty: "easy" },
-    { category: "Host Cities (Finland)", items: ["HELSINKI", "TAMPERE", "TURKU", "ESPOO"], difficulty: "medium" },
-    { category: "Titles starting 'Z'", items: ["ZITTI", "ZARI", "ZERO", "ZDOB"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["PORTUGAL", "LUXEMBOURG", "AUSTRALIA", "ICELAND"], difficulty: "expert" }
+    { category: "Sibling acts", items: ["OLSEN BROTHERS", "TOLMACHEVY SISTERS", "JEDWARD", "OG3NE"], difficulty: "easy" },
+    { category: "Male-female duos", items: ["ELL & NIKKI", "THE COMMON LINNETS", "ZALA KRALJ & GASPER SANTL", "ILINCA & ALEX FLOREA"], difficulty: "medium" },
+    { category: "Eurovision slogans", items: ["CELEBRATE DIVERSITY", "ALL ABOARD!", "LIGHT YOUR FIRE!", "WE ARE ONE"], difficulty: "hard" },
+    { category: "Countries that withdrew and returned in the 2010s", items: ["PORTUGAL", "ROMANIA", "BULGARIA", "UKRAINE"], difficulty: "expert" }
   ],
-  // Board 54: Metals
   [
-    { category: "Metal Types in Songs", items: ["GOLD", "SILVER", "IRON", "STEEL"], difficulty: "easy" },
-    { category: "Host Cities (Ireland)", items: ["DUBLIN", "CORK", "LIMERICK", "GALWAY"], difficulty: "medium" },
-    { category: "Titles with 'Star'", items: ["STAR", "STARS", "STARRY", "STORY"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["MALTA", "ALBANIA", "GREECE", "SWITZERLAND"], difficulty: "expert" }
+    { category: "Mononym artists", items: ["LOREEN", "JAMALA", "NETTA", "ANOUK"], difficulty: "easy" },
+    { category: "Titles beginning with My", items: ["MY NUMBER ONE", "MY LUCKY DAY", "MY FRIEND", "MY STAR"], difficulty: "medium" },
+    { category: "Countries with both a win and a last place", items: ["UNITED KINGDOM", "NORWAY", "GERMANY", "SWITZERLAND"], difficulty: "hard" },
+    { category: "Rap blended into pop", items: ["CHA CHA CHA", "TRENULETUL", "YODEL IT!", "LIE TO ME"], difficulty: "expert" }
   ],
-  // Board 55: Elements
   [
-    { category: "Elemental Words", items: ["FIRE", "WATER", "WIND", "ROCK"], difficulty: "easy" },
-    { category: "Host Cities (Greece)", items: ["ATHENS", "THESSALONIKI", "PATRAS", "HERAKLION"], difficulty: "medium" },
-    { category: "Titles with 'Moon'", items: ["MOON", "FULL MOON", "MOONLIGHT", "NEW MOON"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SERBIA", "UKRAINE", "CYPRUS", "IRELAND"], difficulty: "expert" }
+    { category: "Titles with exclamation marks", items: ["HEY MAMMA!", "YODEL IT!", "OPA!", "HVALA, NE!"], difficulty: "easy" },
+    { category: "Creature themed titles", items: ["BIRDS", "BLACKBIRD", "BUTTERFLIES", "WOLVES OF THE SEA"], difficulty: "medium" },
+    { category: "Eurovision songs that went viral", items: ["ARCADE", "SNAP", "THINK ABOUT THINGS", "SHUM"], difficulty: "hard" },
+    { category: "Countries with 30+ years between wins", items: ["AUSTRIA", "NETHERLANDS", "ITALY", "SWITZERLAND"], difficulty: "expert" }
   ],
-  // Board 56: Seasons
   [
-    { category: "Seasons in Songs", items: ["SPRING", "SUMMER", "FALL", "WINTER"], difficulty: "easy" },
-    { category: "Host Cities (Turkey)", items: ["ISTANBUL", "ANKARA", "IZMIR", "ANTALYA"], difficulty: "medium" },
-    { category: "Titles with 'Love'", items: ["LOVE", "ONLY LOVE", "MY LOVE", "TRUE LOVE"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["CZECHIA", "AUSTRIA", "DENMARK", "ARMENIA"], difficulty: "expert" }
+    { category: "French-language winners", items: ["DORS MON AMOUR", "UN PREMIER AMOUR", "L'OISEAU ET L'ENFANT", "NE PARTEZ PAS SANS MOI"], difficulty: "easy" },
+    { category: "Portuguese-language entries", items: ["AMAR PELOS DOIS", "O JARDIM", "TELEMOVEIS", "AI CORACAO"], difficulty: "medium" },
+    { category: "Songs featuring rap sections", items: ["SHUM", "1944", "SNAP", "RANDAJAD"], difficulty: "hard" },
+    { category: "Countries with wins in Eurovision and Junior Eurovision", items: ["ITALY", "FRANCE", "SPAIN", "NETHERLANDS"], difficulty: "expert" }
   ],
-  // Board 57: Directions
   [
-    { category: "Compass Points", items: ["NORTH", "SOUTH", "EAST", "WEST"], difficulty: "easy" },
-    { category: "Host Cities (Portugal)", items: ["LISBON", "PORTO", "COIMBRA", "FARO"], difficulty: "medium" },
-    { category: "Titles with 'Bird'", items: ["BIRD", "BIRDS", "EAGLE", "SWAN"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SLOVENIA", "FINLAND", "MOLDOVA", "AZERBAIJAN"], difficulty: "expert" }
+    { category: "Solo male winners since 2000", items: ["BELIEVE", "FAIRYTALE", "AMAR PELOS DOIS", "ARCADE"], difficulty: "easy" },
+    { category: "One-word titles starting with S", items: ["SATELLITE", "SUUS", "SHUM", "SOLDI"], difficulty: "medium" },
+    { category: "LED or AR-driven staging illusions", items: ["HEROES", "YOU ARE THE ONLY ONE", "SCREAM", "SKELETONS"], difficulty: "hard" },
+    { category: "3rd-place finishers in the 2010s", items: ["PLAYING WITH FIRE", "POPULAR", "NIJE LJUBAV STVAR", "GRANDE AMORE"], difficulty: "expert" }
   ],
-  // Board 58: Continents
   [
-    { category: "Geographic Units", items: ["EUROPE", "ASIA", "AFRICA", "AMERICA"], difficulty: "easy" },
-    { category: "Host Cities (Belgium)", items: ["BRUSSELS", "ANTWERP", "GHENT", "LIEGE"], difficulty: "medium" },
-    { category: "Titles with 'Space'", items: ["SPACE", "SATELLITE", "STARS", "MOON"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["LATVIA", "SAN MARINO", "GEORGIA", "BELGIUM"], difficulty: "expert" }
+    { category: "Host cities beginning with B", items: ["BELGRADE", "BAKU", "BIRMINGHAM", "BRIGHTON"], difficulty: "easy" },
+    { category: "Weather in the title", items: ["SUNLIGHT", "STORM", "FLOWER IN THE SNOW", "RAIN OF REVOLUTION"], difficulty: "medium" },
+    { category: "Returnees who later won", items: ["DIMA BILAN", "CAROLA", "JOHNNY LOGAN", "LOREEN"], difficulty: "hard" },
+    { category: "Cities hosting three or more times", items: ["DUBLIN", "LONDON", "STOCKHOLM", "COPENHAGEN"], difficulty: "expert" }
   ],
-  // Board 59: Tools
   [
-    { category: "Stage Construction", items: ["LED", "TRUSS", "CABLE", "MIC"], difficulty: "easy" },
-    { category: "Host Cities (Switzerland)", items: ["LUGANO", "LAUSANNE", "BASEL", "GENEVA"], difficulty: "medium" },
-    { category: "Titles with 'Life'", items: ["LIFE", "MY LIFE", "LOVE LIFE", "NEW LIFE"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["PORTUGAL", "LUXEMBOURG", "AUSTRALIA", "ICELAND"], difficulty: "expert" }
+    { category: "2010s female solo winners", items: ["EUPHORIA", "ONLY TEARDROPS", "RISE LIKE A PHOENIX", "TOY"], difficulty: "easy" },
+    { category: "Light-themed titles", items: ["CITY LIGHTS", "LIGHTS OFF", "LIGHT ME UP", "LOVE SHINE A LIGHT"], difficulty: "medium" },
+    { category: "2010s finalists mostly not in English", items: ["SUUS", "KEDVESEM", "OCCIDENTALI'S KARMA", "AMAR PELOS DOIS"], difficulty: "hard" },
+    { category: "Artists in both Junior Eurovision and Eurovision", items: ["IRU", "STEFANIA", "DESTINY", "NEVENA BOZOVIC"], difficulty: "expert" }
   ],
-  // Board 60: Action
   [
-    { category: "Song Verb Themes", items: ["FLY", "RISE", "SING", "DANCE"], difficulty: "easy" },
-    { category: "Host Cities (Luxembourg)", items: ["LUXEMBOURG CITY", "ESCH", "DIFFERDANGE", "DUDELANGE"], difficulty: "medium" },
-    { category: "Titles with 'Color'", items: ["BLUE", "BLACK", "WHITE", "RED"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["MALTA", "ALBANIA", "GREECE", "SWITZERLAND"], difficulty: "expert" }
+    { category: "Eurovision winners 1970s", items: ["DING-A-DONG", "WATERLOO", "SAVE YOUR KISSES FOR ME", "A-BA-NI-BI"], difficulty: "easy" },
+    { category: "Titles beginning with Hold", items: ["HOLD ME NOW", "HOLD ME", "HOLD ON BE STRONG", "HOLD ON TO OUR LOVE"], difficulty: "medium" },
+    { category: "Non-capital host cities", items: ["BRIGHTON", "HARROGATE", "MALMO", "LIVERPOOL"], difficulty: "hard" },
+    { category: "Countries with 10+ years out of the contest", items: ["TURKEY", "ANDORRA", "MONACO", "LUXEMBOURG"], difficulty: "expert" }
   ],
-  // Board 61: Winners 80s
   [
-    { category: "80s Winning Songs", items: ["WHAT'S ANOTHER", "MAKING YOUR", "SI LA VIE", "DIGGI-LOO"], difficulty: "easy" },
-    { category: "Host Cities (Ukraine)", items: ["KYIV", "LVIV", "ODESSA", "KHARKIV"], difficulty: "medium" },
-    { category: "Titles with 'Night'", items: ["NIGHT", "MIDNIGHT", "ONE NIGHT", "IN THE NIGHT"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SERBIA", "UKRAINE", "CYPRUS", "IRELAND"], difficulty: "expert" }
+    { category: "Iconic interval acts", items: ["RIVERDANCE", "LOVE LOVE PEACE PEACE", "ROCK THE ROOF", "SWITCH SONG"], difficulty: "easy" },
+    { category: "Grand Final opening songs", items: ["UNDER THE LADDER", "WHAT'S THE PRESSURE", "HERE FOR YOU", "I FEEL ALIVE"], difficulty: "medium" },
+    { category: "Countries with land in the name", items: ["FINLAND", "ICELAND", "IRELAND", "NETHERLANDS"], difficulty: "hard" },
+    { category: "Countries that returned after a long absence", items: ["ITALY", "CZECH REPUBLIC", "MONTENEGRO", "LUXEMBOURG"], difficulty: "expert" }
   ],
-  // Board 62: Winners 70s
   [
-    { category: "70s Winning Songs", items: ["WATERLOO", "DING-A-DONG", "SAVE YOUR", "HALLELUJAH"], difficulty: "easy" },
-    { category: "Host Cities (Austria)", items: ["VIENNA", "INNSBRUCK", "SALZBURG", "LINZ"], difficulty: "medium" },
-    { category: "Titles starting 'F'", items: ["FIRE", "FUEGO", "FLY", "FACE"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["CZECHIA", "AUSTRIA", "DENMARK", "ARMENIA"], difficulty: "expert" }
+    { category: "Entries with viral choreographies", items: ["UNO", "FUEGO", "SLOMO", "TOY"], difficulty: "easy" },
+    { category: "Closing songs of recent Grand Finals", items: ["ONLY LOVE SURVIVES", "GRANDE AMORE", "ADRENALINA", "I WROTE A SONG"], difficulty: "medium" },
+    { category: "Countries hosting in a non-capital city", items: ["UNITED KINGDOM", "SWEDEN", "GERMANY", "IRELAND"], difficulty: "hard" },
+    { category: "Countries whose first win came in the 21st century", items: ["UKRAINE", "SERBIA", "AZERBAIJAN", "PORTUGAL"], difficulty: "expert" }
   ],
-  // Board 63: Winners 60s
   [
-    { category: "60s Winning Songs", items: ["PUPPET ON", "LA LA LA", "BOOM BANG", "VIVO CANTANDO"], difficulty: "easy" },
-    { category: "Host Cities (Serbia)", items: ["BELGRADE", "NOVI SAD", "NIS", "KRAGUJEVAC"], difficulty: "medium" },
-    { category: "Titles starting 'G'", items: ["GOLD", "GIRL", "GOD", "GREEN"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SLOVENIA", "FINLAND", "MOLDOVA", "AZERBAIJAN"], difficulty: "expert" }
+    { category: "Celestial imagery in the title", items: ["SATELLITE", "THE MOON IS RISING", "CHILDREN OF THE UNIVERSE", "FALLING STARS"], difficulty: "easy" },
+    { category: "Entries featuring a violin on stage", items: ["FAIRYTALE", "BELIEVE", "TIME", "LANE MOJE"], difficulty: "medium" },
+    { category: "Countries with capitals starting B", items: ["GERMANY", "ROMANIA", "AZERBAIJAN", "SERBIA"], difficulty: "hard" },
+    { category: "Countries with a Black Sea coastline", items: ["BULGARIA", "ROMANIA", "GEORGIA", "UKRAINE"], difficulty: "expert" }
   ],
-  // Board 64: Winners 50s
   [
-    { category: "50s Winning Songs", items: ["REFRAIN", "DORSET", "VOLARE", "TOM PILLIBI"], difficulty: "easy" },
-    { category: "Host Cities (Estonia)", items: ["TALLINN", "TARTU", "NARVA", "PARNU"], difficulty: "medium" },
-    { category: "Titles starting 'H'", items: ["HALLELUJAH", "HEROES", "HEART", "HEAVEN"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["LATVIA", "SAN MARINO", "GEORGIA", "BELGIUM"], difficulty: "expert" }
+    { category: "Supernatural-themed titles", items: ["GHOST", "MONSTERS", "SKELETONS", "SPIRIT IN THE SKY"], difficulty: "easy" },
+    { category: "Stylized all-caps artist names", items: ["KEIINO", "AWS", "OG3NE", "IVAN"], difficulty: "medium" },
+    { category: "Countries that withdrew and have not returned", items: ["TURKEY", "ANDORRA", "BOSNIA AND HERZEGOVINA", "MOROCCO"], difficulty: "hard" },
+    { category: "Countries with exactly one win", items: ["PORTUGAL", "AZERBAIJAN", "GREECE", "RUSSIA"], difficulty: "expert" }
   ],
-  // Board 65: Winners 90s
   [
-    { category: "90s Winning Songs", items: ["INSIEME", "FANGAD AV", "WHY ME", "IN YOUR EYES"], difficulty: "easy" },
-    { category: "Host Cities (Latvia)", items: ["RIGA", "DAUGAVPILS", "LIEPAJA", "JELGAVA"], difficulty: "medium" },
-    { category: "Titles starting 'I'", items: ["I CAN", "I WILL", "I BELIEVE", "I FEEL"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["PORTUGAL", "LUXEMBOURG", "AUSTRALIA", "ICELAND"], difficulty: "expert" }
+    { category: "Nonsense or invented words in the title", items: ["SANOMI", "DIGGI-LOO DIGGI-LEY", "DUM TEK TEK", "DANCING LASHA TUMBAI"], difficulty: "easy" },
+    { category: "2020 artists who returned in 2021", items: ["DADI OG GAGNAMAGNID", "THE ROOP", "GO_A", "GJON'S TEARS"], difficulty: "medium" },
+    { category: "1993 pre-qualification participants", items: ["SLOVENIA", "CROATIA", "BOSNIA AND HERZEGOVINA", "ESTONIA"], difficulty: "hard" },
+    { category: "Nordic participating countries", items: ["DENMARK", "FINLAND", "ICELAND", "NORWAY"], difficulty: "expert" }
   ],
-  // Board 66: Winners 00s
   [
-    { category: "00s Winning Songs", items: ["EVERYBODY", "I WANNA", "WILD DANCES", "MY NUMBER"], difficulty: "easy" },
-    { category: "Host Cities (Azerbaijan)", items: ["BAKU", "GANJA", "SUMQAYIT", "LANKARAN"], difficulty: "medium" },
-    { category: "Titles starting 'J'", items: ["JURY", "JOY", "JAZZ", "JUST"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["MALTA", "ALBANIA", "GREECE", "SWITZERLAND"], difficulty: "expert" }
+    { category: "Host cities before and after 2000", items: ["STOCKHOLM", "COPENHAGEN", "OSLO", "MALMO"], difficulty: "easy" },
+    { category: "Color words in the title", items: ["GOLDEN BOY", "BLACKBIRD", "BLACK SMOKE", "BLUE AND RED"], difficulty: "medium" },
+    { category: "Countries with capitals starting L", items: ["UNITED KINGDOM", "PORTUGAL", "LUXEMBOURG", "SLOVENIA"], difficulty: "hard" },
+    { category: "Countries bordering the Baltic Sea", items: ["ESTONIA", "LATVIA", "LITHUANIA", "POLAND"], difficulty: "expert" }
   ],
-  // Board 67: Winners 10s
   [
-    { category: "10s Winning Songs", items: ["SATELLITE", "RUNNING", "EUPHORIA", "ONLY"], difficulty: "easy" },
-    { category: "Host Cities (Sweden)", items: ["STOCKHOLM", "MALMÖ", "GOTHENBURG", "UPPSALA"], difficulty: "medium" },
-    { category: "Titles starting 'K'", items: ["KALUSH", "KÄÄRIJÄ", "KING", "KISS"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SERBIA", "UKRAINE", "CYPRUS", "IRELAND"], difficulty: "expert" }
+    { category: "Eurovision slogans", items: ["ALL ABOARD!", "THE SOUND OF BEAUTY", "OPEN UP", "DARE TO DREAM"], difficulty: "easy" },
+    { category: "Space and physics titles", items: ["SPACE MAN", "SPACE", "ZERO GRAVITY", "GRAVITY"], difficulty: "medium" },
+    { category: "Island countries in the contest", items: ["CYPRUS", "MALTA", "ICELAND", "UNITED KINGDOM"], difficulty: "hard" },
+    { category: "Founding 1956 participants", items: ["NETHERLANDS", "SWITZERLAND", "FRANCE", "ITALY"], difficulty: "expert" }
   ],
-  // Board 68: Winners 20s
   [
-    { category: "20s Winning Songs", items: ["ZITTI", "STEFANIA", "TATTOO", "THE CODE"], difficulty: "easy" },
-    { category: "Host Cities (Germany)", items: ["BERLIN", "MUNICH", "FRANKFURT", "DUSSELDORF"], difficulty: "medium" },
-    { category: "Titles starting 'N'", items: ["NEMO", "NOCTURNE", "NETTA", "NO"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["CZECHIA", "AUSTRIA", "DENMARK", "ARMENIA"], difficulty: "expert" }
+    { category: "Titles beginning with You", items: ["YOU", "YOU ARE THE ONLY ONE", "YOU LET ME WALK ALONE", "YOU AND ME"], difficulty: "easy" },
+    { category: "Countries with five or more wins", items: ["IRELAND", "SWEDEN", "UNITED KINGDOM", "FRANCE"], difficulty: "medium" },
+    { category: "Countries debuting in the 1990s", items: ["SLOVENIA", "CROATIA", "BOSNIA AND HERZEGOVINA", "NORTH MACEDONIA"], difficulty: "hard" },
+    { category: "Titles with exclamation marks", items: ["HEY MAMMA!", "YODEL IT!", "OPA!", "HVALA, NE!"], difficulty: "expert" }
   ],
-  // Board 69: Junior ESC
   [
-    { category: "Junior Winners", items: ["DESTINY", "NEVENA", "VINCENZO", "MALENA"], difficulty: "easy" },
-    { category: "Host Cities (UK)", items: ["LONDON", "LIVERPOOL", "BIRMINGHAM", "BRIGHTON"], difficulty: "medium" },
-    { category: "Titles starting 'O'", items: ["ONE", "ONLY", "OUT", "ORO"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SLOVENIA", "FINLAND", "MOLDOVA", "AZERBAIJAN"], difficulty: "expert" }
+    { category: "Heart in the title", items: ["HEARTBEAT", "BREAK A BROKEN HEART", "MY HEART IS YOURS", "MY HEART GOES BOOM"], difficulty: "easy" },
+    { category: "Countries using Cyrillic officially", items: ["RUSSIA", "BELARUS", "SERBIA", "NORTH MACEDONIA"], difficulty: "medium" },
+    { category: "Titles with numbers", items: ["ONE LIFE", "TEN YEARS", "THREE MINUTES TO EARTH", "1944"], difficulty: "hard" },
+    { category: "Countries that have never won", items: ["CYPRUS", "MALTA", "LITHUANIA", "ICELAND"], difficulty: "expert" }
   ],
-  // Board 70: Sanremo
   [
-    { category: "Sanremo Winners", items: ["ANGELINA", "MARCO", "MAHMOOD", "MANESKIN"], difficulty: "easy" },
-    { category: "Host Cities (Italy)", items: ["TURIN", "ROME", "NAPLES", "MILAN"], difficulty: "medium" },
-    { category: "Titles starting 'P'", items: ["PARIS", "PEACE", "POP", "PHOENIX"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["LATVIA", "SAN MARINO", "GEORGIA", "BELGIUM"], difficulty: "expert" }
+    { category: "Winning songs with one-word titles", items: ["ARCADE", "TATTOO", "SATELLITE", "HEROES"], difficulty: "easy" },
+    { category: "Countries debuting in the 2000s", items: ["ALBANIA", "ANDORRA", "AZERBAIJAN", "SERBIA AND MONTENEGRO"], difficulty: "medium" },
+    { category: "Titles beginning with My", items: ["MY NUMBER ONE", "MY LUCKY DAY", "MY FRIEND", "MY STAR"], difficulty: "hard" },
+    { category: "Participants outside geographical Europe", items: ["ISRAEL", "AZERBAIJAN", "ARMENIA", "AUSTRALIA"], difficulty: "expert" }
   ],
-  // Board 71: Duos
   [
-    { category: "Famous Duos", items: ["JEDWARD", "BOBBYSOX", "ELL & NIKKI", "TOLMACHEVY"], difficulty: "easy" },
-    { category: "Host Cities (Netherlands)", items: ["AMSTERDAM", "ROTTERDAM", "HAGUE", "HILVERSUM"], difficulty: "medium" },
-    { category: "Titles starting 'Q'", items: ["QUEEN", "QUEST", "QUICK", "QUALIFY"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["PORTUGAL", "LUXEMBOURG", "AUSTRALIA", "ICELAND"], difficulty: "expert" }
+    { category: "Food and drink in titles", items: ["CHEESECAKE", "CAKE TO BAKE", "VODKA", "SUGAR"], difficulty: "easy" },
+    { category: "Communication-themed titles", items: ["CALL ME", "TICK-TOCK - CROATIA", "THE SOCIAL NETWORK SONG", "TELEMOVEIS"], difficulty: "medium" },
+    { category: "Titles with apostrophes", items: ["WHAT'S ANOTHER YEAR", "DON'T COME EASY", "I'M ALIVE", "IT'S MY LIFE"], difficulty: "hard" },
+    { category: "Female trios at Eurovision", items: ["FEMINNEM", "OG3NE", "SEREBRO", "HURRICANE"], difficulty: "expert" }
   ],
-  // Board 72: Trios
   [
-    { category: "Famous Trios", items: ["KEIINO", "HURRICANE", "LAS KETCHUP", "HERREYS"], difficulty: "easy" },
-    { category: "Host Cities (Spain)", items: ["MADRID", "BARCELONA", "VALENCIA", "SEVILLE"], difficulty: "medium" },
-    { category: "Titles starting 'R'", items: ["RISE", "ROCK", "RAIN", "RIVER"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["MALTA", "ALBANIA", "GREECE", "SWITZERLAND"], difficulty: "expert" }
+    { category: "One-word titles of four letters", items: ["HALO", "HOME", "SNAP", "TIME - BELARUS"], difficulty: "easy" },
+    { category: "Heaven and hell imagery in titles", items: ["ANGEL", "FALLEN ANGEL", "EL DIABLO", "TAKE ME TO YOUR HEAVEN"], difficulty: "medium" },
+    { category: "Entries credited to multiple artists", items: ["PLAYING WITH FIRE", "RUN AWAY", "IGRANKA", "ADRENALINA"], difficulty: "hard" },
+    { category: "Host cities that stepped in for another country", items: ["EDINBURGH", "BRIGHTON", "THE HAGUE", "LIVERPOOL"], difficulty: "expert" }
   ],
-  // Board 73: Returnees
   [
-    { category: "Returning Artists", items: ["CAROLA", "SELMA", "ALEXANDER", "NATALIA"], difficulty: "easy" },
-    { category: "Host Cities (Norway)", items: ["OSLO", "BERGEN", "TRONDHEIM", "STAVANGER"], difficulty: "medium" },
-    { category: "Titles starting 'U'", items: ["UKRAINE", "UNDER", "UP", "UN BANC"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SERBIA", "UKRAINE", "CYPRUS", "IRELAND"], difficulty: "expert" }
+    { category: "Celestial bodies in the title", items: ["SPACE MAN", "THE MOON IS RISING", "SUNLIGHT", "FALLING STARS"], difficulty: "easy" },
+    { category: "Mythic or famous women in titles", items: ["CLEOPATRA", "MATA HARI", "JEZEBEL", "APHRODISIAC"], difficulty: "medium" },
+    { category: "Titles meaning love in various languages", items: ["AMAR PELOS DOIS", "L'AMOUR EST BLEU", "L'AMORE E FEMMINA", "NIJE LJUBAV STVAR"], difficulty: "hard" },
+    { category: "Night-themed titles", items: ["TONIGHT AGAIN", "THIS NIGHT", "MIDNIGHT GOLD", "NOCTURNE"], difficulty: "expert" }
   ],
-  // Board 74: Languages
   [
-    { category: "Winning Languages", items: ["ENGLISH", "FRENCH", "HEBREW", "ITALIAN"], difficulty: "easy" },
-    { category: "Host Cities (Israel)", items: ["JERUSALEM", "TEL AVIV", "HAIFA", "EILAT"], difficulty: "medium" },
-    { category: "Titles starting 'V'", items: ["VOICE", "VOICES", "VOLARE", "VERKA"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["CZECHIA", "AUSTRIA", "DENMARK", "ARMENIA"], difficulty: "expert" }
+    { category: "Time-themed titles", items: ["TICK-TOCK", "THESE DAYS", "TIME", "TEN YEARS"], difficulty: "easy" },
+    { category: "Mononym Eurovision artists", items: ["NETTA", "JAMALA", "ANOUK", "KÄÄRIJÄ"], difficulty: "medium" },
+    { category: "Solitude-themed titles", items: ["DANCE ALONE", "LEAVE ME ALONE", "LONELY PLANET", "SOLO"], difficulty: "hard" },
+    { category: "Countries that won Eurovision and the World Cup", items: ["FRANCE", "GERMANY", "ITALY", "SPAIN"], difficulty: "expert" }
   ],
-  // Board 75: Nul Points
   [
-    { category: "Nul Pointers", items: ["JEMINI", "ANN SOPHIE", "MAKEMAKES", "NEWMAN"], difficulty: "easy" },
-    { category: "Host Cities (Denmark)", items: ["COPENHAGEN", "ODENSE", "AARHUS", "HERNING"], difficulty: "medium" },
-    { category: "Titles starting 'W'", items: ["WATERLOO", "WOLF", "WHITE", "WILD"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SLOVENIA", "FINLAND", "MOLDOVA", "AZERBAIJAN"], difficulty: "expert" }
+    { category: "Masked or helmeted performers", items: ["LORDI", "SUBWOOLFER", "HATARI", "WHO SEE"], difficulty: "easy" },
+    { category: "Weather in the title", items: ["SUNLIGHT", "STORM", "DANCING IN THE RAIN", "RAIN OF REVOLUTION"], difficulty: "medium" },
+    { category: "Eurovision songs that went viral", items: ["SNAP", "ARCADE", "THINK ABOUT THINGS", "SHUM"], difficulty: "hard" },
+    { category: "30+ years between a country's wins", items: ["AUSTRIA", "NETHERLANDS", "ITALY", "SWITZERLAND"], difficulty: "expert" }
   ],
-  // Board 76: One Word
   [
-    { category: "One Word Winners", items: ["WATERLOO", "SATELLITE", "EUPHORIA", "ARCADE"], difficulty: "easy" },
-    { category: "Host Cities (Austria)", items: ["VIENNA", "INNSBRUCK", "SALZBURG", "LINZ"], difficulty: "medium" },
-    { category: "Titles starting 'Y'", items: ["YES", "YOU", "YEAR", "YESTERDAY"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["LATVIA", "SAN MARINO", "GEORGIA", "BELGIUM"], difficulty: "expert" }
+    { category: "Artists playing an instrument live on stage", items: ["ME AND MY GUITAR", "FAIRYTALE", "GOODBYE TO YESTERDAY", "I DON'T FEEL HATE"], difficulty: "easy" },
+    { category: "One-word titles starting with S", items: ["SATELLITE", "SUUS", "SHUM", "SOLDI"], difficulty: "medium" },
+    { category: "Countries on the Adriatic Sea", items: ["ITALY", "SLOVENIA", "CROATIA", "MONTENEGRO"], difficulty: "hard" },
+    { category: "Unity-themed Eurovision slogans", items: ["COME TOGETHER", "WE ARE ONE", "BUILDING BRIDGES", "UNITED BY MUSIC"], difficulty: "expert" }
   ],
-  // Board 77: Mothers
   [
-    { category: "Songs about Mothers", items: ["STEFANIA", "MATA HARI", "MAMMA", "MOTHER"], difficulty: "easy" },
-    { category: "Host Cities (Russia)", items: ["MOSCOW", "ST. PETERSBURG", "KAZAN", "SOCHI"], difficulty: "medium" },
-    { category: "Titles starting 'Z'", items: ["ZITTI", "ZARI", "ZERO", "ZDOB"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["PORTUGAL", "LUXEMBOURG", "AUSTRALIA", "ICELAND"], difficulty: "expert" }
+    { category: "Color plus object titles", items: ["GOLDEN BOY", "BLACK SMOKE", "BLUE AND RED", "WHITE AND BLACK BLUES"], difficulty: "easy" },
+    { category: "Host cities beginning with a vowel", items: ["AMSTERDAM", "OSLO", "ATHENS", "EDINBURGH"], difficulty: "medium" },
+    { category: "Gerund titles ending in -ing", items: ["PLAYING WITH FIRE", "RUNNING SCARED", "DANCING IN THE RAIN", "FALLING STARS"], difficulty: "hard" },
+    { category: "1994 debuting countries", items: ["ESTONIA", "HUNGARY", "LITHUANIA", "POLAND"], difficulty: "expert" }
   ],
-  // Board 78: Nature
   [
-    { category: "Nature Themes", items: ["RIVER", "RAIN", "STORM", "WIND"], difficulty: "easy" },
-    { category: "Host Cities (Finland)", items: ["HELSINKI", "TAMPERE", "TURKU", "ESPOO"], difficulty: "medium" },
-    { category: "Titles with 'Star'", items: ["STAR", "STARS", "STARRY", "STORY"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["MALTA", "ALBANIA", "GREECE", "SWITZERLAND"], difficulty: "expert" }
+    { category: "Travel-themed titles", items: ["ON MY WAY", "FLY ON THE WINGS OF LOVE", "TRENULETUL", "TAKE ME TO YOUR HEAVEN"], difficulty: "easy" },
+    { category: "Walk-themed titles", items: ["YOU LET ME WALK ALONE", "WALKING OUT", "WALK ON WATER", "WALK ALONG"], difficulty: "medium" },
+    { category: "Family words in titles", items: ["MAMO", "SISTER", "HEY MAMMA!", "MOTHER"], difficulty: "hard" },
+    { category: "Countries ending with -land", items: ["FINLAND", "ICELAND", "IRELAND", "SWITZERLAND"], difficulty: "expert" }
   ],
-  // Board 79: Peace
   [
-    { category: "Peace Themes", items: ["PEACE", "LOVE", "HOPE", "TOGETHER"], difficulty: "easy" },
-    { category: "Host Cities (Ireland)", items: ["DUBLIN", "CORK", "LIMERICK", "GALWAY"], difficulty: "medium" },
-    { category: "Titles with 'Moon'", items: ["MOON", "FULL MOON", "MOONLIGHT", "NEW MOON"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SERBIA", "UKRAINE", "CYPRUS", "IRELAND"], difficulty: "expert" }
+    { category: "Titles beginning with On", items: ["ON FIRE", "ON MY WAY", "ON A SUNDAY", "ON AGAIN... OFF AGAIN"], difficulty: "easy" },
+    { category: "Imperative titles", items: ["SHAKE IT", "YODEL IT!", "SAY NA NA NA", "START A FIRE"], difficulty: "medium" },
+    { category: "Countries with 5+ Eurovision-country land borders", items: ["GERMANY", "POLAND", "ROMANIA", "AUSTRIA"], difficulty: "hard" },
+    { category: "Winners who returned in later years", items: ["JOHNNY LOGAN", "LOREEN", "ALEXANDER RYBAK", "DANA INTERNATIONAL"], difficulty: "expert" }
   ],
-  // Board 80: Colors II
   [
-    { category: "Colors II", items: ["YELLOW", "PURPLE", "GOLD", "SILVER"], difficulty: "easy" },
-    { category: "Host Cities (Greece)", items: ["ATHENS", "THESSALONIKI", "PATRAS", "HERAKLION"], difficulty: "medium" },
-    { category: "Titles with 'Love'", items: ["LOVE", "ONLY LOVE", "MY LOVE", "TRUE LOVE"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["CZECHIA", "AUSTRIA", "DENMARK", "ARMENIA"], difficulty: "expert" }
+    { category: "Titles beginning with I", items: ["I CAN'T GO ON", "I STAND", "I FEED YOU MY LOVE", "I WROTE A SONG"], difficulty: "easy" },
+    { category: "Countries whose capitals begin with L", items: ["PORTUGAL", "UNITED KINGDOM", "SLOVENIA", "LUXEMBOURG"], difficulty: "medium" },
+    { category: "Group or band winners", items: ["ABBA", "TEACH-IN", "LORDI", "KALUSH ORCHESTRA"], difficulty: "hard" },
+    { category: "Light-themed titles", items: ["CITY LIGHTS", "LIGHTS OFF", "LIGHT ME UP", "LOVE SHINE A LIGHT"], difficulty: "expert" }
   ],
-  // Board 81: Roles II
   [
-    { category: "Stage Roles", items: ["SINGER", "DANCER", "MUSICIAN", "DRUMMER"], difficulty: "easy" },
-    { category: "Host Cities (Turkey)", items: ["ISTANBUL", "ANKARA", "IZMIR", "ANTALYA"], difficulty: "medium" },
-    { category: "Titles with 'Bird'", items: ["BIRD", "BIRDS", "EAGLE", "SWAN"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SLOVENIA", "FINLAND", "MOLDOVA", "AZERBAIJAN"], difficulty: "expert" }
+    { category: "Animals in the title", items: ["WOLVES OF THE SEA", "GIVE THAT WOLF A BANANA", "RUN WITH THE LIONS", "BUTTERFLIES"], difficulty: "easy" },
+    { category: "Titles beginning with La", items: ["LA, LA, LA", "LA VENDA", "LA FORZA", "LA NOCHE ES PARA MI"], difficulty: "medium" },
+    { category: "Countries using Cyrillic officially", items: ["RUSSIA", "BELARUS", "SERBIA", "NORTH MACEDONIA"], difficulty: "hard" },
+    { category: "Countries that returned after a long absence", items: ["ITALY", "CZECH REPUBLIC", "MONACO", "LUXEMBOURG"], difficulty: "expert" }
   ],
-  // Board 82: Places II
   [
-    { category: "Song Places", items: ["PARIS", "LONDON", "ROME", "AMSTERDAM"], difficulty: "easy" },
-    { category: "Host Cities (Portugal)", items: ["LISBON", "PORTO", "COIMBRA", "FARO"], difficulty: "medium" },
-    { category: "Titles with 'Space'", items: ["SPACE", "SATELLITE", "STARS", "MOON"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["LATVIA", "SAN MARINO", "GEORGIA", "BELGIUM"], difficulty: "expert" }
+    { category: "Alphanumeric stage names", items: ["S10", "OG3NE", "3+2", "4FUN"], difficulty: "easy" },
+    { category: "Dance in the title", items: ["DANCE YOU OFF", "DANCE ALONE", "DANCING IN THE RAIN", "DANCING LASHA TUMBAI"], difficulty: "medium" },
+    { category: "Countries with one land border to a Eurovision nation", items: ["PORTUGAL", "IRELAND", "SAN MARINO", "DENMARK"], difficulty: "hard" },
+    { category: "Former Yugoslav republics", items: ["SLOVENIA", "CROATIA", "BOSNIA AND HERZEGOVINA", "NORTH MACEDONIA"], difficulty: "expert" }
   ],
-  // Board 83: Visuals
   [
-    { category: "Stage Visuals", items: ["LED", "LASER", "SCREEN", "LIGHT"], difficulty: "easy" },
-    { category: "Host Cities (Belgium)", items: ["BRUSSELS", "ANTWERP", "GHENT", "LIEGE"], difficulty: "medium" },
-    { category: "Titles with 'Life'", items: ["LIFE", "MY LIFE", "LOVE LIFE", "NEW LIFE"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["PORTUGAL", "LUXEMBOURG", "AUSTRALIA", "ICELAND"], difficulty: "expert" }
+    { category: "Body parts in the title", items: ["LIPSTICK", "BONES", "EYES THAT NEVER LIE", "MY HEART IS YOURS"], difficulty: "easy" },
+    { category: "Sing or Song in the title", items: ["SING IT AWAY", "SING LITTLE BIRDIE", "THAT'S HOW YOU WRITE A SONG", "THE SOCIAL NETWORK SONG"], difficulty: "medium" },
+    { category: "Winners in Romance languages", items: ["FRANCE", "SPAIN", "ITALY", "PORTUGAL"], difficulty: "hard" },
+    { category: "Mediterranean participants that never won", items: ["MALTA", "CYPRUS", "MOROCCO", "BOSNIA AND HERZEGOVINA"], difficulty: "expert" }
   ],
-  // Board 84: Sound II
   [
-    { category: "Audio Parts", items: ["NOTE", "BEAT", "TUNE", "RHYTHM"], difficulty: "easy" },
-    { category: "Host Cities (Switzerland)", items: ["LUGANO", "LAUSANNE", "BASEL", "GENEVA"], difficulty: "medium" },
-    { category: "Titles with 'Color'", items: ["BLUE", "BLACK", "WHITE", "RED"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["MALTA", "ALBANIA", "GREECE", "SWITZERLAND"], difficulty: "expert" }
+    { category: "Rap or spoken passages on stage", items: ["IGRANKA", "EURO NEURO", "LOVEWAVE", "CHA CHA CHA"], difficulty: "easy" },
+    { category: "Time-themed titles", items: ["TICK-TOCK", "THIS TIME", "A MATTER OF TIME", "10 YEARS"], difficulty: "medium" },
+    { category: "Participants outside geographical Europe", items: ["ISRAEL", "AZERBAIJAN", "ARMENIA", "AUSTRALIA"], difficulty: "hard" },
+    { category: "Countries with land in the name", items: ["FINLAND", "ICELAND", "IRELAND", "NETHERLANDS"], difficulty: "expert" }
   ],
-  // Board 85: Actions II
   [
-    { category: "Stage Actions", items: ["SING", "DANCE", "JUMP", "MOVE"], difficulty: "easy" },
-    { category: "Host Cities (Luxembourg)", items: ["LUXEMBOURG CITY", "ESCH", "DIFFERDANGE", "DUDELANGE"], difficulty: "medium" },
-    { category: "Titles with 'Night'", items: ["NIGHT", "MIDNIGHT", "ONE NIGHT", "IN THE NIGHT"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SERBIA", "UKRAINE", "CYPRUS", "IRELAND"], difficulty: "expert" }
+    { category: "Numerals in the title", items: ["1 LIFE", "1944", "ZERO GRAVITY", "10 YEARS"], difficulty: "easy" },
+    { category: "Staging built around boxes or frames", items: ["HOLD ME", "SKELETONS", "TRUTH", "MY LUCKY DAY"], difficulty: "medium" },
+    { category: "Baltic national selections", items: ["EESTI LAUL", "SUPERNOVA", "PABANDOM IS NAUJO!", "DZIESMA"], difficulty: "hard" },
+    { category: "Titles containing Love", items: ["LOVEWAVE", "LOVE INJECTED", "LOVE ME BACK", "I LOVE BELARUS"], difficulty: "expert" }
   ],
-  // Board 86: Space II
   [
-    { category: "Celestial II", items: ["SUN", "STARS", "MOON", "PLANETS"], difficulty: "easy" },
-    { category: "Host Cities (Ukraine)", items: ["KYIV", "LVIV", "ODESSA", "KHARKIV"], difficulty: "medium" },
-    { category: "Titles starting 'F'", items: ["FIRE", "FUEGO", "FLY", "FACE"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["CZECHIA", "AUSTRIA", "DENMARK", "ARMENIA"], difficulty: "expert" }
+    { category: "Italian-language entries (2010s-2020s)", items: ["GRANDE AMORE", "OCCIDENTALI'S KARMA", "NON MI AVETE FATTO NIENTE", "DUE VITE"], difficulty: "easy" },
+    { category: "Male-female duos credited with &", items: ["ELL & NIKKI", "THE COMMON LINNETS", "KOIT TOOME & LAURA", "MORLAND & DEBRAH SCARLETT"], difficulty: "medium" },
+    { category: "Countries ending with -ia", items: ["SERBIA", "ROMANIA", "ESTONIA", "LITHUANIA"], difficulty: "hard" },
+    { category: "Countries with a Black Sea coastline", items: ["BULGARIA", "ROMANIA", "GEORGIA", "UKRAINE"], difficulty: "expert" }
   ],
-  // Board 87: Body II
   [
-    { category: "Body II", items: ["HANDS", "FEET", "HEART", "EYES"], difficulty: "easy" },
-    { category: "Host Cities (Austria)", items: ["VIENNA", "INNSBRUCK", "SALZBURG", "LINZ"], difficulty: "medium" },
-    { category: "Titles starting 'G'", items: ["GOLD", "GIRL", "GOD", "GREEN"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SLOVENIA", "FINLAND", "MOLDOVA", "AZERBAIJAN"], difficulty: "expert" }
+    { category: "Addressing mother in the title", items: ["MAMO", "MOTHER", "HEY MAMMA!", "MAMA SC!"], difficulty: "easy" },
+    { category: "Yodel or joik featured in performance", items: ["YODEL IT!", "SAMIID AEDNAN", "SPIRIT IN THE SKY", "Y ASI"], difficulty: "medium" },
+    { category: "Countries withdrawn and not returned", items: ["TURKEY", "ANDORRA", "BOSNIA AND HERZEGOVINA", "MOROCCO"], difficulty: "hard" },
+    { category: "Countries with one Eurovision-country land border", items: ["PORTUGAL", "IRELAND", "SAN MARINO", "DENMARK"], difficulty: "expert" }
   ],
-  // Board 88: Numbers II
   [
-    { category: "Numbers II", items: ["ONE", "TWO", "THREE", "FOUR"], difficulty: "easy" },
-    { category: "Host Cities (Serbia)", items: ["BELGRADE", "NOVI SAD", "NIS", "KRAGUJEVAC"], difficulty: "medium" },
-    { category: "Titles starting 'H'", items: ["HALLELUJAH", "HEROES", "HEART", "HEAVEN"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["LATVIA", "SAN MARINO", "GEORGIA", "BELGIUM"], difficulty: "expert" }
+    { category: "Mythic or famous women in titles", items: ["CLEOPATRA", "MATA HARI", "JEZEBEL", "APHRODISIAC"], difficulty: "easy" },
+    { category: "One-word titles of four letters", items: ["HALO", "HOME", "SNAP", "TIME"], difficulty: "medium" },
+    { category: "Entries with viral choreographies", items: ["UNO", "FUEGO", "SLOMO", "TOY"], difficulty: "hard" },
+    { category: "Non-capital host cities", items: ["BRIGHTON", "HARROGATE", "MALMO", "LIVERPOOL"], difficulty: "expert" }
   ],
-  // Board 89: Time II
   [
-    { category: "Time II", items: ["HOUR", "DAY", "WEEK", "YEAR"], difficulty: "easy" },
-    { category: "Host Cities (Estonia)", items: ["TALLINN", "TARTU", "NARVA", "PARNU"], difficulty: "medium" },
-    { category: "Titles starting 'I'", items: ["I CAN", "I WILL", "I BELIEVE", "I FEEL"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["PORTUGAL", "LUXEMBOURG", "AUSTRALIA", "ICELAND"], difficulty: "expert" }
+    { category: "Celestial imagery in the title", items: ["SATELLITE", "THE MOON IS RISING", "SUNLIGHT", "FALLING STARS"], difficulty: "easy" },
+    { category: "Large stage prop as centerpiece", items: ["TICK-TOCK", "I CAN'T GO ON", "HOLD ME", "LOVE IS FOREVER"], difficulty: "medium" },
+    { category: "Countries with five or more wins", items: ["IRELAND", "SWEDEN", "UNITED KINGDOM", "FRANCE"], difficulty: "hard" },
+    { category: "Countries bordering the Baltic Sea", items: ["ESTONIA", "LATVIA", "LITHUANIA", "POLAND"], difficulty: "expert" }
   ],
-  // Board 90: Elements II
   [
-    { category: "Elements II", items: ["FIRE", "WATER", "WIND", "ROCK"], difficulty: "easy" },
-    { category: "Host Cities (Latvia)", items: ["RIGA", "DAUGAVPILS", "LIEPAJA", "JELGAVA"], difficulty: "medium" },
-    { category: "Titles starting 'J'", items: ["JURY", "JOY", "JAZZ", "JUST"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["MALTA", "ALBANIA", "GREECE", "SWITZERLAND"], difficulty: "expert" }
+    { category: "Titles that are full sentences", items: ["THAT'S HOW YOU WRITE A SONG", "I DON'T FEEL HATE", "I CAN'T GO ON", "WE ARE THE WINNERS"], difficulty: "easy" },
+    { category: "Invented or nonsense words in titles", items: ["SANOMI", "DUM TEK TEK", "ZALEILAH", "HABA HABA"], difficulty: "medium" },
+    { category: "Countries whose capitals begin with B", items: ["GERMANY", "ROMANIA", "AZERBAIJAN", "SERBIA"], difficulty: "hard" },
+    { category: "Host cities beginning with T", items: ["TEL AVIV", "TURIN", "TALLINN", "THE HAGUE"], difficulty: "expert" }
   ],
-  // Board 91: Sound III
   [
-    { category: "Sound III", items: ["NOTE", "BEAT", "TUNE", "RHYTHM"], difficulty: "easy" },
-    { category: "Host Cities (Azerbaijan)", items: ["BAKU", "GANJA", "SUMQAYIT", "LANKARAN"], difficulty: "medium" },
-    { category: "Titles starting 'K'", items: ["KALUSH", "KÄÄRIJÄ", "KING", "KISS"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SERBIA", "UKRAINE", "CYPRUS", "IRELAND"], difficulty: "expert" }
+    { category: "Water imagery in titles", items: ["WALK ON WATER", "RIVER", "LOVEWAVE", "RAIN OF REVOLUTION"], difficulty: "easy" },
+    { category: "Titles beginning with Sh", items: ["SHADY LADY", "SHINE", "SHUM", "SHE GOT ME"], difficulty: "medium" },
+    { category: "Heavy rock or metal entries", items: ["HARD ROCK HALLELUJAH", "HATRID MUN SIGRA", "VISZLAT NYAR", "IN MY DREAMS"], difficulty: "hard" },
+    { category: "Landlocked participating countries", items: ["AUSTRIA", "HUNGARY", "CZECH REPUBLIC", "SWITZERLAND"], difficulty: "expert" }
   ],
-  // Board 92: Space III
   [
-    { category: "Celestial III", items: ["SUN", "STARS", "MOON", "PLANETS"], difficulty: "easy" },
-    { category: "Host Cities (Sweden)", items: ["STOCKHOLM", "MALMÖ", "GOTHENBURG", "UPPSALA"], difficulty: "medium" },
-    { category: "Titles starting 'N'", items: ["NEMO", "NOCTURNE", "NETTA", "NO"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["CZECHIA", "AUSTRIA", "DENMARK", "ARMENIA"], difficulty: "expert" }
+    { category: "Titles beginning with On", items: ["ON FIRE", "ON MY WAY", "ON A SUNDAY", "ON AGAIN... OFF AGAIN"], difficulty: "easy" },
+    { category: "Regional or minority language entries", items: ["VIVER SENZA TEI", "DIWANIT BUGALE", "FULENN", "SAMIID AEDNAN"], difficulty: "medium" },
+    { category: "Common idioms used as titles", items: ["PLAYING WITH FIRE", "RUNNING SCARED", "LOVE IS BLIND", "UNDER THE LADDER"], difficulty: "hard" },
+    { category: "Countries with wins in four or more decades", items: ["UNITED KINGDOM", "SWEDEN", "NETHERLANDS", "ISRAEL"], difficulty: "expert" }
   ],
-  // Board 93: Body III
   [
-    { category: "Body III", items: ["HANDS", "FEET", "HEART", "EYES"], difficulty: "easy" },
-    { category: "Host Cities (Germany)", items: ["BERLIN", "MUNICH", "FRANKFURT", "DUSSELDORF"], difficulty: "medium" },
-    { category: "Titles starting 'O'", items: ["ONE", "ONLY", "OUT", "ORO"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SLOVENIA", "FINLAND", "MOLDOVA", "AZERBAIJAN"], difficulty: "expert" }
+    { category: "Family words in titles", items: ["SISTER", "MAMO", "MOTHER", "HEY MAMMA!"], difficulty: "easy" },
+    { category: "Alphanumeric act names", items: ["S10", "OG3NE", "3+2", "4FUN"], difficulty: "medium" },
+    { category: "Entries with prominent whistling", items: ["J'AI CHERCHE", "IF LOVE WAS A CRIME", "CAROBAN", "HUNTER OF STARS"], difficulty: "hard" },
+    { category: "Countries that have won exactly once", items: ["PORTUGAL", "AZERBAIJAN", "GREECE", "RUSSIA"], difficulty: "expert" }
   ],
-  // Board 94: Numbers III
   [
-    { category: "Numbers III", items: ["ONE", "TWO", "THREE", "FOUR"], difficulty: "easy" },
-    { category: "Host Cities (UK)", items: ["LONDON", "LIVERPOOL", "BIRMINGHAM", "BRIGHTON"], difficulty: "medium" },
-    { category: "Titles starting 'P'", items: ["PARIS", "PEACE", "POP", "PHOENIX"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["LATVIA", "SAN MARINO", "GEORGIA", "BELGIUM"], difficulty: "expert" }
+    { category: "Supernatural-themed titles", items: ["GHOST", "MONSTERS", "SKELETONS", "SPIRIT IN THE SKY"], difficulty: "easy" },
+    { category: "Countries whose flags have a Nordic cross", items: ["DENMARK", "SWEDEN", "NORWAY", "ICELAND"], difficulty: "medium" },
+    { category: "Entries blending rap with pop", items: ["CHA CHA CHA", "TRENULETUL", "YODEL IT!", "LIE TO ME"], difficulty: "hard" },
+    { category: "Countries with one Eurovision-country land border", items: ["PORTUGAL", "IRELAND", "SAN MARINO", "DENMARK"], difficulty: "expert" }
   ],
-  // Board 95: Time III
   [
-    { category: "Time III", items: ["HOUR", "DAY", "WEEK", "YEAR"], difficulty: "easy" },
-    { category: "Host Cities (Italy)", items: ["TURIN", "ROME", "NAPLES", "MILAN"], difficulty: "medium" },
-    { category: "Titles starting 'Q'", items: ["QUEEN", "QUEST", "QUICK", "QUALIFY"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["PORTUGAL", "LUXEMBOURG", "AUSTRALIA", "ICELAND"], difficulty: "expert" }
+    { category: "Fire-themed titles", items: ["FUEGO", "PLAYING WITH FIRE", "ON FIRE", "START A FIRE"], difficulty: "easy" },
+    { category: "Countries on the Baltic Sea", items: ["ESTONIA", "LATVIA", "LITHUANIA", "POLAND"], difficulty: "medium" },
+    { category: "Host cities beginning with H", items: ["HELSINKI", "HARROGATE", "HILVERSUM", "THE HAGUE"], difficulty: "hard" },
+    { category: "Acts performing with face coverings", items: ["LORDI", "HATARI", "SUBWOOLFER", "WHO SEE"], difficulty: "expert" }
   ],
-  // Board 96: Elements III
   [
-    { category: "Elements III", items: ["FIRE", "WATER", "WIND", "ROCK"], difficulty: "easy" },
-    { category: "Host Cities (Netherlands)", items: ["AMSTERDAM", "ROTTERDAM", "HAGUE", "HILVERSUM"], difficulty: "medium" },
-    { category: "Titles starting 'R'", items: ["RISE", "ROCK", "RAIN", "RIVER"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["MALTA", "ALBANIA", "GREECE", "SWITZERLAND"], difficulty: "expert" }
+    { category: "Songs that rhyme with 'fire'", items: ["HIGHER", "DESIRE", "LIAR", "EMPIRE"], difficulty: "easy" },
+    { category: "Participating countries beginning with S", items: ["SPAIN", "SWEDEN", "SWITZERLAND", "SLOVENIA"], difficulty: "medium" },
+    { category: "Gerund titles ending in -ing", items: ["RUNNING SCARED", "DANCING IN THE RAIN", "FALLING STARS", "PLAYING WITH FIRE"], difficulty: "hard" },
+    { category: "Countries with non-Indo-European official languages", items: ["FINLAND", "HUNGARY", "ESTONIA", "GEORGIA"], difficulty: "expert" }
   ],
-  // Board 97: Sound IV
   [
-    { category: "Sound IV", items: ["NOTE", "BEAT", "TUNE", "RHYTHM"], difficulty: "easy" },
-    { category: "Host Cities (Spain)", items: ["MADRID", "BARCELONA", "VALENCIA", "SEVILLE"], difficulty: "medium" },
-    { category: "Titles starting 'U'", items: ["UKRAINE", "UNDER", "UP", "UN BANC"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SERBIA", "UKRAINE", "CYPRUS", "IRELAND"], difficulty: "expert" }
+    { category: "Titles that are one-word English nouns", items: ["EUPHORIA", "ARCADE", "TOY", "SKELETONS"], difficulty: "easy" },
+    { category: "Countries with wins before and after 2000", items: ["SWEDEN", "ISRAEL", "ITALY", "NETHERLANDS"], difficulty: "medium" },
+    { category: "LED or projection-driven staging highlights", items: ["HEROES", "YOU ARE THE ONLY ONE", "SCREAM", "LA FORZA"], difficulty: "hard" },
+    { category: "Countries debuting in 1994", items: ["ESTONIA", "HUNGARY", "LITHUANIA", "POLAND"], difficulty: "expert" }
   ],
-  // Board 98: Space IV
   [
-    { category: "Celestial IV", items: ["SUN", "STARS", "MOON", "PLANETS"], difficulty: "easy" },
-    { category: "Host Cities (Norway)", items: ["OSLO", "BERGEN", "TRONDHEIM", "STAVANGER"], difficulty: "medium" },
-    { category: "Titles starting 'V'", items: ["VOICE", "VOICES", "VOLARE", "VERKA"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["CZECHIA", "AUSTRIA", "DENMARK", "ARMENIA"], difficulty: "expert" }
+    { category: "Imperative titles", items: ["SHAKE IT", "YODEL IT!", "SAY NA NA NA", "START A FIRE"], difficulty: "easy" },
+    { category: "Coastal host cities", items: ["LISBON", "TEL AVIV", "BAKU", "CANNES"], difficulty: "medium" },
+    { category: "Folk meets pop on stage", items: ["SHUM", "SPIRIT IN THE SKY", "TRENULETUL", "ORO"], difficulty: "hard" },
+    { category: "Countries with exactly five Eurovision wins (as of 2025)", items: ["UNITED KINGDOM", "FRANCE", "LUXEMBOURG", "NETHERLANDS"], difficulty: "expert" }
   ],
-  // Board 99: Body IV
   [
-    { category: "Body IV", items: ["HANDS", "FEET", "HEART", "EYES"], difficulty: "easy" },
-    { category: "Host Cities (Israel)", items: ["JERUSALEM", "TEL AVIV", "HAIFA", "EILAT"], difficulty: "medium" },
-    { category: "Titles starting 'W'", items: ["WATERLOO", "WOLF", "WHITE", "WILD"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 1", items: ["SLOVENIA", "FINLAND", "MOLDOVA", "AZERBAIJAN"], difficulty: "expert" }
+    { category: "Weather in the title", items: ["SUNLIGHT", "STORM", "DANCING IN THE RAIN", "FLOWER IN THE SNOW"], difficulty: "easy" },
+    { category: "2020 artists who returned in 2021", items: ["DADI OG GAGNAMAGNID", "THE ROOP", "GO_A", "GJON'S TEARS"], difficulty: "medium" },
+    { category: "Teenage Eurovision winners", items: ["SANDRA KIM", "LENA", "NICOLE", "GIGLIOLA CINQUETTI"], difficulty: "hard" },
+    { category: "Winners performed in a language other than English since 2000", items: ["MOLITVA", "AMAR PELOS DOIS", "ZITTI E BUONI", "STEFANIA"], difficulty: "expert" }
   ],
-  // Board 100: Numbers IV
   [
-    { category: "Numbers IV", items: ["ONE", "TWO", "THREE", "FOUR"], difficulty: "easy" },
-    { category: "Host Cities (Denmark)", items: ["COPENHAGEN", "ODENSE", "AARHUS", "HERNING"], difficulty: "medium" },
-    { category: "Titles starting 'Y'", items: ["YES", "YOU", "YEAR", "YESTERDAY"], difficulty: "hard" },
-    { category: "Acts from 2024 Semi 2", items: ["LATVIA", "SAN MARINO", "GEORGIA", "BELGIUM"], difficulty: "expert" }
+    { category: "Five-letter one-word titles", items: ["SHINE", "ANGEL", "STORM", "SUGAR"], difficulty: "easy" },
+    { category: "Countries with land in their English name", items: ["FINLAND", "ICELAND", "IRELAND", "NETHERLANDS"], difficulty: "medium" },
+    { category: "Host cities beginning with L", items: ["LISBON", "LONDON", "LAUSANNE", "LUGANO"], difficulty: "hard" },
+    { category: "Televote winners who didn't win overall", items: ["GRANDE AMORE", "YOU ARE THE ONLY ONE", "SPIRIT IN THE SKY", "RIM TIM TAGI DIM"], difficulty: "expert" }
   ]
 ];
