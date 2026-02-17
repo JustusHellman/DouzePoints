@@ -1,4 +1,3 @@
-
 import { TranslationSchema } from './types.ts';
 
 export const es: TranslationSchema = {
@@ -24,9 +23,7 @@ export const es: TranslationSchema = {
     mistakesLeft: "Errores restantes",
     howToPlay: "Cómo jugar",
     close: "Cerrar",
-    selectLanguage: "Seleccionar Idioma",
-    // Adding missing stats key
-    stats: "Estadísticas"
+    selectLanguage: "Seleccionar Idioma"
   },
   greenroom: {
     greenroom: "La Sala Verde",
@@ -34,7 +31,7 @@ export const es: TranslationSchema = {
     dailyProgress: "Progreso Diario",
     qualified: "✨ Clasificado para la Gran Final ✨",
     finishedToday: "Completado hoy",
-    statsButton: "Récord de la Gran Final",
+    statsButton: "Estadísticas",
     careerStats: "Estadísticas",
     todayScore: "Puntuación de hoy"
   },
@@ -61,7 +58,7 @@ export const es: TranslationSchema = {
     },
     euroarena: { 
       title: "EuroArena", 
-      desc: "Compara y analiza.",
+      desc: "Compara estadísticas para ganar.",
       rules: "Compara tus suposiciones contra una entrada misteriosa. Usa los marcadores de atributos (Año, Puesto, País, Género, Tamaño, Sexo) para estrechar tu búsqueda.\n\n🟩: Coincidencia Perfecta\n🟨: Coincidencia Cercana (año/puesto cercano, misma región o grupo de género)\n⬛: Sin Coincidencia"
     }
   },
@@ -172,7 +169,7 @@ export const es: TranslationSchema = {
       "Italy": "Italia", "Croatia": "Croacia", "United Kingdom": "Reino Unido", "Ukraine": "Ucrania",
       "Israel": "Israel", "Portugal": "Portugal", "Denmark": "Dinamarca", "Norway": "Noruega", "Spain": "España",
       "Austria": "Austria", "Cyprus": "Chipre", "Iceland": "Islandia", "Germany": "Alemania", "Azerbaijan": "Azerbaiyán",
-      "Serbia": "Serbia", "Australia": "Australia", "Greece": "Grecia", "Moldova": "Moldavia", "Belgium": "Bélgica",
+      "Serbia": "Serbia", "Australia": "Australia", "Greece": "Grecia", "Moldavia": "Moldavia", "Belgium": "Bélgica",
       "Poland": "Polonia", "Slovenia": "Eslovenia", "Ireland": "Irlanda", "Luxembourg": "Luxemburgo", "Albania": "Albania",
       "Bulgaria": "Bulgaria", "Estonia": "Estonia", "Russia": "Rusia", "Turkey": "Turquía", "Bosnia & Herzegovina": "Bosnia y Herzegovina",
       "Malta": "Malta", "Monaco": "Mónaco", "Latvia": "Letonia", "Hungary": "Hungría"

@@ -150,38 +150,38 @@ export const CookieBanner: React.FC = () => {
         />
       )}
 
-      {/* The main banner - Compact Size Restored */}
+      {/* The main banner - Larger for PC */}
       {isVisible && (
-        <div id="cookie-banner" className="fixed bottom-0 left-0 right-0 bg-[#0a0a15]/95 backdrop-blur-xl text-white p-4 md:p-5 z-[9999] shadow-[0_-20px_50px_rgba(0,0,0,0.5)] border-t border-white/10 animate-in slide-in-from-bottom-full duration-700 ease-out fill-mode-forwards">
-          <div className="max-w-[1100px] mx-auto flex flex-col md:flex-row gap-4 md:gap-8 items-center">
-            <div id="cookie-banner-text" className="flex-1 text-[11px] md:text-xs leading-relaxed text-gray-400">
-              <div className="flex items-center gap-2 mb-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse"></div>
-                <span className="font-black text-white uppercase tracking-widest text-[9px] block">{t('cookies.cookiePolicy')}</span>
+        <div id="cookie-banner" className="fixed bottom-0 left-0 right-0 bg-[#0a0a15]/98 backdrop-blur-3xl text-white p-6 md:p-12 z-[9999] shadow-[0_-20px_100px_rgba(0,0,0,0.8)] border-t border-white/20 animate-in slide-in-from-bottom-full duration-700 ease-out fill-mode-forwards">
+          <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row gap-6 md:gap-12 items-center">
+            <div id="cookie-banner-text" className="flex-1 text-[12px] md:text-base leading-relaxed text-gray-400">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-2 h-2 rounded-full bg-pink-500 animate-ping"></div>
+                <span className="font-black text-white uppercase tracking-[0.4em] text-[10px] md:text-xs block">{t('cookies.cookiePolicy')}</span>
               </div>
               <p>
                 {t('cookies.bannerText')}{' '}
-                <Link to="/cookies" className="text-pink-500 underline decoration-pink-500/30 underline-offset-4 hover:text-pink-400 transition-colors font-bold">
+                <Link to="/cookies" className="text-pink-500 underline decoration-pink-500/30 underline-offset-8 hover:text-pink-400 transition-colors font-black uppercase text-[10px] md:text-sm tracking-widest ml-1">
                   {t('cookies.learnMore')}
                 </Link>
               </p>
             </div>
-            <div className="flex flex-wrap justify-center gap-3 shrink-0 w-full md:w-auto">
+            <div className="flex flex-wrap justify-center gap-4 shrink-0 w-full md:w-auto">
               <button
                 onClick={handleAcceptAll}
-                className="flex-1 md:flex-none bg-pink-600 hover:bg-pink-500 text-white px-5 py-2.5 rounded-full font-black uppercase text-[9px] tracking-widest transition-all active:scale-95 shadow-lg shadow-pink-600/20"
+                className="flex-1 md:flex-none bg-white text-black px-10 py-4 md:px-12 md:py-5 rounded-full font-black uppercase text-[10px] md:text-xs tracking-[0.2em] transition-all active:scale-95 shadow-2xl hover:scale-105"
               >
                 {t('cookies.acceptAll')}
               </button>
               <button
                 onClick={handleDecline}
-                className="flex-1 md:flex-none bg-white/5 hover:bg-white/10 text-white px-5 py-2.5 rounded-full font-black uppercase text-[9px] tracking-widest transition-all active:scale-95 border border-white/10"
+                className="flex-1 md:flex-none bg-white/5 hover:bg-white/10 text-white px-10 py-4 md:px-12 md:py-5 rounded-full font-black uppercase text-[10px] md:text-xs tracking-[0.2em] transition-all active:scale-95 border border-white/10"
               >
                 {t('cookies.decline')}
               </button>
               <button
                 onClick={handleManage}
-                className="bg-transparent text-gray-500 px-3 py-2.5 rounded-full font-black uppercase text-[9px] tracking-widest hover:text-white transition-all"
+                className="bg-transparent text-gray-500 px-4 py-4 rounded-full font-black uppercase text-[10px] md:text-xs tracking-widest hover:text-white transition-all"
               >
                 {t('cookies.manage')}
               </button>

@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect, useLayoutEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { getDailyIndex, getDayString } from '../../utils/daily.ts';
 import { updateGameStats } from '../../utils/stats.ts';
@@ -15,7 +14,7 @@ interface EuroArenaProps {
   data: MasterSong[];
 }
 
-const MAX_GUESSES = 6;
+const MAX_GUESSES = 7;
 
 const ComparisonBox = ({ label, value, status, arrow, delay }: { label: string, value: string | number, status: 'green' | 'yellow' | 'gray', arrow?: 'up' | 'down', delay: number }) => {
   const [revealed, setRevealed] = useState(false);
@@ -31,12 +30,12 @@ const ComparisonBox = ({ label, value, status, arrow, delay }: { label: string, 
   };
 
   return (
-    <div className={`relative flex flex-col items-center justify-center p-1.5 rounded-xl border-2 transition-all duration-700 w-full aspect-square text-center transform-gpu ${revealed ? `${colorClasses[status]} scale-100 rotate-0 opacity-100` : 'bg-gray-900 border-white/5 scale-75 opacity-0'}`}>
-      <span className="text-[7px] font-black uppercase tracking-widest text-white/50 mb-0.5 leading-none italic">{label}</span>
+    <div className={`relative flex flex-col items-center justify-center p-1.5 md:p-3 rounded-xl border-2 transition-all duration-700 w-full aspect-square text-center transform-gpu ${revealed ? `${colorClasses[status]} scale-100 rotate-0 opacity-100` : 'bg-gray-900 border-white/5 scale-75 opacity-0'}`}>
+      <span className="text-[7px] md:text-[9px] font-black uppercase tracking-widest text-white/50 mb-0.5 md:mb-1.5 leading-none italic">{label}</span>
       <div className={`flex items-center gap-0.5 font-black leading-tight w-full justify-center px-0.5`}>
-        <span className="text-white drop-shadow-md break-words line-clamp-2 text-[9px] sm:text-[10px] leading-tight hyphens-auto">{value}</span>
-        {revealed && arrow === 'up' && <svg className="w-2.5 h-2.5 text-white animate-bounce shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"/></svg>}
-        {revealed && arrow === 'down' && <svg className="w-2.5 h-2.5 text-white animate-bounce shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 112 0v7.586l2.293-2.293a1 1 0 011.414 0z"/></svg>}
+        <span className="text-white drop-shadow-md break-words line-clamp-2 text-[9px] sm:text-[12px] md:text-[14px] lg:text-[16px] xl:text-[18px] leading-tight hyphens-auto">{value}</span>
+        {revealed && arrow === 'up' && <svg className="w-2.5 h-2.5 md:w-4 md:h-4 text-white animate-bounce shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"/></svg>}
+        {revealed && arrow === 'down' && <svg className="w-2.5 h-2.5 md:w-4 md:h-4 text-white animate-bounce shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 112 0v7.586l2.293-2.293a1 1 0 011.414 0z"/></svg>}
       </div>
     </div>
   );
@@ -45,14 +44,6 @@ const ComparisonBox = ({ label, value, status, arrow, delay }: { label: string, 
 const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
   const { t } = useTranslation();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
-
-  // Automated scroll nudge (Instant scroll)
-  useLayoutEffect(() => {
-    const timer = requestAnimationFrame(() => {
-      window.scrollTo(0, 60);
-    });
-    return () => cancelAnimationFrame(timer);
-  }, []);
 
   const target = useMemo(() => {
     const idx = getDailyIndex(data, "arena");
@@ -96,7 +87,9 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
 
   const getPointsInfo = useMemo(() => {
     if (!won) return { points: 0, label: t('common.nulPoints'), color: "text-red-500" };
-    const pointsMap = [12, 10, 8, 6, 4, 2];
+    
+    // Logic: 1st/2nd Guess = 12pts, 3rd = 10pts, 4th = 8pts, 5th = 6pts, 6th = 4pts, 7th = 2pts
+    const pointsMap = [12, 12, 10, 8, 6, 4, 2];
     const pts = pointsMap[guesses.length - 1] || 2;
     
     if (pts === 12) return { points: 12, label: t('common.douzePoints'), color: "text-yellow-500" };
@@ -190,16 +183,16 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
       {(!isGameOver || !showModal) && (
         <>
           <div className="flex items-center gap-3 mb-1">
-            <h2 className="text-3xl md:text-4xl font-black bg-gradient-to-r from-emerald-400 to-green-600 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroArena</h2>
+            <h2 className="text-3xl md:text-5xl font-black bg-gradient-to-r from-emerald-400 to-green-600 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroArena</h2>
             <button 
               onClick={() => setShowHowToPlay(true)}
-              className="w-6 h-6 rounded-full border border-white/20 text-[10px] flex items-center justify-center font-bold text-gray-500 hover:text-white hover:border-white transition-all active:scale-90"
+              className="w-6 h-6 md:w-8 md:h-8 rounded-full border border-white/20 text-[10px] md:text-xs flex items-center justify-center font-bold text-gray-500 hover:text-white hover:border-white transition-all active:scale-90"
               aria-label="How to play"
             >
               ?
             </button>
           </div>
-          <p className="text-[9px] text-gray-500 font-black uppercase tracking-[0.3em] mb-8 pr-[0.2em] italic">{t('arena.analyze')}</p>
+          <p className="text-[9px] md:text-[11px] text-gray-500 font-black uppercase tracking-[0.3em] mb-8 pr-[0.2em] italic">{t('arena.analyze')}</p>
 
           <HowToPlayModal 
             isOpen={showHowToPlay} 
@@ -214,15 +207,15 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
                   type="text" value={query}
                   onChange={(e) => { setQuery(e.target.value); setShowResults(true); }}
                   placeholder={t('guesser.searchPlaceholder')}
-                  className="w-full bg-gray-950 border-2 border-white/5 rounded-2xl px-6 py-5 font-bold focus:border-emerald-500 outline-none text-center text-lg shadow-inner text-white"
+                  className="w-full bg-gray-950 border-2 border-white/5 rounded-2xl px-6 py-5 md:py-7 font-bold focus:border-emerald-500 outline-none text-center text-lg md:text-2xl shadow-inner text-white"
                 />
                 {showResults && query.length >= 1 && (
-                  <div className="absolute top-full left-0 right-0 mt-3 bg-gray-950 border border-white/10 rounded-2xl shadow-3xl overflow-hidden backdrop-blur-xl max-h-60 overflow-y-auto z-[160]">
+                  <div className="absolute top-full left-0 right-0 mt-3 bg-gray-950 border border-white/10 rounded-2xl shadow-3xl overflow-hidden backdrop-blur-xl max-h-60 md:max-h-80 overflow-y-auto z-[160]">
                     {filteredData.length > 0 ? filteredData.map((s) => (
-                        <button key={s.id} onClick={() => handleSelect(s)} className="w-full text-left px-6 py-4 transition-colors flex justify-between items-center border-b border-white/5 last:border-0 hover:bg-emerald-500/10">
+                        <button key={s.id} onClick={() => handleSelect(s)} className="w-full text-left px-6 py-4 md:py-6 transition-colors flex justify-between items-center border-b border-white/5 last:border-0 hover:bg-emerald-500/10">
                           <div className="flex flex-col">
-                             <span className="font-black text-xs uppercase text-white leading-none mb-1">{s.title}</span>
-                             <span className="text-[10px] font-bold text-gray-500 uppercase">{s.artist} • {t(`metadata.countries.${s.country}`)}</span>
+                             <span className="font-black text-xs md:text-sm uppercase text-white leading-none mb-1">{s.title}</span>
+                             <span className="text-[10px] md:text-[12px] font-bold text-gray-500 uppercase">{s.artist} • {t(`metadata.countries.${s.country}`)}</span>
                           </div>
                         </button>
                     )) : <div className="px-6 py-6 text-[10px] font-black text-gray-600 uppercase text-center italic">{t('guesser.noResults')}</div>}
@@ -231,18 +224,20 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
             </div>
           )}
 
-          <div className="w-full space-y-6">
+          <div className="w-full space-y-6 md:space-y-10">
             {guesses.map((g, idx) => (
-              <div key={idx} className="bg-white/5 p-4 rounded-3xl border border-white/5 animate-in slide-in-from-top-6 duration-700 shadow-2xl relative overflow-hidden">
-                 <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
-                 <div className="flex justify-between items-center mb-4 px-2">
+              <div key={idx} className="bg-white/5 p-4 md:p-8 rounded-3xl md:rounded-[3rem] border border-white/5 animate-in slide-in-from-top-6 duration-700 shadow-2xl relative overflow-hidden">
+                 <div className="absolute top-0 left-0 w-1 md:w-2 h-full bg-emerald-500"></div>
+                 <div className="flex justify-between items-center mb-4 md:mb-8 px-2">
                     <div className="flex flex-col">
-                       <span className="text-[14px] font-black text-white uppercase tracking-tighter leading-tight break-words">{g.title}</span>
-                       <span className="text-[9px] font-bold text-gray-500 uppercase break-words">{g.artist}</span>
+                       <span className="text-[14px] md:text-2xl font-black text-white uppercase tracking-tighter leading-tight break-words">{g.title}</span>
+                       <span className="text-[9px] md:text-sm font-bold text-gray-500 uppercase break-words">{g.artist}</span>
                     </div>
-                    <div className="text-[10px] font-black text-emerald-500 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 shrink-0">#{guesses.length - idx}</div>
+                    <div className="text-[10px] md:text-[12px] font-black text-emerald-500 px-4 py-1.5 md:py-2.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 shrink-0">
+                      {guesses.length - idx} / 7
+                    </div>
                  </div>
-                <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                 <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
                     <ComparisonBox label={t('arena.labels.year')} value={g.year} status={getStatus('year', g.year, g)} arrow={g.year < target.year ? 'up' : g.year > target.year ? 'down' : undefined} delay={idx === 0 ? 100 : 0} />
                     <ComparisonBox label={t('arena.labels.rank')} value={`#${g.placing}`} status={getStatus('placing', g.placing, g)} arrow={g.placing > target.placing ? 'up' : g.placing < target.placing ? 'down' : undefined} delay={idx === 0 ? 250 : 0} />
                     <ComparisonBox label={t('arena.labels.country')} value={t(`metadata.countries.${g.country}`)} status={getStatus('country', g.country, g)} delay={idx === 0 ? 400 : 0} />
@@ -258,7 +253,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
             <div className="w-full flex justify-center mt-12">
                <button 
                  onClick={() => setShowModal(true)}
-                 className="bg-white text-black px-12 py-5 rounded-full font-black uppercase text-xs tracking-widest shadow-2xl"
+                 className="bg-white text-black px-12 py-5 rounded-full font-black uppercase text-xs tracking-widest shadow-2xl hover:scale-105 active:scale-95 transition-all"
                >
                  {t('scorecard.viewScorecard')}
                </button>

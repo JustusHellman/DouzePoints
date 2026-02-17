@@ -1,4 +1,3 @@
-
 import { TranslationSchema } from './types.ts';
 
 export const fr: TranslationSchema = {
@@ -24,9 +23,7 @@ export const fr: TranslationSchema = {
     mistakesLeft: "Erreurs restantes",
     howToPlay: "Comment jouer",
     close: "Fermer",
-    selectLanguage: "Choisir la Langue",
-    // Adding missing stats key
-    stats: "Stats"
+    selectLanguage: "Choisir la Langue"
   },
   greenroom: {
     greenroom: "Le Greenroom",
@@ -61,7 +58,7 @@ export const fr: TranslationSchema = {
     },
     euroarena: { 
       title: "EuroArena", 
-      desc: "Comparez et analysez.",
+      desc: "Devinez via les statistiques.",
       rules: "Comparez vos suppositions à une entrée mystère. Utilisez les marqueurs d'attributs (Année, Classement, Pays, Genre, Taille, Sexe) pour affiner votre recherche.\n\n🟩 : Correspondance Parfaite\n🟨 : Correspondance Proche (année/rang proche, même région ou groupe de genre)\n⬛ : Aucune Correspondance"
     }
   },
@@ -169,7 +166,7 @@ export const fr: TranslationSchema = {
   metadata: {
     countries: {
       "Switzerland": "Suisse", "Sweden": "Suède", "Finland": "Finlande", "Netherlands": "Pays-Bas",
-      "Italy": "Italie", "Croatia": "Croatie", "United Kingdom": "Royaume-Uni", "Ukraine": "Ukraine",
+      "Italy": "Italie", "Croatie": "Croatie", "United Kingdom": "Royaume-Uni", "Ukraine": "Ukraine",
       "Israel": "Israël", "Portugal": "Portugal", "Denmark": "Danemark", "Norway": "Norvège", "Spain": "Espagne",
       "Austria": "Autriche", "Cyprus": "Chypre", "Iceland": "Islande", "Germany": "Allemagne", "Azerbaijan": "Azerbaïdjan",
       "Serbia": "Serbie", "Australia": "Australie", "Greece": "Grèce", "Moldova": "Moldavie", "Belgium": "Belgique",
@@ -179,7 +176,7 @@ export const fr: TranslationSchema = {
     },
     genres: {
       "Drum and Bass": "Drum and Bass", "Opera": "Opéra", "Drum and Bass / Opera": "Drum and Bass / Opéra",
-      "Pop": "Pop", "Party Metal": "Party Metal", "Ballad": "Ballade", "Rock": "Rock", "Industrial Rock": "Rock Industriel", 
+      "Pop": "Pop", "Party Metal": "Party Metal", "Ballade": "Ballade", "Rock": "Rock", "Industrial Rock": "Rock Industriel", 
       "Glam Rock": "Glam Rock", "Folk-Hop": "Folk-Hop", "Jazz": "Jazz", "Europop": "Europop", "Hard Rock": "Hard Rock",
       "Folk-Pop": "Folk-Pop", "Folk": "Folk", "Comedy Pop": "Pop Comique", "Latin Pop": "Pop Latin",
       "R&B": "R&B", "Orchestral Pop": "Pop Orchestral", "Dance Pop": "Dance Pop", "Synthpop": "Synthpop",

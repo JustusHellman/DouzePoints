@@ -23,8 +23,6 @@ export interface TranslationSchema {
     howToPlay: string;
     close: string;
     selectLanguage: string;
-    // Add stats key to match usage in locales/en.ts and other locale files
-    stats: string;
   };
   greenroom: {
     greenroom: string;

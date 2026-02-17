@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 
 interface AdSlotProps {
@@ -29,16 +28,12 @@ export const AdSlot: React.FC<AdSlotProps> = ({
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        // Only attempt to push if the element is intersecting AND has a measurable width
-        // to avoid the "availableWidth=0" TagError.
         if (entry.isIntersecting && !pushed.current && adRef.current && adRef.current.offsetWidth > 0) {
           const status = adRef.current.getAttribute('data-adsbygoogle-status');
           
           if (!status || status === '') {
             try {
               window.adsbygoogle = window.adsbygoogle || [];
-              
-              // Verify again that the slot isn't already processed
               const currentStatus = adRef.current.getAttribute('data-adsbygoogle-status');
               if (!currentStatus) {
                 pushed.current = true;
@@ -59,8 +54,7 @@ export const AdSlot: React.FC<AdSlotProps> = ({
       });
     }, { 
       threshold: 0.1,
-      // Root margin helps trigger the load slightly before it enters the viewport
-      rootMargin: '50px' 
+      rootMargin: '100px' 
     });
 
     observer.observe(adRef.current);
@@ -77,10 +71,9 @@ export const AdSlot: React.FC<AdSlotProps> = ({
         className="adsbygoogle"
         style={{ 
           ...style, 
-          width: '100%', // Force full width to prevent 0px width detection
+          width: '100%', 
           minWidth: adFormat === 'fluid' ? '250px' : (style.width || 'auto'), 
-          minHeight: hideLabel ? '50px' : '90px',
-          maxHeight: hideLabel ? '50px' : 'none',
+          minHeight: '90px',
           background: 'transparent'
         }}
         data-ad-client={PUBLISHER_ID}

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import EuroWordGame from './games/wordGame/EuroWordGame.tsx';
@@ -93,9 +92,6 @@ const LanguageOverlay: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         >
           {t('common.close')}
         </button>
-        
-        {/* Mobile buffer for sticky ads */}
-        <div className="h-12 md:hidden" />
       </div>
     </div>
   );
@@ -225,7 +221,8 @@ const Dashboard: React.FC<{ stats: GlobalStats }> = ({ stats }) => {
             if (gameId === 'linksgame') {
                 return data.won ? (pointsMap[data.mistakes] || 2) : 0;
             } else if (gameId === 'arena') {
-                return data.won ? (pointsMap[data.guesses.length - 1] || 2) : 0;
+                const arenaPointsMap = [12, 12, 10, 8, 6, 4, 2];
+                return data.won ? (arenaPointsMap[data.guesses.length - 1] || 2) : 0;
             } else if (gameId === 'guesser') {
                 return data.won ? (pointsMap[data.attempts.length - 1] || 2) : 0;
             } else {
@@ -247,7 +244,7 @@ const Dashboard: React.FC<{ stats: GlobalStats }> = ({ stats }) => {
     <>
       <DailyProgressBar games={games} />
       
-      <div className="max-w-4xl mx-auto px-6 mb-8 text-center">
+      <div className="max-w-4xl mx-auto px-6 mb-8 text-center min-h-[90px]">
         <AdSlot adSlot="1234567890" adFormat="fluid" />
       </div>
 
@@ -337,18 +334,18 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen relative flex flex-col">
       <ScrollToTop />
-      <header className="px-6 md:px-12 py-2 border-b border-white/5 backdrop-blur-xl sticky top-0 z-[100] flex items-center justify-between bg-black/60 h-14 md:h-24">
-        <div className="flex items-center gap-4">
+      <header className="px-4 md:px-8 py-2 border-b border-white/5 backdrop-blur-xl sticky top-0 z-[100] flex items-center justify-between bg-black/60 h-14 md:h-20">
+        <div className="flex items-center gap-3 md:gap-6">
            {!isLobby && (
-             <button onClick={handleReturn} className="p-2 hover:bg-white/10 rounded-xl transition-all text-white bg-white/5 border border-white/10 active:scale-90">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"/></svg>
+             <button onClick={handleReturn} className="p-1.5 md:p-2.5 hover:bg-white/10 rounded-xl transition-all text-white bg-white/5 border border-white/10 active:scale-90">
+                <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"/></svg>
              </button>
            )}
-           <Link to="/" className="text-xl md:text-3xl font-black tracking-tighter bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent uppercase italic pr-[0.2em] hover:opacity-80 transition-opacity whitespace-nowrap">
+           <Link to="/" className="text-base md:text-2xl font-black tracking-tighter bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent uppercase italic pr-[0.2em] hover:opacity-80 transition-opacity whitespace-nowrap">
              Douze Points
            </Link>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           <button 
             onClick={() => setShowLang(true)}
             className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/30 transition-all active:scale-95 group overflow-hidden"
@@ -356,21 +353,23 @@ const App: React.FC = () => {
             <span className="text-xl md:text-2xl group-hover:scale-125 transition-transform duration-300">{currentFlag}</span>
           </button>
           
-          <button onClick={() => { setStats(getStoredStats()); setShowStats(true); }} className="flex items-center gap-3 px-4 md:px-6 py-2 md:py-3 hover:bg-white/10 rounded-full transition-all text-white bg-white/5 border border-white/10 active:scale-95 outline-none">
-            <div className="w-2 h-2 rounded-full bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.5)]"></div>
-            <span className="text-[10px] md:text-[12px] font-black uppercase tracking-widest">{t('common.stats')}</span>
+          <button onClick={() => { setStats(getStoredStats()); setShowStats(true); }} className="flex items-center gap-2 px-3 md:px-5 py-1.5 md:py-2.5 hover:bg-white/10 rounded-full transition-all text-white bg-white/5 border border-white/10 active:scale-95 outline-none">
+            <div className="w-1.5 h-1.5 rounded-full bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.5)]"></div>
+            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest">
+              {currentGameType === 'TOTAL' ? t('greenroom.statsButton') : t('greenroom.careerStats')}
+            </span>
           </button>
         </div>
       </header>
 
       <main className="flex-1 container mx-auto pb-4 px-4 page-fade" key={location.pathname}>
         {isLobby && (
-          <section className="text-center pt-16 pb-8">
+          <section className="text-center pt-16 md:pt-24 pb-8">
             <div className="inline-flex items-center gap-2 bg-pink-500/10 border border-pink-500/20 px-4 py-1.5 rounded-full mb-6">
-              <span className="text-[10px] font-black text-pink-500 uppercase tracking-[0.2em] italic pr-[0.15em]">{t(`ranks.${currentRank?.title}`)}</span>
+              <span className="text-[10px] md:text-[12px] font-black text-pink-500 uppercase tracking-[0.2em] italic pr-[0.15em]">{t(`ranks.${currentRank?.title}`)}</span>
             </div>
             <h1 className="text-5xl md:text-9xl font-black italic pr-[0.2em] tracking-tighter mb-4 uppercase leading-none text-white drop-shadow-2xl">{t('greenroom.greenroom')}</h1>
-            <p className="text-gray-400 text-xs md:text-base max-w-xl mx-auto font-medium tracking-tight opacity-70 px-4">{t('greenroom.description')}</p>
+            <p className="text-gray-400 text-xs md:text-lg max-w-2xl mx-auto font-medium tracking-tight opacity-70 px-4 leading-relaxed">{t('greenroom.description')}</p>
           </section>
         )}
         <Routes>
@@ -389,7 +388,7 @@ const App: React.FC = () => {
       {showStats && <StatsModal stats={stats} onClose={() => setShowStats(false)} onShowInfo={() => {}} initialTab={currentGameType} />}
       {showLang && <LanguageOverlay onClose={() => setShowLang(false)} />}
       
-      <footer className="pt-12 pb-40 md:pb-12 text-center border-t border-white/5 px-6">
+      <footer className="pt-12 pb-40 md:pb-24 text-center border-t border-white/5 px-6">
         <div className="flex flex-col items-center gap-8">
           <div className="max-w-2xl mx-auto space-y-4">
             <p className="font-black text-[10px] tracking-[0.5em] uppercase text-gray-500">Fan Project</p>

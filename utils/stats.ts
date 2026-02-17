@@ -1,4 +1,3 @@
-
 import { GlobalStats, DetailedStats, GameType } from '../data/types.ts';
 import { getDayString } from './daily.ts';
 
@@ -101,7 +100,7 @@ export const updateGameStats = (gameType: GameType, won: boolean, performanceMet
       }
       if (mistakes === 0) isPerfect = true;
     }
-    else if (gameType === GameType.GUESSER || gameType === GameType.ARENA) {
+    else if (gameType === GameType.GUESSER) {
       const attemptsCount = performanceMetrics.attempts;
       const pointsMap = [12, 10, 8, 6, 4, 2];
       pointsEarned = pointsMap[attemptsCount - 1] || 0;
@@ -109,6 +108,25 @@ export const updateGameStats = (gameType: GameType, won: boolean, performanceMet
         stats[gameKey].distribution[attemptsCount - 1] = (stats[gameKey].distribution[attemptsCount - 1] || 0) + 1;
       }
       if (attemptsCount === 1) isPerfect = true;
+    }
+    else if (gameType === GameType.ARENA) {
+      const attemptsCount = performanceMetrics.attempts;
+      // Arena Logic: 1->12, 2->12, 3->10, 4->8, 5->6, 6->4, 7->2
+      const pointsMap = [12, 12, 10, 8, 6, 4, 2];
+      pointsEarned = pointsMap[attemptsCount - 1] || 0;
+      
+      // Map back to 6 buckets for the distribution chart: 12pt, 10pt, 8pt, 6pt, 4pt, 2pt
+      let bucketIdx = 0;
+      if (attemptsCount === 1 || attemptsCount === 2) {
+        bucketIdx = 0; // 12 pts
+        isPerfect = true;
+      } else {
+        bucketIdx = attemptsCount - 2; // 3->1 (10pt), 4->2 (8pt), etc.
+      }
+
+      if (stats[gameKey].distribution) {
+        stats[gameKey].distribution[bucketIdx] = (stats[gameKey].distribution[bucketIdx] || 0) + 1;
+      }
     }
 
     stats.totalPoints += pointsEarned;

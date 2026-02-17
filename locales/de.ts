@@ -1,4 +1,3 @@
-
 import { TranslationSchema } from './types.ts';
 
 export const de: TranslationSchema = {
@@ -24,9 +23,7 @@ export const de: TranslationSchema = {
     mistakesLeft: "Fehler verbleibend",
     howToPlay: "Spielanleitung",
     close: "Schließen",
-    selectLanguage: "Sprache Wählen",
-    // Adding missing stats key
-    stats: "Statistiken"
+    selectLanguage: "Sprache Wählen"
   },
   greenroom: {
     greenroom: "Der Greenroom",
@@ -61,7 +58,7 @@ export const de: TranslationSchema = {
     },
     euroarena: { 
       title: "EuroArena", 
-      desc: "Vergleiche und analysiere.",
+      desc: "Errate über Statistiken.",
       rules: "Vergleiche deine Tipps mit einem mysteriösen Zielbeitrag. Nutze die Attribute (Jahr, Rang, Land, Genre, Größe, Geschlecht), um deine Suche einzugrenzen.\n\n🟩: Perfekter Treffer\n🟨: Nahe dran (nahes Jahr/Rang, gleiche Region oder Genregruppe)\n⬛: Kein Treffer"
     }
   },
@@ -169,7 +166,7 @@ export const de: TranslationSchema = {
   metadata: {
     countries: {
       "Switzerland": "Schweiz", "Sweden": "Schweden", "Finland": "Finnland", "Netherlands": "Niederlande",
-      "Italy": "Italien", "Croatia": "Croatien", "United Kingdom": "Vereinigtes Königreich", "Ukraine": "Ukraine",
+      "Italy": "Italien", "Croatien": "Kroatien", "United Kingdom": "Vereinigtes Königreich", "Ukraine": "Ukraine",
       "Israel": "Israel", "Portugal": "Portugal", "Denmark": "Dänemark", "Norway": "Norwegen", "Spain": "Spanien",
       "Austria": "Österreich", "Cyprus": "Zypern", "Iceland": "Island", "Germany": "Deutschland", "Azerbaijan": "Aserbaidschan",
       "Serbia": "Serbien", "Australia": "Australien", "Greece": "Griechenland", "Moldova": "Moldawien", "Belgium": "Belgien",
@@ -179,9 +176,9 @@ export const de: TranslationSchema = {
     },
     genres: {
       "Drum and Bass": "Drum and Bass", "Opera": "Oper", "Drum and Bass / Opera": "Drum and Bass / Oper",
-      "Pop": "Pop", "Party Metal": "Party Metal", "Ballad": "Ballade", "Rock": "Rock", "Industrial Rock": "Industrial Rock", 
+      "Pop": "Pop", "Party Metal": "Party Metal", "Ballade": "Ballade", "Rock": "Rock", "Industrial Rock": "Industrial Rock", 
       "Glam Rock": "Glam Rock", "Folk-Hop": "Folk-Hop", "Jazz": "Jazz", "Europop": "Europop", "Hard Rock": "Hard Rock",
-      "Folk-Pop": "Folk-Pop", "Folk": "Folk", "Comedy Pop": "Comedy Pop", "Latin Pop": "Pop Latino",
+      "Folk-Pop": "Folk-Pop", "Folk": "Folk", "Comedy Pop": "Comedy Pop", "Latin Pop": "Latin Pop",
       "R&B": "R&B", "Orchestral Pop": "Orchestral Pop", "Dance Pop": "Dance Pop", "Synthpop": "Synthpop",
       "Indie Pop": "Indie Pop", "Ethno-Pop": "Ethno-Pop", "Soul": "Soul", "Other": "Andere", "Ouija Pop": "Ouija Pop",
       "Electro-Folk": "Electro-Folk", "Synth-Pop": "Synth-Pop", "Alternative": "Alternative", "Electropop": "Electropop",
