@@ -56,10 +56,6 @@ export const MASTER_DATA: MasterSong[] = [
   { id: "2021-20", title: "Mata Hari", artist: "Efendi", year: 2021, placing: 20, country: "Azerbaijan", sex: "Female", genre: "Dance Pop", members: 1, fact: "Included traditional Azerbaijani instrumentation.", tier: "cult" },
 
   // 2019
-  { id: "1969-1-1", title: "Boom Bang-a-Bang", artist: "Lulu", year: 1969, placing: 1, country: "United Kingdom", sex: "Female", genre: "Pop", members: 1, fact: "One of the four joint winners in 1969.", tier: "golden" },
-  { id: "1969-1-2", title: "Un jour, un enfant", artist: "Frida Boccara", year: 1969, placing: 1, country: "France", sex: "Female", genre: "Chanson", members: 1, fact: "France's winner in the infamous 1969 four-way tie.", tier: "golden" },
-  { id: "1969-1-3", title: "De troubadour", artist: "Lenny Kuhr", year: 1969, placing: 1, country: "Netherlands", sex: "Female", genre: "Chanson", members: 1, fact: "The Netherlands' winner in the infamous 1969 four-way tie.", tier: "golden" },
-  { id: "1969-1-4", title: "Vivo cantando", artist: "Salomé", year: 1969, placing: 1, country: "Spain", sex: "Female", genre: "Pop", members: 1, fact: "Spain's winner in the infamous 1969 four-way tie.", tier: "golden" },
   { id: "2019-1", title: "Arcade", artist: "Duncan Laurence", year: 2019, placing: 1, country: "Netherlands", sex: "Male", genre: "Pop Ballad", members: 1, fact: "Became a global viral hit on TikTok two years after winning.", tier: "golden" },
   { id: "2019-2", title: "Soldi", artist: "Mahmood", year: 2019, placing: 2, country: "Italy", sex: "Male", genre: "R&B", members: 1, fact: "The first Eurovision song to reach 100 million streams on Spotify.", tier: "golden" },
   { id: "2019-6", title: "Spirit in the Sky", artist: "KEiiNO", year: 2019, placing: 6, country: "Norway", sex: "Mixed", genre: "Pop", members: 3, fact: "Won the televote but came 6th overall due to juries.", tier: "cult" },
