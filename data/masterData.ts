@@ -1,6 +1,18 @@
 import { MasterSong } from './types.ts';
 
 export const MASTER_DATA: MasterSong[] = [
+   // 2025
+  { id: "2025-1", title: "Wasted Love", artist: "JJ", year: 2025, placing: 1, country: "Austria", sex: "Male", genre: "Drum and Bass / Opera", members: 1, fact: "Austria’s third Eurovision win, combining operatic vocals with modern electronic production.", youtubeId: "tBDx7y9Ejwc", tier: "golden" },
+  { id: "2025-2", title: "New Day Will Rise", artist: "Yuval Raphael", year: 2025, placing: 2, country: "Israel", sex: "Female", genre: "Pop Ballad", members: 1, fact: "Won the televote but finished second overall after jury results.", youtubeId: "IzniNjG4Xto", tier: "golden" },
+  { id: "2025-3", title: "Espresso Macchiato", artist: "Tommy Cash", year: 2025, placing: 3, country: "Estonia", sex: "Male", genre: "Electropop", members: 1, fact: "One of the most streamed Eurovision songs of the year following the contest.", youtubeId: "m2pQeKDcIdY", tier: "golden" },
+  { id: "2025-4", title: "Bara bada bastu", artist: "KAJ", year: 2025, placing: 4, country: "Sweden", sex: "Male", genre: "Comedy Pop", members: 3, fact: "Sauna-themed performance that became a viral hit across Nordic countries.", youtubeId: "QWx7N9jZVxA", tier: "golden" },
+  { id: "2025-5", title: "Volevo essere un duro", artist: "Lucio Corsi", year: 2025, placing: 5, country: "Italy", sex: "Male", genre: "Art Pop / Rock", members: 1, fact: "Italy’s artsy entry gained strong jury support and post-contest streaming traction.", youtubeId: "JZkNpR4Yv7s", tier: "cult" },
+  { id: "2025-7", title: "Maman", artist: "Louane", year: 2025, placing: 7, country: "France", sex: "Female", genre: "Chanson / Pop Ballad", members: 1, fact: "A jury favourite that continued France’s recent strong Eurovision streak.", youtubeId: "oL7h3xBs5KY", tier: "cult" },
+  { id: "2025-11", title: "Ich komme", artist: "Erika Vikman", year: 2025, placing: 11, country: "Finland", sex: "Female", genre: "Schlager", members: 1, fact: "One of the most talked-about performances of the year due to its bold staging.", youtubeId: "V3vbVd1ynnk", tier: "cult" },
+  { id: "2025-12", title: "C’est la vie", artist: "Claude", year: 2025, placing: 12, country: "Netherlands", sex: "Male", genre: "Pop", members: 1, fact: "Generated pre-contest hype and strong streaming numbers before the final.", youtubeId: "lQm8WcYkP3E", tier: "cult" },
+  { id: "2025-15", title: "Baller", artist: "Marie Reim", year: 2025, placing: 15, country: "Germany", sex: "Female", genre: "Dance Pop", members: 1, fact: "One of the more radio-friendly entries of the year in German media.", youtubeId: "pL9kRm2Zx4Q", tier: "cult" },
+  { id: "2025-26", title: "Tutta l’Italia", artist: "Angelina Mango", year: 2025, placing: 26, country: "San Marino", sex: "Female", genre: "Pop", members: 1, fact: "Created significant fan buzz online despite finishing lower in the table.", youtubeId: "7xZ9bLkQ2Rw", tier: "cult" },
+
   // 2024
   { id: "2024-1", title: "The Code", artist: "Nemo", year: 2024, placing: 1, country: "Switzerland", sex: "Other", genre: "Drum and Bass / Opera", members: 1, fact: "Broke the trophy on stage within minutes of winning.", youtubeId: "kiGDvM14Kwg", tier: "golden" },
   { id: "2024-2", title: "Rim Tim Tagi Dim", artist: "Baby Lasagna", year: 2024, placing: 2, country: "Croatia", sex: "Male", genre: "Industrial Rock", members: 1, fact: "Actually started as a reserve entry for his national final.", youtubeId: "YIBjarAiAVc", tier: "golden" },
