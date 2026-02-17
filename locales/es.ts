@@ -1,4 +1,3 @@
-
 import { TranslationSchema } from './types.ts';
 
 export const es: TranslationSchema = {
@@ -173,7 +172,7 @@ export const es: TranslationSchema = {
       "Serbia": "Serbia", "Australia": "Australia", "Greece": "Grecia", "Moldavia": "Moldavia", "Belgium": "Bélgica",
       "Poland": "Polonia", "Slovenia": "Eslovenia", "Ireland": "Irlanda", "Luxembourg": "Luxemburgo", "Albania": "Albania",
       "Bulgaria": "Bulgaria", "Estonia": "Estonia", "Russia": "Rusia", "Turkey": "Turquía", "Bosnia & Herzegovina": "Bosnia y Herzegovina",
-      "Malta": "Malta", "Monaco": "Mónaco", "Latvia": "Letonia", "Hungary": "Hungría"
+      "Malta": "Malta", "Monaco": "Mónaco", "Latvia": "Letonia", "Hungary": "Hungría", "San Marino": "San Marino"
     },
     genres: {
       "Drum and Bass": "Drum and Bass", "Opera": "Ópera", "Drum and Bass / Opera": "Drum and Bass / Ópera",

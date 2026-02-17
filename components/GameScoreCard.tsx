@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { MasterSong } from '../data/types.ts';
 import { useTranslation } from '../context/LanguageContext.tsx';
@@ -163,6 +162,12 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
     };
   })();
 
+  // Simplified to always use search query for maximum reliability
+  const getWatchUrl = (s: MasterSong) => {
+    const query = encodeURIComponent(`Eurovision ${s.year} ${s.country} ${s.artist} ${s.title} Live`);
+    return `https://www.youtube.com/results?search_query=${query}`;
+  };
+
   return (
     <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out py-1">
       <div className={`bg-[#0b0b18] border border-white/10 rounded-[2rem] w-full relative flex flex-col overflow-hidden ${theme.card}`}>
@@ -201,16 +206,14 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
                        <h4 className="text-lg sm:text-xl font-black text-white uppercase tracking-tighter leading-none">{song.title}</h4>
                        <p className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-tight">{song.artist}</p>
                     </div>
-                    {song.youtubeId && (
-                      <a 
-                        href={`https://youtube.com/watch?v=${song.youtubeId}`} 
-                        target="_blank" rel="noopener noreferrer" 
-                        className="bg-[#ff0000] px-2.5 py-1.5 rounded-lg text-[6px] font-black text-white transition-all hover:bg-[#cc0000] flex flex-col items-center gap-0.5 shadow-lg shadow-red-600/10"
-                      >
-                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
-                        {t('scorecard.watch')}
-                      </a>
-                    )}
+                    <a 
+                      href={getWatchUrl(song)} 
+                      target="_blank" rel="noopener noreferrer" 
+                      className="bg-[#ff0000] px-2.5 py-1.5 rounded-lg text-[6px] font-black text-white transition-all hover:bg-[#cc0000] flex flex-col items-center gap-0.5 shadow-lg shadow-red-600/10"
+                    >
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                      {t('scorecard.watch')}
+                    </a>
                  </div>
                </div>
 

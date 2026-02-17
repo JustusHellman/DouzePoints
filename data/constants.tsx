@@ -1,4 +1,3 @@
-
 export const REGION_MAP: Record<string, string> = {
   // Nordics
   "Sweden": "Nordics", "Norway": "Nordics", "Finland": "Nordics", "Denmark": "Nordics", "Iceland": "Nordics",
@@ -26,6 +25,7 @@ export const REGION_MAP: Record<string, string> = {
 
 export const GENRE_PARENT_MAP: Record<string, string> = {
   "Pop": "Pop", "Dance Pop": "Pop", "Dance-Pop": "Pop", "Europop": "Pop", "Synthpop": "Pop", "Latin Pop": "Pop", "Comedy Pop": "Pop",
+  "Schlager": "Pop", "Chanson": "Pop",
   "Rock": "Rock", "Hard Rock": "Rock", "Party Metal": "Rock", "Industrial Rock": "Rock", "Glam Rock": "Rock",
   "Drum and Bass": "Electronic", "Techno": "Electronic",
   "Opera": "Classical", "Orchestral Pop": "Classical",

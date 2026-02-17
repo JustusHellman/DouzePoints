@@ -1,4 +1,3 @@
-
 import { TranslationSchema } from './types.ts';
 
 export const de: TranslationSchema = {
@@ -167,13 +166,13 @@ export const de: TranslationSchema = {
   metadata: {
     countries: {
       "Switzerland": "Schweiz", "Sweden": "Schweden", "Finland": "Finnland", "Netherlands": "Niederlande",
-      "Italy": "Italien", "Croatien": "Kroatien", "United Kingdom": "Vereinigtes Königreich", "Ukraine": "Ukraine",
+      "Italy": "Italien", "Croatia": "Kroatien", "United Kingdom": "Vereinigtes Königreich", "Ukraine": "Ukraine",
       "Israel": "Israel", "Portugal": "Portugal", "Denmark": "Danimarca", "Norway": "Norwegen", "Spain": "Spanien",
       "Austria": "Österreich", "Cyprus": "Zypern", "Iceland": "Island", "Germany": "Deutschland", "Azerbaijan": "Aserbaidschan",
       "Serbia": "Serbien", "Australia": "Australien", "Greece": "Griechenland", "Moldova": "Moldawien", "Belgium": "Belgien",
       "Poland": "Polen", "Slovenia": "Slowenien", "Ireland": "Irland", "Luxembourg": "Luxemburg", "Albania": "Albanien",
       "Bulgaria": "Bulgarien", "Estonia": "Estland", "Russia": "Russland", "Turkey": "Türkei", "Bosnia & Herzegovina": "Bosnien & Herzegowina",
-      "Malta": "Malta", "Monaco": "Monaco", "Latvia": "Lettland", "Hungary": "Ungarn"
+      "Malta": "Malta", "Monaco": "Monaco", "Latvia": "Lettland", "Hungary": "Ungarn", "San Marino": "San Marino"
     },
     genres: {
       "Drum and Bass": "Drum and Bass", "Opera": "Oper", "Drum and Bass / Opera": "Drum and Bass / Oper",

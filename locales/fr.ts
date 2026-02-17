@@ -1,4 +1,3 @@
-
 import { TranslationSchema } from './types.ts';
 
 export const fr: TranslationSchema = {
@@ -167,17 +166,17 @@ export const fr: TranslationSchema = {
   metadata: {
     countries: {
       "Switzerland": "Suisse", "Sweden": "Suède", "Finland": "Finlande", "Netherlands": "Pays-Bas",
-      "Italy": "Italie", "Croatie": "Croatie", "United Kingdom": "Royaume-Uni", "Ukraine": "Ukraine",
+      "Italy": "Italie", "Croatia": "Croatie", "United Kingdom": "Royaume-Uni", "Ukraine": "Ukraine",
       "Israel": "Israël", "Portugal": "Portugal", "Denmark": "Danemark", "Norway": "Norvège", "Spain": "Espagne",
-      "Austria": "Autriche", "Cypre": "Chypre", "Islande": "Islande", "Allemagne": "Allemagne", "Azerbaïdjan": "Azerbaïdjan",
-      "Serbie": "Serbie", "Australie": "Australie", "Grèce": "Grèce", "Moldavie": "Moldavie", "Belgique": "Belgique",
-      "Pologne": "Pologne", "Slovénie": "Slovénie", "Irlande": "Irlande", "Luxembourg": "Luxembourg", "Albanie": "Albanie",
-      "Bulgarie": "Bulgarie", "Estonie": "Estonie", "Russie": "Russie", "Turquie": "Turquie", "Bosnie & Herzégovine": "Bosnie-Herzégovine",
-      "Malte": "Malte", "Monaco": "Monaco", "Lettonie": "Lettonie", "Hongrie": "Hongrie"
+      "Austria": "Autriche", "Cyprus": "Chypre", "Iceland": "Islande", "Germany": "Allemagne", "Azerbaijan": "Azerbaïdjan",
+      "Serbia": "Serbie", "Australia": "Australie", "Greece": "Grèce", "Moldova": "Moldavie", "Belgium": "Belgique",
+      "Poland": "Pologne", "Slovenia": "Slovénie", "Ireland": "Irlande", "Luxembourg": "Luxembourg", "Albania": "Albania",
+      "Bulgaria": "Bulgarie", "Estonia": "Estonie", "Russia": "Russie", "Turkey": "Turquie", "Bosnia & Herzegovina": "Bosnie-Herzégovine",
+      "Malta": "Malte", "Monaco": "Monaco", "Latvia": "Lettonie", "Hungary": "Hongrie", "San Marino": "Saint-Marin"
     },
     genres: {
       "Drum and Bass": "Drum and Bass", "Opera": "Opéra", "Drum and Bass / Opera": "Drum and Bass / Opéra",
-      "Pop": "Pop", "Party Metal": "Party Metal", "Ballade": "Ballade", "Rock": "Rock", "Industrial Rock": "Rock Industriel", 
+      "Pop": "Pop", "Party Metal": "Party Metal", "Ballad": "Ballade", "Rock": "Rock", "Industrial Rock": "Rock Industriel", 
       "Glam Rock": "Glam Rock", "Folk-Hop": "Folk-Hop", "Jazz": "Jazz", "Europop": "Europop", "Hard Rock": "Hard Rock",
       "Folk-Pop": "Folk-Pop", "Folk": "Folk", "Comedy Pop": "Pop Comique", "Latin Pop": "Pop Latin",
       "R&B": "R&B", "Orchestral Pop": "Pop Orchestral", "Dance Pop": "Dance Pop", "Synthpop": "Synthpop",
