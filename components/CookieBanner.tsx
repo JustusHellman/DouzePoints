@@ -12,7 +12,6 @@ declare global {
 }
 
 const CONSENT_KEY = 'eu_cookie_consent_v1';
-const PUBLISHER_ID = 'ca-pub-4733458613669560';
 
 export const CookieBanner: React.FC = () => {
   const { t } = useTranslation();
@@ -37,10 +36,8 @@ export const CookieBanner: React.FC = () => {
         setIsVisible(false);
         if (consent && consent.personalized === true) {
           updateGoogleConsent(true);
-          loadAdSense(true);
         } else {
           updateGoogleConsent(false);
-          loadAdSense(false);
         }
       } catch (e) {
         setIsVisible(true);
@@ -95,27 +92,12 @@ export const CookieBanner: React.FC = () => {
       'ad_user_data': value,
       'ad_personalization': value
     });
-  };
 
-  const loadAdSense = (personalized: boolean) => {
-    if (window._adsense_loaded) return;
-    
-    window.adsbygoogle = window.adsbygoogle || [];
-    if (!personalized) {
+    // If non-personalized is selected, we let adsbygoogle know
+    if (!granted) {
+      window.adsbygoogle = window.adsbygoogle || [];
       (window.adsbygoogle as any).requestNonPersonalizedAds = 1;
     }
-
-    const s = document.createElement('script');
-    s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-    s.async = true;
-    s.crossOrigin = 'anonymous';
-    s.setAttribute('data-ad-client', PUBLISHER_ID);
-    
-    s.onload = () => {
-      window._adsense_loaded = true;
-    };
-    
-    document.head.appendChild(s);
   };
 
   const handleAcceptAll = () => {
@@ -124,7 +106,6 @@ export const CookieBanner: React.FC = () => {
     setIsVisible(false);
     setHasConsented(true);
     updateGoogleConsent(true);
-    loadAdSense(true);
   };
 
   const handleDecline = () => {
@@ -133,7 +114,6 @@ export const CookieBanner: React.FC = () => {
     setIsVisible(false);
     setHasConsented(true);
     updateGoogleConsent(false);
-    loadAdSense(false);
   };
 
   const handleManage = () => {

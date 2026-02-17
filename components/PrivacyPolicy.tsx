@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useTranslation } from '../context/LanguageContext.tsx';
 
@@ -48,8 +47,8 @@ export const PrivacyPolicy: React.FC = () => {
           <h2 className="text-xl font-black uppercase text-white tracking-widest">Contact Information</h2>
           <p>
             If you have any questions or would like to request data deletion, please contact us at: 
-            <a href="mailto:your@email.example" className="text-blue-400 hover:text-blue-300 transition-colors ml-1 underline underline-offset-4">
-              your@email.example
+            <a href="mailto:douzepointsgame@gmail.com" className="text-blue-400 hover:text-blue-300 transition-colors ml-1 underline underline-offset-4">
+              douzepointsgame@gmail.com
             </a>
           </p>
         </section>
