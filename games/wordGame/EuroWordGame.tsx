@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useLayoutEffect, useCallback, useMemo } from 'react';
 import confetti from 'canvas-confetti';
 import { getDailyIndex, getDayString } from '../../utils/daily.ts';
@@ -258,7 +259,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
   }, [guesses, target, getGuessStatuses]);
 
   const handleShare = () => {
-    const shareText = `${won ? '🏆' : '❌'} ${title} • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')} • ${guesses.length}/${MAX_ATTEMPTS} ${t('common.attempts')}\n\n${historyEmoji}\n\n#DouzePoints #Eurovision`;
+    const shareText = `${won ? '🏆' : '❌'} ${title} • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')} • ${guesses.length}/${MAX_ATTEMPTS} ${t('common.attempts')}\n\n${historyEmoji}\n\ndouzepoints.net`;
     navigator.clipboard.writeText(shareText);
   };
 

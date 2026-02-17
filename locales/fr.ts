@@ -1,3 +1,4 @@
+
 import { TranslationSchema } from './types.ts';
 
 export const fr: TranslationSchema = {
@@ -27,39 +28,39 @@ export const fr: TranslationSchema = {
   },
   greenroom: {
     greenroom: "Le Greenroom",
-    description: "Détendez-vous et préparez-vous pour la performance. Cinq défis quotidiens pour prouver que vous êtes le fan ultime.",
+    description: "Bienvenue au Greenroom. Prouvez vos connaissances sur le Concours Eurovision de la Chanson avec cinq défis quotidiens pour le fan ultime.",
     dailyProgress: "Progression du Jour",
     qualified: "✨ Qualifié pour la Grande Finale ✨",
     finishedToday: "Terminé aujourd'hui",
-    statsButton: "Record de la Grande Finale",
+    statsButton: "Stats",
     careerStats: "Stats",
     todayScore: "Score du Jour"
   },
   games: {
     eurosong: { 
       title: "EuroSong", 
-      desc: "Défi quotidien de titres.",
-      rules: "Devinez le titre de la chanson cachée en 6 essais. Vous pouvez entrer n'importe quelle combinaison de lettres. La couleur des tuiles changera pour montrer si vous étiez proche.\n\n🟩 : Lettre et position correctes\n🟨 : Lettre correcte, mauvaise position\n⬛ : Mauvaise lettre"
+      desc: "Défi quotidien de titres de l'Eurovision.",
+      rules: "Devinez le titre de la chanson de l'Eurovision cachée en 6 essais. Vous pouvez entrer n'importe quelle combinaison de lettres. La couleur des tuiles changera pour montrer si vous étiez proche.\n\n🟩 : Lettre et position correctes\n🟨 : Lettre correcte, mauvaise position\n⬛ : Mauvaise lettre"
     },
     euroartist: { 
       title: "EuroArtist", 
-      desc: "Défi quotidien d'artistes.",
-      rules: "Devinez l'artiste caché en 6 essais. Vous pouvez entrer n'importe quelle combinaison de lettres. La couleur des tuiles changera pour montrer si vous étiez proche.\n\n🟩 : Lettre et position correctes\n🟨 : Lettre correcte, mauvaise position\n⬛ : Mauvaise lettre"
+      desc: "Défi quotidien d'artistes de l'ESC.",
+      rules: "Devinez l'artiste de l'ESC caché en 6 essais. Vous pouvez entrer n'importe quelle combinaison de lettres. La couleur des tuiles changera pour montrer si vous étiez proche.\n\n🟩 : Lettre et position correctes\n🟨 : Lettre correcte, mauvaise position\n⬛ : Mauvaise lettre"
     },
     eurolinks: { 
       title: "EuroLinks", 
-      desc: "Groupez 4 éléments liés.",
+      desc: "Groupez 4 éléments de l'Eurovision.",
       rules: "Trouvez des groupes de quatre éléments qui partagent un thème commun du concours. Sélectionnez quatre éléments et appuyez sur 'Envoyer' pour vérifier. Vous avez droit à 6 erreurs !"
     },
     euroguess: { 
       title: "EuroGuess", 
-      desc: "Identifiez l'entrée via 6 indices.",
-      rules: "Identifiez l'entrée mystère en utilisant jusqu'à 6 indices. Chaque erreur révèle un indice plus précis (Année, Pays, Genre, etc.). Plus vous devinez vite, plus vous marquez de points !"
+      desc: "Identifiez l'entrée via des indices Eurovision.",
+      rules: "Identifiez l'entrée mystère du concours en utilisant jusqu'à 6 indices. Chaque erreur révèle un indice plus précis (Année, Pays, Genre, etc.). Plus vous devinez vite, plus vous marquez de points !"
     },
     euroarena: { 
       title: "EuroArena", 
-      desc: "Devinez via les statistiques.",
-      rules: "Comparez vos suppositions à une entrée mystère. Utilisez les marqueurs d'attributs (Année, Classement, Pays, Genre, Taille, Sexe) pour affiner votre recherche.\n\n🟩 : Correspondance Parfaite\n🟨 : Correspondance Proche (année/rang proche, même région ou groupe de genre)\n⬛ : Aucune Correspondance"
+      desc: "Devinez via les statistiques du concours.",
+      rules: "Comparez vos suppositions à une entrée mystère de l'Eurovision. Utilisez les marqueurs d'attributs (Année, Classement, Pays, Genre, Taille, Sexe) pour affiner votre recherche.\n\n🟩 : Correspondance Parfaite\n🟨 : Correspondance Proche (année/rang proche, même région ou groupe de genre)\n⬛ : Aucune Correspondance"
     }
   },
   wordGame: {
@@ -76,7 +77,7 @@ export const fr: TranslationSchema = {
     categoriesDiscovered: "Catégories Découvertes"
   },
   guesser: {
-    searchPlaceholder: "Chercher un titre, artiste ou pays...",
+    searchPlaceholder: "Chercher des entrées Eurovision...",
     noResults: "Aucune entrée correspondante",
     hintLabels: {
       year: "Année",
@@ -88,7 +89,7 @@ export const fr: TranslationSchema = {
     }
   },
   arena: {
-    analyze: "Analysez le terrain",
+    analyze: "Analysez le terrain Eurovision",
     verdict: "Voir le verdict de l'Arena",
     labels: {
       year: "Année",
@@ -100,7 +101,7 @@ export const fr: TranslationSchema = {
     }
   },
   stats: {
-    totalRecord: "Record de la Grande Finale",
+    totalRecord: "Record de l'Eurovision",
     voterBreakdown: "Détails des Votes",
     howToWin: "Comment Gagner",
     earnPoints: "Gagner des Points de Rang",
@@ -158,7 +159,7 @@ export const fr: TranslationSchema = {
     "Grand Finalist": "Grand Finaliste",
     "Top 10 Contender": "Candidat au Top 10",
     "Podium Finish": "Place sur le Podium",
-    "Winner": "Vainqueur",
+    "Winner": "Winner",
     "Multi-Winner": "Multi-Vainqueur",
     "Hall of Famer": "Hall of Famer",
     "Eurovision Legend": "Légende de l'Eurovision"
@@ -168,11 +169,11 @@ export const fr: TranslationSchema = {
       "Switzerland": "Suisse", "Sweden": "Suède", "Finland": "Finlande", "Netherlands": "Pays-Bas",
       "Italy": "Italie", "Croatie": "Croatie", "United Kingdom": "Royaume-Uni", "Ukraine": "Ukraine",
       "Israel": "Israël", "Portugal": "Portugal", "Denmark": "Danemark", "Norway": "Norvège", "Spain": "Espagne",
-      "Austria": "Autriche", "Cyprus": "Chypre", "Iceland": "Islande", "Germany": "Allemagne", "Azerbaijan": "Azerbaïdjan",
-      "Serbia": "Serbie", "Australia": "Australie", "Greece": "Grèce", "Moldova": "Moldavie", "Belgium": "Belgique",
-      "Poland": "Pologne", "Slovenia": "Slovénie", "Ireland": "Irlande", "Luxembourg": "Luxembourg", "Albania": "Albanie",
-      "Bulgaria": "Bulgarie", "Estonia": "Estonie", "Russia": "Russie", "Turkey": "Turquie", "Bosnia & Herzegovina": "Bosnie-Herzégovine",
-      "Malta": "Malte", "Monaco": "Monaco", "Latvia": "Lettonie", "Hungary": "Hongrie"
+      "Austria": "Autriche", "Cypre": "Chypre", "Islande": "Islande", "Allemagne": "Allemagne", "Azerbaïdjan": "Azerbaïdjan",
+      "Serbie": "Serbie", "Australie": "Australie", "Grèce": "Grèce", "Moldavie": "Moldavie", "Belgique": "Belgique",
+      "Pologne": "Pologne", "Slovénie": "Slovénie", "Irlande": "Irlande", "Luxembourg": "Luxembourg", "Albanie": "Albanie",
+      "Bulgarie": "Bulgarie", "Estonie": "Estonie", "Russie": "Russie", "Turquie": "Turquie", "Bosnie & Herzégovine": "Bosnie-Herzégovine",
+      "Malte": "Malte", "Monaco": "Monaco", "Lettonie": "Lettonie", "Hongrie": "Hongrie"
     },
     genres: {
       "Drum and Bass": "Drum and Bass", "Opera": "Opéra", "Drum and Bass / Opera": "Drum and Bass / Opéra",

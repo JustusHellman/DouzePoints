@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import { MasterSong } from '../data/types.ts';
-import { AdSlot } from './AdSlot.tsx';
 import { useTranslation } from '../context/LanguageContext.tsx';
 import { getDayString } from '../utils/daily.ts';
 
@@ -138,7 +137,7 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
     else if (points >= 8) headline = t('scorecard.headlines.greatPerformance');
     else headline = t('scorecard.headlines.qualified');
 
-    const shareText = `✨ DOUZE POINTS ✨\n${headline}\n\n${gameTitle} • ${getDayString()}\n${t('scorecard.score')}: ${points} ${t('common.pointsShort')} • ${attempts}/${maxAttempts} ${t('common.steps')}\n\n${displayHistory}\n\n#DouzePoints #Eurovision`;
+    const shareText = `✨ DOUZE POINTS ✨\n${headline}\n\n${gameTitle} • ${getDayString()}\n${t('scorecard.score')}: ${points} ${t('common.pointsShort')} • ${attempts}/${maxAttempts} ${t('common.steps')}\n\n${displayHistory}\n\ndouzepoints.net`;
     
     navigator.clipboard.writeText(shareText).then(() => {
       setShowCopied(true);
@@ -265,10 +264,6 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
                 {extraInfo}
              </div>
           )}
-
-          <div className="px-1 border-t border-white/5 pt-2">
-            <AdSlot adSlot="1234567890" adFormat="rectangle" hideLabel={true} />
-          </div>
         </div>
 
         <div className="p-5 border-t border-white/5 bg-black/40 flex flex-col gap-2">

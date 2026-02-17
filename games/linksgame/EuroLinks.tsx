@@ -205,7 +205,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   }, [guessHistory]);
 
   const handleShare = () => {
-    const shareText = `${won ? '🏆' : '❌'} EuroLinks • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')} • ${6 - mistakes} ${t('common.mistakesLeft').toLowerCase()}\n\n${historyEmoji}\n\n#DouzePoints #Eurovision`;
+    const shareText = `${won ? '🏆' : '❌'} EuroLinks • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')} • ${6 - mistakes} ${t('common.mistakesLeft').toLowerCase()}\n\n${historyEmoji}\n\ndouzepoints.net`;
     navigator.clipboard.writeText(shareText);
     alert(t('common.copied'));
   };
@@ -337,7 +337,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
         <GameScoreCard 
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
           historyEmoji={historyEmoji} gameTitle={t('games.eurolinks.title')} attempts={remainingAttempts} maxAttempts={6}
-          onClose={() => setShowModal(false)} onReturn={onReturn}
+          onClose={() => setShowModal(false)} onReturn={onReturn} onShare={handleShare}
           extraInfo={
             <div className="space-y-4">
               <p className="text-[10px] text-gray-600 font-black uppercase tracking-[0.4em] text-center mb-1">{t('links.categoriesDiscovered')}</p>

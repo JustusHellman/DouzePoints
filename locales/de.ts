@@ -1,3 +1,4 @@
+
 import { TranslationSchema } from './types.ts';
 
 export const de: TranslationSchema = {
@@ -27,39 +28,39 @@ export const de: TranslationSchema = {
   },
   greenroom: {
     greenroom: "Der Greenroom",
-    description: "Entspanne dich und bereite dich auf den Auftritt vor. Fünf tägliche Herausforderungen, um zu beweisen, dass du der ultimative Superfan bist.",
+    description: "Willkommen im Greenroom. Teste dein Wissen über den Eurovision Song Contest mit fünf täglichen Herausforderungen für den ultimativen Superfan.",
     dailyProgress: "Tagesfortschritt",
     qualified: "✨ Qualifiziert für das Finale ✨",
     finishedToday: "Heute abgeschlossen",
-    statsButton: "Grand-Prix-Rekord",
+    statsButton: "Stats",
     careerStats: "Statistiken",
     todayScore: "Heutige Punktzahl"
   },
   games: {
     eurosong: { 
       title: "EuroSong", 
-      desc: "Tägliche Titel-Herausforderung.",
-      rules: "Errate den versteckten Songtitel in 6 Versuchen. Du kannst jede Buchstabenkombination eingeben. Die Farbe der Kacheln zeigt an, wie nah du der Lösung warst.\n\n🟩: Richtiger Buchstabe & Position\n🟨: Richtiger Buchstabe, falsche Position\n⬛: Falscher Buchstabe"
+      desc: "Tägliche Eurovision Titel-Herausforderung.",
+      rules: "Errate den versteckten Eurovision Songtitel in 6 Versuchen. Du kannst jede Buchstabenkombination eingeben. Die Farbe der Kacheln zeigt an, wie nah du der Lösung warst.\n\n🟩: Richtiger Buchstabe & Position\n🟨: Richtiger Buchstabe, falsche Position\n⬛: Falscher Buchstabe"
     },
     euroartist: { 
       title: "EuroArtist", 
-      desc: "Tägliche Künstler-Herausforderung.",
-      rules: "Errate den versteckten Künstler in 6 Versuchen. Du kannst jede Buchstabenkombination eingeben. Die Farbe der Kacheln zeigt an, wie nah du der Lösung warst.\n\n🟩: Richtiger Buchstabe & Position\n🟨: Richtiger Buchstabe, falsche Position\n⬛: Falscher Buchstabe"
+      desc: "Tägliche ESC Künstler-Herausforderung.",
+      rules: "Errate den versteckten ESC Künstler in 6 Versuchen. Du kannst jede Buchstabenkombination eingeben. Die Farbe der Kacheln zeigt an, wie nah du der Lösung warst.\n\n🟩: Richtiger Buchstabe & Position\n🟨: Richtiger Buchstabe, falsche Position\n⬛: Falscher Buchstabe"
     },
     eurolinks: { 
       title: "EuroLinks", 
-      desc: "Gruppiere 4 zusammengehörige Begriffe.",
+      desc: "Gruppiere 4 Eurovision Begriffe.",
       rules: "Finde Gruppen von vier Begriffen, die ein gemeinsames Eurovision-Thema haben. Wähle vier Begriffe aus und tippe auf 'Absenden'. Du hast 6 Fehler frei!"
     },
     euroguess: { 
       title: "EuroGuess", 
-      desc: "Erkenne den Beitrag anhand von 6 Hinweisen.",
-      rules: "Identifiziere den mysteriösen Beitrag mit bis zu 6 Hinweisen. Jeder falsche Tipp enthüllt einen neuen, spezifischeren Hinweis (Jahr, Land, Genre usw.). Frühes Erraten gibt mehr Punkte!"
+      desc: "Erkenne den Beitrag über ESC Hinweise.",
+      rules: "Identifiziere den mysteriösen Song-Contest-Beitrag mit bis zu 6 Hinweisen. Jeder falsche Tipp enthüllt einen neuen, spezifischeren Hinweis (Jahr, Land, Genre usw.). Frühes Erraten gibt mehr Punkte!"
     },
     euroarena: { 
       title: "EuroArena", 
-      desc: "Errate über Statistiken.",
-      rules: "Vergleiche deine Tipps mit einem mysteriösen Zielbeitrag. Nutze die Attribute (Jahr, Rang, Land, Genre, Größe, Geschlecht), um deine Suche einzugrenzen.\n\n🟩: Perfekter Treffer\n🟨: Nahe dran (nahes Jahr/Rang, gleiche Region oder Genregruppe)\n⬛: Kein Treffer"
+      desc: "Errate über Statistiken des Contests.",
+      rules: "Vergleiche deine Tipps mit einem mysteriösen Eurovision Zielbeitrag. Nutze die Attribute (Jahr, Rang, Land, Genre, Größe, Geschlecht), um deine Suche einzugrenzen.\n\n🟩: Perfekter Treffer\n🟨: Nahe dran (nahes Jahr/Rang, gleiche Region oder Genregruppe)\n⬛: Kein Treffer"
     }
   },
   wordGame: {
@@ -76,7 +77,7 @@ export const de: TranslationSchema = {
     categoriesDiscovered: "Gefundene Kategorien"
   },
   guesser: {
-    searchPlaceholder: "Suche Titel, Künstler oder Land...",
+    searchPlaceholder: "Suche Eurovision Beiträge...",
     noResults: "Keine passenden Beiträge gefunden",
     hintLabels: {
       year: "Jahr",
@@ -88,7 +89,7 @@ export const de: TranslationSchema = {
     }
   },
   arena: {
-    analyze: "Analysiere das Feld",
+    analyze: "Analysiere das Eurovision Feld",
     verdict: "Arena-Urteil ansehen",
     labels: {
       year: "Jahr",
@@ -100,7 +101,7 @@ export const de: TranslationSchema = {
     }
   },
   stats: {
-    totalRecord: "Der Grand-Prix-Rekord",
+    totalRecord: "Eurovision Rekord",
     voterBreakdown: "Wähler-Details",
     howToWin: "Wie man gewinnt",
     earnPoints: "Rang-Punkte verdienen",
@@ -158,7 +159,7 @@ export const de: TranslationSchema = {
     "Grand Finalist": "Finalist",
     "Top 10 Contender": "Top-10-Kandidat",
     "Podium Finish": "Podestplatz",
-    "Winner": "Gewinner",
+    "Winner": "Winner",
     "Multi-Winner": "Mehrfach-Gewinner",
     "Hall of Famer": "Hall of Famer",
     "Eurovision Legend": "Eurovision-Legende"
@@ -167,7 +168,7 @@ export const de: TranslationSchema = {
     countries: {
       "Switzerland": "Schweiz", "Sweden": "Schweden", "Finland": "Finnland", "Netherlands": "Niederlande",
       "Italy": "Italien", "Croatien": "Kroatien", "United Kingdom": "Vereinigtes Königreich", "Ukraine": "Ukraine",
-      "Israel": "Israel", "Portugal": "Portugal", "Denmark": "Dänemark", "Norway": "Norwegen", "Spain": "Spanien",
+      "Israel": "Israel", "Portugal": "Portugal", "Denmark": "Danimarca", "Norway": "Norwegen", "Spain": "Spanien",
       "Austria": "Österreich", "Cyprus": "Zypern", "Iceland": "Island", "Germany": "Deutschland", "Azerbaijan": "Aserbaidschan",
       "Serbia": "Serbien", "Australia": "Australien", "Greece": "Griechenland", "Moldova": "Moldawien", "Belgium": "Belgien",
       "Poland": "Polen", "Slovenia": "Slowenien", "Ireland": "Irland", "Luxembourg": "Luxemburg", "Albania": "Albanien",

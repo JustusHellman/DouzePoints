@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GameType, GlobalStats, DetailedStats } from '../data/types.ts';
@@ -109,7 +110,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, onShowIn
       text += `Total Points: ${stats.totalPoints}\n`;
       text += `Total Wins: ${wins}\n`;
       text += `Douze Points: ${stats.totalDouzePoints} 🏆\n\n`;
-      text += `Come and join the jury at Douze Points!\n#DouzePoints #Eurovision`;
+      text += `Come and join the jury at Douze Points!\ndouzepoints.net`;
     } else {
       const gameLabel = activeTab === GameType.WORD_GAME ? "Song" : 
                         activeTab === GameType.ARTIST_WORD_GAME ? "Artist" : 
@@ -130,8 +131,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, onShowIn
       text += `Douze Points: ${activeGameStats?.perfectGames} 🏆\n`;
       text += `Best Streak: ${activeGameStats?.maxStreak} 🔥\n`;
       text += `Current Streak: ${activeGameStats?.currentStreak}\n\n`;
-      text += `Rank: ${t(`ranks.${rankInfo.current.title}`)}\n`;
-      text += `#DouzePoints #Eurovision`;
+      text += `Rank: ${t(`ranks.${rankInfo.current.title}`)}\ndouzepoints.net`;
     }
 
     navigator.clipboard.writeText(text).then(() => {

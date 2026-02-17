@@ -1,3 +1,4 @@
+
 import { TranslationSchema } from './types.ts';
 
 export const en: TranslationSchema = {
@@ -10,7 +11,7 @@ export const en: TranslationSchema = {
     shareDaily: "Share Daily Score",
     shareCareer: "Share Stats",
     shareHallOfFame: "Share Hall of Fame",
-    copied: "Copied to clipboard!",
+    copied: "Copiated to clipboard!",
     returnToGreenroom: "Return to Greenroom",
     perfect: "Perfect",
     finished: "Finished",
@@ -27,7 +28,7 @@ export const en: TranslationSchema = {
   },
   greenroom: {
     greenroom: "The Greenroom",
-    description: "Relax and prepare for the performance. Five daily challenges to prove you are the ultimate superfan.",
+    description: "Welcome to the Greenroom. Prove your knowledge of the Eurovision Song Contest with five daily challenges designed for the ultimate superfan.",
     dailyProgress: "Daily Progress",
     qualified: "✨ Grand Final Qualified ✨",
     finishedToday: "Finished Today",
@@ -38,28 +39,28 @@ export const en: TranslationSchema = {
   games: {
     eurosong: { 
       title: "EuroSong", 
-      desc: "Daily title challenge.",
-      rules: "Guess the hidden song title in 6 tries. You can enter any combination of letters - it doesn't even have to be a real word! The color of the tiles will change to show how close your guess was to the answer.\n\n🟩: Correct letter & position\n🟨: Correct letter, wrong position\n⬛: Wrong letter"
+      desc: "Daily Eurovision song title challenge.",
+      rules: "Guess the hidden Eurovision song title in 6 tries. You can enter any combination of letters - it doesn't even have to be a real word! The color of the tiles will change to show how close your guess was to the answer.\n\n🟩: Correct letter & position\n🟨: Correct letter, wrong position\n⬛: Wrong letter"
     },
     euroartist: { 
       title: "EuroArtist", 
-      desc: "Daily performer challenge.",
-      rules: "Guess the hidden artist in 6 tries. You can enter any combination of letters - it doesn't even have to be a real word! The color of the tiles will change to show how close your guess was to the answer.\n\n🟩: Correct letter & position\n🟨: Correct letter, wrong position\n⬛: Wrong letter"
+      desc: "Daily Eurovision artist guessing game.",
+      rules: "Guess the hidden Eurovision artist in 6 tries. You can enter any combination of letters - it doesn't even have to be a real word! The color of the tiles will change to show how close your guess was to the answer.\n\n🟩: Correct letter & position\n🟨: Correct letter, wrong position\n⬛: Wrong letter"
     },
     eurolinks: { 
       title: "EuroLinks", 
-      desc: "Group 4 related items.",
+      desc: "Connect four related Eurovision items.",
       rules: "Find groups of four items that share a common song contest theme. Select four items and tap 'Submit' to check your guess. You have 6 mistakes allowed to find all 4 categories!"
     },
     euroguess: { 
       title: "EuroGuess", 
-      desc: "Identify the entry from 6 hints.",
-      rules: "Identify the mystery entry using up to 6 hints. Each incorrect guess reveals a new, more specific clue (Year, Country, Genre, etc.). Guessing correctly early yields more points!"
+      desc: "Identify a mystery Eurovision entry.",
+      rules: "Identify the mystery contest entry using up to 6 hints. Each incorrect guess reveals a new, more specific clue (Year, Country, Genre, etc.). Guessing correctly early yields more points!"
     },
     euroarena: { 
       title: "EuroArena", 
-      desc: "Compare stats to find the entry.",
-      rules: "Compare your guesses against a mystery target entry. Use the attribute markers (Year, Rank, Country, Genre, Size, Sex) to narrow your search.\n\n🟩: Perfect Match\n🟨: Close Match (near year/rank, same region or genre group)\n⬛: No Match"
+      desc: "Compare stats to find the target entry.",
+      rules: "Compare your guesses against a mystery Eurovision target entry. Use the attribute markers (Year, Rank, Country, Genre, Size, Sex) to narrow your search.\n\n🟩: Perfect Match\n🟨: Close Match (near year/rank, same region or genre group)\n⬛: No Match"
     }
   },
   wordGame: {
@@ -76,7 +77,7 @@ export const en: TranslationSchema = {
     categoriesDiscovered: "Categories Discovered"
   },
   guesser: {
-    searchPlaceholder: "Search title, artist or country...",
+    searchPlaceholder: "Search Eurovision entries...",
     noResults: "No matching entries found",
     hintLabels: {
       year: "Year",
@@ -88,7 +89,7 @@ export const en: TranslationSchema = {
     }
   },
   arena: {
-    analyze: "Analyze the field",
+    analyze: "Analyze the Eurovision field",
     verdict: "View Arena Verdict",
     labels: {
       year: "Year",
@@ -100,7 +101,7 @@ export const en: TranslationSchema = {
     }
   },
   stats: {
-    totalRecord: "The Grand Final Record",
+    totalRecord: "The Eurovision Record",
     voterBreakdown: "Voter Breakdown",
     howToWin: "How to Win",
     earnPoints: "Earn Rank Points",

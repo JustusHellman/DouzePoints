@@ -1,3 +1,4 @@
+
 import { TranslationSchema } from './types.ts';
 
 export const es: TranslationSchema = {
@@ -27,7 +28,7 @@ export const es: TranslationSchema = {
   },
   greenroom: {
     greenroom: "La Sala Verde",
-    description: "Relájate y prepárate para la actuación. Cinco retos diarios para demostrar que eres el fan definitivo.",
+    description: "Bienvenido a la Sala Verde. Demuestra tus conocimientos sobre el Festival de la Canción de Eurovisión con cinco retos diarios diseñados para el fan definitivo.",
     dailyProgress: "Progreso Diario",
     qualified: "✨ Clasificado para la Gran Final ✨",
     finishedToday: "Completado hoy",
@@ -38,28 +39,28 @@ export const es: TranslationSchema = {
   games: {
     eurosong: { 
       title: "EuroSong", 
-      desc: "Reto de títulos diarios.",
-      rules: "Adivina el título de la canción oculta en 6 intentos. Puedes introducir cualquier combinación de letras. El color de las casillas cambiará para mostrar qué tan cerca estuviste.\n\n🟩: Letra y posición correctas\n🟨: Letra correcta, posición incorrecta\n⬛: Letra incorrecta"
+      desc: "Reto diario de títulos de Eurovisión.",
+      rules: "Adivina el título de la canción de Eurovisión oculta en 6 intentos. Puedes introducir cualquier combinación de letras. El color de las casillas cambiará para mostrar qué tan cerca estuviste.\n\n🟩: Letra y posición correctas\n🟨: Letra correcta, posición incorrecta\n⬛: Letra incorrecta"
     },
     euroartist: { 
       title: "EuroArtist", 
-      desc: "Reto de artistas diarios.",
-      rules: "Adivina el artista oculto en 6 intentos. Puedes introducir cualquier combinación de letras. El color de las casillas cambiará para mostrar qué tan cerca estuviste.\n\n🟩: Letra y posición correctas\n🟨: Letra correcta, posición incorrecta\n⬛: Letra incorrecta"
+      desc: "Reto diario de artistas del ESC.",
+      rules: "Adivina el artista del ESC oculto en 6 intentos. Puedes introducir cualquier combinación de letras. El color de las casillas cambiará para mostrar qué tan cerca estuviste.\n\n🟩: Letra y posición correctas\n🟨: Letra correcta, posición incorrecta\n⬛: Letra incorrecta"
     },
     eurolinks: { 
       title: "EuroLinks", 
-      desc: "Agrupa 4 elementos relacionados.",
+      desc: "Agrupa 4 elementos de Eurovisión.",
       rules: "Encuentra grupos de cuatro elementos que compartan un tema común del festival. Selecciona cuatro elementos y pulsa 'Enviar' para comprobar tu suposición. ¡Tienes 6 errores permitidos!"
     },
     euroguess: { 
       title: "EuroGuess", 
-      desc: "Identifica la entrada con 6 pistas.",
+      desc: "Identifica la entrada con pistas de Eurovisión.",
       rules: "Identifica la entrada misteriosa usando hasta 6 pistas. Cada suposición incorrecta revela una pista nueva y más específica (Año, País, Género, etc.). ¡Adivinar antes otorga más puntos!"
     },
     euroarena: { 
       title: "EuroArena", 
-      desc: "Compara estadísticas para ganar.",
-      rules: "Compara tus suposiciones contra una entrada misteriosa. Usa los marcadores de atributos (Año, Puesto, País, Género, Tamaño, Sexo) para estrechar tu búsqueda.\n\n🟩: Coincidencia Perfecta\n🟨: Coincidencia Cercana (año/puesto cercano, misma región o grupo de género)\n⬛: Sin Coincidencia"
+      desc: "Compara estadísticas del festival.",
+      rules: "Compara tus suposiciones contra una entrada misteriosa de Eurovisión. Usa los marcadores de atributos (Año, Puesto, País, Género, Tamaño, Sexo) para estrechar tu búsqueda.\n\n🟩: Coincidencia Perfecta\n🟨: Coincidencia Cercana (año/puesto cercano, misma región o grupo de género)\n⬛: Sin Coincidencia"
     }
   },
   wordGame: {
@@ -76,7 +77,7 @@ export const es: TranslationSchema = {
     categoriesDiscovered: "Categorías Descubiertas"
   },
   guesser: {
-    searchPlaceholder: "Buscar título, artista o país...",
+    searchPlaceholder: "Buscar entradas de Eurovisión...",
     noResults: "No se encontraron entradas",
     hintLabels: {
       year: "Año",
@@ -88,7 +89,7 @@ export const es: TranslationSchema = {
     }
   },
   arena: {
-    analyze: "Analiza el campo",
+    analyze: "Analiza el campo de Eurovisión",
     verdict: "Ver veredicto del Arena",
     labels: {
       year: "Año",
@@ -100,7 +101,7 @@ export const es: TranslationSchema = {
     }
   },
   stats: {
-    totalRecord: "Récord de la Gran Final",
+    totalRecord: "Récord de Eurovisión",
     voterBreakdown: "Desglose de Votante",
     howToWin: "Cómo Ganar",
     earnPoints: "Gana Puntos de Rango",
@@ -158,7 +159,7 @@ export const es: TranslationSchema = {
     "Grand Finalist": "Gran Finalista",
     "Top 10 Contender": "Aspirante al Top 10",
     "Podium Finish": "Puesto en el Podio",
-    "Winner": "Ganador",
+    "Winner": "Winner",
     "Multi-Winner": "Ganador Múltiple",
     "Hall of Famer": "Salón de la Fama",
     "Eurovision Legend": "Leyenda de Eurovisión"
