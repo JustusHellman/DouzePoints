@@ -1,0 +1,42 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#050510"/>
+  
+  <!-- Subtle Grid Pattern -->
+  <defs>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ec4899;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ec4899;stop-opacity:0.15" />
+      <stop offset="100%" style="stop-color:#ec4899;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+  
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  
+  <!-- Decorative Glow -->
+  <circle cx="600" cy="315" r="400" fill="url(#glow)"/>
+  
+  <!-- Content Container -->
+  <g transform="translate(600, 315)">
+    <!-- Big '12' Logo in Background -->
+    <text y="40" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="320" font-style="italic" fill="rgba(255,255,255,0.03)">12</text>
+    
+    <!-- Main Title -->
+    <text y="-40" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="120" font-style="italic" fill="url(#brandGradient)" style="letter-spacing: -0.05em; text-transform: uppercase;">DOUZE POINTS</text>
+    
+    <!-- Subtitle -->
+    <text y="60" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="36" fill="rgba(255,255,255,0.6)" style="letter-spacing: 0.4em; text-transform: uppercase;">Daily ESC Challenges</text>
+    
+    <!-- Tagline / Features -->
+    <text y="140" text-anchor="middle" font-family="sans-serif" font-weight="400" font-size="24" fill="rgba(255,255,255,0.4)" style="letter-spacing: 0.1em;">WORDLE-STYLE • CONNECTIONS • TRIVIA • ARENA</text>
+  </g>
+  
+  <!-- Border -->
+  <rect x="20" y="20" width="1160" height="590" rx="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+</svg>
