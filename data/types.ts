@@ -3,7 +3,8 @@ export enum GameType {
   ARTIST_WORD_GAME = 'ARTIST_WORD_GAME',
   LINKS_GAME = 'LINKS_GAME',
   GUESSER = 'GUESSER',
-  ARENA = 'ARENA'
+  ARENA = 'ARENA',
+  REFRAIN_GAME = 'REFRAIN_GAME'
 }
 
 export interface DetailedStats {
@@ -22,6 +23,7 @@ export interface GlobalStats {
   links: DetailedStats;
   guesser: DetailedStats;
   arena: DetailedStats;
+  refrain: DetailedStats;
   totalPoints: number;
   totalDouzePoints: number; 
 }
@@ -30,6 +32,14 @@ export interface ConnectionsGroup {
   category: string;
   items: string[];
   difficulty: 'easy' | 'medium' | 'hard' | 'expert';
+}
+
+export interface LyricSnippet {
+  id: string;
+  title: string;
+  artist: string;
+  words: string[]; // Exactly 4 words
+  tier: 'easy' | 'medium' | 'hard' | 'expert';
 }
 
 export interface MasterSong {

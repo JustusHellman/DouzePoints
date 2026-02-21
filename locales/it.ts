@@ -27,7 +27,7 @@ export const it: TranslationSchema = {
   },
   greenroom: {
     greenroom: "La Greenroom",
-    description: "Benvenuto nella Greenroom. Dimostra le tue conoscenze sull'Eurovision Song Contest con cinque sfide quotidiane per il superfan definitivo.",
+    description: "Benvenuto nella Greenroom. Dimostra le tue conoscenze sull'Eurovision Song Contest con sei sfide quotidiane per il superfan definitivo.",
     dailyProgress: "Progresso Giornaliero",
     qualified: "✨ Qualificato per la Grand Final ✨",
     finishedToday: "Completato oggi",
@@ -45,6 +45,11 @@ export const it: TranslationSchema = {
       title: "EuroArtist", 
       desc: "Sfida quotidiana sugli artisti ESC.",
       rules: "Indovina l'artista ESC nascosto in 6 tentativi. Puoi inserire qualsiasi combinazione de lettere. Il colore delle tessere cambierà per mostrare quanto eri vicino alla risposta.\n\n🟩: Lettera e posizione corrette\n🟨: Lettera corretta, posizione errata\n⬛: Lettera errata"
+    },
+    eurorefrain: {
+      title: "EuroRefrain",
+      desc: "Collega 4 parole da un hook lirico.",
+      rules: "Trova gruppi di quattro parole che formano un hook sequenziale o un ritornello di una specifica canzone dell'Eurovision. Seleziona quattro parole e premi 'Invia'. Hai 6 errori a disposizione per identificare tutte e 4 le canzoni!"
     },
     eurolinks: { 
       title: "EuroLinks", 
@@ -73,7 +78,8 @@ export const it: TranslationSchema = {
     notALink: "Nessun collegamento",
     shuffle: "Mescola",
     deselectAll: "Deseleziona tutto",
-    categoriesDiscovered: "Categorie Scoperte"
+    categoriesDiscovered: "Categorie Scoperte",
+    lyricsDiscovered: "Ritornelli Scoperti"
   },
   guesser: {
     searchPlaceholder: "Cerca entry dell'Eurovision...",
@@ -165,7 +171,7 @@ export const it: TranslationSchema = {
   },
   metadata: {
     countries: {
-      "Switzerland": "Svizzera", "Sweden": "Svezia", "Finland": "Finlandia", "Netherlands": "Paesi Bassi",
+      "Switzerland": "Svizzera", "Sweden": "Svezia", "Finland": "Finlandia", "The Netherlands": "Paesi Bassi",
       "Italy": "Italia", "Croatia": "Croazia", "United Kingdom": "Regno Unito", "Ukraine": "Ucraina",
       "Israel": "Israele", "Portugal": "Portogallo", "Denmark": "Danimarca", "Norway": "Norvegia", "Spain": "Spagna",
       "Austria": "Austria", "Cyprus": "Cipro", "Iceland": "Islanda", "Germany": "Germania", "Azerbaijan": "Azerbaigian",

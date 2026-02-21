@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useLayoutEffect, useMemo, useCallback } from 'react';
 import confetti from 'canvas-confetti';
-import { getDailyIndex, getDayString } from '../../utils/daily.ts';
+import { getDayString } from '../../utils/daily.ts';
 import { updateGameStats } from '../../utils/stats.ts';
-import { GameType, ConnectionsGroup } from '../../data/types.ts';
-import { PUZZLES } from '../../data/linksgameData.ts';
+import { GameType, LyricSnippet } from '../../data/types.ts';
+import { REFRAIN_POOL } from '../../data/refrainData.ts';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
@@ -11,18 +11,24 @@ import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
 interface Tile {
   id: string;
   text: string;
-  category: string;
   difficulty: string;
 }
 
-interface EuroLinksProps {
+interface CompletedGroup {
+  category: string;
+  items: string[];
+  difficulty: string;
+}
+
+interface EuroRefrainProps {
   onReturn: () => void;
 }
 
-const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
+const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
   const { t } = useTranslation();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
 
+  // Instant scroll on mount
   useLayoutEffect(() => {
     const timer = requestAnimationFrame(() => {
       window.scrollTo(0, 60);
@@ -30,26 +36,68 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
     return () => cancelAnimationFrame(timer);
   }, []);
 
-  const dailyData = useMemo(() => {
-    const idx = getDailyIndex(PUZZLES, "linksgame");
-    return PUZZLES[idx];
-  }, []);
+  // Determinstic Board Generation from Seed
+  const { boardGroups, allTiles } = useMemo(() => {
+    const seedStr = getDayString() + "eurorefrain-salt-v1";
+    let hash = 0;
+    for (let i = 0; i < seedStr.length; i++) {
+      hash = (hash << 5) - hash + seedStr.charCodeAt(i);
+      hash |= 0;
+    }
+    const seed = Math.abs(hash);
 
-  // Create unique tile objects for the entire board
-  const allTiles = useMemo(() => {
-    return dailyData.flatMap((group, gIdx) => 
-      group.items.map((item, iIdx) => ({
-        id: `tile-${gIdx}-${iIdx}`,
-        text: item,
-        category: group.category,
-        difficulty: group.difficulty
+    const easyPool = REFRAIN_POOL.filter(s => s.tier === 'easy');
+    const mediumPool = REFRAIN_POOL.filter(s => s.tier === 'medium');
+    const hardPool = REFRAIN_POOL.filter(s => s.tier === 'hard');
+    const expertPool = REFRAIN_POOL.filter(s => s.tier === 'expert');
+
+    const selection: LyricSnippet[] = [];
+    const usedWords = new Set<string>();
+    const usedTitles = new Set<string>();
+
+    const pickSnippet = (pool: LyricSnippet[], salt: number) => {
+      let attempts = 0;
+      while (attempts < pool.length) {
+        const idx = (seed + salt + attempts) % pool.length;
+        const candidate = pool[idx];
+        const wordCollision = candidate.words.some(w => usedWords.has(w.toUpperCase()));
+        const titleCollision = usedTitles.has(candidate.title);
+
+        if (!wordCollision && !titleCollision) {
+          candidate.words.forEach(w => usedWords.add(w.toUpperCase()));
+          usedTitles.add(candidate.title);
+          return candidate;
+        }
+        attempts++;
+      }
+      return pool[0];
+    };
+
+    selection.push(pickSnippet(easyPool, 1));
+    selection.push(pickSnippet(mediumPool, 2));
+    selection.push(pickSnippet(hardPool, 3));
+    selection.push(pickSnippet(expertPool, 4));
+
+    const groups = selection.map(s => ({
+      category: `${s.title} (${s.artist})`,
+      items: s.words.map(w => w.toUpperCase()),
+      difficulty: s.tier
+    }));
+
+    const tiles: Tile[] = groups.flatMap((g, gIdx) => 
+      g.items.map((text, i) => ({
+        id: `tile-${gIdx}-${i}`,
+        text,
+        difficulty: g.difficulty
       }))
     );
-  }, [dailyData]);
+
+    return { boardGroups: groups, allTiles: tiles };
+  }, []);
 
   const [displayTiles, setDisplayTiles] = useState<Tile[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [completedGroups, setCompletedGroups] = useState<ConnectionsGroup[]>([]);
+  const [completedGroups, setCompletedGroups] = useState<CompletedGroup[]>([]);
   const [guessHistory, setGuessHistory] = useState<string[][]>([]);
   const [mistakes, setMistakes] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
@@ -60,7 +108,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const seenKey = 'hasSeenRules-linksgame';
+    const seenKey = 'hasSeenRules-refrain';
     const hasSeen = localStorage.getItem(seenKey);
     if (!hasSeen) {
       setShowHowToPlay(true);
@@ -69,7 +117,6 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   }, []);
 
   useEffect(() => {
-    // Initial shuffle of all tiles
     setDisplayTiles([...allTiles].sort(() => Math.random() - 0.5));
   }, [allTiles]);
 
@@ -85,7 +132,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   }, [won, mistakes, t]);
 
   useEffect(() => {
-    const saved = localStorage.getItem(`linksgame-${getDayString()}`);
+    const saved = localStorage.getItem(`eurorefrain-${getDayString()}`);
     if (saved) {
       try {
         const data = JSON.parse(saved);
@@ -95,20 +142,25 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
         setIsGameOver(!!data.isGameOver);
         setWon(!!data.won);
         if (!!data.isGameOver) setShowModal(true);
-        
         if (data.completedGroups) {
-          const completedCategories = data.completedGroups.map((g: any) => g.category);
-          setDisplayTiles(prev => prev.filter(tile => !completedCategories.includes(tile.category)));
+          const completedTileIds = new Set(data.completedGroups.flatMap((g: any) => {
+              // Find the source group to recover original IDs
+              const source = boardGroups.find(bg => bg.category === g.category);
+              if (!source) return [];
+              const groupIdx = boardGroups.indexOf(source);
+              return source.items.map((_, i) => `tile-${groupIdx}-${i}`);
+          }));
+          setDisplayTiles(prev => prev.filter(tile => !completedTileIds.has(tile.id)));
         }
       } catch (e) {}
     }
-  }, []);
+  }, [boardGroups]);
 
   useEffect(() => {
     if (completedGroups.length === 0 && mistakes === 0 && !isGameOver) return;
-    localStorage.setItem(`linksgame-${getDayString()}`, JSON.stringify({ completedGroups, guessHistory, mistakes, isGameOver, won }));
+    localStorage.setItem(`eurorefrain-${getDayString()}`, JSON.stringify({ completedGroups, guessHistory, mistakes, isGameOver, won }));
     if (isGameOver) {
-      updateGameStats(GameType.LINKS_GAME, won, { mistakes });
+      updateGameStats(GameType.REFRAIN_GAME, won, { mistakes });
       if (won) confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
     }
   }, [completedGroups, guessHistory, mistakes, isGameOver, won]);
@@ -128,58 +180,34 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
 
   const submit = () => {
     if (selectedIds.length !== 4) return;
-    
     const selectedTiles = selectedIds.map(id => allTiles.find(t => t.id === id)!);
     const attemptDiffs = selectedTiles.map(t => t.difficulty);
     setGuessHistory(prev => [...prev, attemptDiffs]);
 
-    // Check if all selected tiles belong to the same category
-    const firstCategory = selectedTiles[0].category;
-    const isCorrect = selectedTiles.every(t => t.category === firstCategory);
+    const foundGroup = boardGroups.find(bg => 
+      selectedTiles.every(st => bg.items.includes(st.text)) && 
+      bg.items.every(text => selectedTiles.some(st => st.text === text))
+    );
 
-    if (isCorrect) {
-      const foundGroup = dailyData.find(g => g.category === firstCategory);
-      if (foundGroup) {
-        const newCompleted = [...completedGroups, foundGroup];
-        setCompletedGroups(newCompleted);
-        setDisplayTiles(prev => prev.filter(tile => !selectedIds.includes(tile.id)));
-        setSelectedIds([]);
-        if (newCompleted.length === 4) { 
-          setWon(true); 
-          setIsGameOver(true); 
-          setShowModal(true); 
-        }
-      }
+    if (foundGroup) {
+      const newCompleted = [...completedGroups, foundGroup];
+      setCompletedGroups(newCompleted);
+      setDisplayTiles(prev => prev.filter(tile => !selectedIds.includes(tile.id)));
+      setSelectedIds([]);
+      if (newCompleted.length === 4) { setWon(true); setIsGameOver(true); setShowModal(true); }
     } else {
-      // One away logic: check if any group has 3 matches in the selection
       let oneAway = false;
-      dailyData.forEach(group => {
-        const matches = selectedTiles.filter(t => t.category === group.category).length;
+      boardGroups.forEach(bg => {
+        const matches = selectedTiles.filter(st => bg.items.includes(st.text)).length;
         if (matches === 3) oneAway = true;
       });
-
       setShaking(true);
       setShowWrongFlash(true);
       const newMistakes = mistakes + 1;
       setMistakes(newMistakes);
-      
-      if (oneAway && newMistakes < 6) { 
-        setMessage(t('links.oneAway')); 
-        setTimeout(() => setMessage(null), 1200); 
-      }
-      
-      if (newMistakes >= 6) { 
-        setTimeout(() => { 
-          setIsGameOver(true); 
-          setWon(false); 
-          setShowModal(true); 
-        }, 1200); 
-      }
-      
-      setTimeout(() => { 
-        setShaking(false); 
-        setShowWrongFlash(false); 
-      }, 800);
+      if (oneAway && newMistakes < 6) { setMessage(t('links.oneAway')); setTimeout(() => setMessage(null), 1200); }
+      if (newMistakes >= 6) { setTimeout(() => { setIsGameOver(true); setWon(false); setShowModal(true); }, 1200); }
+      setTimeout(() => { setShaking(false); setShowWrongFlash(false); }, 800);
     }
   };
 
@@ -199,7 +227,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   }, [guessHistory]);
 
   const handleShare = () => {
-    const shareText = `${won ? '🏆' : '❌'} EuroLinks • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')}\n\n${historyEmoji}\n\ndouzepoints.net`;
+    const shareText = `${won ? '🏆' : '❌'} EuroRefrain • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')}\n\n${historyEmoji}\n\ndouzepoints.net`;
     navigator.clipboard.writeText(shareText);
   };
 
@@ -216,11 +244,11 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
       {(!isGameOver || !showModal) && (
         <>
           <div className="flex items-center gap-3 mb-4">
-            <h1 className="text-3xl md:text-4xl font-black bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroLinks</h1>
+            <h1 className="text-3xl md:text-4xl font-black bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroRefrain</h1>
             <button onClick={() => setShowHowToPlay(true)} className="w-6 h-6 rounded-full border border-white/20 text-[10px] flex items-center justify-center font-bold text-gray-500 hover:text-white transition-all active:scale-90" aria-label="How to play">?</button>
           </div>
 
-          <HowToPlayModal isOpen={showHowToPlay} onClose={() => setShowHowToPlay(false)} title="EuroLinks" rules={t('games.eurolinks.rules')} />
+          <HowToPlayModal isOpen={showHowToPlay} onClose={() => setShowHowToPlay(false)} title="EuroRefrain" rules={t('games.eurorefrain.rules')} />
           
           <div className="mb-6 flex gap-1.5 h-6 items-center">
             <span className="text-[9px] text-gray-500 font-black uppercase tracking-widest mr-2">{t('links.mistakesRemaining')}</span>
@@ -243,7 +271,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
                   key={tile.id} onClick={() => handleSelect(tile.id)}
                   className={`min-h-[60px] sm:min-h-[80px] flex flex-col items-center justify-center rounded-2xl font-black transition-all duration-200 border-2 uppercase tracking-tight overflow-hidden ${
                     isSelected && showWrongFlash ? 'bg-red-500/10 border-red-500/40 text-white scale-105' : 
-                    isSelected ? 'bg-gray-400 text-black border-white scale-95 shadow-inner' : 
+                    isSelected ? 'bg-indigo-500 text-white border-indigo-400 scale-95 shadow-inner' : 
                     'bg-gray-900 border-white/5 text-white hover:border-white/20'
                   } ${isSelected && shaking ? 'animate-shake' : ''}`}
                 >
@@ -286,11 +314,11 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
       {isGameOver && showModal && (
         <GameScoreCard 
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
-          historyEmoji={historyEmoji} gameTitle="EuroLinks" attempts={mistakes} maxAttempts={6}
+          historyEmoji={historyEmoji} gameTitle="EuroRefrain" attempts={mistakes} maxAttempts={6}
           onClose={() => setShowModal(false)} onReturn={onReturn} onShare={handleShare}
           extraInfo={
             <div className="space-y-4">
-              <p className="text-[10px] text-gray-600 font-black uppercase tracking-[0.4em] text-center mb-1">{t('links.categoriesDiscovered')}</p>
+              <p className="text-[10px] text-gray-600 font-black uppercase tracking-[0.4em] text-center mb-1">{t('links.lyricsDiscovered')}</p>
               {completedGroups.map((g, i) => (
                 <div key={i} className={`flex flex-col gap-1 p-5 rounded-3xl border border-white/5 ${getDiffColor(g.difficulty)}/20 backdrop-blur-sm animate-in zoom-in-95 duration-500`}>
                    <div className="flex items-center gap-3">
@@ -314,4 +342,4 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   );
 };
 
-export default EuroLinks;
+export default EuroRefrain;

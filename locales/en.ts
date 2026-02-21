@@ -1,4 +1,3 @@
-
 import { TranslationSchema } from './types.ts';
 
 export const en: TranslationSchema = {
@@ -28,7 +27,7 @@ export const en: TranslationSchema = {
   },
   greenroom: {
     greenroom: "The Greenroom",
-    description: "Welcome to the Greenroom. Prove your knowledge of the Eurovision Song Contest with five daily challenges designed for the ultimate superfan.",
+    description: "Welcome to the Greenroom. Prove your knowledge of the Eurovision Song Contest with six daily challenges designed for the ultimate superfan.",
     dailyProgress: "Daily Progress",
     qualified: "✨ Grand Final Qualified ✨",
     finishedToday: "Finished Today",
@@ -46,6 +45,11 @@ export const en: TranslationSchema = {
       title: "EuroArtist", 
       desc: "Daily Eurovision artist guessing game.",
       rules: "Guess the hidden Eurovision artist in 6 tries. You can enter any combination of letters - it doesn't even have to be a real word! The color of the tiles will change to show how close your guess was to the answer.\n\n🟩: Correct letter & position\n🟨: Correct letter, wrong position\n⬛: Wrong letter"
+    },
+    eurorefrain: {
+      title: "EuroRefrain",
+      desc: "Connect 4 words from a lyric hook.",
+      rules: "Find groups of four words that form a sequential hook or refrain from a specific Eurovision song. Select four words and tap 'Submit'. You have 6 mistakes allowed to identify all 4 songs!"
     },
     eurolinks: { 
       title: "EuroLinks", 
@@ -74,7 +78,8 @@ export const en: TranslationSchema = {
     notALink: "Not a link",
     shuffle: "Shuffle Grid",
     deselectAll: "Deselect All",
-    categoriesDiscovered: "Categories Discovered"
+    categoriesDiscovered: "Categories Discovered",
+    lyricsDiscovered: "Lyric Hooks Discovered"
   },
   guesser: {
     searchPlaceholder: "Search Eurovision entries...",
@@ -166,7 +171,7 @@ export const en: TranslationSchema = {
   },
   metadata: {
     countries: {
-      "Switzerland": "Switzerland", "Sweden": "Sweden", "Finland": "Finland", "Netherlands": "Netherlands",
+      "Switzerland": "Switzerland", "Sweden": "Sweden", "Finland": "Finland", "The Netherlands": "The Netherlands",
       "Italy": "Italy", "Croatia": "Croatia", "United Kingdom": "United Kingdom", "Ukraine": "Ukraine",
       "Israel": "Israel", "Portugal": "Portugal", "Denmark": "Denmark", "Norway": "Norway", "Spain": "Spain",
       "Austria": "Austria", "Cyprus": "Cyprus", "Iceland": "Iceland", "Germany": "Germany", "Azerbaijan": "Azerbaijan",

@@ -29,7 +29,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
     { category: "1970s Eurovision-winning songs", items: ["WATERLOO", "SAVE YOUR KISSES FOR ME", "A-BA-NI-BI", "HALLELUJAH"], difficulty: "easy" },
     { category: "National finals (names)", items: ["FESTIVAL DA CANCAO", "SONGVAKEPPNIN", "SUPERNOVA", "EESTI LAUL"], difficulty: "medium" },
     { category: "Countries that debuted in 1994", items: ["ESTONIA", "HUNGARY", "POLAND", "RUSSIA"], difficulty: "hard" },
-    { category: "Countries that have hosted exactly once in the 21st century", items: ["GERMANY", "PORTUGAL", "NETHERLANDS", "ITALY"], difficulty: "expert" }
+    { category: "Countries that have hosted exactly once in the 21st century", items: ["GERMANY", "PORTUGAL", "THE NETHERLANDS", "ITALY"], difficulty: "expert" }
   ],
   [
     { category: "Host cities that are national capitals", items: ["KYIV", "ATHENS", "BAKU", "BELGRADE"], difficulty: "easy" },
@@ -59,7 +59,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
     { category: "Host cities beginning with 'L'", items: ["LISBON", "LONDON", "LAUSANNE", "LUGANO"], difficulty: "easy" },
     { category: "Color words in the title", items: ["GOLDEN BOY", "BLACKBIRD", "BLUE AND RED", "BLACK SMOKE"], difficulty: "medium" },
     { category: "Countries with wins both before and after 1990", items: ["IRELAND", "UNITED KINGDOM", "SWEDEN", "ISRAEL"], difficulty: "hard" },
-    { category: "1950s debutants that still compete", items: ["SWITZERLAND", "NETHERLANDS", "GERMANY", "BELGIUM"], difficulty: "expert" }
+    { category: "1950s debutants that still compete", items: ["SWITZERLAND", "THE NETHERLANDS", "GERMANY", "BELGIUM"], difficulty: "expert" }
   ],
   [
     { category: "Eurovision winners (2000–2009)", items: ["EVERYWAY THAT I CAN", "WILD DANCES", "BELIEVE", "FAIRYTALE"], difficulty: "easy" },
@@ -88,7 +88,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
   [
     { category: "2020 entries that never got to compete", items: ["THINK ABOUT THINGS", "FAI RUMORE", "TEARS GETTING SOBER", "UNO"], difficulty: "easy" },
     { category: "Countries currently inactive as of 2024", items: ["TURKEY", "ANDORRA", "BOSNIA AND HERZEGOVINA", "MONACO"], difficulty: "medium" },
-    { category: "Founding participants in 1956", items: ["NETHERLANDS", "SWITZERLAND", "FRANCE", "ITALY"], difficulty: "hard" },
+    { category: "Founding participants in 1956", items: ["THE NETHERLANDS", "SWITZERLAND", "FRANCE", "ITALY"], difficulty: "hard" },
     { category: "National-final winners that didn't make the ESC stage", items: ["MOMENT OF SILENCE", "SIREN SONG", "FLAME IS BURNING", "YA NAUCHU TEBYA"], difficulty: "expert" }
   ],
   [
@@ -100,7 +100,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
   [
     { category: "Non-capital host cities", items: ["BRIGHTON", "HARROGATE", "MALMO", "THE HAGUE"], difficulty: "easy" },
     { category: "Countries bordering the Baltic Sea", items: ["ESTONIA", "LATVIA", "LITHUANIA", "POLAND"], difficulty: "medium" },
-    { category: "Countries with 'land' in their English name", items: ["FINLAND", "ICELAND", "IRELAND", "NETHERLANDS"], difficulty: "hard" },
+    { category: "Countries with 'land' in their English name", items: ["FINLAND", "ICELAND", "IRELAND", "THE NETHERLANDS"], difficulty: "hard" },
     { category: "Song titles containing 'Light'", items: ["LOVE SHINE A LIGHT", "CITY LIGHTS", "LIGHTS OFF", "LIGHT ME UP"], difficulty: "expert" }
   ],
   [
@@ -125,7 +125,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
     { category: "Eurovision winners (1980s)", items: ["MAKING YOUR MIND UP", "HOLD ME NOW", "NE PARTEZ PAS SANS MOI", "EIN BISSCHEN FRIEDEN"], difficulty: "easy" },
     { category: "Netta song words", items: ["TOY", "CHICKEN", "STUPID", "BOY"], difficulty: "medium" },
     { category: "Mixed-gender duos at Eurovision (artists)", items: ["ELL & NIKKI", "THE COMMON LINNETS", "KOIT TOOME & LAURA", "STIG RASTA & ELINA BORN"], difficulty: "hard" },
-    { category: "Countries with Eurovision wins both before and after 2000", items: ["SWEDEN", "ISRAEL", "ITALY", "NETHERLANDS"], difficulty: "expert" }
+    { category: "Countries with Eurovision wins both before and after 2000", items: ["SWEDEN", "ISRAEL", "ITALY", "THE NETHERLANDS"], difficulty: "expert" }
   ],
   [
     { category: "Eurovision winners (2000s)", items: ["FLY ON THE WINGS OF LOVE", "I WANNA", "MY NUMBER ONE", "HARD ROCK HALLELUJAH"], difficulty: "easy" },
@@ -220,7 +220,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
   [
     { category: "Eurovision winners 1960s", items: ["NON HO L'ETA", "POUPEE DE CIRE, POUPEE DE SON", "PUPPET ON A STRING", "BOOM BANG-A-BANG"], difficulty: "easy" },
     { category: "Host cities that are national capitals", items: ["DUBLIN", "JERUSALEM", "ROME", "MOSCOW"], difficulty: "medium" },
-    { category: "Countries that hosted multiple times", items: ["IRELAND", "UNITED KINGDOM", "SWEDEN", "NETHERLANDS"], difficulty: "hard" },
+    { category: "Countries that hosted multiple times", items: ["IRELAND", "UNITED KINGDOM", "SWEDEN", "THE NETHERLANDS"], difficulty: "hard" },
     { category: "Countries currently inactive as of 2024", items: ["TURKEY", "ANDORRA", "BOSNIA AND HERZEGOVINA", "MONACO"], difficulty: "expert" }
   ],
   [
@@ -239,7 +239,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
     { category: "Winning songs with one-word titles", items: ["ARCADE", "EUPHORIA", "SATELLITE", "TATTOO"], difficulty: "easy" },
     { category: "Countries using Cyrillic as an official script", items: ["RUSSIA", "BELARUS", "SERBIA", "NORTH MACEDONIA"], difficulty: "medium" },
     { category: "Titles with Run or Running", items: ["RUN AWAY", "RUN WITH THE LIONS", "RUNNING", "RUNNING SCARED"], difficulty: "hard" },
-    { category: "Countries with wins before and after 2000", items: ["SWEDEN", "NETHERLANDS", "ISRAEL", "ITALY"], difficulty: "expert" }
+    { category: "Countries with wins before and after 2000", items: ["SWEDEN", "THE NETHERLANDS", "ISRAEL", "ITALY"], difficulty: "expert" }
   ],
   [
     { category: "Eurovision winners 1990s", items: ["INSIEME 1992", "ROCK 'N' ROLL KIDS", "NOCTURNE", "LOVE SHINE A LIGHT"], difficulty: "easy" },
@@ -251,7 +251,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
     { category: "Host cities beginning with B", items: ["BAKU", "BELGRADE", "BIRMINGHAM", "BERGEN"], difficulty: "easy" },
     { category: "Countries with population under one million", items: ["ICELAND", "MALTA", "SAN MARINO", "MONTENEGRO"], difficulty: "medium" },
     { category: "Titles with Time", items: ["TIME", "IT'S MY TME", "THIS TIME", "A MATTER OF TIME"], difficulty: "hard" },
-    { category: "Founding participants in 1956", items: ["NETHERLANDS", "SWITZERLAND", "FRANCE", "ITALY"], difficulty: "expert" }
+    { category: "Founding participants in 1956", items: ["THE NETHERLANDS", "SWITZERLAND", "FRANCE", "ITALY"], difficulty: "expert" }
   ],
   [
     { category: "Eurovision winner bands and collectives", items: ["TEACH-IN", "BROTHERHOOD OF MAN", "BUCKS FIZZ", "KALUSH ORCHESTRA"], difficulty: "easy" },
@@ -329,13 +329,13 @@ export const PUZZLES: ConnectionsGroup[][] = [
     { category: "Titles with exclamation marks", items: ["HEY MAMMA!", "YODEL IT!", "OPA!", "HVALA, NE!"], difficulty: "easy" },
     { category: "Creature themed titles", items: ["BIRDS", "BLACKBIRD", "BUTTERFLIES", "WOLVES OF THE SEA"], difficulty: "medium" },
     { category: "Eurovision songs that went viral", items: ["ARCADE", "SNAP", "THINK ABOUT THINGS", "SHUM"], difficulty: "hard" },
-    { category: "Countries with 30+ years between wins", items: ["AUSTRIA", "NETHERLANDS", "ITALY", "SWITZERLAND"], difficulty: "expert" }
+    { category: "Countries with 30+ years between wins", items: ["AUSTRIA", "THE NETHERLANDS", "ITALY", "SWITZERLAND"], difficulty: "expert" }
   ],
   [
     { category: "French-language winners", items: ["DORS MON AMOUR", "UN PREMIER AMOUR", "L'OISEAU ET L'ENFANT", "NE PARTEZ PAS SANS MOI"], difficulty: "easy" },
     { category: "Portuguese-language entries", items: ["AMAR PELOS DOIS", "O JARDIM", "TELEMOVEIS", "AI CORACAO"], difficulty: "medium" },
     { category: "Songs featuring rap sections", items: ["SHUM", "1944", "SNAP", "RANDAJAD"], difficulty: "hard" },
-    { category: "Countries with wins in Eurovision and Junior Eurovision", items: ["ITALY", "FRANCE", "SPAIN", "NETHERLANDS"], difficulty: "expert" }
+    { category: "Countries with wins in Eurovision and Junior Eurovision", items: ["ITALY", "FRANCE", "SPAIN", "THE NETHERLANDS"], difficulty: "expert" }
   ],
   [
     { category: "Solo male winners since 2000", items: ["BELIEVE", "FAIRYTALE", "AMAR PELOS DOIS", "ARCADE"], difficulty: "easy" },
@@ -364,7 +364,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
   [
     { category: "Iconic interval acts", items: ["RIVERDANCE", "LOVE LOVE PEACE PEACE", "ROCK THE ROOF", "SWITCH SONG"], difficulty: "easy" },
     { category: "Grand Final opening songs", items: ["UNDER THE LADDER", "WHAT'S THE PRESSURE", "HERE FOR YOU", "I FEEL ALIVE"], difficulty: "medium" },
-    { category: "Countries with land in the name", items: ["FINLAND", "ICELAND", "IRELAND", "NETHERLANDS"], difficulty: "hard" },
+    { category: "Countries with land in the name", items: ["FINLAND", "ICELAND", "IRELAND", "THE NETHERLANDS"], difficulty: "hard" },
     { category: "Countries that returned after a long absence", items: ["ITALY", "CZECH REPUBLIC", "MONTENEGRO", "LUXEMBOURG"], difficulty: "expert" }
   ],
   [
@@ -401,7 +401,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
     { category: "Eurovision slogans", items: ["ALL ABOARD!", "THE SOUND OF BEAUTY", "OPEN UP", "DARE TO DREAM"], difficulty: "easy" },
     { category: "Space and physics titles", items: ["SPACE MAN", "SPACE", "ZERO GRAVITY", "GRAVITY"], difficulty: "medium" },
     { category: "Island countries in the contest", items: ["CYPRUS", "MALTA", "ICELAND", "UNITED KINGDOM"], difficulty: "hard" },
-    { category: "Founding 1956 participants", items: ["NETHERLANDS", "SWITZERLAND", "FRANCE", "ITALY"], difficulty: "expert" }
+    { category: "Founding 1956 participants", items: ["THE NETHERLANDS", "SWITZERLAND", "FRANCE", "ITALY"], difficulty: "expert" }
   ],
   [
     { category: "Titles beginning with You", items: ["YOU", "YOU ARE THE ONLY ONE", "YOU LET ME WALK ALONE", "YOU AND ME"], difficulty: "easy" },
@@ -449,7 +449,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
     { category: "Masked or helmeted performers", items: ["LORDI", "SUBWOOLFER", "HATARI", "WHO SEE"], difficulty: "easy" },
     { category: "Weather in the title", items: ["SUNLIGHT", "STORM", "DANCING IN THE RAIN", "RAIN OF REVOLUTION"], difficulty: "medium" },
     { category: "Eurovision songs that went viral", items: ["SNAP", "ARCADE", "THINK ABOUT THINGS", "SHUM"], difficulty: "hard" },
-    { category: "30+ years between a country's wins", items: ["AUSTRIA", "NETHERLANDS", "ITALY", "SWITZERLAND"], difficulty: "expert" }
+    { category: "30+ years between a country's wins", items: ["AUSTRIA", "THE NETHERLANDS", "ITALY", "SWITZERLAND"], difficulty: "expert" }
   ],
   [
     { category: "Artists playing an instrument live on stage", items: ["ME AND MY GUITAR", "FAIRYTALE", "GOODBYE TO YESTERDAY", "I DON'T FEEL HATE"], difficulty: "easy" },
@@ -503,7 +503,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
     { category: "Rap or spoken passages on stage", items: ["IGRANKA", "EURO NEURO", "LOVEWAVE", "CHA CHA CHA"], difficulty: "easy" },
     { category: "Time-themed titles", items: ["TICK-TOCK", "THIS TIME", "A MATTER OF TIME", "10 YEARS"], difficulty: "medium" },
     { category: "Participants outside geographical Europe", items: ["ISRAEL", "AZERBAIJAN", "ARMENIA", "AUSTRALIA"], difficulty: "hard" },
-    { category: "Countries with land in the name", items: ["FINLAND", "ICELAND", "IRELAND", "NETHERLANDS"], difficulty: "expert" }
+    { category: "Countries with land in the name", items: ["FINLAND", "ICELAND", "IRELAND", "THE NETHERLANDS"], difficulty: "expert" }
   ],
   [
     { category: "Numerals in the title", items: ["1 LIFE", "1944", "ZERO GRAVITY", "10 YEARS"], difficulty: "easy" },
@@ -551,7 +551,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
     { category: "Titles beginning with On", items: ["ON FIRE", "ON MY WAY", "ON A SUNDAY", "ON AGAIN... OFF AGAIN"], difficulty: "easy" },
     { category: "Regional or minority language entries", items: ["VIVER SENZA TEI", "DIWANIT BUGALE", "FULENN", "SAMIID AEDNAN"], difficulty: "medium" },
     { category: "Common idioms used as titles", items: ["PLAYING WITH FIRE", "RUNNING SCARED", "LOVE IS BLIND", "UNDER THE LADDER"], difficulty: "hard" },
-    { category: "Countries with wins in four or more decades", items: ["UNITED KINGDOM", "SWEDEN", "NETHERLANDS", "ISRAEL"], difficulty: "expert" }
+    { category: "Countries with wins in four or more decades", items: ["UNITED KINGDOM", "SWEDEN", "THE NETHERLANDS", "ISRAEL"], difficulty: "expert" }
   ],
   [
     { category: "Family words in titles", items: ["SISTER", "MAMO", "MOTHER", "HEY MAMMA!"], difficulty: "easy" },
@@ -579,7 +579,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
   ],
   [
     { category: "Titles that are one-word English nouns", items: ["EUPHORIA", "ARCADE", "TOY", "SKELETONS"], difficulty: "easy" },
-    { category: "Countries with wins before and after 2000", items: ["SWEDEN", "ISRAEL", "ITALY", "NETHERLANDS"], difficulty: "medium" },
+    { category: "Countries with wins before and after 2000", items: ["SWEDEN", "ISRAEL", "ITALY", "THE NETHERLANDS"], difficulty: "medium" },
     { category: "LED or projection-driven staging highlights", items: ["HEROES", "YOU ARE THE ONLY ONE", "SCREAM", "LA FORZA"], difficulty: "hard" },
     { category: "Countries debuting in 1994", items: ["ESTONIA", "HUNGARY", "LITHUANIA", "POLAND"], difficulty: "expert" }
   ],
@@ -587,7 +587,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
     { category: "Imperative titles", items: ["SHAKE IT", "YODEL IT!", "SAY NA NA NA", "START A FIRE"], difficulty: "easy" },
     { category: "Coastal host cities", items: ["LISBON", "TEL AVIV", "BAKU", "CANNES"], difficulty: "medium" },
     { category: "Folk meets pop on stage", items: ["SHUM", "SPIRIT IN THE SKY", "TRENULETUL", "ORO"], difficulty: "hard" },
-    { category: "Countries with exactly five Eurovision wins (as of 2025)", items: ["UNITED KINGDOM", "FRANCE", "LUXEMBOURG", "NETHERLANDS"], difficulty: "expert" }
+    { category: "Countries with exactly five Eurovision wins (as of 2025)", items: ["UNITED KINGDOM", "FRANCE", "LUXEMBOURG", "THE NETHERLANDS"], difficulty: "expert" }
   ],
   [
     { category: "Weather in the title", items: ["SUNLIGHT", "STORM", "DANCING IN THE RAIN", "FLOWER IN THE SNOW"], difficulty: "easy" },
@@ -597,7 +597,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
   ],
   [
     { category: "Five-letter one-word titles", items: ["SHINE", "ANGEL", "STORM", "SUGAR"], difficulty: "easy" },
-    { category: "Countries with land in their English name", items: ["FINLAND", "ICELAND", "IRELAND", "NETHERLANDS"], difficulty: "medium" },
+    { category: "Countries with land in their English name", items: ["FINLAND", "ICELAND", "IRELAND", "THE NETHERLANDS"], difficulty: "medium" },
     { category: "Host cities beginning with L", items: ["LISBON", "LONDON", "LAUSANNE", "LUGANO"], difficulty: "hard" },
     { category: "Televote winners who didn't win overall", items: ["GRANDE AMORE", "YOU ARE THE ONLY ONE", "SPIRIT IN THE SKY", "RIM TIM TAGI DIM"], difficulty: "expert" }
   ]

@@ -1,4 +1,3 @@
-
 export interface TranslationSchema {
   common: {
     back: string;
@@ -37,6 +36,7 @@ export interface TranslationSchema {
   games: {
     eurosong: { title: string; desc: string; rules: string };
     euroartist: { title: string; desc: string; rules: string };
+    eurorefrain: { title: string; desc: string; rules: string };
     eurolinks: { title: string; desc: string; rules: string };
     euroguess: { title: string; desc: string; rules: string };
     euroarena: { title: string; desc: string; rules: string };
@@ -53,6 +53,8 @@ export interface TranslationSchema {
     shuffle: string;
     deselectAll: string;
     categoriesDiscovered: string;
+    // Added missing property used by EuroRefrain to track discovered lyric hooks
+    lyricsDiscovered: string;
   };
   guesser: {
     searchPlaceholder: string;

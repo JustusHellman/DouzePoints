@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GameType, GlobalStats, DetailedStats } from '../data/types.ts';
@@ -95,6 +94,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, onShowIn
     if (activeTab === GameType.WORD_GAME) key = 'word_game';
     else if (activeTab === GameType.ARTIST_WORD_GAME) key = 'artists';
     else if (activeTab === GameType.LINKS_GAME) key = 'links';
+    else if (activeTab === GameType.REFRAIN_GAME) key = 'refrain';
     else if (activeTab === GameType.GUESSER) key = 'guesser';
     else key = 'arena';
     
@@ -104,7 +104,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, onShowIn
   const handleShareStats = useCallback(() => {
     let text = "✨ DOUZE POINTS ✨\n";
     if (activeTab === 'TOTAL') {
-      const wins = stats.word_game.wins + stats.artists.wins + stats.links.wins + stats.guesser.played + stats.arena.played;
+      const wins = stats.word_game.wins + stats.artists.wins + stats.links.wins + stats.refrain.wins + stats.guesser.wins + stats.arena.wins;
       text += `Grand Final Record | Hall of Fame\n-------------------------\n`;
       text += `Rank: ${t(`ranks.${rankInfo.current.title}`)}\n`;
       text += `Total Points: ${stats.totalPoints}\n`;
@@ -114,10 +114,12 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, onShowIn
     } else {
       const gameLabel = activeTab === GameType.WORD_GAME ? "Song" : 
                         activeTab === GameType.ARTIST_WORD_GAME ? "Artist" : 
+                        activeTab === GameType.REFRAIN_GAME ? "Refrain" :
                         activeTab.replace('_GAME', '').charAt(0) + activeTab.replace('_GAME', '').slice(1).toLowerCase();
       
       const emoji = activeTab === GameType.WORD_GAME ? "🎵" : 
                     activeTab === GameType.ARTIST_WORD_GAME ? "🎤" : 
+                    activeTab === GameType.REFRAIN_GAME ? "🎼" :
                     activeTab === GameType.LINKS_GAME ? "🔗" : 
                     activeTab === GameType.GUESSER ? "🔎" : "⚔️";
 
@@ -148,6 +150,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, onShowIn
       const paths: Record<string, string> = {
         [GameType.WORD_GAME]: '/euro-song',
         [GameType.ARTIST_WORD_GAME]: '/euro-artist',
+        [GameType.REFRAIN_GAME]: '/euro-refrain',
         [GameType.LINKS_GAME]: '/euro-links',
         [GameType.GUESSER]: '/euro-guess',
         [GameType.ARENA]: '/euro-arena'
@@ -160,6 +163,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, onShowIn
     if (tab === 'TOTAL') return 'Hall of Fame';
     if (tab === GameType.WORD_GAME) return 'Song';
     if (tab === GameType.ARTIST_WORD_GAME) return 'Artist';
+    if (tab === GameType.REFRAIN_GAME) return 'Refrain';
     return tab.replace('_GAME', '').charAt(0) + tab.replace('_GAME', '').slice(1).toLowerCase();
   };
 
@@ -200,7 +204,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, onShowIn
         )}
 
         <div className="flex gap-1 bg-white/5 p-1 rounded-2xl mb-8 overflow-x-auto scrollbar-hide">
-          {['TOTAL', GameType.WORD_GAME, GameType.ARTIST_WORD_GAME, GameType.LINKS_GAME, GameType.GUESSER, GameType.ARENA].map(tab => (
+          {['TOTAL', GameType.WORD_GAME, GameType.ARTIST_WORD_GAME, GameType.REFRAIN_GAME, GameType.LINKS_GAME, GameType.GUESSER, GameType.ARENA].map(tab => (
             <button 
               key={tab}
               onClick={() => setActiveTab(tab as any)}
@@ -227,10 +231,10 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, onShowIn
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <StatBox label="Rank Points" value={stats.totalPoints} />
                 <StatBox label="Douze Points" value={stats.totalDouzePoints} color="yellow-500" icon="🏆" />
-                <StatBox label={t('stats.wins')} value={stats.word_game.wins + stats.artists.wins + stats.links.wins + stats.guesser.wins + stats.arena.wins} color="green-400" />
+                <StatBox label={t('stats.wins')} value={stats.word_game.wins + stats.artists.wins + stats.links.wins + stats.refrain.wins + stats.guesser.wins + stats.arena.wins} color="green-400" />
                 <StatBox label={t('stats.winRate')} value={(() => {
-                  const total = stats.word_game.played + stats.artists.played + stats.links.played + stats.guesser.played + stats.arena.played;
-                  const wins = stats.word_game.wins + stats.artists.wins + stats.links.wins + stats.guesser.wins + stats.arena.wins;
+                  const total = stats.word_game.played + stats.artists.played + stats.links.played + stats.refrain.played + stats.guesser.played + stats.arena.played;
+                  const wins = stats.word_game.wins + stats.artists.wins + stats.links.wins + stats.refrain.wins + stats.guesser.wins + stats.arena.wins;
                   return total > 0 ? Math.round((wins/total)*100)+'%' : '0%';
                 })()} />
               </div>

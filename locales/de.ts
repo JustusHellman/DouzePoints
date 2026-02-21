@@ -27,7 +27,7 @@ export const de: TranslationSchema = {
   },
   greenroom: {
     greenroom: "Der Greenroom",
-    description: "Willkommen im Greenroom. Teste dein Wissen über den Eurovision Song Contest mit fünf täglichen Herausforderungen für den ultimativen Superfan.",
+    description: "Willkommen im Greenroom. Teste dein Wissen über den Eurovision Song Contest mit sechs täglichen Herausforderungen für den ultimativen Superfan.",
     dailyProgress: "Tagesfortschritt",
     qualified: "✨ Qualifiziert für das Finale ✨",
     finishedToday: "Heute abgeschlossen",
@@ -45,6 +45,11 @@ export const de: TranslationSchema = {
       title: "EuroArtist", 
       desc: "Tägliche ESC Künstler-Herausforderung.",
       rules: "Errate den versteckten ESC Künstler in 6 Versuchen. Du kannst jede Buchstabenkombination eingeben. Die Farbe der Kacheln zeigt an, wie nah du der Lösung warst.\n\n🟩: Richtiger Buchstabe & Position\n🟨: Richtiger Buchstabe, falsche Position\n⬛: Falscher Buchstabe"
+    },
+    eurorefrain: {
+      title: "EuroRefrain",
+      desc: "Verbinde 4 Wörter aus einem Lyric-Hook.",
+      rules: "Finde Gruppen von vier Wörtern, die einen sequentiellen Hook oder Refrain aus einem bestimmten Eurovision-Song bilden. Wähle vier Wörter aus und tippe auf 'Absenden'. Du hast 6 Fehler frei, um alle 4 Songs zu identifizieren!"
     },
     eurolinks: { 
       title: "EuroLinks", 
@@ -73,7 +78,8 @@ export const de: TranslationSchema = {
     notALink: "Keine Verbindung",
     shuffle: "Mischen",
     deselectAll: "Alle abwählen",
-    categoriesDiscovered: "Gefundene Kategorien"
+    categoriesDiscovered: "Gefundene Kategorien",
+    lyricsDiscovered: "Song-Hooks Gefunden"
   },
   guesser: {
     searchPlaceholder: "Suche Eurovision Beiträge...",
@@ -131,13 +137,13 @@ export const de: TranslationSchema = {
     resultsCopied: "Ergebnis kopiert!",
     breakthrough: "Durchbruch bei Hinweis",
     signalLost: "Signal verloren...",
-    score: "Punktzahl",
+    score: "Pointzahl",
     viewScorecard: "Punktestand ansehen",
     headlines: {
       nulPoints: "❌ NULL PUNKTE... 🗳️",
       douzePoints: "🏆 DOUZE POINTS! ✨",
       greatPerformance: "🌟 TOLLE PERFORMANCE! 🎤",
-      qualified: "🗳️ QUALIFIZIERT! 🎤"
+      qualified: "🗳️ QUALIFIÉ ! 🎤"
     }
   },
   cookies: {
@@ -165,7 +171,7 @@ export const de: TranslationSchema = {
   },
   metadata: {
     countries: {
-      "Switzerland": "Schweiz", "Sweden": "Schweden", "Finland": "Finnland", "Netherlands": "Niederlande",
+      "Switzerland": "Schweiz", "Sweden": "Schweden", "Finland": "Finnland", "The Netherlands": "Niederlande",
       "Italy": "Italien", "Croatia": "Kroatien", "United Kingdom": "Vereinigtes Königreich", "Ukraine": "Ukraine",
       "Israel": "Israel", "Portugal": "Portugal", "Denmark": "Danimarca", "Norway": "Norwegen", "Spain": "Spanien",
       "Austria": "Österreich", "Cyprus": "Zypern", "Iceland": "Island", "Germany": "Deutschland", "Azerbaijan": "Aserbaidschan",

@@ -218,7 +218,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
       {(!isGameOver || !showModal) && (
         <>
           <div className="flex items-center gap-3 mb-6">
-            <h2 className="text-3xl md:text-5xl font-black bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroGuess</h2>
+            <h1 className="text-3xl md:text-5xl font-black bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroGuess</h1>
             <button 
               onClick={() => setShowHowToPlay(true)}
               className="w-6 h-6 md:w-8 md:h-8 rounded-full border border-white/20 text-[10px] md:text-xs flex items-center justify-center font-bold text-gray-500 hover:text-white hover:border-white transition-all active:scale-90"

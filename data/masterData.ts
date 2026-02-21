@@ -9,7 +9,7 @@ export const MASTER_DATA: MasterSong[] = [
   { id: "2025-5", title: "Volevo essere un duro", artist: "Lucio Corsi", year: 2025, placing: 5, country: "Italy", sex: "Male", genre: "Art Pop / Rock", members: 1, fact: "Italy's artsy entry gained strong jury support and post-contest streaming traction.", tier: "cult" },
   { id: "2025-7", title: "Maman", artist: "Louane", year: 2025, placing: 7, country: "France", sex: "Female", genre: "Chanson / Pop Ballad", members: 1, fact: "A jury favourite that continued France's recent strong Eurovision streak.", tier: "cult" },
   { id: "2025-11", title: "Ich komme", artist: "Erika Vikman", year: 2025, placing: 11, country: "Finland", sex: "Female", genre: "Schlager", members: 1, fact: "One of the most talked-about performances of the year due to its bold staging.", tier: "cult" },
-  { id: "2025-12", title: "C'est la vie", artist: "Claude", year: 2025, placing: 12, country: "Netherlands", sex: "Male", genre: "Pop", members: 1, fact: "Generated pre-contest hype and strong streaming numbers before the final.", tier: "cult" },
+  { id: "2025-12", title: "C'est la vie", artist: "Claude", year: 2025, placing: 12, country: "The Netherlands", sex: "Male", genre: "Pop", members: 1, fact: "Generated pre-contest hype and strong streaming numbers before the final.", tier: "cult" },
   { id: "2025-15", title: "Baller", artist: "Marie Reim", year: 2025, placing: 15, country: "Germany", sex: "Female", genre: "Dance Pop", members: 1, fact: "One of the more radio-friendly entries of the year in German media.", tier: "cult" },
   { id: "2025-26", title: "Tutta l'Italia", artist: "Angelina Mango", year: 2025, placing: 26, country: "San Marino", sex: "Female", genre: "Pop", members: 1, fact: "Created significant fan buzz online despite finishing lower in the table.", tier: "cult" },
 
@@ -23,7 +23,7 @@ export const MASTER_DATA: MasterSong[] = [
   { id: "2024-7", title: "La Noia", artist: "Angelina Mango", year: 2024, placing: 7, country: "Italy", sex: "Female", genre: "Pop", members: 1, fact: "Italy's first female representative since 2016.", tier: "golden" },
   { id: "2024-9", title: "Unforgettable", artist: "Marcus & Martinus", year: 2024, placing: 9, country: "Sweden", sex: "Male", genre: "Dance Pop", members: 2, fact: "Norwegian twins representing Sweden.", tier: "cult" },
   { id: "2024-11", title: "Zari", artist: "Marina Satti", year: 2024, placing: 11, country: "Greece", sex: "Female", genre: "Ethno-Pop", members: 1, fact: "Incorporated traditional Greek sounds with urban drill beats.", tier: "cult" },
-  { id: "2024-26", title: "Europapa", artist: "Joost Klein", year: 2024, placing: 26, country: "Netherlands", sex: "Male", genre: "Hardcore", members: 1, fact: "The most controversial disqualification in contest history.", tier: "cult" },
+  { id: "2024-26", title: "Europapa", artist: "Joost Klein", year: 2024, placing: 26, country: "The Netherlands", sex: "Male", genre: "Hardcore", members: 1, fact: "The most controversial disqualification in contest history.", tier: "cult" },
 
   // 2023
   { id: "2023-1", title: "Tattoo", artist: "Loreen", year: 2023, placing: 1, country: "Sweden", sex: "Female", genre: "Pop", members: 1, fact: "First female artist to win Eurovision twice.", tier: "golden" },
@@ -56,7 +56,7 @@ export const MASTER_DATA: MasterSong[] = [
   { id: "2021-20", title: "Mata Hari", artist: "Efendi", year: 2021, placing: 20, country: "Azerbaijan", sex: "Female", genre: "Dance Pop", members: 1, fact: "Included traditional Azerbaijani instrumentation.", tier: "cult" },
 
   // 2019
-  { id: "2019-1", title: "Arcade", artist: "Duncan Laurence", year: 2019, placing: 1, country: "Netherlands", sex: "Male", genre: "Pop Ballad", members: 1, fact: "Became a global viral hit on TikTok two years after winning.", tier: "golden" },
+  { id: "2019-1", title: "Arcade", artist: "Duncan Laurence", year: 2019, placing: 1, country: "The Netherlands", sex: "Male", genre: "Pop Ballad", members: 1, fact: "Became a global viral hit on TikTok two years after winning.", tier: "golden" },
   { id: "2019-2", title: "Soldi", artist: "Mahmood", year: 2019, placing: 2, country: "Italy", sex: "Male", genre: "R&B", members: 1, fact: "The first Eurovision song to reach 100 million streams on Spotify.", tier: "golden" },
   { id: "2019-6", title: "Spirit in the Sky", artist: "KEiiNO", year: 2019, placing: 6, country: "Norway", sex: "Mixed", genre: "Pop", members: 3, fact: "Won the televote but came 6th overall due to juries.", tier: "cult" },
   { id: "2019-9", title: "Zero Gravity", artist: "Kate Miller-Heidke", year: 2019, placing: 9, country: "Australia", sex: "Female", genre: "Operatic Pop", members: 1, fact: "The singer performed atop a 5-meter tall swaying pole.", tier: "cult" },
@@ -91,7 +91,7 @@ export const MASTER_DATA: MasterSong[] = [
 
   // 2014
   { id: "2014-1", title: "Rise Like a Phoenix", artist: "Conchita Wurst", year: 2014, placing: 1, country: "Austria", sex: "Other", genre: "Orchestral Pop", members: 1, fact: "The 'bearded lady' who became a global LGBTQ+ icon.", tier: "golden" },
-  { id: "2014-2", title: "Calm After the Storm", artist: "The Common Linnets", year: 2014, placing: 2, country: "Netherlands", sex: "Mixed", genre: "Country", members: 2, fact: "Brought country music back to the grand final.", tier: "cult" },
+  { id: "2014-2", title: "Calm After the Storm", artist: "The Common Linnets", year: 2014, placing: 2, country: "The Netherlands", sex: "Mixed", genre: "Country", members: 2, fact: "Brought country music back to the grand final.", tier: "cult" },
 
   // 2013
   { id: "2013-1", title: "Only Teardrops", artist: "Emmelie de Forest", year: 2013, placing: 1, country: "Denmark", sex: "Female", genre: "Folk-Pop", members: 1, fact: "Performed barefoot with a tin whistle soloist.", tier: "golden" },
@@ -225,7 +225,7 @@ export const MASTER_DATA: MasterSong[] = [
   { id: "1976-1", title: "Save Your Kisses for Me", artist: "Brotherhood of Man", year: 1976, placing: 1, country: "United Kingdom", sex: "Mixed", genre: "Pop", members: 4, fact: "Holds the record for the highest average score per voting country.", tier: "golden" },
 
   // 1975
-  { id: "1975-1", title: "Ding-a-dong", artist: "Teach-In", year: 1975, placing: 1, country: "Netherlands", sex: "Mixed", genre: "Pop", members: 6, fact: "The first time a song performed first in the running order won.", tier: "golden" },
+  { id: "1975-1", title: "Ding-a-dong", artist: "Teach-In", year: 1975, placing: 1, country: "The Netherlands", sex: "Mixed", genre: "Pop", members: 6, fact: "The first time a song performed first in the running order won.", tier: "golden" },
 
   // 1974
   { id: "1974-1", title: "Waterloo", artist: "ABBA", year: 1974, placing: 1, country: "Sweden", sex: "Mixed", genre: "Pop", members: 4, fact: "The UK jury gave ABBA zero points in 1974.", tier: "golden" },
@@ -245,7 +245,7 @@ export const MASTER_DATA: MasterSong[] = [
   // 1969
   { id: "1969-1-1", title: "Boom Bang-a-Bang", artist: "Lulu", year: 1969, placing: 1, country: "United Kingdom", sex: "Female", genre: "Pop", members: 1, fact: "One of the four joint winners in 1969.", tier: "golden" },
   { id: "1969-1-2", title: "Un jour, un enfant", artist: "Frida Boccara", year: 1969, placing: 1, country: "France", sex: "Female", genre: "Chanson", members: 1, fact: "France's winner in the infamous 1969 four-way tie.", tier: "golden" },
-  { id: "1969-1-3", title: "De troubadour", artist: "Lenny Kuhr", year: 1969, placing: 1, country: "Netherlands", sex: "Female", genre: "Chanson", members: 1, fact: "The Netherlands' winner in the infamous 1969 four-way tie.", tier: "golden" },
+  { id: "1969-1-3", title: "De troubadour", artist: "Lenny Kuhr", year: 1969, placing: 1, country: "The Netherlands", sex: "Female", genre: "Chanson", members: 1, fact: "The Netherlands' winner in the infamous 1969 four-way tie.", tier: "golden" },
   { id: "1969-1-4", title: "Vivo cantando", artist: "Salomé", year: 1969, placing: 1, country: "Spain", sex: "Female", genre: "Pop", members: 1, fact: "Spain's winner in the infamous 1969 four-way tie.", tier: "golden" },
 
   // 1968
@@ -276,14 +276,14 @@ export const MASTER_DATA: MasterSong[] = [
   { id: "1960-1", title: "Tom Pillibi", artist: "Jacqueline Boyer", year: 1960, placing: 1, country: "France", sex: "Female", genre: "Chanson", members: 1, fact: "The first winning song to become a major international success.", tier: "golden" },
 
   // 1959
-  { id: "1959-1", title: "Een beetje", artist: "Teddy Scholten", year: 1959, placing: 1, country: "Netherlands", sex: "Female", genre: "Chanson", members: 1, fact: "The Netherlands became the first country to win twice.", tier: "golden" },
+  { id: "1959-1", title: "Een beetje", artist: "Teddy Scholten", year: 1959, placing: 1, country: "The Netherlands", sex: "Female", genre: "Chanson", members: 1, fact: "The Netherlands became the first country to win twice.", tier: "golden" },
 
   // 1958
   { id: "1958-1", title: "Dors, mon amour", artist: "André Claveau", year: 1958, placing: 1, country: "France", sex: "Male", genre: "Chanson", members: 1, fact: "The first solo male artist to win Eurovision.", tier: "golden" },
   { id: "1958-3", title: "Nel blu, dipinto di blu", artist: "Domenico Modugno", year: 1958, placing: 3, country: "Italy", sex: "Male", genre: "Chanson", members: 1, fact: "Commonly known as 'Volare', it is the only Eurovision song to win a Grammy.", tier: "golden" },
 
   // 1957
-  { id: "1957-1", title: "Net als toen", artist: "Corry Brokken", year: 1957, placing: 1, country: "Netherlands", sex: "Female", genre: "Chanson", members: 1, fact: "The Netherlands' first victory in the second edition of the contest.", tier: "golden" },
+  { id: "1957-1", title: "Net als toen", artist: "Corry Brokken", year: 1957, placing: 1, country: "The Netherlands", sex: "Female", genre: "Chanson", members: 1, fact: "The Netherlands' first victory in the second edition of the contest.", tier: "golden" },
 
   // 1956
   { id: "1956-1", title: "Refrain", artist: "Lys Assia", year: 1956, placing: 1, country: "Switzerland", sex: "Female", genre: "Chanson", members: 1, fact: "The first ever winner of the Eurovision Song Contest.", tier: "golden" }

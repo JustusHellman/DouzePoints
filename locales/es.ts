@@ -27,7 +27,7 @@ export const es: TranslationSchema = {
   },
   greenroom: {
     greenroom: "La Sala Verde",
-    description: "Bienvenido a la Sala Verde. Demuestra tus conocimientos sobre el Festival de la Canción de Eurovisión con cinco retos diarios diseñados para el fan definitivo.",
+    description: "Bienvenido a la Sala Verde. Demuestra tus conocimientos sobre el Festival de la Canción de Eurovisión con seis retos diarios diseñados para el fan definitivo.",
     dailyProgress: "Progreso Diario",
     qualified: "✨ Clasificado para la Gran Final ✨",
     finishedToday: "Completado hoy",
@@ -45,6 +45,11 @@ export const es: TranslationSchema = {
       title: "EuroArtist", 
       desc: "Reto diario de artistas del ESC.",
       rules: "Adivina el artista del ESC oculto en 6 intentos. Puedes introducir cualquier combinación de letras. El color de las casillas cambiará para mostrar qué tan cerca estuviste.\n\n🟩: Letra y posición correctas\n🟨: Letra correcta, posición incorrecta\n⬛: Letra incorrecta"
+    },
+    eurorefrain: {
+      title: "EuroRefrain",
+      desc: "Conecta 4 palabras de un estribillo lírico.",
+      rules: "Encuentra grupos de cuatro palabras que formen un estribillo secuencial de una canción específica de Eurovisión. Selecciona cuatro palabras y pulsa 'Enviar'. ¡Tienes 6 errores permitidos para identificar las 4 canciones!"
     },
     eurolinks: { 
       title: "EuroLinks", 
@@ -73,7 +78,8 @@ export const es: TranslationSchema = {
     notALink: "Sin vínculo",
     shuffle: "Mezclar",
     deselectAll: "Deseleccionar todo",
-    categoriesDiscovered: "Categorías Descubiertas"
+    categoriesDiscovered: "Categorías Descubiertas",
+    lyricsDiscovered: "Estribillos Descubiertos"
   },
   guesser: {
     searchPlaceholder: "Buscar entradas de Eurovisión...",
@@ -165,14 +171,14 @@ export const es: TranslationSchema = {
   },
   metadata: {
     countries: {
-      "Switzerland": "Suiza", "Sweden": "Suecia", "Finland": "Finlandia", "Netherlands": "Países Bajos",
+      "Switzerland": "Suiza", "Sweden": "Suecia", "Finland": "Finlandia", "The Netherlands": "Países Bajos",
       "Italy": "Italia", "Croatia": "Croacia", "United Kingdom": "Reino Unido", "Ukraine": "Ucrania",
       "Israel": "Israel", "Portugal": "Portugal", "Denmark": "Dinamarca", "Norway": "Noruega", "Spain": "España",
       "Austria": "Austria", "Cyprus": "Chipre", "Iceland": "Islandia", "Germany": "Alemania", "Azerbaijan": "Azerbaiyán",
       "Serbia": "Serbia", "Australia": "Australia", "Greece": "Grecia", "Moldavia": "Moldavia", "Belgium": "Bélgica",
       "Poland": "Polonia", "Slovenia": "Eslovenia", "Ireland": "Irlanda", "Luxembourg": "Luxemburgo", "Albania": "Albania",
       "Bulgaria": "Bulgaria", "Estonia": "Estonia", "Russia": "Rusia", "Turkey": "Turquía", "Bosnia & Herzegovina": "Bosnia y Herzegovina",
-      "Malta": "Malta", "Monaco": "Mónaco", "Latvia": "Letonia", "Hungary": "Hungría", "San Marino": "San Marino"
+      "Malta": "Malta", "Monaco": "Mónaco", "Latvia": "Lettonia", "Hungary": "Hungría", "San Marino": "San Marino"
     },
     genres: {
       "Drum and Bass": "Drum and Bass", "Opera": "Ópera", "Drum and Bass / Opera": "Drum and Bass / Ópera",

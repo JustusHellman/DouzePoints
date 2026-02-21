@@ -4,7 +4,7 @@ export const REGION_MAP: Record<string, string> = {
   // Baltics
   "Estonia": "Baltics", "Latvia": "Baltics", "Lithuania": "Baltics",
   // Western Europe
-  "Switzerland": "Western Europe", "Netherlands": "Western Europe", "United Kingdom": "Western Europe", 
+  "Switzerland": "Western Europe", "The Netherlands": "Western Europe", "United Kingdom": "Western Europe", 
   "UK": "Western Europe", "Austria": "Western Europe", "Belgium": "Western Europe", "France": "Western Europe", 
   "Germany": "Western Europe", "Ireland": "Western Europe", "Luxembourg": "Western Europe",
   // Mediterranean

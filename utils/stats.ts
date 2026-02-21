@@ -31,6 +31,7 @@ export const initialGlobalStats: GlobalStats = {
   links: emptyStats(), 
   guesser: emptyStats(), 
   arena: emptyStats(),
+  refrain: emptyStats(),
   totalPoints: 0, 
   totalDouzePoints: 0 
 };
@@ -49,23 +50,57 @@ export const getStoredStats = (): GlobalStats => {
       links: parsed.links || parsed.linksgame ? { ...emptyStats(), ...(parsed.links || parsed.linksgame) } : emptyStats(),
       guesser: parsed.guesser ? { ...emptyStats(), ...parsed.guesser } : emptyStats(),
       arena: parsed.arena ? { ...emptyStats(), ...parsed.arena } : emptyStats(),
+      refrain: parsed.refrain ? { ...emptyStats(), ...parsed.refrain } : emptyStats(),
     };
   } catch (e) {
     return initialGlobalStats;
   }
 };
 
+export const calculatePoints = (gameType: GameType, performanceMetrics: any): { points: number; isPerfect: boolean } => {
+  let pointsEarned = 0;
+  let isPerfect = false;
+
+  if (gameType === GameType.WORD_GAME || gameType === GameType.ARTIST_WORD_GAME) {
+    const attempts = performanceMetrics.attempts;
+    const pointsMap = [12, 10, 8, 6, 4, 2];
+    pointsEarned = pointsMap[attempts - 1] || 0;
+    if (attempts === 1) isPerfect = true;
+  } 
+  else if (gameType === GameType.LINKS_GAME || gameType === GameType.REFRAIN_GAME) {
+    const mistakes = performanceMetrics.mistakes;
+    const pointsMap = [12, 10, 8, 6, 4, 2];
+    pointsEarned = pointsMap[mistakes] || 0;
+    if (mistakes === 0) isPerfect = true;
+  }
+  else if (gameType === GameType.GUESSER) {
+    const attemptsCount = performanceMetrics.attempts;
+    const pointsMap = [12, 10, 8, 6, 4, 2];
+    pointsEarned = pointsMap[attemptsCount - 1] || 0;
+    if (attemptsCount === 1) isPerfect = true;
+  }
+  else if (gameType === GameType.ARENA) {
+    const attemptsCount = performanceMetrics.attempts;
+    const pointsMap = [12, 12, 10, 8, 6, 4, 2];
+    pointsEarned = pointsMap[attemptsCount - 1] || 0;
+    if (attemptsCount === 1 || attemptsCount === 2) isPerfect = true;
+  }
+
+  return { points: pointsEarned, isPerfect };
+};
+
 export const updateGameStats = (gameType: GameType, won: boolean, performanceMetrics: any) => {
   const stats = getStoredStats();
   const today = getDayString();
   
-  let gameKey: 'word_game' | 'artists' | 'links' | 'guesser' | 'arena';
+  let gameKey: 'word_game' | 'artists' | 'links' | 'guesser' | 'arena' | 'refrain';
   switch(gameType) {
     case GameType.WORD_GAME: gameKey = 'word_game'; break;
     case GameType.ARTIST_WORD_GAME: gameKey = 'artists'; break;
     case GameType.LINKS_GAME: gameKey = 'links'; break;
     case GameType.GUESSER: gameKey = 'guesser'; break;
     case GameType.ARENA: gameKey = 'arena'; break;
+    case GameType.REFRAIN_GAME: gameKey = 'refrain'; break;
     default: return stats;
   }
   
@@ -79,47 +114,31 @@ export const updateGameStats = (gameType: GameType, won: boolean, performanceMet
     stats[gameKey].currentStreak += 1;
     stats[gameKey].maxStreak = Math.max(stats[gameKey].maxStreak, stats[gameKey].currentStreak);
 
-    let pointsEarned = 0;
-    let isPerfect = false;
+    const { points: pointsEarned, isPerfect } = calculatePoints(gameType, performanceMetrics);
 
     if (gameType === GameType.WORD_GAME || gameType === GameType.ARTIST_WORD_GAME) {
       const attempts = performanceMetrics.attempts;
       if (stats[gameKey].distribution) {
         stats[gameKey].distribution[attempts - 1] = (stats[gameKey].distribution[attempts - 1] || 0) + 1;
       }
-      const pointsMap = [12, 10, 8, 6, 4, 2];
-      pointsEarned = pointsMap[attempts - 1] || 0;
-      if (attempts === 1) isPerfect = true;
     } 
-    else if (gameType === GameType.LINKS_GAME) {
+    else if (gameType === GameType.LINKS_GAME || gameType === GameType.REFRAIN_GAME) {
       const mistakes = performanceMetrics.mistakes;
-      const pointsMap = [12, 10, 8, 6, 4, 2];
-      pointsEarned = pointsMap[mistakes] || 0;
       if (stats[gameKey].distribution) {
         stats[gameKey].distribution[mistakes] = (stats[gameKey].distribution[mistakes] || 0) + 1;
       }
-      if (mistakes === 0) isPerfect = true;
     }
     else if (gameType === GameType.GUESSER) {
       const attemptsCount = performanceMetrics.attempts;
-      const pointsMap = [12, 10, 8, 6, 4, 2];
-      pointsEarned = pointsMap[attemptsCount - 1] || 0;
       if (stats[gameKey].distribution) {
         stats[gameKey].distribution[attemptsCount - 1] = (stats[gameKey].distribution[attemptsCount - 1] || 0) + 1;
       }
-      if (attemptsCount === 1) isPerfect = true;
     }
     else if (gameType === GameType.ARENA) {
       const attemptsCount = performanceMetrics.attempts;
-      // Arena Logic: 1->12, 2->12, 3->10, 4->8, 5->6, 6->4, 7->2
-      const pointsMap = [12, 12, 10, 8, 6, 4, 2];
-      pointsEarned = pointsMap[attemptsCount - 1] || 0;
-      
-      // Map back to 6 buckets for the distribution chart: 12pt, 10pt, 8pt, 6pt, 4pt, 2pt
       let bucketIdx = 0;
       if (attemptsCount === 1 || attemptsCount === 2) {
         bucketIdx = 0; // 12 pts
-        isPerfect = true;
       } else {
         bucketIdx = attemptsCount - 2; // 3->1 (10pt), 4->2 (8pt), etc.
       }
