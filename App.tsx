@@ -161,7 +161,7 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: any[]) => 
         else if (config.id === 'artistGame') { type = GameType.ARTIST_WORD_GAME; metrics = { attempts: dailyData.guesses.length }; }
         else if (config.id === 'linksgame') { type = GameType.LINKS_GAME; metrics = { mistakes: dailyData.mistakes }; }
         else if (config.id === 'refrain') { type = GameType.REFRAIN_GAME; metrics = { mistakes: dailyData.mistakes }; }
-        else if (config.id === 'guesser') { type = GameType.GUESSER; metrics = { attempts: dailyData.attempts }; }
+        else if (config.id === 'guesser') { type = GameType.GUESSER; metrics = { attempts: dailyData.attempts.length }; }
         else if (config.id === 'arena') { type = GameType.ARENA; metrics = { attempts: dailyData.guesses.length }; }
 
         const result = calculatePoints(type, metrics);
