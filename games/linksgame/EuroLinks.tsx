@@ -101,7 +101,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
 
   useEffect(() => {
     if (completedGroups.length === 0 && mistakes === 0 && !isGameOver) return;
-    localStorage.setItem(`linksgame-${getDayString()}`, JSON.stringify({ completedGroups, guessHistory, mistakes, isGameOver, won }));
+    localStorage.setItem(`eurolinks-${getDayString()}`, JSON.stringify({ completedGroups, guessHistory, mistakes, isGameOver, won }));
     if (isGameOver) {
       updateGameStats(GameType.LINKS_GAME, won, { mistakes });
       if (won) confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
