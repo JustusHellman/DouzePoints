@@ -370,6 +370,25 @@ const App: React.FC = () => {
       metaKeywords.setAttribute('content', currentKeywords);
     }
 
+    // Update Open Graph and Twitter tags
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.setAttribute('content', currentTitle);
+
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.setAttribute('content', currentDesc);
+
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) ogUrl.setAttribute('content', `https://www.douzepoints.net${location.pathname}`);
+
+    const twitterTitle = document.querySelector('meta[property="twitter:title"]');
+    if (twitterTitle) twitterTitle.setAttribute('content', currentTitle);
+
+    const twitterDesc = document.querySelector('meta[property="twitter:description"]');
+    if (twitterDesc) twitterDesc.setAttribute('content', currentDesc);
+
+    const twitterUrl = document.querySelector('meta[property="twitter:url"]');
+    if (twitterUrl) twitterUrl.setAttribute('content', `https://www.douzepoints.net${location.pathname}`);
+
     // Update Canonical URL
     let canonical = document.querySelector('link[rel="canonical"]');
     if (!canonical) {
