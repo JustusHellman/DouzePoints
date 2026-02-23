@@ -30,7 +30,7 @@ const ComparisonBox = ({ label, value, status, arrow, delay }: { label: string, 
   };
 
   return (
-    <div className={`relative flex flex-col items-center justify-center p-1.5 md:p-3 rounded-xl border-2 transition-all duration-700 w-full aspect-square text-center transform-gpu ${revealed ? `${colorClasses[status]} scale-100 rotate-0 opacity-100` : 'bg-gray-900 border-white/5 scale-75 opacity-0'}`}>
+    <div className={`relative flex flex-col items-center justify-center p-1.5 md:p-3 rounded-xl border-2 transition-all duration-700 w-full aspect-[1.6/1] text-center transform-gpu ${revealed ? `${colorClasses[status]} scale-100 rotate-0 opacity-100` : 'bg-gray-900 border-white/5 scale-75 opacity-0'}`}>
       <span className="text-[7px] md:text-[9px] font-black uppercase tracking-widest text-white/50 mb-0.5 md:mb-1.5 leading-none italic">{label}</span>
       <div className={`flex items-center gap-0.5 font-black leading-tight w-full justify-center px-0.5`}>
         <span className="text-white drop-shadow-md break-words line-clamp-2 text-[9px] sm:text-[12px] md:text-[14px] lg:text-[16px] xl:text-[18px] leading-tight hyphens-auto">{value}</span>
@@ -46,7 +46,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
   const [showHowToPlay, setShowHowToPlay] = useState(false);
 
   const target = useMemo(() => {
-    const idx = getDailyIndex(data, "arena");
+    const idx = getDailyIndex(data, "euroarena");
     return data[idx];
   }, [data]);
 
@@ -58,11 +58,11 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
   const [showResults, setShowResults] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  const getStatus = useCallback((key: keyof MasterSong, val: any, guessSong: MasterSong) => {
+  const getStatus = useCallback((key: keyof MasterSong, val: string | number | undefined, guessSong: MasterSong) => {
     if (val === target[key]) return 'green';
-    if (key === 'year' && Math.abs((val as number) - target.year) <= 3) return 'yellow';
-    if (key === 'placing' && Math.abs((val as number) - target.placing) <= 5) return 'yellow';
-    if (key === 'members' && Math.abs((val as number) - target.members) === 1) return 'yellow';
+    if (key === 'year' && typeof val === 'number' && Math.abs(val - target.year) <= 3) return 'yellow';
+    if (key === 'placing' && typeof val === 'number' && Math.abs(val - target.placing) <= 5) return 'yellow';
+    if (key === 'members' && typeof val === 'number' && Math.abs(val - target.members) === 1) return 'yellow';
     if (key === 'genre') {
       const guessParent = getGenreParent(String(val));
       const targetParent = getGenreParent(target.genre);
@@ -77,10 +77,10 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
   }, [target]);
 
   useEffect(() => {
-    const seenKey = 'hasSeenRules-arena';
+    const seenKey = 'hasSeenRules-euroarena';
     const hasSeen = localStorage.getItem(seenKey);
     if (!hasSeen) {
-      setShowHowToPlay(true);
+      setTimeout(() => setShowHowToPlay(true), 0);
       localStorage.setItem(seenKey, 'true');
     }
   }, []);
@@ -110,12 +110,16 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
   }, [won, guesses, t]);
 
   useEffect(() => {
-    const saved = localStorage.getItem(`arena-${getDayString()}`);
+    const saved = localStorage.getItem(`euroarena-${getDayString()}`);
     if (saved) {
       try {
         const d = JSON.parse(saved);
-        setGuesses(d.guesses || []); setIsGameOver(!!d.isGameOver); setWon(!!d.won);
-        if (!!d.isGameOver) setShowModal(true);
+        setTimeout(() => {
+          if (d.guesses) setGuesses(d.guesses);
+          if (d.isGameOver !== undefined) setIsGameOver(Boolean(d.isGameOver));
+          if (d.won !== undefined) setWon(Boolean(d.won));
+          if (d.isGameOver) setShowModal(true);
+        }, 0);
       } catch (e) { console.error("Arena load failed", e); }
     }
   }, []);
@@ -169,7 +173,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
         ];
         return row.join('');
     }).join('\n');
-  }, [guesses, target, getStatus]);
+  }, [guesses, getStatus]);
 
   const translateGenre = (genre: string) => {
     if (genre.includes(' / ')) {

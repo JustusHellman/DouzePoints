@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MasterSong } from '../data/types.ts';
 import { useTranslation } from '../context/LanguageContext.tsx';
 import { getDayString } from '../utils/daily.ts';
+import { CountdownTimer } from './CountdownTimer.tsx';
 
 interface GameScoreCardProps {
   won: boolean;
@@ -267,6 +268,10 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
                 {extraInfo}
              </div>
           )}
+
+          <div className="pt-4 border-t border-white/5 flex flex-col items-center gap-2">
+             <CountdownTimer label={t('scorecard.nextGame')} />
+          </div>
         </div>
 
         <div className="p-5 border-t border-white/5 bg-black/40 flex flex-col gap-2">

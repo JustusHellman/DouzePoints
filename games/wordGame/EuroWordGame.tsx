@@ -88,10 +88,10 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
     if (saved) {
       try {
         const { guesses: sG, isGameOver: sGO, won: sW } = JSON.parse(saved);
-        setGuesses(sG || []);
-        setIsGameOver(!!sGO);
-        setWon(!!sW);
-        if (!!sGO) setShowModal(true);
+        if (sG) setGuesses(sG);
+        if (sGO !== undefined) setIsGameOver(Boolean(sGO));
+        if (sW !== undefined) setWon(Boolean(sW));
+        if (sGO) setShowModal(true);
       } catch (e) {
         console.error("Load failed", e);
       }

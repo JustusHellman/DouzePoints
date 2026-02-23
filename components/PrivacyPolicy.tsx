@@ -12,80 +12,76 @@ export const PrivacyPolicy: React.FC = () => {
           {t('cookies.privacyPolicy')}
         </h1>
         <div className="h-1.5 w-32 bg-gradient-to-r from-pink-500 to-purple-600 mt-6 rounded-full"></div>
-        <p className="mt-8 text-[10px] font-black uppercase tracking-[0.5em] text-gray-500">Last Updated: February 2026</p>
+        <p className="mt-8 text-[10px] font-black uppercase tracking-[0.5em] text-gray-500">{t('cookies.lastUpdated')}: {t('privacy.lastUpdated')}</p>
       </header>
 
       <main className="space-y-16 leading-relaxed text-sm md:text-base text-gray-300 font-medium">
         
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">01</span> Introduction
+            <span className="text-pink-500 italic">01</span> {t('privacy.introduction.title')}
           </h2>
           <div className="pl-12 space-y-4">
-            <p>Welcome to Douze Points (<a href="https://www.douzepoints.net" className="text-pink-500 hover:text-pink-400 underline decoration-pink-500/20 underline-offset-8">www.douzepoints.net</a>).</p>
-            <p>This website is operated by Justus Hellman, based in Sweden (the “Data Controller”).</p>
-            <p>If you have any questions regarding this Privacy Policy or your personal data, you may contact: <a href="mailto:douzepointsgame@gmail.com" className="text-blue-400 hover:text-blue-300">douzepointsgame@gmail.com</a></p>
+            <p>{t('privacy.introduction.p1')}</p>
+            <p>{t('privacy.introduction.p2')}</p>
+            <p>{t('privacy.introduction.p3')}</p>
           </div>
         </section>
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">02</span> What Data We Collect
+            <span className="text-pink-500 italic">02</span> {t('privacy.dataCollection.title')}
           </h2>
           <div className="pl-12 space-y-8">
             <div>
-              <h3 className="text-white font-black uppercase text-xs tracking-widest mb-3">a) Automatically Collected Data</h3>
-              <p className="mb-4 opacity-80">When you visit the website, certain information may be automatically collected, including:</p>
+              <h3 className="text-white font-black uppercase text-xs tracking-widest mb-3">{t('privacy.dataCollection.autoTitle')}</h3>
+              <p className="mb-4 opacity-80">{t('privacy.dataCollection.autoDesc')}</p>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2 text-xs md:text-sm font-bold uppercase tracking-tight text-gray-400">
-                <li className="flex items-center gap-2"><div className="w-1 h-1 bg-pink-500 rounded-full"></div> IP address</li>
-                <li className="flex items-center gap-2"><div className="w-1 h-1 bg-pink-500 rounded-full"></div> Browser type and version</li>
-                <li className="flex items-center gap-2"><div className="w-1 h-1 bg-pink-500 rounded-full"></div> Device information</li>
-                <li className="flex items-center gap-2"><div className="w-1 h-1 bg-pink-500 rounded-full"></div> Operating system</li>
-                <li className="flex items-center gap-2"><div className="w-1 h-1 bg-pink-500 rounded-full"></div> Pages visited</li>
-                <li className="flex items-center gap-2"><div className="w-1 h-1 bg-pink-500 rounded-full"></div> Date and time of access</li>
-                <li className="flex items-center gap-2"><div className="w-1 h-1 bg-pink-500 rounded-full"></div> Referring website</li>
+                {t('privacy.dataCollection.autoItems').map((item: string, i: number) => (
+                  <li key={i} className="flex items-center gap-2"><div className="w-1 h-1 bg-pink-500 rounded-full"></div> {item}</li>
+                ))}
               </ul>
-              <p className="mt-4 opacity-60 italic text-xs">This information may be processed by our advertising and analytics providers.</p>
+              <p className="mt-4 opacity-60 italic text-xs">{t('privacy.dataCollection.autoFootnote')}</p>
             </div>
 
             <div>
-              <h3 className="text-white font-black uppercase text-xs tracking-widest mb-3">b) Cookies and Similar Technologies</h3>
-              <p className="mb-4 opacity-80">We use cookies and similar technologies for Advertising, Measuring ad performance, and Website functionality.</p>
-              <p>Consent for cookies is collected and managed through Google Funding Choices, which provides our consent management platform (CMP). Users in applicable regions (such as the EU/EEA and UK) are asked to provide consent before non-essential cookies are used.</p>
-              <p className="mt-4">You can change your consent preferences at any time via the consent options available on the website.</p>
+              <h3 className="text-white font-black uppercase text-xs tracking-widest mb-3">{t('privacy.dataCollection.cookiesTitle')}</h3>
+              <p className="mb-4 opacity-80">{t('privacy.dataCollection.cookiesDesc1')}</p>
+              <p>{t('privacy.dataCollection.cookiesDesc2')}</p>
+              <p className="mt-4">{t('privacy.dataCollection.cookiesDesc3')}</p>
             </div>
           </div>
         </section>
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">03</span> Advertising
+            <span className="text-pink-500 italic">03</span> {t('privacy.advertising.title')}
           </h2>
           <div className="pl-12 space-y-4">
-            <p>We use Google AdSense to display advertisements. Google and its partners may use cookies and similar technologies to serve personalized ads, measure ad performance, and limit the number of times you see an ad.</p>
-            <p>You can manage your advertising preferences via: <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" className="text-pink-500 hover:text-pink-400 underline decoration-pink-500/20 underline-offset-8">adssettings.google.com</a></p>
-            <p>More information about how Google processes personal data is available in Google’s Privacy Policy.</p>
+            <p>{t('privacy.advertising.p1')}</p>
+            <p>{t('privacy.advertising.p2')}</p>
+            <p>{t('privacy.advertising.p3')}</p>
           </div>
         </section>
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">04</span> Legal Basis (GDPR)
+            <span className="text-pink-500 italic">04</span> {t('privacy.legalBasis.title')}
           </h2>
           <div className="pl-12 space-y-4">
-            <p>If you are located in the EU/EEA, we process personal data on the following legal bases:</p>
+            <p>{t('privacy.legalBasis.p1')}</p>
             <ul className="space-y-3">
               <li className="flex gap-4">
-                <strong className="text-white shrink-0 w-24 uppercase text-[10px] pt-1 tracking-widest">Consent:</strong>
-                <span>for personalized advertising and non-essential cookies.</span>
+                <strong className="text-white shrink-0 w-24 uppercase text-[10px] pt-1 tracking-widest">{t('privacy.legalBasis.consentLabel')}:</strong>
+                <span>{t('privacy.legalBasis.consent')}</span>
               </li>
               <li className="flex gap-4">
-                <strong className="text-white shrink-0 w-24 uppercase text-[10px] pt-1 tracking-widest">Legitimacy:</strong>
-                <span>for basic website functionality, security, and fraud prevention.</span>
+                <strong className="text-white shrink-0 w-24 uppercase text-[10px] pt-1 tracking-widest">{t('privacy.legalBasis.legitimacyLabel')}:</strong>
+                <span>{t('privacy.legalBasis.legitimacy')}</span>
               </li>
               <li className="flex gap-4">
-                <strong className="text-white shrink-0 w-24 uppercase text-[10px] pt-1 tracking-widest">Legal:</strong>
-                <span>where required by applicable law.</span>
+                <strong className="text-white shrink-0 w-24 uppercase text-[10px] pt-1 tracking-widest">{t('privacy.legalBasis.legalLabel')}:</strong>
+                <span>{t('privacy.legalBasis.legal')}</span>
               </li>
             </ul>
           </div>
@@ -93,84 +89,84 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">05</span> Local Storage
+            <span className="text-pink-500 italic">05</span> {t('privacy.localStorage.title')}
           </h2>
           <div className="pl-12 space-y-4 bg-white/5 p-8 rounded-[2rem] border border-white/5 shadow-inner">
-            <p>We use your browser’s local storage to save game progress, scores, and statistics. This information:</p>
+            <p>{t('privacy.localStorage.p1')}</p>
             <ul className="list-disc pl-6 space-y-2 opacity-80 italic text-sm">
-              <li>Is stored only on your device</li>
-              <li>Is not transmitted to our servers</li>
-              <li>Can be deleted by clearing your browser data</li>
+              {t('privacy.localStorage.items').map((item: string, i: number) => (
+                <li key={i}>{item}</li>
+              ))}
             </ul>
           </div>
         </section>
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">06</span> Data Sharing
+            <span className="text-pink-500 italic">06</span> {t('privacy.dataSharing.title')}
           </h2>
           <div className="pl-12 space-y-4">
-            <p>We do not sell personal data. However, data may be processed by third-party service providers, including:</p>
+            <p>{t('privacy.dataSharing.p1')}</p>
             <ul className="list-disc pl-6 space-y-2 opacity-80">
-              <li>Google (advertising and consent management)</li>
-              <li>Hosting providers</li>
-              <li>Technical service providers necessary for website operation</li>
+              {t('privacy.dataSharing.items').map((item: string, i: number) => (
+                <li key={i}>{item}</li>
+              ))}
             </ul>
           </div>
         </section>
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">07</span> International Transfers
+            <span className="text-pink-500 italic">07</span> {t('privacy.internationalTransfers.title')}
           </h2>
           <div className="pl-12 space-y-4">
-            <p>Some third-party providers, including Google, may process data outside the EU or EEA. Where such transfers occur, appropriate safeguards such as Standard Contractual Clauses are used.</p>
+            <p>{t('privacy.internationalTransfers.p1')}</p>
           </div>
         </section>
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">08</span> Data Retention
+            <span className="text-pink-500 italic">08</span> {t('privacy.dataRetention.title')}
           </h2>
           <div className="pl-12 space-y-4">
-            <p>We do not maintain a user database. Advertising data is retained according to Google’s policies, technical logs for security purposes, and local storage remains until you delete it.</p>
+            <p>{t('privacy.dataRetention.p1')}</p>
           </div>
         </section>
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">09</span> Your Rights (EU/EEA)
+            <span className="text-pink-500 italic">09</span> {t('privacy.yourRights.title')}
           </h2>
           <div className="pl-12 space-y-4">
-            <p>If you are located in the EU/EEA, you have the right to access, correct, or delete your data, and to restrict or object to processing. In Sweden, the supervisory authority is <strong className="text-white">Integritetsskyddsmyndigheten</strong>.</p>
-            <p>Contact us at <a href="mailto:douzepointsgame@gmail.com" className="text-blue-400">douzepointsgame@gmail.com</a> to exercise your rights.</p>
+            <p>{t('privacy.yourRights.p1')}</p>
+            <p>{t('privacy.yourRights.p2')}</p>
           </div>
         </section>
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">10</span> Data Security
+            <span className="text-pink-500 italic">10</span> {t('privacy.dataSecurity.title')}
           </h2>
           <div className="pl-12 space-y-4">
-            <p>We take reasonable technical and organizational measures to protect personal data. However, no method of transmission over the Internet is completely secure.</p>
+            <p>{t('privacy.dataSecurity.p1')}</p>
           </div>
         </section>
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">11</span> Links to Third-Party Websites
+            <span className="text-pink-500 italic">11</span> {t('privacy.thirdPartyLinks.title')}
           </h2>
           <div className="pl-12 space-y-4">
-            <p>This website may contain links to third-party websites, including YouTube. We are not responsible for the privacy practices or content of external websites.</p>
+            <p>{t('privacy.thirdPartyLinks.p1')}</p>
           </div>
         </section>
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">12</span> Changes to This Policy
+            <span className="text-pink-500 italic">12</span> {t('privacy.changes.title')}
           </h2>
           <div className="pl-12 space-y-4">
-            <p>We may update this Privacy Policy from time to time. Any updates will be posted on this page with a revised “Last Updated” date.</p>
+            <p>{t('privacy.changes.p1')}</p>
           </div>
         </section>
 

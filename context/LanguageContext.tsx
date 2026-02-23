@@ -24,23 +24,27 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     return (localStorage.getItem('euro-lang') as Language) || 'en';
   });
 
-  const t = (key: string) => {
+  const t = (key: string): any => {
     const keys = key.split('.');
     let value: any = translations[language];
     
     for (const k of keys) {
-      if (value && value[k] !== undefined) {
+      if (value && typeof value === 'object' && value[k] !== undefined) {
         value = value[k];
       } else {
         // Fallback to English if current language is missing key
         let fallback: any = translations['en'];
         for (const fk of keys) {
-            fallback = fallback ? fallback[fk] : undefined;
+            if (fallback && typeof fallback === 'object') {
+                fallback = fallback[fk];
+            } else {
+                fallback = undefined;
+            }
         }
         return fallback || key;
       }
     }
-    return value;
+    return value || key;
   };
 
   const handleSetLanguage = (lang: Language) => {

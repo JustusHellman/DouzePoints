@@ -1,4 +1,5 @@
 export const getDayString = () => {
+  // Use UTC date to ensure everyone gets the same puzzle at the same time
   return new Date().toISOString().split('T')[0];
 };
 
@@ -42,13 +43,20 @@ export const getDailyIndex = (data: any[], salt: string) => {
 };
 
 /**
- * Returns the time remaining until the next day starts.
+ * Returns the time remaining until the next day starts in UTC.
  */
 export const getTimeUntilNext = () => {
   const now = new Date();
-  const nextDay = new Date(now);
-  nextDay.setHours(24, 0, 0, 0);
-  const diff = nextDay.getTime() - now.getTime();
+  
+  // Calculate milliseconds until next midnight UTC
+  const nextMidnightUtc = new Date(Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate() + 1,
+    0, 0, 0, 0
+  ));
+  
+  const diff = nextMidnightUtc.getTime() - now.getTime();
   
   const h = Math.floor(diff / (1000 * 60 * 60));
   const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));

@@ -1,10 +1,26 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useTranslation } from '../context/LanguageContext.tsx';
 import { getDayString } from '../utils/daily.ts';
 import { getCurrentRank } from '../utils/stats.ts';
 
+interface GameInstance {
+  id: string;
+  path: string;
+  title: string;
+  desc: string;
+  type: string;
+  done: boolean;
+  points: number;
+  stat: number;
+  styles: {
+    bg: string;
+    text: string;
+    glow: string;
+  };
+}
+
 interface DailyShareModalProps {
-  games: any[];
+  games: GameInstance[];
   onClose: () => void;
   totalPoints?: number;
 }
@@ -20,6 +36,20 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({ games, onClose
   const completedCount = games.filter(g => g.done).length;
   const totalCount = games.length;
   const totalDailyPoints = games.reduce((acc, g) => acc + g.points, 0);
+  
+  const [confetti, setConfetti] = useState<{ color: string; alpha: number; size: number; isCircle: boolean; x: number; y: number }[]>([]);
+
+  useEffect(() => {
+    const generatedConfetti = Array.from({ length: 50 }).map(() => ({
+      color: ['#ec4899', '#3b82f6', '#8b5cf6', '#eab308', '#ffffff'][Math.floor(Math.random() * 5)],
+      alpha: Math.random() * 0.5,
+      size: Math.random() * 10 + 2,
+      isCircle: Math.random() > 0.5,
+      x: Math.random(),
+      y: Math.random()
+    }));
+    setTimeout(() => setConfetti(generatedConfetti), 0);
+  }, []);
 
   const shareText = useMemo(() => {
     let text = `✨ DOUZE POINTS ✨\nDaily Progress • ${today}\n\n`;
@@ -40,7 +70,23 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({ games, onClose
     return text;
   }, [games, today, completedCount, totalCount, totalDailyPoints]);
 
-  const generateCanvas = () => {
+  const roundRect = useCallback((ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number, fill: boolean, stroke: boolean) => {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+    if (fill) ctx.fill();
+    if (stroke) ctx.stroke();
+  }, []);
+
+  const generateCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -78,18 +124,17 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({ games, onClose
     drawGlow(canvas.width / 2, canvas.height / 2, 600, '#8b5cf6'); // Purple center
 
     // 3. Confetti / Sparkles
-    for (let i = 0; i < 50; i++) {
-      ctx.fillStyle = ['#ec4899', '#3b82f6', '#8b5cf6', '#eab308', '#ffffff'][Math.floor(Math.random() * 5)];
-      ctx.globalAlpha = Math.random() * 0.5;
-      const size = Math.random() * 10 + 2;
+    confetti.forEach(c => {
+      ctx.fillStyle = c.color;
+      ctx.globalAlpha = c.alpha;
       ctx.beginPath();
-      if (Math.random() > 0.5) {
-        ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, size, 0, Math.PI * 2);
+      if (c.isCircle) {
+        ctx.arc(c.x * canvas.width, c.y * canvas.height, c.size, 0, Math.PI * 2);
       } else {
-        ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, size, size);
+        ctx.fillRect(c.x * canvas.width, c.y * canvas.height, c.size, c.size);
       }
       ctx.fill();
-    }
+    });
     ctx.globalAlpha = 1.0;
 
     // 4. Header Section
@@ -179,34 +224,6 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({ games, onClose
       }
     });
 
-    // 7. Trophy / Celebration Icon
-    if (completedCount === totalCount) {
-       ctx.save();
-       ctx.translate(canvas.width / 2, 1050);
-       ctx.shadowColor = '#eab308';
-       ctx.shadowBlur = 40;
-       ctx.fillStyle = '#eab308';
-       
-       // Simple Trophy Shape
-       ctx.beginPath();
-       ctx.fillRect(-50, 60, 100, 15); // Base
-       ctx.fillRect(-20, 40, 40, 20); // Stem
-       ctx.arc(0, 0, 50, 0, Math.PI, false); // Bowl
-       ctx.fill();
-       ctx.fillRect(-50, -40, 100, 40); // Top
-       
-       // Handles
-       ctx.strokeStyle = '#eab308';
-       ctx.lineWidth = 8;
-       ctx.beginPath();
-       ctx.arc(-50, -10, 25, Math.PI * 0.5, Math.PI * 1.5);
-       ctx.stroke();
-       ctx.beginPath();
-       ctx.arc(50, -10, 25, Math.PI * 1.5, Math.PI * 0.5);
-       ctx.stroke();
-       ctx.restore();
-    }
-
     // 8. Footer
     ctx.save();
     ctx.shadowBlur = 0;
@@ -215,28 +232,12 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({ games, onClose
     ctx.font = '900 35px Montserrat, sans-serif';
     ctx.fillText('DOUZEPOINTS.NET', canvas.width / 2, 1280);
     ctx.restore();
-  };
-
-  function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number, fill: boolean, stroke: boolean) {
-    ctx.beginPath();
-    ctx.moveTo(x + radius, y);
-    ctx.lineTo(x + width - radius, y);
-    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-    ctx.lineTo(x + width, y + height - radius);
-    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-    ctx.lineTo(x + radius, y + height);
-    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-    ctx.lineTo(x, y + radius);
-    ctx.quadraticCurveTo(x, y, x + radius, y);
-    ctx.closePath();
-    if (fill) ctx.fill();
-    if (stroke) ctx.stroke();
-  }
+  }, [games, confetti, today, completedCount, totalCount, totalDailyPoints, currentRank, roundRect]);
 
   useEffect(() => {
     const timer = setTimeout(generateCanvas, 150);
     return () => clearTimeout(timer);
-  }, [games]);
+  }, [generateCanvas]);
 
   const handleShareText = () => {
     navigator.clipboard.writeText(shareText).then(() => {

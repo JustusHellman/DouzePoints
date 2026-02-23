@@ -1,6 +1,38 @@
 import { GlobalStats, DetailedStats, GameType } from '../data/types.ts';
 import { getDayString } from './daily.ts';
 
+export const getDailyGameState = (config: any, today: string) => {
+  const saved = localStorage.getItem(`${config.storageKey}-${today}`);
+  let dailyData = null;
+  if (saved) {
+    try {
+      dailyData = JSON.parse(saved);
+    } catch (e) { /* ignore */ }
+  }
+
+  let done = false;
+  let points = 0;
+
+  if (dailyData && dailyData.isGameOver) {
+    done = true;
+    if (dailyData.won) {
+      let metrics: { attempts?: number; mistakes?: number } = {};
+      if (config.id === 'eurosong' || config.id === 'euroartist' || config.id === 'euroarena') {
+        metrics = { attempts: dailyData.guesses?.length || dailyData.attempts?.length || 0 };
+      } else if (config.id === 'eurolinks' || config.id === 'eurorefrain') {
+        metrics = { mistakes: dailyData.mistakes };
+      } else if (config.id === 'euroguess') {
+        metrics = { attempts: dailyData.attempts?.length || 0 };
+      }
+
+      const result = calculatePoints(config.type, metrics);
+      points = result.points;
+    }
+  }
+
+  return { done, points };
+};
+
 export const RANK_TIERS = [
   { threshold: 0, title: "First-Time Voter" },
   { threshold: 24, title: "Backing Vocalist" },

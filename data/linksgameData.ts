@@ -50,7 +50,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
     { category: "Host cities in the former USSR", items: ["MOSCOW", "KYIV", "BAKU", "TALLINN"], difficulty: "expert" }
   ],
   [
-    { category: "Big Five countries", items: ["FRANCE", "GERMANY", "ITALY", "SPAIN", "UNITED KINGDOM"], difficulty: "easy" },
+    { category: "Countries in the Big Five", items: ["FRANCE", "GERMANY", "ITALY", "SPAIN"], difficulty: "easy" },
     { category: "Participants outside geographical Europe", items: ["ISRAEL", "AZERBAIJAN", "ARMENIA", "AUSTRALIA"], difficulty: "medium" },
     { category: "Exclamation marks in the song title", items: ["HEY MAMMA!", "YODEL IT!", "OPA!", "HVALA, NE!"], difficulty: "hard" },
     { category: "Host cities beginning with 'B'", items: ["BELGRADE", "BAKU", "BIRMINGHAM", "BERGEN"], difficulty: "expert" }
@@ -106,7 +106,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
   [
     { category: "Eurovision winners (2021–2024)", items: ["ZITTI E BUONI", "STEFANIA", "TATTOO", "THE CODE"], difficulty: "easy" },
     { category: "Countries that have won exactly once (as of 2024)", items: ["GREECE", "TURKEY", "PORTUGAL", "AZERBAIJAN"], difficulty: "medium" },
-    { category: "Acts who competed at both Junior Eurovision and Eurovision", items: ["DESTINY", "TOLMACHEVY SISTERS", "STEFANIA", "NEVENA BOZOVIC"], difficulty: "hard" },
+    { category: "Acts who competed at both Junior Eurovision and Eurovision", items: ["DESTINY", "TOLMACHEVY SISTERS", "IRU", "NEVENA BOZOVIC"], difficulty: "hard" },
     { category: "Countries that have participated but never won (as of 2024)", items: ["CYPRUS", "ARMENIA", "ROMANIA", "GEORGIA"], difficulty: "expert" }
   ],
   [
@@ -118,7 +118,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
   [
     { category: "Host cities beginning with 'T'", items: ["TEL AVIV", "TURIN", "TALLINN", "THE HAGUE"], difficulty: "easy" },
     { category: "Countries using Cyrillic as an official script", items: ["RUSSIA", "BELARUS", "SERBIA", "NORTH MACEDONIA"], difficulty: "medium" },
-    { category: "Countries whose capitals begin with 'B'", items: ["GERMANY", "ROMANIA", "AZERBAIJAN", "SERBIA"], difficulty: "hard" },
+    { category: "Countries whose capitals begin with 'B'", items: ["GERMANY", "ROMANIA", "AZERBAIJAN", "BELGIUM"], difficulty: "hard" },
     { category: "Folk meets pop: entries blending traditional elements", items: ["SHUM", "SPIRIT IN THE SKY", "BOONIKA BATE DOBA", "TRENULETUL"], difficulty: "expert" }
   ],
   [
@@ -376,7 +376,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
   [
     { category: "Celestial imagery in the title", items: ["SATELLITE", "THE MOON IS RISING", "CHILDREN OF THE UNIVERSE", "FALLING STARS"], difficulty: "easy" },
     { category: "Entries featuring a violin on stage", items: ["FAIRYTALE", "BELIEVE", "TIME", "LANE MOJE"], difficulty: "medium" },
-    { category: "Countries with capitals starting B", items: ["GERMANY", "ROMANIA", "AZERBAIJAN", "SERBIA"], difficulty: "hard" },
+    { category: "Countries with capitals starting B", items: ["GERMANY", "BELGIUM", "AZERBAIJAN", "SERBIA"], difficulty: "hard" },
     { category: "Countries with a Black Sea coastline", items: ["BULGARIA", "ROMANIA", "GEORGIA", "UKRAINE"], difficulty: "expert" }
   ],
   [
@@ -417,7 +417,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
   ],
   [
     { category: "Winning songs with one-word titles", items: ["ARCADE", "TATTOO", "SATELLITE", "HEROES"], difficulty: "easy" },
-    { category: "Countries debuting in the 2000s", items: ["ALBANIA", "ANDORRA", "AZERBAIJAN", "SERBIA AND MONTENEGRO"], difficulty: "medium" },
+    { category: "Countries debuting in the 2000s", items: ["ALBANIA", "ANDORRA", "GEORGIA", "SERBIA AND MONTENEGRO"], difficulty: "medium" },
     { category: "Titles beginning with My", items: ["MY NUMBER ONE", "MY LUCKY DAY", "MY FRIEND", "MY STAR"], difficulty: "hard" },
     { category: "Participants outside geographical Europe", items: ["ISRAEL", "AZERBAIJAN", "ARMENIA", "AUSTRALIA"], difficulty: "expert" }
   ],
@@ -514,7 +514,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
   [
     { category: "Italian-language entries (2010s-2020s)", items: ["GRANDE AMORE", "OCCIDENTALI'S KARMA", "NON MI AVETE FATTO NIENTE", "DUE VITE"], difficulty: "easy" },
     { category: "Male-female duos credited with &", items: ["ELL & NIKKI", "THE COMMON LINNETS", "KOIT TOOME & LAURA", "MORLAND & DEBRAH SCARLETT"], difficulty: "medium" },
-    { category: "Countries ending with -ia", items: ["SERBIA", "ROMANIA", "ESTONIA", "LITHUANIA"], difficulty: "hard" },
+    { category: "Countries ending with -ia", items: ["SERBIA", "SLOVENIA", "ESTONIA", "LITHUANIA"], difficulty: "hard" },
     { category: "Countries with a Black Sea coastline", items: ["BULGARIA", "ROMANIA", "GEORGIA", "UKRAINE"], difficulty: "expert" }
   ],
   [
@@ -561,7 +561,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
   ],
   [
     { category: "Supernatural-themed titles", items: ["GHOST", "MONSTERS", "SKELETONS", "SPIRIT IN THE SKY"], difficulty: "easy" },
-    { category: "Countries whose flags have a Nordic cross", items: ["DENMARK", "SWEDEN", "NORWAY", "ICELAND"], difficulty: "medium" },
+    { category: "Countries whose flags have a Nordic cross", items: ["FINLAND", "SWEDEN", "NORWAY", "ICELAND"], difficulty: "medium" },
     { category: "Entries blending rap with pop", items: ["CHA CHA CHA", "TRENULETUL", "YODEL IT!", "LIE TO ME"], difficulty: "hard" },
     { category: "Countries with one Eurovision-country land border", items: ["PORTUGAL", "IRELAND", "SAN MARINO", "DENMARK"], difficulty: "expert" }
   ],

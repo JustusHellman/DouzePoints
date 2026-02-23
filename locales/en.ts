@@ -23,11 +23,13 @@ export const en: TranslationSchema = {
     mistakesLeft: "Mistakes Left",
     howToPlay: "How to play",
     close: "Close",
-    selectLanguage: "Select Language"
+    selectLanguage: "Select Language",
+    languages: "Languages",
+    qualified: "Qualified"
   },
   greenroom: {
     greenroom: "The Greenroom",
-    description: "Welcome to the Greenroom. Prove your knowledge of the Eurovision Song Contest with six daily challenges designed for the ultimate superfan.",
+    description: "Relax and prepare for the performance. Prove your knowledge of the Eurovision Song Contest with six daily challenges designed for the ultimate superfan.",
     dailyProgress: "Daily Progress",
     qualified: "✨ Grand Final Qualified ✨",
     finishedToday: "Finished Today",
@@ -75,6 +77,7 @@ export const en: TranslationSchema = {
   links: {
     mistakesRemaining: "Mistakes Remaining",
     oneAway: "One away...",
+    betterLuck: "Better luck tomorrow!",
     notALink: "Not a link",
     shuffle: "Shuffle Grid",
     deselectAll: "Deselect All",
@@ -139,6 +142,7 @@ export const en: TranslationSchema = {
     signalLost: "Signal Lost...",
     score: "Score",
     viewScorecard: "View Scorecard",
+    nextGame: "Next Game In",
     headlines: {
       nulPoints: "❌ NUL POINTS... 🗳️",
       douzePoints: "🏆 DOUZE POINTS! ✨",
@@ -154,7 +158,79 @@ export const en: TranslationSchema = {
     manage: "Manage",
     privacyPolicy: "Privacy Policy",
     cookiePolicy: "Cookie Policy",
-    privacySettings: "Privacy"
+    privacySettings: "Privacy",
+    lastUpdated: "Last Updated"
+  },
+  privacy: {
+    lastUpdated: "February 2026",
+    introduction: {
+      title: "Introduction",
+      p1: "Welcome to Douze Points (www.douzepoints.net).",
+      p2: "This website is operated by Justus Hellman, based in Sweden (the “Data Controller”).",
+      p3: "If you have any questions regarding this Privacy Policy or your personal data, you may contact: douzepointsgame@gmail.com"
+    },
+    dataCollection: {
+      title: "What Data We Collect",
+      autoTitle: "a) Automatically Collected Data",
+      autoDesc: "When you visit the website, certain information may be automatically collected, including:",
+      autoItems: ["IP address", "Browser type and version", "Device information", "Operating system", "Pages visited", "Date and time of access", "Referring website"],
+      autoFootnote: "This information may be processed by our advertising and analytics providers.",
+      cookiesTitle: "b) Cookies and Similar Technologies",
+      cookiesDesc1: "We use cookies and similar technologies for Advertising, Measuring ad performance, and Website functionality.",
+      cookiesDesc2: "Consent for cookies is collected and managed through Google Funding Choices, which provides our consent management platform (CMP). Users in applicable regions (such as the EU/EEA and UK) are asked to provide consent before non-essential cookies are used.",
+      cookiesDesc3: "You can change your consent preferences at any time via the consent options available on the website."
+    },
+    advertising: {
+      title: "Advertising",
+      p1: "We use Google AdSense to display advertisements. Google and its partners may use cookies and similar technologies to serve personalized ads, measure ad performance, and limit the number of times you see an ad.",
+      p2: "You can manage your advertising preferences via: adssettings.google.com",
+      p3: "More information about how Google processes personal data is available in Google’s Privacy Policy."
+    },
+    legalBasis: {
+      title: "Legal Basis (GDPR)",
+      p1: "If you are located in the EU/EEA, we process personal data on the following legal bases:",
+      consentLabel: "Consent",
+      consent: "for personalized advertising and non-essential cookies.",
+      legitimacyLabel: "Legitimacy",
+      legitimacy: "for basic website functionality, security, and fraud prevention.",
+      legalLabel: "Legal",
+      legal: "where required by applicable law."
+    },
+    localStorage: {
+      title: "Local Storage",
+      p1: "We use your browser’s local storage to save game progress, scores, and statistics. This information:",
+      items: ["Is stored only on your device", "Is not transmitted to our servers", "Can be deleted by clearing your browser data"]
+    },
+    dataSharing: {
+      title: "Data Sharing",
+      p1: "We do not sell personal data. However, data may be processed by third-party service providers, including:",
+      items: ["Google (advertising and consent management)", "Hosting providers", "Technical service providers necessary for website operation"]
+    },
+    internationalTransfers: {
+      title: "International Transfers",
+      p1: "Some third-party providers, including Google, may process data outside the EU or EEA. Where such transfers occur, appropriate safeguards such as Standard Contractual Clauses are used."
+    },
+    dataRetention: {
+      title: "Data Retention",
+      p1: "We do not maintain a user database. Advertising data is retained according to Google’s policies, technical logs for security purposes, and local storage remains until you delete it."
+    },
+    yourRights: {
+      title: "Your Rights (EU/EEA)",
+      p1: "If you are located in the EU/EEA, you have the right to access, correct, or delete your data, and to restrict or object to processing. In Sweden, the supervisory authority is Integritetsskyddsmyndigheten.",
+      p2: "Contact us at douzepointsgame@gmail.com to exercise your rights."
+    },
+    dataSecurity: {
+      title: "Data Security",
+      p1: "We take reasonable technical and organizational measures to protect personal data. However, no method of transmission over the Internet is completely secure."
+    },
+    thirdPartyLinks: {
+      title: "Links to Third-Party Websites",
+      p1: "This website may contain links to third-party websites, including YouTube. We are not responsible for the privacy practices or content of external websites."
+    },
+    changes: {
+      title: "Changes to This Policy",
+      p1: "We may update this Privacy Policy from time to time. Any updates will be posted on this page with a revised “Last Updated” date."
+    }
   },
   ranks: {
     "First-Time Voter": "First-Time Voter",
@@ -173,6 +249,7 @@ export const en: TranslationSchema = {
     countries: {
       "Switzerland": "Switzerland", "Sweden": "Sweden", "Finland": "Finland", "The Netherlands": "The Netherlands",
       "Italy": "Italy", "Croatia": "Croatia", "United Kingdom": "United Kingdom", "Ukraine": "Ukraine",
+      "France": "France",
       "Israel": "Israel", "Portugal": "Portugal", "Denmark": "Denmark", "Norway": "Norway", "Spain": "Spain",
       "Austria": "Austria", "Cyprus": "Cyprus", "Iceland": "Iceland", "Germany": "Germany", "Azerbaijan": "Azerbaijan",
       "Serbia": "Serbia", "Australia": "Australia", "Greece": "Greece", "Moldova": "Moldova", "Belgium": "Belgium",

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
 import App from './App.tsx';
 import { LanguageProvider } from './context/LanguageContext.tsx';
+import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 import './index.css';
 
 const rootElement = document.getElementById('root');
@@ -13,10 +14,12 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <HashRouter>
+    <ErrorBoundary>
+      <HashRouter>
       <LanguageProvider>
         <App />
       </LanguageProvider>
     </HashRouter>
+    </ErrorBoundary>
   </React.StrictMode>
 );

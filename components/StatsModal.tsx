@@ -11,7 +11,14 @@ interface StatsModalProps {
   initialTab?: GameType | 'TOTAL';
 }
 
-const StatBox = ({ label, value, color = "white", icon }: any) => (
+interface StatBoxProps {
+  label: string;
+  value: string | number;
+  color?: string;
+  icon?: string;
+}
+
+const StatBox = ({ label, value, color = "white", icon }: StatBoxProps) => (
   <div className="bg-white/5 p-4 rounded-3xl border border-white/5 flex flex-col items-center group relative overflow-hidden transition-all hover:bg-white/10">
     <div className="flex items-baseline gap-1">
       <span className={`text-2xl font-black mb-1 text-${color}`}>{value}</span>
@@ -69,7 +76,7 @@ const PointsDistribution = ({ distribution }: { distribution: number[] }) => {
   );
 };
 
-export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, onShowInfo, initialTab = 'TOTAL' }) => {
+export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, initialTab = 'TOTAL' }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<GameType | 'TOTAL'>(initialTab);
@@ -90,7 +97,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, onShowIn
 
   const activeGameStats = useMemo(() => {
     if (activeTab === 'TOTAL') return null;
-    let key: string;
+    let key: keyof GlobalStats;
     if (activeTab === GameType.WORD_GAME) key = 'word_game';
     else if (activeTab === GameType.ARTIST_WORD_GAME) key = 'artists';
     else if (activeTab === GameType.LINKS_GAME) key = 'links';
@@ -98,7 +105,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, onShowIn
     else if (activeTab === GameType.GUESSER) key = 'guesser';
     else key = 'arena';
     
-    return (stats as any)[key] as DetailedStats;
+    return stats[key] as DetailedStats;
   }, [activeTab, stats]);
 
   const handleShareStats = useCallback(() => {
@@ -111,7 +118,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, onShowIn
       text += `Total Wins: ${wins}\n`;
       text += `Douze Points: ${stats.totalDouzePoints} 🏆\n\n`;
       text += `Come and join the jury at Douze Points!\ndouzepoints.net`;
-    } else {
+    } else if (activeGameStats) {
       const gameLabel = activeTab === GameType.WORD_GAME ? "Song" : 
                         activeTab === GameType.ARTIST_WORD_GAME ? "Artist" : 
                         activeTab === GameType.REFRAIN_GAME ? "Refrain" :
@@ -123,16 +130,16 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, onShowIn
                     activeTab === GameType.LINKS_GAME ? "🔗" : 
                     activeTab === GameType.GUESSER ? "🔎" : "⚔️";
 
-      const winRate = activeGameStats && activeGameStats.played > 0 
+      const winRate = activeGameStats.played > 0 
                       ? Math.round((activeGameStats.wins / activeGameStats.played) * 100) 
                       : 0;
 
       text += `${emoji} Euro${gameLabel} Career Stats\n-------------------------\n`;
-      text += `Played: ${activeGameStats?.played} | Wins: ${activeGameStats?.wins}\n`;
+      text += `Played: ${activeGameStats.played} | Wins: ${activeGameStats.wins}\n`;
       text += `Win Rate: ${winRate}%\n`;
-      text += `Douze Points: ${activeGameStats?.perfectGames} 🏆\n`;
-      text += `Best Streak: ${activeGameStats?.maxStreak} 🔥\n`;
-      text += `Current Streak: ${activeGameStats?.currentStreak}\n\n`;
+      text += `Douze Points: ${activeGameStats.perfectGames} 🏆\n`;
+      text += `Best Streak: ${activeGameStats.maxStreak} 🔥\n`;
+      text += `Current Streak: ${activeGameStats.currentStreak}\n\n`;
       text += `Rank: ${t(`ranks.${rankInfo.current.title}`)}\ndouzepoints.net`;
     }
 
@@ -140,7 +147,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, onShowIn
       setShowCopied(true);
       setTimeout(() => setShowCopied(false), 2000);
     });
-  }, [activeTab, rankInfo, stats, activeGameStats, t]);
+  }, [activeTab, rankInfo.current.title, stats, activeGameStats, t]);
 
   const handlePlayNow = () => {
     onClose();
@@ -207,7 +214,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, onShowIn
           {['TOTAL', GameType.WORD_GAME, GameType.ARTIST_WORD_GAME, GameType.REFRAIN_GAME, GameType.LINKS_GAME, GameType.GUESSER, GameType.ARENA].map(tab => (
             <button 
               key={tab}
-              onClick={() => setActiveTab(tab as any)}
+              onClick={() => setActiveTab(tab as GameType | 'TOTAL')}
               className={`flex-1 py-3 px-4 rounded-xl text-[10px] md:text-[12px] font-black uppercase tracking-tighter transition-all whitespace-nowrap ${activeTab === tab ? 'bg-white text-black shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
             >
               {getCleanTabLabel(tab)}

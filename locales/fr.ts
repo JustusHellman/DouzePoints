@@ -23,11 +23,13 @@ export const fr: TranslationSchema = {
     mistakesLeft: "Erreurs restantes",
     howToPlay: "Comment jouer",
     close: "Fermer",
-    selectLanguage: "Choisir la Langue"
+    selectLanguage: "Choisir la Langue",
+    languages: "Langues",
+    qualified: "Qualifié"
   },
   greenroom: {
     greenroom: "Le Greenroom",
-    description: "Bienvenue au Greenroom. Prouvez vos connaissances sur le Concours Eurovision de la Chanson avec six défis quotidiens pour le fan ultime.",
+    description: "Détendez-vous et préparez-vous pour la performance. Prouvez vos connaissances sur le Concours Eurovision de la Chanson avec six défis quotidiens pour le fan ultime.",
     dailyProgress: "Progression du Jour",
     qualified: "✨ Qualifié pour la Grande Finale ✨",
     finishedToday: "Terminé aujourd'hui",
@@ -75,6 +77,7 @@ export const fr: TranslationSchema = {
   links: {
     mistakesRemaining: "Erreurs restantes",
     oneAway: "Plus qu'un...",
+    betterLuck: "Plus de chance demain !",
     notALink: "Aucun lien",
     shuffle: "Mélanger",
     deselectAll: "Tout désélectionner",
@@ -139,6 +142,7 @@ export const fr: TranslationSchema = {
     signalLost: "Signal perdu...",
     score: "Score",
     viewScorecard: "Voir la Fiche",
+    nextGame: "Prochain jeu dans",
     headlines: {
       nulPoints: "❌ NUL POINTS... 🗳️",
       douzePoints: "🏆 DOUZE POINTS ! ✨",
@@ -154,7 +158,79 @@ export const fr: TranslationSchema = {
     manage: "Gérer",
     privacyPolicy: "Politique de Confidentialité",
     cookiePolicy: "Politique de Cookies",
-    privacySettings: "Confidentialité"
+    privacySettings: "Confidentialité",
+    lastUpdated: "Dernière mise à jour"
+  },
+  privacy: {
+    lastUpdated: "Février 2026",
+    introduction: {
+      title: "Introduction",
+      p1: "Bienvenue sur Douze Points (www.douzepoints.net).",
+      p2: "Ce site web est exploité par Justus Hellman, basé en Suède (le « Responsable du traitement »).",
+      p3: "Si vous avez des questions concernant cette politique de confidentialité ou vos données personnelles, vous pouvez nous contacter : douzepointsgame@gmail.com"
+    },
+    dataCollection: {
+      title: "Quelles données nous collectons",
+      autoTitle: "a) Données collectées automatiquement",
+      autoDesc: "Lorsque vous visitez le site web, certaines informations peuvent être collectées automatiquement, notamment :",
+      autoItems: ["Adresse IP", "Type et version du navigateur", "Informations sur l'appareil", "Système d'exploitation", "Pages visitées", "Date et heure d'accès", "Site web référent"],
+      autoFootnote: "Ces informations peuvent être traitées par nos prestataires de publicité et d'analyse.",
+      cookiesTitle: "b) Cookies et technologies similaires",
+      cookiesDesc1: "Nous utilisons des cookies et des technologies similaires pour la publicité, la mesure de la performance des publicités et les fonctionnalités du site web.",
+      cookiesDesc2: "Le consentement pour les cookies est collecté et géré via Google Funding Choices, qui fournit notre plateforme de gestion du consentement (CMP). Les utilisateurs des régions concernées (telles que l'UE/EEE et le Royaume-Uni) sont invités à donner leur consentement avant que des cookies non essentiels ne soient utilisés.",
+      cookiesDesc3: "Vous pouvez modifier vos préférences de consentement à tout moment via les options de consentement disponibles sur le site web."
+    },
+    advertising: {
+      title: "Publicité",
+      p1: "Nous utilisons Google AdSense pour afficher des publicités. Google et ses partenaires peuvent utiliser des cookies et des technologies similaires pour diffuser des publicités personnalisées, mesurer la performance des publicités et limiter le nombre de fois que vous voyez une publicité.",
+      p2: "Vous pouvez gérer vos préférences publicitaires via : adssettings.google.com",
+      p3: "De plus amples informations sur la manière dont Google traite les données personnelles sont disponibles dans la politique de confidentialité de Google."
+    },
+    legalBasis: {
+      title: "Base juridique (RGPD)",
+      p1: "Si vous êtes situé dans l'UE/EEE, nous traitons les données personnelles sur les bases juridiques suivantes :",
+      consentLabel: "Consentement",
+      consent: "pour la publicité personnalisée et les cookies non essentiels.",
+      legitimacyLabel: "Légitimité",
+      legitimacy: "pour les fonctionnalités de base du site web, la sécurité et la prévention de la fraude.",
+      legalLabel: "Juridique",
+      legal: "lorsque cela est requis par la loi applicable."
+    },
+    localStorage: {
+      title: "Stockage local",
+      p1: "Nous utilisons le stockage local de votre navigateur pour enregistrer la progression du jeu, les scores et les statistiques. Ces informations :",
+      items: ["Sont stockées uniquement sur votre appareil", "Ne sont pas transmises à nos serveurs", "Peuvent être supprimées en effaçant les données de votre navigateur"]
+    },
+    dataSharing: {
+      title: "Partage de données",
+      p1: "Nous ne vendons pas de données personnelles. Toutefois, les données peuvent être traitées par des prestataires de services tiers, notamment :",
+      items: ["Google (publicité et gestion du consentement)", "Fournisseurs d'hébergement", "Prestataires de services techniques nécessaires au fonctionnement du site web"]
+    },
+    internationalTransfers: {
+      title: "Transferts internationaux",
+      p1: "Certains prestataires tiers, dont Google, peuvent traiter des données en dehors de l'UE ou de l'EEE. Lorsque de tels transferts ont lieu, des garanties appropriées telles que des clauses contractuelles types sont utilisées."
+    },
+    dataRetention: {
+      title: "Rétention des données",
+      p1: "Nous ne maintenons pas de base de données d'utilisateurs. Les données publicitaires sont conservées conformément aux politiques de Google, les journaux techniques à des fins de sécurité, et le stockage local demeure jusqu'à ce que vous le supprimiez."
+    },
+    yourRights: {
+      title: "Vos droits (UE/EEE)",
+      p1: "Si vous êtes situé dans l'UE/EEE, vous avez le droit d'accéder à vos données, de les corriger ou de les supprimer, et de restreindre le traitement ou de vous y opposer. En Suède, l'autorité de contrôle est Integritetsskyddsmyndigheten.",
+      p2: "Contactez-nous à douzepointsgame@gmail.com pour exercer vos droits."
+    },
+    dataSecurity: {
+      title: "Sécurité des données",
+      p1: "Nous prenons des mesures techniques et organisationnelles raisonnables pour protéger les données personnelles. Toutefois, aucune méthode de transmission sur Internet n'est totalement sécurisée."
+    },
+    thirdPartyLinks: {
+      title: "Liens vers des sites tiers",
+      p1: "Ce site web peut contenir des liens vers des sites tiers, y compris YouTube. Nous ne sommes pas responsables des pratiques de confidentialité ou du contenu des sites web externes."
+    },
+    changes: {
+      title: "Modifications de cette politique",
+      p1: "Nous pouvons mettre à jour cette politique de confidentialité de temps à autre. Toute mise à jour sera publiée sur cette page avec une date de « Dernière mise à jour » révisée."
+    }
   },
   ranks: {
     "First-Time Voter": "Premier Votant",
@@ -173,11 +249,12 @@ export const fr: TranslationSchema = {
     countries: {
       "Switzerland": "Suisse", "Sweden": "Suède", "Finland": "Finlande", "The Netherlands": "Pays-Bas",
       "Italy": "Italie", "Croatia": "Croatie", "United Kingdom": "Royaume-Uni", "Ukraine": "Ukraine",
+      "France": "France",
       "Israel": "Israël", "Portugal": "Portugal", "Denmark": "Danemark", "Norway": "Norvège", "Spain": "Espagne",
       "Austria": "Autriche", "Cyprus": "Chypre", "Iceland": "Islande", "Germany": "Allemagne", "Azerbaijan": "Azerbaïdjan",
       "Serbia": "Serbie", "Australia": "Australie", "Greece": "Grèce", "Moldova": "Moldavie", "Belgium": "Belgique",
       "Poland": "Pologne", "Slovénie": "Slovénie", "Irlande": "Irlande", "Luxembourg": "Luxembourg", "Albania": "Albanie",
-      "Bulgaria": "Bulgarie", "Estonie": "Estonie", "Russia": "Russie", "Turkey": "Turquie", "Bosnia & Herzegovina": "Bosnie-Herzégovine",
+      "Bulgaria": "Bulgaria", "Estonia": "Estonia", "Russia": "Russia", "Turkey": "Turquie", "Bosnia & Herzegovina": "Bosnie-Herzégovine",
       "Malta": "Malte", "Monaco": "Monaco", "Latvia": "Lettonie", "Hungary": "Hongrie", "San Marino": "Saint-Marin"
     },
     genres: {

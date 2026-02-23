@@ -23,11 +23,13 @@ export const de: TranslationSchema = {
     mistakesLeft: "Fehler verbleibend",
     howToPlay: "Spielanleitung",
     close: "Schließen",
-    selectLanguage: "Sprache Wählen"
+    selectLanguage: "Sprache Wählen",
+    languages: "Sprachen",
+    qualified: "Qualifiziert"
   },
   greenroom: {
     greenroom: "Der Greenroom",
-    description: "Willkommen im Greenroom. Teste dein Wissen über den Eurovision Song Contest mit sechs täglichen Herausforderungen für den ultimativen Superfan.",
+    description: "Entspanne dich und bereite dich auf den Auftritt vor. Teste dein Wissen über den Eurovision Song Contest mit sechs täglichen Herausforderungen für den ultimativen Superfan.",
     dailyProgress: "Tagesfortschritt",
     qualified: "✨ Qualifiziert für das Finale ✨",
     finishedToday: "Heute abgeschlossen",
@@ -75,6 +77,7 @@ export const de: TranslationSchema = {
   links: {
     mistakesRemaining: "Verbleibende Fehler",
     oneAway: "Nur noch einer...",
+    betterLuck: "Viel Glück morgen!",
     notALink: "Keine Verbindung",
     shuffle: "Mischen",
     deselectAll: "Alle abwählen",
@@ -139,6 +142,7 @@ export const de: TranslationSchema = {
     signalLost: "Signal verloren...",
     score: "Pointzahl",
     viewScorecard: "Punktestand ansehen",
+    nextGame: "Nächstes Spiel in",
     headlines: {
       nulPoints: "❌ NULL PUNKTE... 🗳️",
       douzePoints: "🏆 DOUZE POINTS! ✨",
@@ -154,7 +158,79 @@ export const de: TranslationSchema = {
     manage: "Verwalten",
     privacyPolicy: "Datenschutzerklärung",
     cookiePolicy: "Cookie-Richtlinie",
-    privacySettings: "Privatsphäre"
+    privacySettings: "Privatsphäre",
+    lastUpdated: "Zuletzt aktualisiert"
+  },
+  privacy: {
+    lastUpdated: "Februar 2026",
+    introduction: {
+      title: "Einleitung",
+      p1: "Willkommen bei Douze Points (www.douzepoints.net).",
+      p2: "Diese Website wird von Justus Hellman mit Sitz in Schweden betrieben (der „Verantwortliche“).",
+      p3: "Wenn Sie Fragen zu dieser Datenschutzrichtlinie oder Ihren personenbezogenen Daten haben, können Sie uns kontaktieren: douzepointsgame@gmail.com"
+    },
+    dataCollection: {
+      title: "Welche Daten wir sammeln",
+      autoTitle: "a) Automatisch erhobene Daten",
+      autoDesc: "Wenn Sie die Website besuchen, können bestimmte Informationen automatisch erfasst werden, darunter:",
+      autoItems: ["IP-Adresse", "Browsertyp und -version", "Geräteinformationen", "Betriebssystem", "Besuchte Seiten", "Datum und Uhrzeit des Zugriffs", "Referrer-Website"],
+      autoFootnote: "Diese Informationen können von unseren Werbe- und Analyseanbietern verarbeitet werden.",
+      cookiesTitle: "b) Cookies und ähnliche Technologien",
+      cookiesDesc1: "Wir verwenden Cookies und ähnliche Technologien für Werbung, Messung der Anzeigenleistung und Website-Funktionalität.",
+      cookiesDesc2: "Die Einwilligung für Cookies wird über Google Funding Choices eingeholt und verwaltet, das unsere Consent Management Platform (CMP) bereitstellt. Nutzer in relevanten Regionen (wie EU/EWR und UK) werden um ihre Einwilligung gebeten, bevor nicht-essenzielle Cookies verwendet werden.",
+      cookiesDesc3: "Sie können Ihre Einwilligungseinstellungen jederzeit über die auf der Website verfügbaren Einwilligungsoptionen ändern."
+    },
+    advertising: {
+      title: "Werbung",
+      p1: "Wir verwenden Google AdSense, um Werbung anzuzeigen. Google und seine Partner können Cookies und ähnliche Technologien verwenden, um personalisierte Anzeigen zu schalten, die Anzeigenleistung zu messen und die Häufigkeit zu begrenzen, mit der Sie eine Anzeige sehen.",
+      p2: "Sie können Ihre Werbeeinstellungen verwalten über: adssettings.google.com",
+      p3: "Weitere Informationen darüber, wie Google personenbezogene Daten verarbeitet, finden Sie in der Datenschutzerklärung von Google."
+    },
+    legalBasis: {
+      title: "Rechtsgrundlage (DSGVO)",
+      p1: "Wenn Sie sich in der EU/im EWR befinden, verarbeiten wir personenbezogene Daten auf den folgenden Rechtsgrundlagen:",
+      consentLabel: "Einwilligung",
+      consent: "für personalisierte Werbung und nicht-essenzielle Cookies.",
+      legitimacyLabel: "Legitimität",
+      legitimacy: "für grundlegende Website-Funktionalität, Sicherheit und Betrugsprävention.",
+      legalLabel: "Rechtlich",
+      legal: "wo dies nach geltendem Recht erforderlich ist."
+    },
+    localStorage: {
+      title: "Lokaler Speicher",
+      p1: "Wir verwenden den lokalen Speicher Ihres Browsers, um Spielfortschritte, Spielstände und Statistiken zu speichern. Diese Informationen:",
+      items: ["Werden nur auf Ihrem Gerät gespeichert", "Werden nicht an unsere Server übertragen", "Können durch Löschen Ihrer Browserdaten gelöscht werden"]
+    },
+    dataSharing: {
+      title: "Weitergabe von Daten",
+      p1: "Wir verkaufen keine personenbezogenen Daten. Daten können jedoch von Drittanbietern verarbeitet werden, darunter:",
+      items: ["Google (Werbung und Einwilligungsmanagement)", "Hosting-Anbieter", "Technische Dienstleister, die für den Betrieb der Website erforderlich sind"]
+    },
+    internationalTransfers: {
+      title: "Internationale Übermittlungen",
+      p1: "Einige Drittanbieter, einschließlich Google, können Daten außerhalb der EU oder des EWR verarbeiten. Wo solche Übermittlungen stattfinden, werden angemessene Garantien wie Standardvertragsklauseln verwendet."
+    },
+    dataRetention: {
+      title: "Datenspeicherung",
+      p1: "Wir führen keine Benutzerdatenbank. Werbedaten werden gemäß den Richtlinien von Google gespeichert, technische Protokolle für Sicherheitszwecke und der lokale Speicher bleibt erhalten, bis Sie ihn löschen."
+    },
+    yourRights: {
+      title: "Ihre Rechte (EU/EWR)",
+      p1: "Wenn Sie sich in der EU/im EWR befinden, haben Sie das Recht auf Auskunft, Berichtigung oder Löschung Ihrer Daten sowie auf Einschränkung oder Widerspruch gegen die Verarbeitung. In Schweden ist die Aufsichtsbehörde Integritetsskyddsmyndigheten.",
+      p2: "Kontaktieren Sie uns unter douzepointsgame@gmail.com, um Ihre Rechte auszuüben."
+    },
+    dataSecurity: {
+      title: "Datensicherheit",
+      p1: "Wir treffen angemessene technische und organisatorische Maßnahmen zum Schutz personenbezogener Daten. Keine Methode der Übertragung über das Internet ist jedoch vollständig sicher."
+    },
+    thirdPartyLinks: {
+      title: "Links zu Websites Dritter",
+      p1: "Diese Website kann Links zu Websites Dritter enthalten, einschließlich YouTube. Wir sind nicht verantwortlich für die Datenschutzpraktiken oder Inhalte externer Websites."
+    },
+    changes: {
+      title: "Änderungen an dieser Richtlinie",
+      p1: "Wir können diese Datenschutzrichtlinie von Zeit zu Zeit aktualisieren. Alle Aktualisierungen werden auf dieser Seite mit einem überarbeiteten Datum „Zuletzt aktualisiert“ veröffentlicht."
+    }
   },
   ranks: {
     "First-Time Voter": "Erst-Wähler",
@@ -173,6 +249,7 @@ export const de: TranslationSchema = {
     countries: {
       "Switzerland": "Schweiz", "Sweden": "Schweden", "Finland": "Finnland", "The Netherlands": "Niederlande",
       "Italy": "Italien", "Croatia": "Kroatien", "United Kingdom": "Vereinigtes Königreich", "Ukraine": "Ukraine",
+      "France": "Frankreich",
       "Israel": "Israel", "Portugal": "Portugal", "Denmark": "Danimarca", "Norway": "Norwegen", "Spain": "Spanien",
       "Austria": "Österreich", "Cyprus": "Zypern", "Iceland": "Island", "Germany": "Deutschland", "Azerbaijan": "Aserbaidschan",
       "Serbia": "Serbien", "Australia": "Australien", "Greece": "Griechenland", "Moldova": "Moldawien", "Belgium": "Belgien",

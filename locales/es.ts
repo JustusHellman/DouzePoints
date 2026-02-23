@@ -23,11 +23,13 @@ export const es: TranslationSchema = {
     mistakesLeft: "Errores restantes",
     howToPlay: "Cómo jugar",
     close: "Cerrar",
-    selectLanguage: "Seleccionar Idioma"
+    selectLanguage: "Seleccionar Idioma",
+    languages: "Idiomas",
+    qualified: "Calificado"
   },
   greenroom: {
     greenroom: "La Sala Verde",
-    description: "Bienvenido a la Sala Verde. Demuestra tus conocimientos sobre el Festival de la Canción de Eurovisión con seis retos diarios diseñados para el fan definitivo.",
+    description: "Relájate y prepárate para la actuación. Demuestra tus conocimientos sobre el Festival de la Canción de Eurovisión con seis retos diarios diseñados para el fan definitivo.",
     dailyProgress: "Progreso Diario",
     qualified: "✨ Clasificado para la Gran Final ✨",
     finishedToday: "Completado hoy",
@@ -75,6 +77,7 @@ export const es: TranslationSchema = {
   links: {
     mistakesRemaining: "Errores restantes",
     oneAway: "A uno...",
+    betterLuck: "¡Más suerte mañana!",
     notALink: "Sin vínculo",
     shuffle: "Mezclar",
     deselectAll: "Deseleccionar todo",
@@ -139,6 +142,7 @@ export const es: TranslationSchema = {
     signalLost: "Señal Perdida...",
     score: "Puntuación",
     viewScorecard: "Ver Ficha de Puntuación",
+    nextGame: "Próximo juego en",
     headlines: {
       nulPoints: "❌ NUL POINTS... 🗳️",
       douzePoints: "🏆 ¡DOUZE POINTS! ✨",
@@ -154,7 +158,79 @@ export const es: TranslationSchema = {
     manage: "Gestionar",
     privacyPolicy: "Política de Privacidad",
     cookiePolicy: "Política de Cookies",
-    privacySettings: "Privaciad"
+    privacySettings: "Privaciad",
+    lastUpdated: "Última actualización"
+  },
+  privacy: {
+    lastUpdated: "Febrero 2026",
+    introduction: {
+      title: "Introducción",
+      p1: "Bienvenido a Douze Points (www.douzepoints.net).",
+      p2: "Este sitio web es operado por Justus Hellman, con sede en Suecia (el “Responsable del Tratamiento”).",
+      p3: "Si tiene alguna pregunta sobre esta Política de Privacidad o sus datos personales, puede contactar con: douzepointsgame@gmail.com"
+    },
+    dataCollection: {
+      title: "Qué datos recopilamos",
+      autoTitle: "a) Datos recopilados automáticamente",
+      autoDesc: "Cuando visita el sitio web, se puede recopilar automáticamente cierta información, incluyendo:",
+      autoItems: ["Dirección IP", "Tipo y versión del navegador", "Información del dispositivo", "Sistema operativo", "Páginas visitadas", "Fecha y hora de acceso", "Sitio web de referencia"],
+      autoFootnote: "Esta información puede ser procesada por nuestros proveedores de publicidad y análisis.",
+      cookiesTitle: "b) Cookies y tecnologías similares",
+      cookiesDesc1: "Utilizamos cookies y tecnologías similares para publicidad, medición del rendimiento de los anuncios y funcionalidad del sitio web.",
+      cookiesDesc2: "El consentimiento para las cookies se recopila y gestiona a través de Google Funding Choices, que proporciona nuestra plataforma de gestión de consentimiento (CMP). A los usuarios de las regiones aplicables (como la UE/EEE y el Reino Unido) se les pide su consentimiento antes de utilizar cookies no esenciales.",
+      cookiesDesc3: "Puede cambiar sus preferencias de consentimiento en cualquier momento a través de las opciones de consentimiento disponibles en el sitio web."
+    },
+    advertising: {
+      title: "Publicidad",
+      p1: "Utilizamos Google AdSense para mostrar anuncios. Google y sus socios pueden utilizar cookies y tecnologías similares para servir anuncios personalizados, medir el rendimiento de los anuncios y limitar el número de veces que ve un anuncio.",
+      p2: "Puede gestionar sus preferencias de publicidad a través de: adssettings.google.com",
+      p3: "Más información sobre cómo Google procesa los datos personales está disponible en la Política de Privacidad de Google."
+    },
+    legalBasis: {
+      title: "Base legal (RGPD)",
+      p1: "Si se encuentra en la UE/EEE, procesamos datos personales sobre las siguientes bases legales:",
+      consentLabel: "Consentimiento",
+      consent: "para publicidad personalizada y cookies no esenciales.",
+      legitimacyLabel: "Legitimidad",
+      legitimacy: "para la funcionalidad básica del sitio web, la seguridad y la prevención del fraude.",
+      legalLabel: "Legal",
+      legal: "cuando lo exija la legislación aplicable."
+    },
+    localStorage: {
+      title: "Almacenamiento local",
+      p1: "Utilizamos el almacenamiento local de su navegador para guardar el progreso del juego, las puntuaciones y las estadísticas. Esta información:",
+      items: ["Se almacena solo en su dispositivo", "No se transmite a nuestros servidores", "Se puede eliminar borrando los datos de su navegador"]
+    },
+    dataSharing: {
+      title: "Intercambio de datos",
+      p1: "No vendemos datos personales. Sin embargo, los datos pueden ser procesados por terceros proveedores de servicios, incluyendo:",
+      items: ["Google (publicidad y gestión de consentimiento)", "Proveedores de alojamiento", "Proveedores de servicios técnicos necesarios para el funcionamiento del sitio web"]
+    },
+    internationalTransfers: {
+      title: "Transferencias internacionales",
+      p1: "Algunos proveedores externos, incluido Google, pueden procesar datos fuera de la UE o el EEE. Cuando se producen tales transferencias, se utilizan salvaguardias adecuadas, como las Cláusulas Contractuales Tipo."
+    },
+    dataRetention: {
+      title: "Retención de datos",
+      p1: "No mantenemos una base de datos de usuarios. Los datos publicitarios se conservan de acuerdo con las políticas de Google, los registros técnicos para fines de seguridad y el almacenamiento local permanece hasta que lo elimine."
+    },
+    yourRights: {
+      title: "Sus derechos (UE/EEE)",
+      p1: "Si se encuentra en la UE/EEE, tiene derecho a acceder, corregir o eliminar sus datos, y a restringir u oponerse al tratamiento. En Suecia, la autoridad de control es Integritetsskyddsmyndigheten.",
+      p2: "Póngase en contacto con nosotros en douzepointsgame@gmail.com para ejercer sus derechos."
+    },
+    dataSecurity: {
+      title: "Seguridad de los datos",
+      p1: "Tomamos medidas técnicas y organizativas razonables para proteger los datos personales. Sin embargo, ningún método de transmisión por Internet es completamente seguro."
+    },
+    thirdPartyLinks: {
+      title: "Enlaces a sitios web de terceros",
+      p1: "Este sitio web puede contener enlaces a sitios web de terceros, incluido YouTube. No somos responsables de las prácticas de privacidad ni del contenido de los sitios web externos."
+    },
+    changes: {
+      title: "Cambios en esta política",
+      p1: "Podemos actualizar esta Política de Privacidad de vez en cuando. Cualquier actualización se publicará en esta página con una fecha de “Última actualización” revisada."
+    }
   },
   ranks: {
     "First-Time Voter": "Primer Votante",
@@ -173,9 +249,10 @@ export const es: TranslationSchema = {
     countries: {
       "Switzerland": "Suiza", "Sweden": "Suecia", "Finland": "Finlandia", "The Netherlands": "Países Bajos",
       "Italy": "Italia", "Croatia": "Croacia", "United Kingdom": "Reino Unido", "Ukraine": "Ucrania",
+      "France": "Francia",
       "Israel": "Israel", "Portugal": "Portugal", "Denmark": "Dinamarca", "Norway": "Noruega", "Spain": "España",
       "Austria": "Austria", "Cyprus": "Chipre", "Iceland": "Islandia", "Germany": "Alemania", "Azerbaijan": "Azerbaiyán",
-      "Serbia": "Serbia", "Australia": "Australia", "Greece": "Grecia", "Moldavia": "Moldavia", "Belgium": "Bélgica",
+      "Serbia": "Serbia", "Australia": "Australia", "Greece": "Grecia", "Moldova": "Moldavia", "Belgium": "Bélgica",
       "Poland": "Polonia", "Slovenia": "Eslovenia", "Ireland": "Irlanda", "Luxembourg": "Luxemburgo", "Albania": "Albania",
       "Bulgaria": "Bulgaria", "Estonia": "Estonia", "Russia": "Rusia", "Turkey": "Turquía", "Bosnia & Herzegovina": "Bosnia y Herzegovina",
       "Malta": "Malta", "Monaco": "Mónaco", "Latvia": "Lettonia", "Hungary": "Hungría", "San Marino": "San Marino"

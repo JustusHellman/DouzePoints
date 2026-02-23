@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { getDailyIndex, getDayString } from '../../utils/daily.ts';
 import { updateGameStats } from '../../utils/stats.ts';
@@ -20,12 +20,11 @@ interface HintBoxProps {
   hint: { label: string; value: string | number };
   attempt?: string;
   idx: number;
-  totalAttempts?: number;
   isActive?: boolean;
   songTitle: string;
 }
 
-const HintBox: React.FC<HintBoxProps> = ({ hint, attempt, idx, totalAttempts, isActive, songTitle }) => {
+const HintBox: React.FC<HintBoxProps> = ({ hint, attempt, idx, isActive, songTitle }) => {
   const isCorrect = attempt?.toLowerCase() === songTitle.toLowerCase();
   const displayIdx = idx + 1;
   
@@ -78,7 +77,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
   const [showHowToPlay, setShowHowToPlay] = useState(false);
 
   const song = useMemo(() => {
-    const idx = getDailyIndex(data, "guesser");
+    const idx = getDailyIndex(data, "euroguess");
     return data[idx];
   }, [data]);
 
@@ -93,24 +92,26 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
   const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const seenKey = 'hasSeenRules-guesser';
+    const seenKey = 'hasSeenRules-euroguess';
     const hasSeen = localStorage.getItem(seenKey);
     if (!hasSeen) {
-      setShowHowToPlay(true);
+      setTimeout(() => setShowHowToPlay(true), 0);
       localStorage.setItem(seenKey, 'true');
     }
   }, []);
 
   useEffect(() => {
-    const saved = localStorage.getItem(`guesser-${getDayString()}`);
+    const saved = localStorage.getItem(`euroguess-${getDayString()}`);
     if (saved) {
       try {
         const d = JSON.parse(saved);
-        setAttempts(d.attempts || []);
-        setIsGameOver(!!d.isGameOver);
-        setRevealedHints(d.revealedHints || 1);
-        setWon(!!d.won);
-        if (!!d.isGameOver) setShowModal(true);
+        setTimeout(() => {
+          if (d.attempts) setAttempts(d.attempts);
+          if (d.isGameOver !== undefined) setIsGameOver(Boolean(d.isGameOver));
+          if (d.revealedHints !== undefined) setRevealedHints(d.revealedHints);
+          if (d.won !== undefined) setWon(Boolean(d.won));
+          if (d.isGameOver) setShowModal(true);
+        }, 0);
       } catch (e) {
         console.error("Failed to load saved guesser state", e);
       }

@@ -1,6 +1,21 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --font-montserrat: "Montserrat", sans-serif;
+  
+  --color-euro-dark: #050510;
+  --color-euro-greenroom: #0b0b18;
+  
+  --animate-fade-in: fadeIn 0.4s ease-out forwards;
+  --animate-ping-slow: ping 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+  
+  --shadow-3xl: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
 
 @layer base {
   body {
@@ -28,15 +43,6 @@
 
 .page-fade {
   @apply animate-fade-in;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
 }
 
 ::-webkit-scrollbar {

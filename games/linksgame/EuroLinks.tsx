@@ -31,7 +31,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   }, []);
 
   const dailyData = useMemo(() => {
-    const idx = getDailyIndex(PUZZLES, "linksgame");
+    const idx = getDailyIndex(PUZZLES, "eurolinks");
     return PUZZLES[idx];
   }, []);
 
@@ -47,7 +47,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
     );
   }, [dailyData]);
 
-  const [displayTiles, setDisplayTiles] = useState<Tile[]>([]);
+  const [displayTiles, setDisplayTiles] = useState<Tile[]>(() => [...allTiles].sort(() => Math.random() - 0.5));
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [completedGroups, setCompletedGroups] = useState<ConnectionsGroup[]>([]);
   const [guessHistory, setGuessHistory] = useState<string[][]>([]);
@@ -60,18 +60,13 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const seenKey = 'hasSeenRules-linksgame';
+    const seenKey = 'hasSeenRules-eurolinks';
     const hasSeen = localStorage.getItem(seenKey);
     if (!hasSeen) {
-      setShowHowToPlay(true);
+      setTimeout(() => setShowHowToPlay(true), 0);
       localStorage.setItem(seenKey, 'true');
     }
   }, []);
-
-  useEffect(() => {
-    // Initial shuffle of all tiles
-    setDisplayTiles([...allTiles].sort(() => Math.random() - 0.5));
-  }, [allTiles]);
 
   const getPointsInfo = useMemo(() => {
     if (!won) return { points: 0, label: t('common.nulPoints'), color: "text-red-500" };
@@ -85,16 +80,16 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   }, [won, mistakes, t]);
 
   useEffect(() => {
-    const saved = localStorage.getItem(`linksgame-${getDayString()}`);
+    const saved = localStorage.getItem(`eurolinks-${getDayString()}`);
     if (saved) {
       try {
         const data = JSON.parse(saved);
-        setCompletedGroups(data.completedGroups || []);
-        setGuessHistory(data.guessHistory || []);
-        setMistakes(data.mistakes || 0);
-        setIsGameOver(!!data.isGameOver);
-        setWon(!!data.won);
-        if (!!data.isGameOver) setShowModal(true);
+        if (data.completedGroups) setCompletedGroups(data.completedGroups);
+        if (data.guessHistory) setGuessHistory(data.guessHistory);
+        if (data.mistakes !== undefined) setMistakes(data.mistakes);
+        if (data.isGameOver !== undefined) setIsGameOver(Boolean(data.isGameOver));
+        if (data.won !== undefined) setWon(Boolean(data.won));
+        if (data.isGameOver) setShowModal(true);
         
         if (data.completedGroups) {
           const completedCategories = data.completedGroups.map((g: any) => g.category);
@@ -125,6 +120,43 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   const shuffle = () => {
     setDisplayTiles(prev => [...prev].sort(() => Math.random() - 0.5));
   };
+
+  const revealRemainingGroups = useCallback(async () => {
+    setIsGameOver(true);
+    setSelectedIds([]);
+    setMessage(t('links.betterLuck'));
+    await new Promise(r => setTimeout(r, 1500));
+    setMessage(null);
+    
+    // Get groups that haven't been found yet
+    const remaining = dailyData.filter(g => !completedGroups.some(cg => cg.category === g.category));
+    
+    for (const group of remaining) {
+      // Find the tiles for this group that are still on the board
+      const groupTiles = allTiles.filter(t => t.category === group.category);
+      
+      // Select them one by one
+      for (const tile of groupTiles) {
+        setSelectedIds(prev => [...prev, tile.id]);
+        await new Promise(r => setTimeout(r, 250));
+      }
+      
+      // Short pause before collapsing
+      await new Promise(r => setTimeout(r, 300));
+      
+      // Collapse into category
+      setCompletedGroups(prev => [...prev, group]);
+      setDisplayTiles(prev => prev.filter(tile => tile.category !== group.category));
+      setSelectedIds([]);
+      
+      // Pause before next group
+      await new Promise(r => setTimeout(r, 500));
+    }
+    
+    // Final wait before scorecard
+    await new Promise(r => setTimeout(r, 1000));
+    setShowModal(true);
+  }, [dailyData, completedGroups, allTiles, t]);
 
   const submit = () => {
     if (selectedIds.length !== 4) return;
@@ -169,11 +201,11 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
       }
       
       if (newMistakes >= 6) { 
+        setIsGameOver(true);
+        setWon(false);
         setTimeout(() => { 
-          setIsGameOver(true); 
-          setWon(false); 
-          setShowModal(true); 
-        }, 1200); 
+          revealRemainingGroups();
+        }, 800); 
       }
       
       setTimeout(() => { 
@@ -247,13 +279,14 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
                     'bg-gray-900 border-white/5 text-white hover:border-white/20'
                   } ${isSelected && shaking ? 'animate-shake' : ''}`}
                 >
-                  <span className={`text-center w-full px-0.5 leading-none ${
-                    tile.text.length > 12 ? 'text-[7px] sm:text-[9px]' : 
-                    tile.text.length > 10 ? 'text-[8px] text-[10px]' : 
-                    tile.text.length > 8 ? 'text-[9px] text-[11px]' : 
-                    'text-[10px] text-[12px]'
+                  <span className={`text-center w-full px-1 leading-tight flex items-center justify-center break-words hyphens-auto ${
+                    tile.text.length > 18 ? 'text-[7px] sm:text-[9px]' :
+                    tile.text.length > 14 ? 'text-[8px] sm:text-[10px]' :
+                    tile.text.length > 10 ? 'text-[9px] sm:text-[12px]' : 
+                    tile.text.length > 7 ? 'text-[10px] sm:text-[13px]' :
+                    'text-[11px] sm:text-[15px]'
                   }`}>
-                    {tile.text.includes(' ') ? tile.text.split(' ').map((word, i) => <React.Fragment key={i}>{word}{i < tile.text.split(' ').length - 1 && <br/>}</React.Fragment>) : tile.text}
+                    {tile.text}
                   </span>
                 </button>
               );
