@@ -126,7 +126,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
 
   useEffect(() => {
     if (guesses.length === 0 && !isGameOver) return;
-    localStorage.setItem(`arena-${getDayString()}`, JSON.stringify({ guesses, isGameOver, won }));
+    localStorage.setItem(`euroarena-${getDayString()}`, JSON.stringify({ guesses, isGameOver, won }));
     if (isGameOver) {
       updateGameStats(GameType.ARENA, won, { attempts: guesses.length });
       if (won) confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
