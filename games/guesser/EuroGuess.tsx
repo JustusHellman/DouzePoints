@@ -142,7 +142,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
 
   useEffect(() => {
     if (attempts.length === 0 && !isGameOver) return;
-    localStorage.setItem(`guesser-${getDayString()}`, JSON.stringify({ attempts, isGameOver, revealedHints, won }));
+    localStorage.setItem(`euroguess-${getDayString()}`, JSON.stringify({ attempts, isGameOver, revealedHints, won }));
     if (isGameOver) {
       updateGameStats(GameType.GUESSER, won, { attempts: attempts.length });
       if (won) {
