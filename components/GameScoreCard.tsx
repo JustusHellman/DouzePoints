@@ -24,9 +24,8 @@ const PerformanceLogRenderer: React.FC<{
   history: string; 
   title: string; 
   attempts: number; 
-  maxAttempts: number; 
   won: boolean 
-}> = ({ history, title, attempts, maxAttempts, won }) => {
+}> = ({ history, title, attempts, won }) => {
   const { t } = useTranslation();
   const isArena = title.toLowerCase().includes('arena');
   const isGuess = title.toLowerCase().includes('guess');
@@ -249,7 +248,6 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
                 history={displayHistory} 
                 title={gameTitle} 
                 attempts={attempts} 
-                maxAttempts={maxAttempts} 
                 won={won} 
               />
             </div>

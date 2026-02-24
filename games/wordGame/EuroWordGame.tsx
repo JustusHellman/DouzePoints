@@ -32,12 +32,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
   const { t } = useTranslation();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
 
-  useLayoutEffect(() => {
-    const timer = requestAnimationFrame(() => {
-      window.scrollTo(0, 60);
-    });
-    return () => cancelAnimationFrame(timer);
-  }, []);
+  const [message, setMessage] = useState<string | null>(null);
 
   const validPool = useMemo(() => {
     return data.filter(song => {
@@ -68,6 +63,14 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
   const [isGameOver, setIsGameOver] = useState(false);
   const [won, setWon] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  useLayoutEffect(() => {
+    if (isGameOver) return;
+    const timer = requestAnimationFrame(() => {
+      window.scrollTo(0, 60);
+    });
+    return () => cancelAnimationFrame(timer);
+  }, [isGameOver]);
 
   const animationDelay = useMemo(() => {
     const totalRevealTargetTime = 1200; 
@@ -229,6 +232,9 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
             setShowModal(true);
           }, target.length * animationDelay + 500);
         }
+      } else {
+        setMessage(t('wordGame.notEnoughLetters'));
+        setTimeout(() => setMessage(null), 1500);
       }
     } else if (e.key === 'Backspace') {
       setCurrentGuess(prev => prev.slice(0, -1));
@@ -237,7 +243,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
         setCurrentGuess(prev => (prev + e.key).toUpperCase());
       }
     }
-  }, [currentGuess, guesses, isGameOver, target, inputLength, animationDelay]);
+  }, [currentGuess, guesses, isGameOver, target, inputLength, animationDelay, setGuesses, setCurrentGuess, setIsGameOver, setWon, setShowModal, setMessage, t]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => onKeyPress(e);
@@ -295,6 +301,13 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
 
   return (
     <div className="flex flex-col items-center pt-4 pb-12 w-full max-w-2xl mx-auto">
+      {message && (
+        <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[600] p-4">
+          <div className="bg-white/80 backdrop-blur-xl text-black font-black uppercase text-[14px] md:text-[18px] tracking-[0.2em] px-6 py-3 rounded-2xl shadow-3xl border-[3px] border-white/40 animate-fade-in-out text-center">
+            {message}
+          </div>
+        </div>
+      )}
       {(!isGameOver || !showModal) && (
         <>
           <div className="flex items-center gap-3 mb-6">
@@ -315,14 +328,14 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
             rules={t(`games.${gameRuleKey}.rules`)} 
           />
           
-          <div className="flex flex-col gap-2 mb-8 items-center px-4 w-full" aria-label={t('wordGame.board')}>
+          <div className="flex flex-col gap-1.5 sm:gap-2 mb-8 items-center px-1 sm:px-4 w-full" aria-label={t('wordGame.board')}>
             {[...Array(MAX_ATTEMPTS)].map((_, i) => {
               const guess = guesses[i] || (i === guesses.length ? currentGuess : "");
               const isSubmitted = i < guesses.length;
               const guessStatuses = isSubmitted ? getGuessStatuses(guess, target) : [];
               let letterIdx = 0;
               return (
-                <div key={i} className="flex justify-center gap-1 sm:gap-2 min-w-max" aria-label={`Row ${i + 1}`}>
+                <div key={i} className="flex justify-center gap-0.5 sm:gap-2" aria-label={`Row ${i + 1}`}>
                   {target.split('').map((targetChar, j) => {
                     if (targetChar === ' ') return <div key={j} className="w-1.5 sm:w-4" />;
                     
@@ -373,29 +386,32 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
           )}
 
           {!isGameOver && (
-            <div className="w-full px-2 space-y-1 mt-auto" aria-label={t('wordGame.keyboard')}>
+            <div className="w-full px-1 sm:px-2 space-y-1 mt-auto" aria-label={t('wordGame.keyboard')}>
               {["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"].map((row, i) => (
                 <div key={i} className="flex justify-center gap-0.5 sm:gap-1">
                   {i === 2 && (
                     <button 
                       onClick={() => onKeyPress({ key: 'Enter' })} 
-                      className="flex-1 max-w-[3.5rem] bg-purple-700 p-2 sm:p-4 rounded-lg text-[7px] sm:text-[9px] font-black uppercase border border-purple-400/20 active:scale-95 outline-none focus:ring-2 focus:ring-purple-400"
+                      className="flex-1 max-w-[3rem] sm:max-w-[3.5rem] bg-purple-700 p-2 sm:p-4 rounded-lg text-[7px] sm:text-[9px] font-black uppercase border border-purple-400/20 active:scale-95 outline-none focus:ring-2 focus:ring-purple-400"
                     >
                       {t('wordGame.enter')}
                     </button>
                   )}
-                  {row.split('').map(key => (
-                    <button 
-                      key={key} onClick={() => onKeyPress({ key })} 
-                      className={`w-7 h-11 sm:w-10 sm:h-14 rounded-lg text-xs sm:text-sm font-black transition-all flex items-center justify-center border border-white/5 active:scale-95 outline-none focus:ring-2 focus:ring-pink-500 ${getKeyClass(key)}`}
-                    >
-                      {key}
-                    </button>
-                  ))}
+                  {row.split('').map(key => {
+                    const isFull = currentGuess.length >= inputLength;
+                    return (
+                      <button 
+                        key={key} onClick={() => onKeyPress({ key })} 
+                        className={`w-[30px] h-11 sm:w-10 sm:h-14 rounded-lg text-xs sm:text-sm font-black transition-all flex items-center justify-center border border-white/5 outline-none ${!isFull ? 'active:scale-95 focus:ring-2 focus:ring-pink-500' : ''} ${getKeyClass(key)}`}
+                      >
+                        {key}
+                      </button>
+                    );
+                  })}
                   {i === 2 && (
                     <button 
                       onClick={() => onKeyPress({ key: 'Backspace' })} 
-                      className="flex-1 max-w-[3.5rem] bg-gray-700 p-2 sm:p-4 rounded-lg flex items-center justify-center border border-white/5 active:scale-95 outline-none focus:ring-2 focus:ring-gray-400"
+                      className="flex-1 max-w-[3rem] sm:max-w-[3.5rem] bg-gray-700 p-2 sm:p-4 rounded-lg flex items-center justify-center border border-white/5 active:scale-95 outline-none focus:ring-2 focus:ring-gray-400"
                     >
                       <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414A2 2 0 0010.828 19H20a2 2 0 002-2V7a2 2 0 00-2-2h-9.172a2 2 0 00-1.414.586L3 12z"/></svg>
                     </button>
@@ -418,6 +434,8 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
       <style>{`
         .flip-animation { animation: flip 0.6s ease-in-out forwards; }
         @keyframes flip { 0% { transform: rotateX(0); } 50% { transform: rotateX(90deg); opacity: 0.5; } 100% { transform: rotateX(0); } }
+        .animate-fade-in-out { animation: fade-in-out 1.2s ease-in-out forwards; }
+        @keyframes fade-in-out { 0% { opacity: 0; transform: translateY(10px); } 15% { opacity: 1; transform: translateY(0); } 85% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-10px); } }
       `}</style>
     </div>
   );

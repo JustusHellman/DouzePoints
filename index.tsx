@@ -16,10 +16,18 @@ root.render(
   <React.StrictMode>
     <ErrorBoundary>
       <HashRouter>
-      <LanguageProvider>
-        <App />
-      </LanguageProvider>
-    </HashRouter>
+        <LanguageProvider>
+          <App />
+        </LanguageProvider>
+      </HashRouter>
     </ErrorBoundary>
   </React.StrictMode>
 );
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(err => {
+      console.log('SW registration failed: ', err);
+    });
+  });
+}

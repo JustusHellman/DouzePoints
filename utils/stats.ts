@@ -1,13 +1,14 @@
 import { GlobalStats, DetailedStats, GameType } from '../data/types.ts';
 import { getDayString } from './daily.ts';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getDailyGameState = (config: any, today: string) => {
   const saved = localStorage.getItem(`${config.storageKey}-${today}`);
   let dailyData = null;
   if (saved) {
     try {
       dailyData = JSON.parse(saved);
-    } catch (e) { /* ignore */ }
+    } catch { /* ignore */ }
   }
 
   let done = false;
@@ -84,11 +85,12 @@ export const getStoredStats = (): GlobalStats => {
       arena: parsed.arena ? { ...emptyStats(), ...parsed.arena } : emptyStats(),
       refrain: parsed.refrain ? { ...emptyStats(), ...parsed.refrain } : emptyStats(),
     };
-  } catch (e) {
+  } catch {
     return initialGlobalStats;
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const calculatePoints = (gameType: GameType, performanceMetrics: any): { points: number; isPerfect: boolean } => {
   let pointsEarned = 0;
   let isPerfect = false;
@@ -121,6 +123,7 @@ export const calculatePoints = (gameType: GameType, performanceMetrics: any): { 
   return { points: pointsEarned, isPerfect };
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const updateGameStats = (gameType: GameType, won: boolean, performanceMetrics: any) => {
   const stats = getStoredStats();
   const today = getDayString();
@@ -191,7 +194,9 @@ export const updateGameStats = (gameType: GameType, won: boolean, performanceMet
 
   try {
     localStorage.setItem('euro-stats-v2', JSON.stringify(stats));
-  } catch (e) {}
+  } catch (err) {
+    console.error("Failed to save stats", err);
+  }
   return stats;
 };
 

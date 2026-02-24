@@ -28,14 +28,6 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
   const { t } = useTranslation();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
 
-  // Instant scroll on mount
-  useLayoutEffect(() => {
-    const timer = requestAnimationFrame(() => {
-      window.scrollTo(0, 60);
-    });
-    return () => cancelAnimationFrame(timer);
-  }, []);
-
   // Determinstic Board Generation from Seed
   const { boardGroups, allTiles } = useMemo(() => {
     const seedStr = getDayString() + "eurorefrain-salt-v1";
@@ -107,11 +99,20 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
   const [showWrongFlash, setShowWrongFlash] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
+  // Instant scroll on mount
+  useLayoutEffect(() => {
+    if (isGameOver) return;
+    const timer = requestAnimationFrame(() => {
+      window.scrollTo(0, 60);
+    });
+    return () => cancelAnimationFrame(timer);
+  }, [isGameOver]);
+
   useEffect(() => {
     const seenKey = 'hasSeenRules-refrain';
     const hasSeen = localStorage.getItem(seenKey);
     if (!hasSeen) {
-      setShowHowToPlay(true);
+      setTimeout(() => setShowHowToPlay(true), 0);
       localStorage.setItem(seenKey, 'true');
     }
   }, []);
@@ -132,23 +133,27 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     if (saved) {
       try {
         const data = JSON.parse(saved);
-        if (data.completedGroups) setCompletedGroups(data.completedGroups);
-        if (data.guessHistory) setGuessHistory(data.guessHistory);
-        if (data.mistakes !== undefined) setMistakes(data.mistakes);
-        if (data.isGameOver !== undefined) setIsGameOver(Boolean(data.isGameOver));
-        if (data.won !== undefined) setWon(Boolean(data.won));
-        if (data.isGameOver) setShowModal(true);
-        if (data.completedGroups) {
-          const completedTileIds = new Set(data.completedGroups.flatMap((g: any) => {
-              // Find the source group to recover original IDs
-              const source = boardGroups.find(bg => bg.category === g.category);
-              if (!source) return [];
-              const groupIdx = boardGroups.indexOf(source);
-              return source.items.map((_, i) => `tile-${groupIdx}-${i}`);
-          }));
-          setDisplayTiles(prev => prev.filter(tile => !completedTileIds.has(tile.id)));
-        }
-      } catch (e) {}
+        setTimeout(() => {
+          if (data.completedGroups) setCompletedGroups(data.completedGroups);
+          if (data.guessHistory) setGuessHistory(data.guessHistory);
+          if (data.mistakes !== undefined) setMistakes(data.mistakes);
+          if (data.isGameOver !== undefined) setIsGameOver(Boolean(data.isGameOver));
+          if (data.won !== undefined) setWon(Boolean(data.won));
+          if (data.isGameOver) setShowModal(true);
+          if (data.completedGroups) {
+            const completedTileIds = new Set(data.completedGroups.flatMap((g: { category: string }) => {
+                // Find the source group to recover original IDs
+                const source = boardGroups.find(bg => bg.category === g.category);
+                if (!source) return [];
+                const groupIdx = boardGroups.indexOf(source);
+                return source.items.map((_, i) => `tile-${groupIdx}-${i}`);
+            }));
+            setDisplayTiles(prev => prev.filter(tile => !completedTileIds.has(tile.id)));
+          }
+        }, 0);
+      } catch (err) {
+        console.error("Failed to load saved refrain state", err);
+      }
     }
   }, [boardGroups]);
 
@@ -212,7 +217,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     // Final wait before scorecard
     await new Promise(r => setTimeout(r, 1000));
     setShowModal(true);
-  }, [boardGroups, completedGroups, allTiles, t]);
+  }, [boardGroups, completedGroups, allTiles, t, setIsGameOver, setSelectedIds, setCompletedGroups, setDisplayTiles, setShowModal]);
 
   const submit = () => {
     if (selectedIds.length !== 4) return;
@@ -274,10 +279,10 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
   };
 
   return (
-    <div className="flex flex-col items-center pt-4 pb-12 px-4 w-full max-w-xl mx-auto">
+    <div className="flex flex-col items-center pt-4 pb-12 px-1 sm:px-4 w-full max-w-xl mx-auto">
       {message && (
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[600] p-4">
-          <div className="bg-white/80 backdrop-blur-xl text-black font-black uppercase text-[14px] md:text-[18px] tracking-[0.2em] px-10 py-6 rounded-3xl shadow-3xl border-[3px] border-white/40 animate-fade-in-out text-center">
+          <div className="bg-white/80 backdrop-blur-xl text-black font-black uppercase text-[14px] md:text-[18px] tracking-[0.2em] px-6 py-3 rounded-2xl shadow-3xl border-[3px] border-white/40 animate-fade-in-out text-center">
             {message}
           </div>
         </div>
@@ -299,7 +304,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
             ))}
           </div>
 
-          <div className="grid grid-cols-4 gap-2 w-full mb-8">
+          <div className="grid grid-cols-4 gap-1 sm:gap-2 w-full mb-8">
             {completedGroups.map((g, idx) => (
               <div key={idx} className={`${getDiffColor(g.difficulty)} col-span-4 min-h-[60px] flex flex-col items-center justify-center px-4 py-2 rounded-2xl text-center shadow-lg animate-in zoom-in-95 duration-500 overflow-hidden`}>
                 <p className="font-black text-[10px] sm:text-[14px] uppercase tracking-tighter text-black/60 leading-none mb-1">{g.category}</p>

@@ -34,7 +34,7 @@
     <text y="60" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="36" fill="rgba(255,255,255,0.6)" style="letter-spacing: 0.4em; text-transform: uppercase;">Daily ESC Challenges</text>
     
     <!-- Tagline / Features -->
-    <text y="140" text-anchor="middle" font-family="sans-serif" font-weight="400" font-size="24" fill="rgba(255,255,255,0.4)" style="letter-spacing: 0.1em;">WORDLE-STYLE • CONNECTIONS • TRIVIA • ARENA</text>
+    <text y="140" text-anchor="middle" font-family="sans-serif" font-weight="400" font-size="24" fill="rgba(255,255,255,0.4)" style="letter-spacing: 0.1em;">WORDLE-STYLE • LINKS • TRIVIA • QUIZ</text>
   </g>
   
   <!-- Border -->

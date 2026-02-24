@@ -19,6 +19,23 @@ export const PrivacyPolicy: React.FC = () => {
         
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
+            <span className="text-pink-500 italic">00</span> About Douze Points
+          </h2>
+          <div className="pl-12 space-y-4">
+            <p>
+              Douze Points is a passion project created for the Eurovision Song Contest community. 
+              Our goal is to provide a fun, daily interactive experience for fans to test their knowledge 
+              and celebrate the rich history of the contest.
+            </p>
+            <p>
+              The game is completely free to play and is maintained as a tribute to the world's 
+              greatest music competition.
+            </p>
+          </div>
+        </section>
+
+        <section className="space-y-6">
+          <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
             <span className="text-pink-500 italic">01</span> {t('privacy.introduction.title')}
           </h2>
           <div className="pl-12 space-y-4">
@@ -91,7 +108,7 @@ export const PrivacyPolicy: React.FC = () => {
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
             <span className="text-pink-500 italic">05</span> {t('privacy.localStorage.title')}
           </h2>
-          <div className="pl-12 space-y-4 bg-white/5 p-8 rounded-[2rem] border border-white/5 shadow-inner">
+          <div className="pl-12 space-y-4">
             <p>{t('privacy.localStorage.p1')}</p>
             <ul className="list-disc pl-6 space-y-2 opacity-80 italic text-sm">
               {t('privacy.localStorage.items').map((item: string, i: number) => (

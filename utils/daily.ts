@@ -17,6 +17,7 @@ const hashCode = (str: string) => {
  * Returns a stable index for a given day and game salt.
  * Implements a 70/30 weighting for 'golden' vs 'cult' tiers if metadata is present.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getDailyIndex = (data: any[], salt: string) => {
   const seed = hashCode(getDayString() + salt);
   

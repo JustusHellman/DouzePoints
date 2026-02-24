@@ -183,7 +183,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
   };
 
   return (
-    <div className="flex flex-col items-center pt-6 pb-12 px-4 w-full max-w-2xl mx-auto">
+    <div className="flex flex-col items-center pt-6 pb-12 px-1 sm:px-4 w-full max-w-2xl mx-auto">
       {(!isGameOver || !showModal) && (
         <>
           <div className="flex items-center gap-3 mb-1">
@@ -241,7 +241,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
                       {guesses.length - idx} / 7
                     </div>
                  </div>
-                 <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6">
+                 <div className="grid grid-cols-3 gap-1 sm:gap-4 md:gap-6">
                     <ComparisonBox label={t('arena.labels.year')} value={g.year} status={getStatus('year', g.year, g)} arrow={g.year < target.year ? 'up' : g.year > target.year ? 'down' : undefined} delay={idx === 0 ? 100 : 0} />
                     <ComparisonBox label={t('arena.labels.rank')} value={`#${g.placing}`} status={getStatus('placing', g.placing, g)} arrow={g.placing > target.placing ? 'up' : g.placing < target.placing ? 'down' : undefined} delay={idx === 0 ? 250 : 0} />
                     <ComparisonBox label={t('arena.labels.country')} value={t(`metadata.countries.${g.country}`)} status={getStatus('country', g.country, g)} delay={idx === 0 ? 400 : 0} />

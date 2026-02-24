@@ -1,0 +1,17 @@
+{
+  "name": "Douze Points",
+  "short_name": "Douze Points",
+  "description": "Daily Eurovision Games & Trivia",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050510",
+  "theme_color": "#ec4899",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

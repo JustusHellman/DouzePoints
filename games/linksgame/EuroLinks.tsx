@@ -23,13 +23,6 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   const { t } = useTranslation();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
 
-  useLayoutEffect(() => {
-    const timer = requestAnimationFrame(() => {
-      window.scrollTo(0, 60);
-    });
-    return () => cancelAnimationFrame(timer);
-  }, []);
-
   const dailyData = useMemo(() => {
     const idx = getDailyIndex(PUZZLES, "eurolinks");
     return PUZZLES[idx];
@@ -59,6 +52,14 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   const [showWrongFlash, setShowWrongFlash] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
+  useLayoutEffect(() => {
+    if (isGameOver) return;
+    const timer = requestAnimationFrame(() => {
+      window.scrollTo(0, 60);
+    });
+    return () => cancelAnimationFrame(timer);
+  }, [isGameOver]);
+
   useEffect(() => {
     const seenKey = 'hasSeenRules-eurolinks';
     const hasSeen = localStorage.getItem(seenKey);
@@ -84,18 +85,22 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
     if (saved) {
       try {
         const data = JSON.parse(saved);
-        if (data.completedGroups) setCompletedGroups(data.completedGroups);
-        if (data.guessHistory) setGuessHistory(data.guessHistory);
-        if (data.mistakes !== undefined) setMistakes(data.mistakes);
-        if (data.isGameOver !== undefined) setIsGameOver(Boolean(data.isGameOver));
-        if (data.won !== undefined) setWon(Boolean(data.won));
-        if (data.isGameOver) setShowModal(true);
-        
-        if (data.completedGroups) {
-          const completedCategories = data.completedGroups.map((g: any) => g.category);
-          setDisplayTiles(prev => prev.filter(tile => !completedCategories.includes(tile.category)));
-        }
-      } catch (e) {}
+        setTimeout(() => {
+          if (data.completedGroups) setCompletedGroups(data.completedGroups);
+          if (data.guessHistory) setGuessHistory(data.guessHistory);
+          if (data.mistakes !== undefined) setMistakes(data.mistakes);
+          if (data.isGameOver !== undefined) setIsGameOver(Boolean(data.isGameOver));
+          if (data.won !== undefined) setWon(Boolean(data.won));
+          if (data.isGameOver) setShowModal(true);
+          
+          if (data.completedGroups) {
+            const completedCategories = data.completedGroups.map((g: { category: string }) => g.category);
+            setDisplayTiles(prev => prev.filter(tile => !completedCategories.includes(tile.category)));
+          }
+        }, 0);
+      } catch (err) {
+        console.error("Failed to load saved links state", err);
+      }
     }
   }, []);
 
@@ -156,7 +161,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
     // Final wait before scorecard
     await new Promise(r => setTimeout(r, 1000));
     setShowModal(true);
-  }, [dailyData, completedGroups, allTiles, t]);
+  }, [dailyData, completedGroups, allTiles, t, setIsGameOver, setSelectedIds, setCompletedGroups, setDisplayTiles, setShowModal]);
 
   const submit = () => {
     if (selectedIds.length !== 4) return;
@@ -236,10 +241,10 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   };
 
   return (
-    <div className="flex flex-col items-center pt-4 pb-12 px-4 w-full max-w-xl mx-auto">
+    <div className="flex flex-col items-center pt-4 pb-12 px-1 sm:px-4 w-full max-w-xl mx-auto">
       {message && (
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[600] p-4">
-          <div className="bg-white/80 backdrop-blur-xl text-black font-black uppercase text-[14px] md:text-[18px] tracking-[0.2em] px-10 py-6 rounded-3xl shadow-3xl border-[3px] border-white/40 animate-fade-in-out text-center">
+          <div className="bg-white/80 backdrop-blur-xl text-black font-black uppercase text-[14px] md:text-[18px] tracking-[0.2em] px-6 py-3 rounded-2xl shadow-3xl border-[3px] border-white/40 animate-fade-in-out text-center">
             {message}
           </div>
         </div>
@@ -261,7 +266,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
             ))}
           </div>
 
-          <div className="grid grid-cols-4 gap-2 w-full mb-8">
+          <div className="grid grid-cols-4 gap-1 sm:gap-2 w-full mb-8">
             {completedGroups.map((g, idx) => (
               <div key={idx} className={`${getDiffColor(g.difficulty)} col-span-4 min-h-[60px] flex flex-col items-center justify-center px-4 py-2 rounded-2xl text-center shadow-lg animate-in zoom-in-95 duration-500 overflow-hidden`}>
                 <p className="font-black text-[10px] sm:text-[14px] uppercase tracking-tighter text-black/60 leading-none mb-1">{g.category}</p>

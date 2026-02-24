@@ -365,11 +365,7 @@ const App: React.FC = () => {
       metaDescription.setAttribute('content', currentDesc);
     }
 
-    const metaKeywords = document.querySelector('meta[name="keywords"]');
-    if (metaKeywords) {
-      metaKeywords.setAttribute('content', currentKeywords);
-    }
-
+    
     // Update Open Graph and Twitter tags
     const ogTitle = document.querySelector('meta[property="og:title"]');
     if (ogTitle) ogTitle.setAttribute('content', currentTitle);
@@ -388,6 +384,11 @@ const App: React.FC = () => {
 
     const twitterUrl = document.querySelector('meta[property="twitter:url"]');
     if (twitterUrl) twitterUrl.setAttribute('content', `https://www.douzepoints.net${location.pathname}`);
+
+    const metaKeywords = document.querySelector('meta[name="keywords"]');
+    if (metaKeywords) {
+      metaKeywords.setAttribute('content', currentKeywords);
+    }
 
     // Update Canonical URL
     let canonical = document.querySelector('link[rel="canonical"]');
@@ -548,6 +549,7 @@ const App: React.FC = () => {
           </div>
           <div className="flex gap-8 text-[9px] font-black uppercase tracking-widest text-gray-500">
             <Link to="/privacy" className="hover:text-white transition-colors">{t('cookies.privacyPolicy')}</Link>
+            <a href="mailto:douzepointsgame@gmail.com" className="hover:text-white transition-colors">Contact</a>
           </div>
         </div>
       </footer>

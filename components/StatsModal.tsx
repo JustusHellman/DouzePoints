@@ -147,7 +147,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, initialT
       setShowCopied(true);
       setTimeout(() => setShowCopied(false), 2000);
     });
-  }, [activeTab, rankInfo.current.title, stats, activeGameStats, t]);
+  }, [activeTab, rankInfo, stats, activeGameStats, t]);
 
   const handlePlayNow = () => {
     onClose();

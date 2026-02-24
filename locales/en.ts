@@ -10,7 +10,7 @@ export const en: TranslationSchema = {
     shareDaily: "Share Daily Score",
     shareCareer: "Share Stats",
     shareHallOfFame: "Share Hall of Fame",
-    copied: "Copiated to clipboard!",
+    copied: "Copied to clipboard!",
     returnToGreenroom: "Return to Greenroom",
     perfect: "Perfect",
     finished: "Finished",
@@ -55,7 +55,7 @@ export const en: TranslationSchema = {
     },
     eurolinks: { 
       title: "EuroLinks", 
-      desc: "Connect four related Eurovision items.",
+      desc: "Connect 4 related Eurovision items.",
       rules: "Find groups of four items that share a common song contest theme. Select four items and tap 'Submit' to check your guess. You have 6 mistakes allowed to find all 4 categories!"
     },
     euroguess: { 
@@ -72,7 +72,8 @@ export const en: TranslationSchema = {
   wordGame: {
     enter: "Enter",
     board: "Game board",
-    keyboard: "Virtual keyboard"
+    keyboard: "Virtual keyboard",
+    notEnoughLetters: "Not enough letters"
   },
   links: {
     mistakesRemaining: "Mistakes Remaining",
@@ -182,7 +183,7 @@ export const en: TranslationSchema = {
     },
     advertising: {
       title: "Advertising",
-      p1: "We use Google AdSense to display advertisements. Google and its partners may use cookies and similar technologies to serve personalized ads, measure ad performance, and limit the number of times you see an ad.",
+      p1: "We use Google AdSense to display advertisements. Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to our website or other websites. Google's use of advertising cookies enables it and its partners to serve ads to our users based on their visit to our site and/or other sites on the Internet.",
       p2: "You can manage your advertising preferences via: adssettings.google.com",
       p3: "More information about how Google processes personal data is available in Google’s Privacy Policy."
     },

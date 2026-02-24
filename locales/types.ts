@@ -47,6 +47,7 @@ export interface TranslationSchema {
     enter: string;
     board: string;
     keyboard: string;
+    notEnoughLetters: string;
   };
   links: {
     mistakesRemaining: string;

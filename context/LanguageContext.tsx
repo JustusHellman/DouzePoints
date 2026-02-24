@@ -12,6 +12,7 @@ type Language = 'en' | 'es' | 'fr' | 'it' | 'de';
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   t: (key: string) => any;
 }
 
@@ -24,8 +25,10 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     return (localStorage.getItem('euro-lang') as Language) || 'en';
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const t = (key: string): any => {
     const keys = key.split('.');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let value: any = translations[language];
     
     for (const k of keys) {
@@ -33,6 +36,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
         value = value[k];
       } else {
         // Fallback to English if current language is missing key
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let fallback: any = translations['en'];
         for (const fk of keys) {
             if (fallback && typeof fallback === 'object') {

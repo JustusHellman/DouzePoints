@@ -72,7 +72,8 @@ export const es: TranslationSchema = {
   wordGame: {
     enter: "Entrar",
     board: "Tablero de juego",
-    keyboard: "Teclado virtual"
+    keyboard: "Teclado virtual",
+    notEnoughLetters: "No hay suficientes letras"
   },
   links: {
     mistakesRemaining: "Errores restantes",
@@ -182,7 +183,7 @@ export const es: TranslationSchema = {
     },
     advertising: {
       title: "Publicidad",
-      p1: "Utilizamos Google AdSense para mostrar anuncios. Google y sus socios pueden utilizar cookies y tecnologías similares para servir anuncios personalizados, medir el rendimiento de los anuncios y limitar el número de veces que ve un anuncio.",
+      p1: "Utilizamos Google AdSense para mostrar anuncios. Los proveedores terceros, incluido Google, utilizan cookies para servir anuncios basados en las visitas previas de un usuario a nuestro sitio web u otros sitios web. El uso de cookies publicitarias por parte de Google le permite a él y a sus socios servir anuncios a nuestros usuarios basados en sus visitas a nuestro sitio y/o a otros sitios en Internet.",
       p2: "Puede gestionar sus preferencias de publicidad a través de: adssettings.google.com",
       p3: "Más información sobre cómo Google procesa los datos personales está disponible en la Política de Privacidad de Google."
     },
