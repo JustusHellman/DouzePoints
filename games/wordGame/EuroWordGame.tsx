@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { getDailyIndex, getDayString } from '../../utils/daily.ts';
 import { updateGameStats } from '../../utils/stats.ts';
@@ -64,6 +64,118 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
   const [won, setWon] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Initialize with a sensible guess to avoid zero-start
+  const [containerWidth, setContainerWidth] = useState(() => Math.min(672, window.innerWidth - 16));
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setViewportHeight(window.innerHeight);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    // Set initial width immediately
+    setContainerWidth(containerRef.current.offsetWidth);
+    
+    const obs = new ResizeObserver(entries => {
+      if (entries[0]) {
+        setContainerWidth(entries[0].contentRect.width);
+        // Once we have the first real measurement, enable transitions
+        setIsReady(true);
+      }
+    });
+    obs.observe(containerRef.current);
+    return () => obs.disconnect();
+  }, []);
+
+  const { tileStyle, spaceStyle, keyboardStyle, fallbackClass } = useMemo(() => {
+    const chars = target.split('');
+    const len = chars.length;
+
+    if (containerWidth === 0) {
+      return { 
+        tileStyle: {}, 
+        spaceStyle: {}, 
+        keyboardStyle: { keyStyle: {}, actionKeyStyle: {} }, 
+        fallbackClass: 'w-10 h-10 sm:w-14 sm:h-14 text-xl sm:text-3xl' 
+      };
+    }
+    
+    const isMobile = window.innerWidth < 640;
+    const gap = isMobile ? 2 : 8; 
+    const rowGap = isMobile ? 6 : 8; 
+    const spaceWidth = isMobile ? 6 : 16;
+    
+    let maxTileSize = isMobile ? 80 : 120;
+
+    const reservedHeight = isMobile ? 240 : 300; 
+    const availableBoardHeight = viewportHeight - reservedHeight;
+    const heightBasedSize = Math.floor((availableBoardHeight - (5 * rowGap)) / 6);
+    
+    maxTileSize = Math.min(maxTileSize, Math.max(isMobile ? 20 : 28, heightBasedSize));
+    
+    const numSpaces = chars.filter(c => c === ' ').length;
+    const numLetters = len - numSpaces;
+    
+    const availableWidth = containerWidth - (numSpaces * spaceWidth) - ((len - 1) * gap) - 4;
+    const widthBasedSize = Math.floor(availableWidth / numLetters);
+    
+    const finalSize = Math.max(12, Math.min(maxTileSize, widthBasedSize));
+    const fontSize = Math.floor(finalSize * 0.65);
+    const borderRadius = Math.max(4, Math.floor(finalSize * 0.25));
+
+    // Calculate actual board width to match keyboard to it
+    const boardWidth = (numLetters * finalSize) + (numSpaces * spaceWidth) + ((len - 1) * gap);
+    
+    // Keyboard Scaling
+    const kGap = isMobile ? 2 : 4;
+    // Keyboard should match board width but stay within reasonable bounds
+    const targetKWidth = Math.max(isMobile ? 280 : 400, Math.min(containerWidth - 8, boardWidth));
+    const kKeyWidth = Math.floor((targetKWidth - (9 * kGap)) / 10);
+    const kActionWidth = Math.floor((3 * kKeyWidth + kGap) / 2);
+    
+    let kKeyHeight = Math.floor(kKeyWidth * 1.3);
+    // Extra compression for very short screens
+    if (viewportHeight < 600) {
+      kKeyHeight = Math.min(kKeyHeight, isMobile ? 36 : 44);
+    }
+    
+    const kFontSize = Math.max(10, Math.floor(kKeyWidth * 0.45));
+
+    return {
+      tileStyle: {
+        width: `${finalSize}px`,
+        height: `${finalSize}px`,
+        fontSize: `${fontSize}px`,
+        borderRadius: `${borderRadius}px`,
+        borderWidth: finalSize < 24 ? '1px' : '2px'
+      },
+      spaceStyle: {
+        width: `${spaceWidth}px`
+      },
+      keyboardStyle: {
+        keyStyle: {
+          width: `${kKeyWidth}px`,
+          height: `${kKeyHeight}px`,
+          fontSize: `${kFontSize}px`
+        },
+        actionKeyStyle: {
+          width: `${kActionWidth}px`,
+          height: `${kKeyHeight}px`,
+          fontSize: `${Math.max(8, kFontSize * 0.75)}px`,
+        }
+      },
+      fallbackClass: ""
+    };
+  }, [containerWidth, viewportHeight, target]);
+
+  /* 
   useLayoutEffect(() => {
     if (isGameOver) return;
     const timer = requestAnimationFrame(() => {
@@ -71,6 +183,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
     });
     return () => cancelAnimationFrame(timer);
   }, [isGameOver]);
+  */
 
   const animationDelay = useMemo(() => {
     const totalRevealTargetTime = 1200; 
@@ -264,7 +377,8 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
   }, [guesses, target, getGuessStatuses]);
 
   const handleShare = () => {
-    const shareText = `${won ? '🏆' : '❌'} ${title} • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')} • ${guesses.length}/${MAX_ATTEMPTS} ${t('common.attempts')}\n\n${historyEmoji}\n\ndouzepoints.net`;
+    const gamePath = gameId === 'eurosong' ? '/euro-song' : '/euro-artist';
+    const shareText = `${won ? '🏆' : '❌'} ${title} • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')} • ${guesses.length}/${MAX_ATTEMPTS} ${t('common.attempts')}\n\n${historyEmoji}\n\nhttps://www.douzepoints.net${gamePath}`;
     navigator.clipboard.writeText(shareText);
   };
 
@@ -289,18 +403,10 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
     }
   };
 
-  const tileSize = useMemo(() => {
-    const len = target.length;
-    if (len > 15) return 'w-4 h-4 sm:w-6 sm:h-6 text-[7px] sm:text-[10px]';
-    if (len > 12) return 'w-5 h-5 sm:w-8 sm:h-8 text-[8px] sm:text-xs';
-    if (len > 7) return 'w-8 h-8 sm:w-11 sm:h-11 text-sm sm:text-xl';
-    return 'w-10 h-10 sm:w-14 sm:h-14 text-xl sm:text-3xl';
-  }, [target]);
-
   const gameRuleKey = gameType === GameType.WORD_GAME ? 'eurosong' : 'euroartist';
 
   return (
-    <div className="flex flex-col items-center pt-4 pb-12 w-full max-w-2xl mx-auto">
+    <div ref={containerRef} className="flex flex-col items-center pt-4 pb-12 w-full max-w-2xl mx-auto px-0.5">
       {message && (
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[600] p-4">
           <div className="bg-white/80 backdrop-blur-xl text-black font-black uppercase text-[14px] md:text-[18px] tracking-[0.2em] px-6 py-3 rounded-2xl shadow-3xl border-[3px] border-white/40 animate-fade-in-out text-center">
@@ -325,10 +431,10 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
             isOpen={showHowToPlay} 
             onClose={() => setShowHowToPlay(false)} 
             title={title} 
-            rules={t(`games.${gameRuleKey}.rules`)} 
+            rules={t(`games.${gameRuleKey}.rulesShort`)} 
           />
           
-          <div className="flex flex-col gap-1.5 sm:gap-2 mb-8 items-center px-1 sm:px-4 w-full" aria-label={t('wordGame.board')}>
+          <div className="flex flex-col gap-1.5 sm:gap-2 mb-8 items-center px-0.5 sm:px-2 w-full" aria-label={t('wordGame.board')}>
             {[...Array(MAX_ATTEMPTS)].map((_, i) => {
               const guess = guesses[i] || (i === guesses.length ? currentGuess : "");
               const isSubmitted = i < guesses.length;
@@ -337,7 +443,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
               return (
                 <div key={i} className="flex justify-center gap-0.5 sm:gap-2" aria-label={`Row ${i + 1}`}>
                   {target.split('').map((targetChar, j) => {
-                    if (targetChar === ' ') return <div key={j} className="w-1.5 sm:w-4" />;
+                    if (targetChar === ' ') return <div key={j} style={spaceStyle} />;
                     
                     const isFix = !isLetter(targetChar);
                     let char = "";
@@ -358,11 +464,16 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
                     return (
                       <div 
                         key={j} 
-                        style={{ transitionDelay: isSubmitted && !isFix ? `${(letterIdx-1) * animationDelay}ms` : '0ms' }}
+                        style={{ 
+                          ...tileStyle,
+                          transitionDelay: isSubmitted && !isFix ? `${(letterIdx-1) * animationDelay}ms` : '0ms' 
+                        }}
                         className={`
-                          ${tileSize} border-2 flex items-center justify-center font-black rounded-xl 
-                          transition-all duration-700 transform-gpu
+                          flex items-center justify-center font-black border-2
+                          transform-gpu
+                          ${isReady ? 'transition-all duration-700' : ''}
                           ${tileClass} 
+                          ${fallbackClass}
                           ${!isSubmitted && char && !isFix ? 'border-white/40 scale-110' : ''}
                           ${isSubmitted && !isFix ? 'flip-animation' : ''}
                         `}
@@ -392,17 +503,19 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
                   {i === 2 && (
                     <button 
                       onClick={() => onKeyPress({ key: 'Enter' })} 
-                      className="flex-1 max-w-[3rem] sm:max-w-[3.5rem] bg-purple-700 p-2 sm:p-4 rounded-lg text-[7px] sm:text-[9px] font-black uppercase border border-purple-400/20 active:scale-95 outline-none focus:ring-2 focus:ring-purple-400"
+                      style={keyboardStyle.actionKeyStyle}
+                      className="bg-purple-700 rounded-lg font-black uppercase border border-purple-400/20 active:scale-95 outline-none focus:ring-2 focus:ring-purple-400 flex items-center justify-center"
                     >
                       {t('wordGame.enter')}
                     </button>
                   )}
                   {row.split('').map(key => {
-                    const isFull = currentGuess.length >= inputLength;
+                    const canInput = currentGuess.length < inputLength;
                     return (
                       <button 
                         key={key} onClick={() => onKeyPress({ key })} 
-                        className={`w-[30px] h-11 sm:w-10 sm:h-14 rounded-lg text-xs sm:text-sm font-black transition-all flex items-center justify-center border border-white/5 outline-none ${!isFull ? 'active:scale-95 focus:ring-2 focus:ring-pink-500' : ''} ${getKeyClass(key)}`}
+                        style={keyboardStyle.keyStyle}
+                        className={`rounded-lg font-black transition-all flex items-center justify-center border border-white/5 outline-none ${canInput ? 'active:scale-95 focus:ring-2 focus:ring-pink-500' : ''} ${getKeyClass(key)}`}
                       >
                         {key}
                       </button>
@@ -411,9 +524,10 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
                   {i === 2 && (
                     <button 
                       onClick={() => onKeyPress({ key: 'Backspace' })} 
-                      className="flex-1 max-w-[3rem] sm:max-w-[3.5rem] bg-gray-700 p-2 sm:p-4 rounded-lg flex items-center justify-center border border-white/5 active:scale-95 outline-none focus:ring-2 focus:ring-gray-400"
+                      style={keyboardStyle.actionKeyStyle}
+                      className="bg-gray-700 rounded-lg flex items-center justify-center border border-white/5 active:scale-95 outline-none focus:ring-2 focus:ring-gray-400"
                     >
-                      <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414A2 2 0 0010.828 19H20a2 2 0 002-2V7a2 2 0 00-2-2h-9.172a2 2 0 00-1.414.586L3 12z"/></svg>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414A2 2 0 0010.828 19H20a2 2 0 002-2V7a2 2 0 00-2-2h-9.172a2 2 0 00-1.414.586L3 12z"/></svg>
                     </button>
                   )}
                 </div>
@@ -422,6 +536,18 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
           )}
         </>
       )}
+
+      {/* How to Play Section */}
+      <div className="mt-16 pt-12 border-t border-white/5 w-full max-w-2xl mx-auto">
+        <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-white mb-6 text-center">
+          {t('common.howToPlay')}
+        </h2>
+        <div className="bg-white/5 rounded-2xl p-6 md:p-8">
+          <p className="text-gray-400 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-wrap">
+            {gameType === GameType.WORD_GAME ? t('games.eurosong.rulesLong') : t('games.euroartist.rulesLong')}
+          </p>
+        </div>
+      </div>
 
       {isGameOver && showModal && (
         <GameScoreCard 

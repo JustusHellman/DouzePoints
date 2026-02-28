@@ -1,26 +1,48 @@
+// Region arrays
+export const REGIONS = {
+  "Nordics": [
+    "Sweden", "Norway", "Finland", "Denmark", "Iceland"
+  ],
+  "Baltics": [
+    "Estonia", "Latvia", "Lithuania"
+  ],
+  "Benelux & Isles": [
+    "United Kingdom", "Ireland", "The Netherlands", "Belgium", "Luxembourg"
+  ],
+  "France & Iberia": [
+    "France", "Spain", "Portugal", "Andorra", "Monaco", "Morocco"
+  ],
+  "Central Europe": [
+    "Germany", "Austria", "Switzerland", "Poland", "Czechia", "Slovakia", "Hungary"
+  ],
+  "Mediterranean": [
+    "Italy", "San Marino", "Malta", "Greece", "Cyprus", "Israel", "Turkey"
+  ],
+  "Balkans": [
+    "Albania", "Bosnia & Herzegovina", "Bulgaria", "Croatia",
+    "Montenegro", "North Macedonia", "Serbia", "Slovenia"
+  ],
+  "Eastern Europe": [
+    "Ukraine", "Belarus", "Moldova", "Romania", "Russia"
+  ],
+  "Caucasus": [
+    "Georgia", "Armenia", "Azerbaijan"
+  ],
+  "Oceania": [
+    "Australia"
+  ]
+} as const;
+
+export type Region = keyof typeof REGIONS;
+
+// Build a country -> region map
 export const REGION_MAP: Record<string, string> = {
-  // Nordics
-  "Sweden": "Nordics", "Norway": "Nordics", "Finland": "Nordics", "Denmark": "Nordics", "Iceland": "Nordics",
-  // Baltics
-  "Estonia": "Baltics", "Latvia": "Baltics", "Lithuania": "Baltics",
-  // Western Europe
-  "Switzerland": "Western Europe", "The Netherlands": "Western Europe", "United Kingdom": "Western Europe", 
-  "UK": "Western Europe", "Austria": "Western Europe", "Belgium": "Western Europe", "France": "Western Europe", 
-  "Germany": "Western Europe", "Ireland": "Western Europe", "Luxembourg": "Western Europe",
-  // Mediterranean
-  "Italy": "Mediterranean", "Israel": "Mediterranean", "Spain": "Mediterranean", "Portugal": "Mediterranean", 
-  "Cyprus": "Mediterranean", "Greece": "Mediterranean", "Malta": "Mediterranean", "San Marino": "Mediterranean",
-  // Balkans
-  "Croatia": "Balkans", "Serbia": "Balkans", "Slovenia": "Balkans", "Albania": "Balkans", 
-  "Bosnia & Herzegovina": "Balkans", "Montenegro": "Balkans", "North Macedonia": "Balkans",
-  // Eastern Europe
-  "Ukraine": "Eastern Europe", "Poland": "Eastern Europe", "Moldova": "Eastern Europe", 
-  "Bulgaria": "Eastern Europe", "Czechia": "Eastern Europe", "Hungary": "Eastern Europe", 
-  "Romania": "Eastern Europe", "Slovakia": "Eastern Europe",
-  // Caucasus
-  "Turkey": "Caucasus", "Georgia": "Caucasus", "Armenia": "Caucasus", "Azerbaijan": "Caucasus",
-  // Oceania
-  "Australia": "Oceania"
+  ...Object.fromEntries(
+    Object.entries(REGIONS).flatMap(([region, countries]) =>
+      (countries as readonly string[]).map((country) => [country, region])
+    )
+  ),
+  "UK": "Benelux & Isles" // Alias for United Kingdom
 };
 
 export const GENRE_PARENT_MAP: Record<string, string> = {

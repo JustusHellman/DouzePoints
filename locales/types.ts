@@ -34,14 +34,23 @@ export interface TranslationSchema {
     statsButton: string;
     careerStats: string;
     todayScore: string;
+    historyTitle: string;
+    howToPlayTitle: string;
+    howToPlayP1: string;
+    howToPlayP2: string;
+    historyP1: string;
+    historyP2: string;
+    historyP3: string;
+    historyP4: string;
+    historyP5: string;
   };
   games: {
-    eurosong: { title: string; desc: string; rules: string };
-    euroartist: { title: string; desc: string; rules: string };
-    eurorefrain: { title: string; desc: string; rules: string };
-    eurolinks: { title: string; desc: string; rules: string };
-    euroguess: { title: string; desc: string; rules: string };
-    euroarena: { title: string; desc: string; rules: string };
+    eurosong: { title: string; desc: string; rulesShort: string; rulesLong: string };
+    euroartist: { title: string; desc: string; rulesShort: string; rulesLong: string };
+    eurorefrain: { title: string; desc: string; rulesShort: string; rulesLong: string };
+    eurolinks: { title: string; desc: string; rulesShort: string; rulesLong: string };
+    euroguess: { title: string; desc: string; rulesShort: string; rulesLong: string };
+    euroarena: { title: string; desc: string; rulesShort: string; rulesLong: string };
   };
   wordGame: {
     enter: string;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { getDailyIndex, getDayString } from '../../utils/daily.ts';
 import { updateGameStats } from '../../utils/stats.ts';
@@ -52,6 +52,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   const [showWrongFlash, setShowWrongFlash] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
+  /*
   useLayoutEffect(() => {
     if (isGameOver) return;
     const timer = requestAnimationFrame(() => {
@@ -59,6 +60,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
     });
     return () => cancelAnimationFrame(timer);
   }, [isGameOver]);
+  */
 
   useEffect(() => {
     const seenKey = 'hasSeenRules-eurolinks';
@@ -236,15 +238,15 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   }, [guessHistory]);
 
   const handleShare = () => {
-    const shareText = `${won ? '🏆' : '❌'} EuroLinks • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')}\n\n${historyEmoji}\n\ndouzepoints.net`;
+    const shareText = `${won ? '🏆' : '❌'} EuroLinks • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')}\n\n${historyEmoji}\n\nhttps://www.douzepoints.net/euro-links`;
     navigator.clipboard.writeText(shareText);
   };
 
   return (
-    <div className="flex flex-col items-center pt-4 pb-12 px-1 sm:px-4 w-full max-w-xl mx-auto">
+    <div className="flex flex-col items-center pt-4 pb-12 px-1 sm:px-4 w-full max-w-lg mx-auto">
       {message && (
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[600] p-4">
-          <div className="bg-white/80 backdrop-blur-xl text-black font-black uppercase text-[14px] md:text-[18px] tracking-[0.2em] px-6 py-3 rounded-2xl shadow-3xl border-[3px] border-white/40 animate-fade-in-out text-center">
+          <div className="bg-white/80 backdrop-blur-xl text-black font-black uppercase text-[12px] md:text-[16px] tracking-[0.2em] px-5 py-2.5 rounded-xl shadow-3xl border-[2px] border-white/40 animate-fade-in-out text-center">
             {message}
           </div>
         </div>
@@ -252,25 +254,31 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
 
       {(!isGameOver || !showModal) && (
         <>
-          <div className="flex items-center gap-3 mb-4">
-            <h1 className="text-3xl md:text-4xl font-black bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroLinks</h1>
-            <button onClick={() => setShowHowToPlay(true)} className="w-6 h-6 rounded-full border border-white/20 text-[10px] flex items-center justify-center font-bold text-gray-500 hover:text-white transition-all active:scale-90" aria-label="How to play">?</button>
+          <div className="flex items-center gap-3 mb-3">
+            <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroLinks</h1>
+            <button 
+              onClick={() => setShowHowToPlay(true)} 
+              className="w-5 h-5 rounded-full border border-white/20 text-[9px] flex items-center justify-center font-bold text-gray-500 hover:text-white transition-all active:scale-90" 
+              aria-label="How to play"
+            >
+              ?
+            </button>
           </div>
 
-          <HowToPlayModal isOpen={showHowToPlay} onClose={() => setShowHowToPlay(false)} title="EuroLinks" rules={t('games.eurolinks.rules')} />
+          <HowToPlayModal isOpen={showHowToPlay} onClose={() => setShowHowToPlay(false)} title="EuroLinks" rules={t('games.eurolinks.rulesShort')} />
           
-          <div className="mb-6 flex gap-1.5 h-6 items-center">
-            <span className="text-[9px] text-gray-500 font-black uppercase tracking-widest mr-2">{t('links.mistakesRemaining')}</span>
+          <div className="mb-4 flex gap-1 h-5 items-center">
+            <span className="text-[8px] text-gray-500 font-black uppercase tracking-widest mr-2">{t('links.mistakesRemaining')}</span>
             {[...Array(6)].map((_, i) => (
-              <div key={i} className={`w-3 h-3 rounded-full border border-white/20 transition-all duration-500 ${i < (6 - mistakes) ? 'bg-white shadow-[0_0_10px_white]' : 'bg-transparent scale-75 opacity-20'}`}></div>
+              <div key={i} className={`w-2.5 h-2.5 rounded-full border border-white/20 transition-all duration-500 ${i < (6 - mistakes) ? 'bg-white shadow-[0_0_8px_white]' : 'bg-transparent scale-75 opacity-20'}`}></div>
             ))}
           </div>
 
-          <div className="grid grid-cols-4 gap-1 sm:gap-2 w-full mb-8">
+          <div className="grid grid-cols-4 gap-1 sm:gap-1.5 w-full mb-6">
             {completedGroups.map((g, idx) => (
-              <div key={idx} className={`${getDiffColor(g.difficulty)} col-span-4 min-h-[60px] flex flex-col items-center justify-center px-4 py-2 rounded-2xl text-center shadow-lg animate-in zoom-in-95 duration-500 overflow-hidden`}>
-                <p className="font-black text-[10px] sm:text-[14px] uppercase tracking-tighter text-black/60 leading-none mb-1">{g.category}</p>
-                <p className="font-bold text-[9px] sm:text-[11px] text-white/95 leading-tight uppercase line-clamp-2">{g.items.join(", ")}</p>
+              <div key={idx} className={`${getDiffColor(g.difficulty)} col-span-4 min-h-[50px] flex flex-col items-center justify-center px-3 py-1.5 rounded-xl text-center shadow-lg animate-in zoom-in-95 duration-500 overflow-hidden`}>
+                <p className="font-black text-[9px] sm:text-[12px] uppercase tracking-tighter text-black/60 leading-none mb-0.5">{g.category}</p>
+                <p className="font-bold text-[8px] sm:text-[10px] text-white/95 leading-tight uppercase line-clamp-2">{g.items.join(", ")}</p>
               </div>
             ))}
             {displayTiles.map(tile => {
@@ -278,18 +286,18 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
               return (
                 <button
                   key={tile.id} onClick={() => handleSelect(tile.id)}
-                  className={`min-h-[60px] sm:min-h-[80px] flex flex-col items-center justify-center rounded-2xl font-black transition-all duration-200 border-2 uppercase tracking-tight overflow-hidden ${
+                  className={`min-h-[50px] sm:min-h-[70px] flex flex-col items-center justify-center rounded-xl font-black transition-all duration-200 border-2 uppercase tracking-tight overflow-hidden ${
                     isSelected && showWrongFlash ? 'bg-red-500/10 border-red-500/40 text-white scale-105' : 
                     isSelected ? 'bg-gray-400 text-black border-white scale-95 shadow-inner' : 
                     'bg-gray-900 border-white/5 text-white hover:border-white/20'
                   } ${isSelected && shaking ? 'animate-shake' : ''}`}
                 >
                   <span className={`text-center w-full px-1 leading-tight flex items-center justify-center break-words hyphens-auto ${
-                    tile.text.length > 18 ? 'text-[7px] sm:text-[9px]' :
-                    tile.text.length > 14 ? 'text-[8px] sm:text-[10px]' :
-                    tile.text.length > 10 ? 'text-[9px] sm:text-[12px]' : 
-                    tile.text.length > 7 ? 'text-[10px] sm:text-[13px]' :
-                    'text-[11px] sm:text-[15px]'
+                    tile.text.length > 18 ? 'text-[6px] sm:text-[8px]' :
+                    tile.text.length > 14 ? 'text-[7px] sm:text-[9px]' :
+                    tile.text.length > 10 ? 'text-[8px] sm:text-[11px]' : 
+                    tile.text.length > 7 ? 'text-[9px] sm:text-[12px]' :
+                    'text-[10px] sm:text-[14px]'
                   }`}>
                     {tile.text}
                   </span>
@@ -299,16 +307,16 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
           </div>
 
           {!isGameOver && (
-            <div className="flex flex-col items-center gap-6 w-full">
+            <div className="flex flex-col items-center gap-4 w-full">
               <button 
                 onClick={submit} disabled={selectedIds.length !== 4 || showWrongFlash} 
-                className={`w-full max-w-xs py-5 rounded-full font-black shadow-xl transition-all text-sm tracking-widest uppercase ${selectedIds.length === 4 && !showWrongFlash ? 'bg-white text-black scale-105 active:scale-95' : 'bg-gray-800 text-gray-500 opacity-50 cursor-not-allowed'}`}
+                className={`w-full max-w-xs py-4 rounded-full font-black shadow-xl transition-all text-xs tracking-widest uppercase ${selectedIds.length === 4 && !showWrongFlash ? 'bg-white text-black scale-105 active:scale-95' : 'bg-gray-800 text-gray-500 opacity-50 cursor-not-allowed'}`}
               >
                 {t('common.submit')}
               </button>
-              <div className="flex gap-3">
-                <button onClick={shuffle} className="border-2 border-white/10 px-6 py-3 rounded-full font-black hover:bg-white/5 text-[9px] tracking-widest uppercase transition-colors">{t('links.shuffle')}</button>
-                <button onClick={() => setSelectedIds([])} className="border-2 border-white/10 px-6 py-3 rounded-full font-black hover:bg-white/5 text-[9px] tracking-widest uppercase transition-colors">{t('links.deselectAll')}</button>
+              <div className="flex gap-2">
+                <button onClick={shuffle} className="border border-white/10 px-4 py-2 rounded-full font-black hover:bg-white/5 text-[8px] tracking-widest uppercase transition-colors">{t('links.shuffle')}</button>
+                <button onClick={() => setSelectedIds([])} className="border border-white/10 px-4 py-2 rounded-full font-black hover:bg-white/5 text-[8px] tracking-widest uppercase transition-colors">{t('links.deselectAll')}</button>
               </div>
             </div>
           )}
@@ -320,6 +328,18 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
           )}
         </>
       )}
+
+      {/* How to Play Section */}
+      <div className="mt-16 pt-12 border-t border-white/5 w-full max-w-2xl mx-auto">
+        <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-white mb-6 text-center">
+          {t('common.howToPlay')}
+        </h2>
+        <div className="bg-white/5 rounded-2xl p-6 md:p-8">
+          <p className="text-gray-400 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-wrap">
+            {t('games.eurolinks.rulesLong')}
+          </p>
+        </div>
+      </div>
 
       {isGameOver && showModal && (
         <GameScoreCard 

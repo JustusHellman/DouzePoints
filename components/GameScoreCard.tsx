@@ -136,7 +136,16 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
     else if (points >= 8) headline = t('scorecard.headlines.greatPerformance');
     else headline = t('scorecard.headlines.qualified');
 
-    const shareText = `✨ DOUZE POINTS ✨\n${headline}\n\n${gameTitle} • ${getDayString()}\n${t('scorecard.score')}: ${points} ${t('common.pointsShort')} • ${attempts}/${maxAttempts} ${t('common.steps')}\n\n${displayHistory}\n\ndouzepoints.net`;
+    const gamePaths: Record<string, string> = {
+      'EuroSong': '/euro-song',
+      'EuroArtist': '/euro-artist',
+      'EuroRefrain': '/euro-refrain',
+      'EuroLinks': '/euro-links',
+      'EuroGuess': '/euro-guess',
+      'EuroArena': '/euro-arena'
+    };
+    const gamePath = gamePaths[gameTitle] || '';
+    const shareText = `✨ DOUZE POINTS ✨\n${headline}\n\n${gameTitle} • ${getDayString()}\n${t('scorecard.score')}: ${points} ${t('common.pointsShort')} • ${attempts}/${maxAttempts} ${t('common.steps')}\n\n${displayHistory}\n\nhttps://www.douzepoints.net${gamePath}`;
     
     navigator.clipboard.writeText(shareText).then(() => {
       setShowCopied(true);

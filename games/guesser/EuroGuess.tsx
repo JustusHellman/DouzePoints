@@ -30,7 +30,7 @@ const HintBox: React.FC<HintBoxProps> = ({ hint, attempt, idx, isActive, songTit
   
   return (
     <div 
-      className={`rounded-2xl md:rounded-[2rem] bg-gray-900/50 border-l-[6px] p-3 sm:p-4 md:p-6 shadow-xl relative overflow-hidden transition-all duration-[1500ms] ${
+      className={`rounded-xl md:rounded-[1.5rem] bg-gray-900/50 border-l-[4px] md:border-l-[6px] p-2 sm:p-3 md:p-4 shadow-xl relative overflow-hidden transition-all duration-[1500ms] ${
         isActive 
           ? 'border-cyan-500 animate-in fade-in slide-in-from-top-12' 
           : 'border-white/10 animate-in fade-in slide-in-from-top-8'
@@ -40,32 +40,32 @@ const HintBox: React.FC<HintBoxProps> = ({ hint, attempt, idx, isActive, songTit
       
       <div className="flex justify-between items-start mb-0.5 relative z-10">
         <div className="flex items-center gap-2">
-          <span className="text-white/30 font-black uppercase text-[7px] md:text-[9px] tracking-[0.3em] block">
+          <span className="text-white/30 font-black uppercase text-[6px] md:text-[8px] tracking-[0.3em] block">
             {hint.label}
           </span>
-          <span className="text-[7px] md:text-[9px] font-black text-cyan-500/40 uppercase tracking-widest">
+          <span className="text-[6px] md:text-[8px] font-black text-cyan-500/40 uppercase tracking-widest">
             {displayIdx} / {MAX_ATTEMPTS}
           </span>
         </div>
         {attempt ? (
-          <div className="flex items-center gap-1.5 bg-black/20 px-2 py-0.5 rounded-full border border-white/5">
-            <span className="text-[7px] md:text-[9px] font-black text-gray-500 uppercase tracking-widest truncate max-w-[80px] sm:max-w-[120px] md:max-w-[200px]">
+          <div className="flex items-center gap-1 bg-black/20 px-1.5 py-0.5 rounded-full border border-white/5">
+            <span className="text-[6px] md:text-[8px] font-black text-gray-500 uppercase tracking-widest truncate max-w-[60px] sm:max-w-[100px] md:max-w-[180px]">
               {attempt}
             </span>
-            <div className={`shrink-0 w-3 h-3 md:w-4 md:h-4 rounded-full flex items-center justify-center text-[6px] md:text-[8px] font-black text-white ${
+            <div className={`shrink-0 w-2.5 h-2.5 md:w-3.5 md:h-3.5 rounded-full flex items-center justify-center text-[5px] md:text-[7px] font-black text-white ${
               isCorrect ? 'bg-green-600' : 'bg-red-600'
             }`}>
               {isCorrect ? '✓' : '✕'}
             </div>
           </div>
         ) : (
-          <span className="text-[7px] md:text-[9px] font-black text-cyan-500 animate-pulse uppercase tracking-widest">
+          <span className="text-[6px] md:text-[8px] font-black text-cyan-500 animate-pulse uppercase tracking-widest">
             Active Hint
           </span>
         )}
       </div>
 
-      <span className="text-base sm:text-lg md:text-3xl font-black tracking-tight text-white/90 break-words relative z-10 leading-tight block">
+      <span className="text-sm sm:text-base md:text-xl font-black tracking-tight text-white/90 break-words relative z-10 leading-tight block">
         {hint.value}
       </span>
     </div>
@@ -218,11 +218,11 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
     <div className="flex flex-col items-center pt-6 pb-12 px-1 sm:px-4 w-full max-w-2xl mx-auto">
       {(!isGameOver || !showModal) && (
         <>
-          <div className="flex items-center gap-3 mb-6">
-            <h1 className="text-3xl md:text-5xl font-black bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroGuess</h1>
+          <div className="flex items-center gap-3 mb-4">
+            <h1 className="text-2xl md:text-4xl font-black bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroGuess</h1>
             <button 
               onClick={() => setShowHowToPlay(true)}
-              className="w-6 h-6 md:w-8 md:h-8 rounded-full border border-white/20 text-[10px] md:text-xs flex items-center justify-center font-bold text-gray-500 hover:text-white hover:border-white transition-all active:scale-90"
+              className="w-5 h-5 md:w-7 md:h-7 rounded-full border border-white/20 text-[9px] md:text-xs flex items-center justify-center font-bold text-gray-500 hover:text-white hover:border-white transition-all active:scale-90"
               aria-label="How to play"
             >
               ?
@@ -233,33 +233,33 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
             isOpen={showHowToPlay} 
             onClose={() => setShowHowToPlay(false)} 
             title="EuroGuess" 
-            rules={t('games.euroguess.rules')} 
+            rules={t('games.euroguess.rulesShort')} 
           />
           
           {!isGameOver && (
-            <div className="w-full flex flex-col gap-6 relative mb-8 z-[150]" ref={searchRef}>
+            <div className="w-full flex flex-col gap-4 relative mb-6 z-[150]" ref={searchRef}>
               <input 
                 type="text" value={query}
                 onChange={(e) => { setQuery(e.target.value); setShowResults(true); }}
                 placeholder={t('guesser.searchPlaceholder')}
-                className="w-full bg-gray-950 border-2 border-white/5 rounded-2xl px-6 py-4 md:py-6 font-bold focus:border-cyan-500 outline-none text-center text-lg md:text-2xl shadow-inner text-white transition-all duration-300"
+                className="w-full bg-gray-950 border-2 border-white/5 rounded-xl px-4 py-3 md:py-4 font-bold focus:border-cyan-500 outline-none text-center text-base md:text-xl shadow-inner text-white transition-all duration-300"
               />
               {showResults && query.length >= 1 && (
-                <div className="absolute top-full left-0 right-0 mt-3 bg-[#111122] border border-white/10 rounded-2xl shadow-3xl overflow-hidden z-[160] backdrop-blur-xl max-h-60 md:max-h-80 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-[#111122] border border-white/10 rounded-xl shadow-3xl overflow-hidden z-[160] backdrop-blur-xl max-h-48 md:max-h-64 overflow-y-auto">
                   {filteredSongs.length > 0 ? filteredSongs.map((s) => (
-                    <button key={s.id} onClick={() => handleSelectSong(s)} className="w-full text-left px-6 py-4 md:py-6 transition-colors flex justify-between items-center border-b border-white/5 last:border-0 hover:bg-cyan-500/20">
+                    <button key={s.id} onClick={() => handleSelectSong(s)} className="w-full text-left px-4 py-3 md:py-4 transition-colors flex justify-between items-center border-b border-white/5 last:border-0 hover:bg-cyan-500/20">
                       <div className="flex flex-col">
-                        <span className="font-black text-xs md:text-sm uppercase tracking-tight text-white">{s.title}</span>
-                        <span className="text-[9px] md:text-[11px] font-bold opacity-30 uppercase tracking-widest text-gray-400">{s.artist} • {t(`metadata.countries.${s.country}`)}</span>
+                        <span className="font-black text-[10px] md:text-xs uppercase tracking-tight text-white">{s.title}</span>
+                        <span className="text-[8px] md:text-[10px] font-bold opacity-30 uppercase tracking-widest text-gray-400">{s.artist} • {t(`metadata.countries.${s.country}`)}</span>
                       </div>
                     </button>
-                  )) : <div className="px-6 py-6 text-[10px] font-black text-gray-600 uppercase tracking-widest text-center italic">{t('guesser.noResults')}</div>}
+                  )) : <div className="px-4 py-4 text-[9px] font-black text-gray-600 uppercase tracking-widest text-center italic">{t('guesser.noResults')}</div>}
                 </div>
               )}
             </div>
           )}
 
-          <div className="w-full space-y-4 md:space-y-6">
+          <div className="w-full space-y-3 md:space-y-4">
             {!isGameOver && (
               <HintBox key={`active-${activeHintIndex}`} hint={hints[activeHintIndex]} idx={activeHintIndex} isActive={true} songTitle={song.title} />
             )}
@@ -280,6 +280,18 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
           )}
         </>
       )}
+
+      {/* How to Play Section */}
+      <div className="mt-16 pt-12 border-t border-white/5 w-full max-w-2xl mx-auto">
+        <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-white mb-6 text-center">
+          {t('common.howToPlay')}
+        </h2>
+        <div className="bg-white/5 rounded-2xl p-6 md:p-8">
+          <p className="text-gray-400 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-wrap">
+            {t('games.euroguess.rulesLong')}
+          </p>
+        </div>
+      </div>
 
       {isGameOver && showModal && (
         <GameScoreCard 

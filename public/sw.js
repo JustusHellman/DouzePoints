@@ -3,7 +3,7 @@ const ASSETS = [
   '/',
   '/index.html',
   '/favicon.svg',
-  '/og-image.svg'
+  '/og-image.png'
 ];
 
 self.addEventListener('install', (event) => {

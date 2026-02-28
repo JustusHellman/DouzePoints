@@ -190,110 +190,141 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
   const isQualified = completedCount === games.length;
 
   return (
-    <div className="max-w-[1400px] mx-auto pb-12">
+    <div className="max-w-[1200px] mx-auto pb-8">
       {/* Daily Progress Bar */}
-      <div className="px-2 md:px-6 mb-6 md:mb-8">
-        <div className="bg-[#0b0b18]/60 backdrop-blur-xl border border-white/10 rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-pink-500/5 rounded-full blur-3xl -mr-32 -mt-32 transition-opacity group-hover:opacity-20"></div>
+      <div className="px-2 md:px-6 mb-4 md:mb-6">
+        <div className="bg-[#0b0b18]/60 backdrop-blur-xl border border-white/10 rounded-[1.25rem] md:rounded-[1.5rem] p-4 md:p-6 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-48 h-48 bg-pink-500/5 rounded-full blur-3xl -mr-24 -mt-24 transition-opacity group-hover:opacity-20"></div>
           
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 relative z-10">
             <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-[9px] font-black text-pink-500 uppercase tracking-[0.4em]">{t('greenroom.dailyProgress')}</span>
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-[8px] font-black text-pink-500 uppercase tracking-[0.3em]">{t('greenroom.dailyProgress')}</span>
                 {isQualified && (
-                  <span className="bg-green-500/20 text-green-400 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-[0.15em] border border-green-500/30 animate-pulse shadow-[0_0_15px_rgba(34,197,94,0.2)]">
+                  <span className="bg-green-500/20 text-green-400 text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-[0.1em] border border-green-500/30 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.2)]">
                     {t('greenroom.qualified')}
                   </span>
                 )}
               </div>
-              <div className="flex items-end gap-4 md:gap-6 mb-3">
-                <div className="flex items-end gap-2">
-                  <h2 className="text-2xl md:text-4xl font-black italic uppercase tracking-tighter text-white leading-none">
-                    {completedCount}<span className="text-white/20 mx-1">/</span>{games.length}
+              <div className="flex items-end gap-3 md:gap-5 mb-2.5">
+                <div className="flex items-end gap-1.5">
+                  <h2 className="text-xl md:text-3xl font-black italic uppercase tracking-tighter text-white leading-none">
+                    {completedCount}<span className="text-white/20 mx-0.5">/</span>{games.length}
                   </h2>
-                  <span className="text-[8px] md:text-[10px] font-bold text-gray-500 uppercase tracking-widest pb-0.5">{t('greenroom.finishedToday')}</span>
+                  <span className="text-[7px] md:text-[9px] font-bold text-gray-500 uppercase tracking-widest pb-0.5">{t('greenroom.finishedToday')}</span>
                 </div>
-                <div className="flex items-end gap-2 border-l border-white/10 pl-4 md:pl-6">
-                  <h2 className="text-2xl md:text-4xl font-black italic uppercase tracking-tighter text-yellow-500 leading-none">
+                <div className="flex items-end gap-1.5 border-l border-white/10 pl-3 md:pl-5">
+                  <h2 className="text-xl md:text-3xl font-black italic uppercase tracking-tighter text-yellow-500 leading-none">
                     {totalDailyPoints}
                   </h2>
-                  <span className="text-[8px] md:text-[10px] font-bold text-gray-500 uppercase tracking-widest pb-0.5">{t('greenroom.todayScore')}</span>
+                  <span className="text-[7px] md:text-[9px] font-bold text-gray-500 uppercase tracking-widest pb-0.5">{t('greenroom.todayScore')}</span>
                 </div>
               </div>
               
-              <div className="h-2.5 bg-white/5 rounded-full overflow-hidden border border-white/5 p-0.5">
+              <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/5 p-0.5">
                 <div 
-                  className="h-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 rounded-full transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(236,72,153,0.3)]"
+                  className="h-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 rounded-full transition-all duration-1000 ease-out"
                   style={{ width: `${(completedCount / games.length) * 100}%` }}
                 />
               </div>
-
-              {isQualified && (
-                <div className="mt-6 pt-6 border-t border-white/5 flex flex-col items-center animate-in fade-in slide-in-from-top-4 duration-1000">
-                  <CountdownTimer label={t('scorecard.nextGame')} />
-                </div>
-              )}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               {completedCount > 0 && (
                 <button 
                   onClick={() => onShareDaily(games)}
-                  className="flex items-center gap-2.5 px-5 py-3.5 bg-white text-black rounded-xl md:rounded-2xl font-black uppercase text-[9px] md:text-[10px] tracking-widest hover:bg-pink-500 hover:text-white transition-all active:scale-95 shadow-xl"
+                  className="flex items-center gap-2 px-5 py-3 bg-white text-black rounded-xl font-black uppercase text-[9px] tracking-widest hover:bg-pink-500 hover:text-white transition-all active:scale-95 shadow-lg"
                 >
-                  <svg className="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
                   </svg>
                   {t('common.shareDaily')}
                 </button>
+              )}
+
+              {isQualified && (
+                <div className="animate-in fade-in slide-in-from-top-4 duration-1000">
+                  <CountdownTimer label={t('scorecard.nextGame')} />
+                </div>
               )}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-5 px-2 md:px-6">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 px-2 md:px-6">
         {games.map((game) => (
           <Link 
             key={game.path}
             to={game.path}
             aria-label={`${t('common.play')} ${game.title}`}
             className={`
-              group relative flex flex-col min-h-[140px] sm:min-h-[160px] md:min-h-[200px] p-3.5 sm:p-5 md:p-6 rounded-[1.25rem] md:rounded-[2rem] 
+              group relative flex flex-col min-h-[120px] sm:min-h-[140px] md:min-h-[160px] p-3 sm:p-4 md:p-5 rounded-[1rem] md:rounded-[1.5rem] 
               bg-gradient-to-br ${game.styles.bg} border-2 transition-all duration-300 
-              hover:scale-[1.03] active:scale-95 shadow-xl overflow-hidden block
+              hover:scale-[1.02] active:scale-95 shadow-lg overflow-hidden block
               focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/20
               ${game.done ? 'border-green-500/30' : 'border-white/5'}
             `}
           >
-            <div className={`absolute -top-10 -right-10 w-32 h-32 md:w-40 md:h-40 ${game.styles.glow} rounded-full blur-[60px] md:blur-[80px] ${game.done ? 'opacity-5 grayscale' : 'opacity-10 group-hover:opacity-25'} transition-opacity`}></div>
+            <div className={`absolute -top-8 -right-8 w-24 h-24 md:w-32 md:h-32 ${game.styles.glow} rounded-full blur-[40px] md:blur-[60px] ${game.done ? 'opacity-5 grayscale' : 'opacity-10 group-hover:opacity-20'} transition-opacity`}></div>
             
-            <div className="mb-2 relative z-10">
-               <h3 className="text-sm sm:text-base md:text-xl font-black italic uppercase tracking-tighter leading-tight pr-2">
+            <div className="mb-1.5 relative z-10">
+               <h3 className="text-xs sm:text-sm md:text-lg font-black italic uppercase tracking-tighter leading-tight pr-2">
                  {game.title}
                </h3>
             </div>
             
-            <p className={`${game.styles.text} text-[8px] sm:text-[10px] md:text-[11px] font-bold uppercase tracking-widest leading-relaxed mb-6 opacity-60 relative z-10 flex-1`}>
+            <p className={`${game.styles.text} text-[7px] sm:text-[8px] md:text-[9px] font-bold uppercase tracking-widest leading-relaxed mb-4 opacity-60 relative z-10 flex-1`}>
               {game.desc}
             </p>
             
-            <div className="mt-auto flex items-center justify-between relative z-10 pt-2 border-t border-white/5">
-              <div className="flex items-center gap-2">
-                <div className={`px-3 py-1 rounded-full border text-[8px] sm:text-[10px] font-black uppercase tracking-widest transition-all ${game.done ? 'bg-green-500 text-black border-green-400' : 'bg-white/5 border-white/10 text-white group-hover:bg-white/10'}`}>
+            <div className="mt-auto flex items-center justify-between relative z-10 pt-1.5 border-t border-white/5">
+              <div className="flex items-center gap-1.5">
+                <div className={`px-2 py-0.5 rounded-full border text-[7px] sm:text-[8px] font-black uppercase tracking-widest transition-all ${game.done ? 'bg-green-500 text-black border-green-400' : 'bg-white/5 border-white/10 text-white group-hover:bg-white/10'}`}>
                   {game.done ? t('common.qualified') : t('common.play')}
                 </div>
                 {game.done && game.points > 0 && (
-                  <span className="text-[10px] font-black text-yellow-500">+{game.points}</span>
+                  <span className="text-[9px] font-black text-yellow-500">+{game.points}</span>
                 )}
               </div>
               <div className="flex flex-col items-end shrink-0">
-                <span className="text-[7px] sm:text-[8px] font-black text-white/20 uppercase tracking-tighter">{t('common.perfect')}</span>
-                <span className="text-sm sm:text-base font-black leading-none">{game.stat}</span>
+                <span className="text-[6px] sm:text-[7px] font-black text-white/20 uppercase tracking-tighter">{t('common.perfect')}</span>
+                <span className="text-xs sm:text-sm font-black leading-none">{game.stat}</span>
               </div>
             </div>
           </Link>
         ))}
+      </div>
+
+      {/* How to Play General Section */}
+      <div className="mt-12 px-2 md:px-6">
+        <div className="bg-white/5 border border-white/5 rounded-[1.5rem] p-6 md:p-10 text-left relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-pink-500 via-purple-500 to-blue-500"></div>
+          <h2 className="text-2xl md:text-4xl font-black italic uppercase tracking-tighter text-white mb-6 pr-[0.1em]">
+            {t('greenroom.howToPlayTitle')}
+          </h2>
+          <div className="space-y-4 text-gray-400 text-xs md:text-sm font-medium leading-relaxed max-w-3xl">
+            <p>{t('greenroom.howToPlayP1')}</p>
+            <p>{t('greenroom.howToPlayP2')}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* History Section */}
+      <div className="mt-12 px-2 md:px-6">
+        <div className="bg-white/5 border border-white/5 rounded-[1.5rem] p-6 md:p-10 text-left relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-pink-500 via-purple-500 to-blue-500"></div>
+          <h2 className="text-2xl md:text-4xl font-black italic uppercase tracking-tighter text-white mb-6 pr-[0.1em]">
+            {t('greenroom.historyTitle')}
+          </h2>
+          <div className="space-y-4 text-gray-400 text-xs md:text-sm font-medium leading-relaxed max-w-3xl">
+            <p>{t('greenroom.historyP1')}</p>
+            <p>{t('greenroom.historyP2')}</p>
+            <p>{t('greenroom.historyP3')}</p>
+            <p>{t('greenroom.historyP4')}</p>
+            <p>{t('greenroom.historyP5')}</p>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -384,6 +415,12 @@ const App: React.FC = () => {
 
     const twitterUrl = document.querySelector('meta[property="twitter:url"]');
     if (twitterUrl) twitterUrl.setAttribute('content', `https://www.douzepoints.net${location.pathname}`);
+
+    const ogImage = document.querySelector('meta[property="og:image"]');
+    if (ogImage) ogImage.setAttribute('content', 'https://www.douzepoints.net/og-image.png');
+
+    const twitterImage = document.querySelector('meta[property="twitter:image"]');
+    if (twitterImage) twitterImage.setAttribute('content', 'https://www.douzepoints.net/og-image.png');
 
     const metaKeywords = document.querySelector('meta[name="keywords"]');
     if (metaKeywords) {

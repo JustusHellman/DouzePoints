@@ -13,8 +13,8 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ isOpen, onClose,
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[500] flex items-center justify-center p-4 animate-in fade-in duration-300">
-      <div className="bg-[#0b0b18] border border-white/10 rounded-[2.5rem] p-8 max-w-sm w-full relative shadow-3xl border-t-cyan-500/30 overflow-hidden">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[500] flex items-start justify-center p-4 pt-16 md:pt-24 animate-in fade-in duration-300">
+      <div className="bg-[#0b0b18] border border-white/10 rounded-[2.5rem] p-8 max-w-sm w-full relative shadow-3xl border-t-cyan-500/30 overflow-hidden animate-in slide-in-from-top-8 duration-500">
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl"></div>
         
         <button 

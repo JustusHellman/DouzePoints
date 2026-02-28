@@ -24,16 +24,16 @@ const ComparisonBox = ({ label, value, status, arrow, delay }: { label: string, 
   }, [delay]);
 
   const colorClasses = {
-    green: 'bg-green-600 border-green-500 shadow-[0_0_20px_rgba(22,163,74,0.3)]',
-    yellow: 'bg-yellow-600 border-yellow-500 shadow-[0_0_20px_rgba(202,138,4,0.3)]',
+    green: 'bg-green-600 border-green-500 shadow-[0_0_15px_rgba(22,163,74,0.3)]',
+    yellow: 'bg-yellow-600 border-yellow-500 shadow-[0_0_15px_rgba(202,138,4,0.3)]',
     gray: 'bg-gray-800 border-gray-700 opacity-60'
   };
 
   return (
-    <div className={`relative flex flex-col items-center justify-center p-1.5 md:p-3 rounded-xl border-2 transition-all duration-700 w-full aspect-[1.6/1] text-center transform-gpu ${revealed ? `${colorClasses[status]} scale-100 rotate-0 opacity-100` : 'bg-gray-900 border-white/5 scale-75 opacity-0'}`}>
-      <span className="text-[7px] md:text-[9px] font-black uppercase tracking-widest text-white/50 mb-0.5 md:mb-1.5 leading-none italic">{label}</span>
-      <div className={`flex items-center gap-0.5 font-black leading-tight w-full justify-center px-0.5`}>
-        <span className="text-white drop-shadow-md break-words line-clamp-2 text-[9px] sm:text-[12px] md:text-[14px] lg:text-[16px] xl:text-[18px] leading-tight hyphens-auto">{value}</span>
+    <div className={`relative flex flex-col items-center justify-center py-1.5 md:py-3 px-1 rounded-lg md:rounded-xl border-2 transition-all duration-700 w-full text-center transform-gpu ${revealed ? `${colorClasses[status]} scale-100 rotate-0 opacity-100` : 'bg-gray-900 border-white/5 scale-75 opacity-0'}`}>
+      <span className="text-[7px] md:text-[9px] font-black uppercase tracking-widest text-white/40 mb-0.5 leading-none italic">{label}</span>
+      <div className={`flex items-center gap-0.5 font-black leading-tight w-full justify-center`}>
+        <span className="text-white drop-shadow-md break-words line-clamp-2 text-[10px] sm:text-[12px] md:text-[15px] lg:text-[18px] leading-tight hyphens-auto">{value}</span>
         {revealed && arrow === 'up' && <svg className="w-2.5 h-2.5 md:w-4 md:h-4 text-white animate-bounce shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"/></svg>}
         {revealed && arrow === 'down' && <svg className="w-2.5 h-2.5 md:w-4 md:h-4 text-white animate-bounce shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 112 0v7.586l2.293-2.293a1 1 0 011.414 0z"/></svg>}
       </div>
@@ -187,61 +187,61 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
       {(!isGameOver || !showModal) && (
         <>
           <div className="flex items-center gap-3 mb-1">
-            <h1 className="text-3xl md:text-5xl font-black bg-gradient-to-r from-emerald-400 to-green-600 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroArena</h1>
+            <h1 className="text-2xl md:text-4xl font-black bg-gradient-to-r from-emerald-400 to-green-600 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroArena</h1>
             <button 
               onClick={() => setShowHowToPlay(true)}
-              className="w-6 h-6 md:w-8 md:h-8 rounded-full border border-white/20 text-[10px] md:text-xs flex items-center justify-center font-bold text-gray-500 hover:text-white hover:border-white transition-all active:scale-90"
+              className="w-5 h-5 md:w-7 md:h-7 rounded-full border border-white/20 text-[9px] md:text-xs flex items-center justify-center font-bold text-gray-500 hover:text-white hover:border-white transition-all active:scale-90"
               aria-label="How to play"
             >
               ?
             </button>
           </div>
-          <p className="text-[9px] md:text-[11px] text-gray-500 font-black uppercase tracking-[0.3em] mb-8 pr-[0.2em] italic">{t('arena.analyze')}</p>
+          <p className="text-[8px] md:text-[10px] text-gray-500 font-black uppercase tracking-[0.3em] mb-6 pr-[0.2em] italic">{t('arena.analyze')}</p>
 
           <HowToPlayModal 
             isOpen={showHowToPlay} 
             onClose={() => setShowHowToPlay(false)} 
             title="EuroArena" 
-            rules={t('games.euroarena.rules')} 
+            rules={t('games.euroarena.rulesShort')} 
           />
 
           {!isGameOver && (
-            <div className="w-full relative mb-10 z-[150]" ref={searchRef}>
+            <div className="w-full relative mb-8 z-[150]" ref={searchRef}>
                <input 
                   type="text" value={query}
                   onChange={(e) => { setQuery(e.target.value); setShowResults(true); }}
                   placeholder={t('guesser.searchPlaceholder')}
-                  className="w-full bg-gray-950 border-2 border-white/5 rounded-2xl px-6 py-5 md:py-7 font-bold focus:border-emerald-500 outline-none text-center text-lg md:text-2xl shadow-inner text-white"
+                  className="w-full bg-gray-950 border-2 border-white/5 rounded-xl px-4 py-3 md:py-4 font-bold focus:border-emerald-500 outline-none text-center text-base md:text-xl shadow-inner text-white"
                 />
                 {showResults && query.length >= 1 && (
-                  <div className="absolute top-full left-0 right-0 mt-3 bg-gray-950 border border-white/10 rounded-2xl shadow-3xl overflow-hidden backdrop-blur-xl max-h-60 md:max-h-80 overflow-y-auto z-[160]">
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-gray-950 border border-white/10 rounded-xl shadow-3xl overflow-hidden backdrop-blur-xl max-h-48 md:max-h-64 overflow-y-auto z-[160]">
                     {filteredData.length > 0 ? filteredData.map((s) => (
-                        <button key={s.id} onClick={() => handleSelect(s)} className="w-full text-left px-6 py-4 md:py-6 transition-colors flex justify-between items-center border-b border-white/5 last:border-0 hover:bg-emerald-500/10">
+                        <button key={s.id} onClick={() => handleSelect(s)} className="w-full text-left px-4 py-3 md:py-4 transition-colors flex justify-between items-center border-b border-white/5 last:border-0 hover:bg-emerald-500/10">
                           <div className="flex flex-col">
-                             <span className="font-black text-xs md:text-sm uppercase text-white leading-none mb-1">{s.title}</span>
-                             <span className="text-[10px] md:text-[12px] font-bold text-gray-500 uppercase">{s.artist} • {t(`metadata.countries.${s.country}`)}</span>
+                             <span className="font-black text-[10px] md:text-xs uppercase text-white leading-none mb-1">{s.title}</span>
+                             <span className="text-[9px] md:text-[11px] font-bold text-gray-500 uppercase">{s.artist} • {t(`metadata.countries.${s.country}`)}</span>
                           </div>
                         </button>
-                    )) : <div className="px-6 py-6 text-[10px] font-black text-gray-600 uppercase text-center italic">{t('guesser.noResults')}</div>}
+                    )) : <div className="px-4 py-4 text-[9px] font-black text-gray-600 uppercase text-center italic">{t('guesser.noResults')}</div>}
                   </div>
                 )}
             </div>
           )}
 
-          <div className="w-full space-y-6 md:space-y-10">
+          <div className="w-full space-y-3 md:space-y-4">
             {guesses.map((g, idx) => (
-              <div key={idx} className="bg-white/5 p-4 md:p-8 rounded-3xl md:rounded-[3rem] border border-white/5 animate-in slide-in-from-top-6 duration-700 shadow-2xl relative overflow-hidden">
-                 <div className="absolute top-0 left-0 w-1 md:w-2 h-full bg-emerald-500"></div>
-                 <div className="flex justify-between items-center mb-4 md:mb-8 px-2">
+              <div key={idx} className="bg-white/5 p-2.5 md:p-4 rounded-xl md:rounded-[1.5rem] border border-white/5 animate-in slide-in-from-top-6 duration-700 shadow-2xl relative overflow-hidden">
+                 <div className="absolute top-0 left-0 w-1 md:w-1.5 h-full bg-emerald-500"></div>
+                 <div className="flex justify-between items-center mb-2 md:mb-3 px-1">
                     <div className="flex flex-col">
-                       <span className="text-[14px] md:text-2xl font-black text-white uppercase tracking-tighter leading-tight break-words">{g.title}</span>
-                       <span className="text-[9px] md:text-sm font-bold text-gray-500 uppercase break-words">{g.artist}</span>
+                       <span className="text-[11px] md:text-lg font-black text-white uppercase tracking-tighter leading-tight break-words">{g.title}</span>
+                       <span className="text-[7px] md:text-[10px] font-bold text-gray-500 uppercase break-words">{g.artist}</span>
                     </div>
-                    <div className="text-[10px] md:text-[12px] font-black text-emerald-500 px-4 py-1.5 md:py-2.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 shrink-0">
+                    <div className="text-[8px] md:text-[10px] font-black text-emerald-500 px-2.5 py-1 md:py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 shrink-0">
                       {guesses.length - idx} / 7
                     </div>
                  </div>
-                 <div className="grid grid-cols-3 gap-1 sm:gap-4 md:gap-6">
+                 <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-3">
                     <ComparisonBox label={t('arena.labels.year')} value={g.year} status={getStatus('year', g.year, g)} arrow={g.year < target.year ? 'up' : g.year > target.year ? 'down' : undefined} delay={idx === 0 ? 100 : 0} />
                     <ComparisonBox label={t('arena.labels.rank')} value={`#${g.placing}`} status={getStatus('placing', g.placing, g)} arrow={g.placing > target.placing ? 'up' : g.placing < target.placing ? 'down' : undefined} delay={idx === 0 ? 250 : 0} />
                     <ComparisonBox label={t('arena.labels.country')} value={t(`metadata.countries.${g.country}`)} status={getStatus('country', g.country, g)} delay={idx === 0 ? 400 : 0} />
@@ -265,6 +265,18 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
           )}
         </>
       )}
+
+      {/* How to Play Section */}
+      <div className="mt-16 pt-12 border-t border-white/5 w-full max-w-2xl mx-auto">
+        <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-white mb-6 text-center">
+          {t('common.howToPlay')}
+        </h2>
+        <div className="bg-white/5 rounded-2xl p-6 md:p-8">
+          <p className="text-gray-400 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-wrap">
+            {t('games.euroarena.rulesLong')}
+          </p>
+        </div>
+      </div>
 
       {isGameOver && showModal && (
         <GameScoreCard 

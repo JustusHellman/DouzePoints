@@ -36,16 +36,27 @@ export const getDailyGameState = (config: any, today: string) => {
 
 export const RANK_TIERS = [
   { threshold: 0, title: "First-Time Voter" },
+  { threshold: 12, title: "Greenroom Guest" },
   { threshold: 24, title: "Backing Vocalist" },
+  { threshold: 42, title: "Jury Member" },
   { threshold: 60, title: "National Finalist" },
+  { threshold: 80, title: "Televote Favorite" },
+  { threshold: 100, title: "National Representative" },
   { threshold: 120, title: "Semi-Final Qualifier" },
+  { threshold: 180, title: "Press Center Darling" },
   { threshold: 250, title: "Grand Finalist" },
+  { threshold: 375, title: "Fan Favorite" },
   { threshold: 500, title: "Top 10 Contender" },
+  { threshold: 750, title: "Dark Horse" },
   { threshold: 1000, title: "Podium Finish" },
-  { threshold: 2500, title: "Winner" },
-  { threshold: 5000, title: "Multi-Winner" },
-  { threshold: 8500, title: "Hall of Famer" },
-  { threshold: 12000, title: "Eurovision Legend" }
+  { threshold: 1750, title: "Chart Topper" },
+  { threshold: 2500, title: "Silver Medalist" },
+  { threshold: 3750, title: "Winner" },
+  { threshold: 5500, title: "Double Winner" },
+  { threshold: 7500, title: "Multi-Winner" },
+  { threshold: 9500, title: "Hall of Famer" },
+  { threshold: 11500, title: "Iconic Entry" },
+  { threshold: 14000, title: "Eurovision Legend" }
 ];
 
 const emptyStats = (): DetailedStats => ({ 

@@ -66,7 +66,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({ games, onClose
       text += `✨ Grand Final Qualified ✨\n`;
     }
     
-    text += `\ndouzepoints.net`;
+    text += `\nhttps://www.douzepoints.net`;
     return text;
   }, [games, today, completedCount, totalCount, totalDailyPoints]);
 
@@ -230,7 +230,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({ games, onClose
     ctx.textAlign = 'center';
     ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
     ctx.font = '900 35px Montserrat, sans-serif';
-    ctx.fillText('DOUZEPOINTS.NET', canvas.width / 2, 1280);
+    ctx.fillText('HTTPS://WWW.DOUZEPOINTS.NET', canvas.width / 2, 1280);
     ctx.restore();
   }, [games, confetti, today, completedCount, totalCount, totalDailyPoints, currentRank, roundRect]);
 

@@ -35,38 +35,53 @@ export const en: TranslationSchema = {
     finishedToday: "Finished Today",
     statsButton: "Stats",
     careerStats: "Stats",
-    todayScore: "Today's Score"
+    todayScore: "Today's Score",
+    howToPlayTitle: "How to Play Douze Points",
+    howToPlayP1: "Douze Points is your daily Eurovision challenge hub. Every day, six unique games are released to test your knowledge of the contest's history, artists, and lyrics. Your goal is to complete each challenge with as few mistakes as possible to earn the maximum score of 12 points—the legendary 'Douze Points'!",
+    howToPlayP2: "As you accumulate points across all games, you will climb the global fandom ranks, evolving from a 'First-Time Voter' to a true 'Eurovision Legend'. You can track your daily progress, career milestones, and current rank by clicking the 'Stats' button in the header at any time. Good luck, and may the best fan win!",
+    historyTitle: "The Legacy of Eurovision",
+    historyP1: "The Eurovision Song Contest began in 1956 as a technical experiment in live, simultaneous, transnational broadcasting. Since then, it has grown into one of the world's most-watched non-sporting events, reaching hundreds of millions of viewers across the globe. It is a unique celebration of music, diversity, and international cooperation.",
+    historyP2: "From the early days of orchestral ballads to the modern era of high-octane pop, rock, and experimental performance, Eurovision has always been a mirror of European culture and identity. It has launched the careers of global icons like ABBA and Celine Dion, and continues to be a platform for artistic innovation and cultural exchange every single year.",
+    historyP3: "At Douze Points, we celebrate this rich history through our daily challenges. Whether you're a casual viewer or a hardcore superfan who knows every entry since Lugano, our games are designed to test your knowledge and passion for the contest. Join us every day to prove your expertise, discover new favorite songs, and climb the ranks of the Eurovision fandom.",
+    historyP4: "As the contest continues to evolve with new technologies and musical trends, its core mission remains the same: to bring people together through the power of music. From the introduction of televoting to the spectacular stage designs of the 21st century, Eurovision has always pushed the boundaries of what is possible in live entertainment. We are proud to be a part of this vibrant community and to provide a space where fans can engage with the contest's legacy in a fun and interactive way.",
+    historyP5: "Beyond the competition, Eurovision has fostered a massive global community of fans who share a deep appreciation for the diverse musical styles and cultural expressions showcased on stage. This community is the heart of the contest, and at Douze Points, we aim to provide a platform that honors this spirit. Our mission is to keep the Eurovision magic alive all year round, offering a space where fans can test their knowledge, celebrate their favorite entries, and connect with the history of the world's most beloved song contest."
   },
   games: {
     eurosong: { 
       title: "EuroSong", 
       desc: "Daily Eurovision song title challenge.",
-      rules: "Guess the hidden Eurovision song title in 6 tries. You can enter any combination of letters - it doesn't even have to be a real word! The color of the tiles will change to show how close your guess was to the answer.\n\n🟩: Correct letter & position\n🟨: Correct letter, wrong position\n⬛: Wrong letter"
+      rulesShort: "Identify the hidden Eurovision song title in 6 attempts. Tiles change color: Green for correct spot, Yellow for wrong spot, and Gray if the letter isn't in the title.",
+      rulesLong: "EuroSong is a word-guessing game dedicated to the vast catalog of Eurovision song titles. Your goal is to identify a specific song title from the contest's history within six attempts.\n\nHow to play:\n• Type any combination of letters to form a guess.\n• After each guess, the color of the tiles will change to provide feedback:\n  - 🟩 (Green): The letter is in the title and in the correct spot.\n  - 🟨 (Yellow): The letter is in the title but in the wrong spot.\n  - ⬛ (Gray): The letter is not in the title at all.\n• Use the feedback from each guess to narrow down the possibilities.\n• The game features titles from all eras of Eurovision, from the 1950s to the present day."
     },
     euroartist: { 
       title: "EuroArtist", 
       desc: "Daily Eurovision artist guessing game.",
-      rules: "Guess the hidden Eurovision artist in 6 tries. You can enter any combination of letters - it doesn't even have to be a real word! The color of the tiles will change to show how close your guess was to the answer.\n\n🟩: Correct letter & position\n🟨: Correct letter, wrong position\n⬛: Wrong letter"
+      rulesShort: "Guess the name of the Eurovision artist or group in 6 tries. Use the color-coded feedback to find the correct letters and their positions.",
+      rulesLong: "EuroArtist challenges you to identify the famous performers and groups who have graced the Eurovision stage. From legendary winners to cult favorites, can you guess the daily artist in six tries?\n\nHow to play:\n• Enter the name of an artist or group as your guess.\n• The tiles will change color based on how close your guess is to the target name:\n  - 🟩 (Green): Correct letter in the correct position.\n  - 🟨 (Yellow): Correct letter in the wrong position.\n  - ⬛ (Gray): This letter is not part of the artist's name.\n• Remember that artist names can include spaces and special characters, which are often fixed on the board to help you."
     },
     eurorefrain: {
       title: "EuroRefrain",
       desc: "Connect 4 words from a lyric hook.",
-      rules: "Find groups of four words that form a sequential hook or refrain from a specific Eurovision song. Select four words and tap 'Submit'. You have 6 mistakes allowed to identify all 4 songs!"
+      rulesShort: "Connect 16 words into four groups of four, each belonging to a different Eurovision song's refrain. You have 6 mistakes allowed to solve the grid.",
+      rulesLong: "EuroRefrain tests your memory for the most iconic lyrics in Eurovision history. You are presented with a grid of 16 words taken from four different song choruses (refrains).\n\nHow to play:\n• Your task is to group these 16 words into four sets of four, where each set belongs to a single song's refrain.\n• Select four words that you believe belong together and tap 'Submit'.\n• If correct, the words will be cleared from the board and the song title will be revealed.\n• If incorrect, it counts as a mistake. You are allowed up to 6 mistakes before the game ends.\n• The words are carefully chosen to be challenging, often featuring common words that could belong to multiple songs!"
     },
     eurolinks: { 
       title: "EuroLinks", 
       desc: "Connect 4 related Eurovision items.",
-      rules: "Find groups of four items that share a common song contest theme. Select four items and tap 'Submit' to check your guess. You have 6 mistakes allowed to find all 4 categories!"
+      rulesShort: "Group 16 Eurovision-related items into four categories of four based on a shared connection. Be careful—you only have 6 mistakes allowed!",
+      rulesLong: "EuroLinks is a game of logic and Eurovision trivia. You must find the hidden connections between 16 different items related to the contest.\n\nHow to play:\n• The grid contains 16 items that can be grouped into four categories of four items each.\n• Categories can range from 'Winners from the 90s' to 'Countries that have never won' or 'Artists who competed multiple times'.\n• Select four items and tap 'Submit' to check if they share a category.\n• You have 6 mistakes allowed to solve the entire puzzle.\n• Each category has a difficulty level, ranging from straightforward to expert-level trivia!"
     },
     euroguess: { 
       title: "EuroGuess", 
       desc: "Identify a mystery Eurovision entry.",
-      rules: "Identify the mystery contest entry using up to 6 hints. Each incorrect guess reveals a new, more specific clue (Year, Country, Genre, etc.). Guessing correctly early yields more points!"
+      rulesShort: "Identify the mystery Eurovision entry using up to 6 increasingly specific hints. The fewer hints you reveal before guessing correctly, the more points you earn.",
+      rulesLong: "EuroGuess is a detective-style game where you identify a mystery Eurovision entry using a series of clues. The challenge is to guess the entry with as few hints as possible.\n\nHow to play:\n• You start with one initial hint (usually the year).\n• If your guess is incorrect, a new, more specific hint is revealed (Country, Genre, Placing, etc.).\n• You have a total of 6 attempts to identify the entry correctly.\n• Use the search bar to find and select your guess from our comprehensive database of Eurovision entries.\n• Scoring is based on how many hints you needed—guessing early earns you the maximum points!"
     },
     euroarena: { 
       title: "EuroArena", 
       desc: "Compare stats to find the target entry.",
-      rules: "Compare your guesses against a mystery Eurovision target entry. Use the attribute markers (Year, Rank, Country, Genre, Size, Sex) to narrow your search.\n\n🟩: Perfect Match\n🟨: Close Match (near year/rank, same region or genre group)\n⬛: No Match"
+      rulesShort: "Find the target Eurovision entry by comparing your guesses against its attributes (Year, Rank, Country, Genre). Use the color markers and arrows to narrow your search in 7 attempts.",
+      rulesLong: "EuroArena is a data-driven guessing game where you use comparative statistics to find a hidden Eurovision entry. It's a test of your knowledge of contest results and artist attributes.\n\nHow to play:\n• Enter a guess to see how its attributes compare to the target entry.\n• Attributes include Year, Rank, Country, Genre, and Artist Size/Sex.\n• Feedback markers will guide your next move:\n  - 🟩 (Green): A perfect match for that attribute.\n  - 🟨 (Yellow): A close match (e.g., the year is within 3 years, or the country is in the same region).\n  - ⬛ (Gray): No match for this attribute.\n• Arrows next to Year and Rank will tell you if the target value is higher or lower than your guess.\n• You have 7 attempts to find the correct entry."
     }
   },
   wordGame: {
@@ -235,15 +250,26 @@ export const en: TranslationSchema = {
   },
   ranks: {
     "First-Time Voter": "First-Time Voter",
+    "Greenroom Guest": "Greenroom Guest",
     "Backing Vocalist": "Backing Vocalist",
+    "Jury Member": "Jury Member",
     "National Finalist": "National Finalist",
+    "Televote Favorite": "Televote Favorite",
+    "National Representative": "National Representative",
     "Semi-Final Qualifier": "Semi-Final Qualifier",
+    "Press Center Darling": "Press Center Darling",
     "Grand Finalist": "Grand Finalist",
+    "Fan Favorite": "Fan Favorite",
     "Top 10 Contender": "Top 10 Contender",
+    "Dark Horse": "Dark Horse",
     "Podium Finish": "Podium Finish",
+    "Chart Topper": "Chart Topper",
+    "Silver Medalist": "Silver Medalist",
     "Winner": "Winner",
+    "Double Winner": "Double Winner",
     "Multi-Winner": "Multi-Winner",
     "Hall of Famer": "Hall of Famer",
+    "Iconic Entry": "Iconic Entry",
     "Eurovision Legend": "Eurovision Legend"
   },
   metadata: {
@@ -256,7 +282,10 @@ export const en: TranslationSchema = {
       "Serbia": "Serbia", "Australia": "Australia", "Greece": "Greece", "Moldova": "Moldova", "Belgium": "Belgium",
       "Poland": "Poland", "Slovenia": "Slovenia", "Ireland": "Ireland", "Luxembourg": "Luxembourg", "Albania": "Albania",
       "Bulgaria": "Bulgaria", "Estonia": "Estonia", "Russia": "Russia", "Turkey": "Turkey", "Bosnia & Herzegovina": "Bosnia & Herzegovina",
-      "Malta": "Malta", "Monaco": "Monaco", "Latvia": "Latvia", "Hungary": "Hungary", "San Marino": "San Marino"
+      "Malta": "Malta", "Monaco": "Monaco", "Latvia": "Latvia", "Hungary": "Hungary", "San Marino": "San Marino",
+      "Lithuania": "Lithuania", "Montenegro": "Montenegro", "North Macedonia": "North Macedonia", "Czechia": "Czechia",
+      "Romania": "Romania", "Slovakia": "Slovakia", "Georgia": "Georgia", "Armenia": "Armenia",
+      "Andorra": "Andorra", "Morocco": "Morocco", "Belarus": "Belarus"
     },
     genres: {
       "Drum and Bass": "Drum and Bass", "Opera": "Opera", "Drum and Bass / Opera": "Drum and Bass / Opera",
@@ -271,7 +300,8 @@ export const en: TranslationSchema = {
       "Folk-Dance": "Folk-Dance", "Nu-Metal": "Nu-Metal", "Ethno-Hip-Hop": "Ethno-Hip-Hop", "Punk": "Punk",
       "Ska": "Ska", "Hardcore": "Hardcore", "Folk-Rap": "Folk-Rap", "Yé-yé": "Yé-yé", "Schlager": "Schlager",
       "Neoclassical": "Neoclassical", "Folk Ballad": "Folk Ballad", "Pop Rock": "Pop Rock", "Soft Rock": "Soft Rock",
-      "Celtic Folk": "Celtic Folk", "Balkan Ballad": "Balkan Ballad", "Disco": "Disco", "Art Pop / Rock": "Art Pop / Rock", "Chanson / Pop Ballad": "Chanson / Pop Ballad"
+      "Celtic Folk": "Celtic Folk", "Balkan Ballad": "Balkan Ballad", "Disco": "Disco", "Art Pop / Rock": "Art Pop / Rock", "Chanson / Pop Ballad": "Chanson / Pop Ballad",
+      "Operatic Pop": "Operatic Pop", "Indie Rock": "Indie Rock", "Avant-Garde": "Avant-Garde", "Country": "Country"
     },
     sex: {
       "Male": "Male", "Female": "Female", "Mixed": "Mixed", "Other": "Other"
