@@ -184,7 +184,13 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
 
   return (
     <div className="flex flex-col items-center pt-6 pb-12 px-1 sm:px-4 w-full max-w-2xl mx-auto">
-      {(!isGameOver || !showModal) && (
+      {isGameOver && showModal ? (
+        <GameScoreCard 
+          won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
+          historyEmoji={historyEmoji} gameTitle={t('games.euroarena.title')} song={target} attempts={guesses.length} maxAttempts={MAX_GUESSES}
+          onClose={() => setShowModal(false)} onReturn={onReturn}
+        />
+      ) : (
         <>
           <div className="flex items-center gap-3 mb-1">
             <h1 className="text-2xl md:text-4xl font-black bg-gradient-to-r from-emerald-400 to-green-600 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroArena</h1>
@@ -263,27 +269,19 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
                </button>
             </div>
           )}
+
+          {/* How to Play Section */}
+          <div className="mt-16 pt-12 border-t border-white/5 w-full max-w-2xl mx-auto">
+            <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-white mb-6 text-center">
+              {t('common.howToPlay')}
+            </h2>
+            <div className="bg-white/5 rounded-2xl p-6 md:p-8">
+              <p className="text-gray-400 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-wrap">
+                {t('games.euroarena.rulesLong')}
+              </p>
+            </div>
+          </div>
         </>
-      )}
-
-      {/* How to Play Section */}
-      <div className="mt-16 pt-12 border-t border-white/5 w-full max-w-2xl mx-auto">
-        <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-white mb-6 text-center">
-          {t('common.howToPlay')}
-        </h2>
-        <div className="bg-white/5 rounded-2xl p-6 md:p-8">
-          <p className="text-gray-400 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-wrap">
-            {t('games.euroarena.rulesLong')}
-          </p>
-        </div>
-      </div>
-
-      {isGameOver && showModal && (
-        <GameScoreCard 
-          won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
-          historyEmoji={historyEmoji} gameTitle={t('games.euroarena.title')} song={target} attempts={guesses.length} maxAttempts={MAX_GUESSES}
-          onClose={() => setShowModal(false)} onReturn={onReturn}
-        />
       )}
     </div>
   );

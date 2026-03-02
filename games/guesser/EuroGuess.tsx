@@ -199,10 +199,10 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
 
   const hints = useMemo(() => [
     { label: t('guesser.hintLabels.year'), value: song.year },
-    { label: t('guesser.hintLabels.country'), value: t(`metadata.countries.${song.country}`) },
-    { label: t('guesser.hintLabels.genre'), value: song.genre.split(' / ').map(g => t(`metadata.genres.${g}`) || g).join(' / ') },
     { label: t('guesser.hintLabels.placing'), value: song.placing },
+    { label: t('guesser.hintLabels.genre'), value: song.genre.split(' / ').map(g => t(`metadata.genres.${g}`) || g).join(' / ') },
     { label: t('guesser.hintLabels.artist'), value: getMemberLabel(song.members) },
+    { label: t('guesser.hintLabels.country'), value: t(`metadata.countries.${song.country}`) },
     { label: t('guesser.hintLabels.fact'), value: song.fact }
   ], [t, song]);
 
@@ -216,7 +216,13 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
 
   return (
     <div className="flex flex-col items-center pt-6 pb-12 px-1 sm:px-4 w-full max-w-2xl mx-auto">
-      {(!isGameOver || !showModal) && (
+      {isGameOver && showModal ? (
+        <GameScoreCard 
+          won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
+          historyEmoji={historyEmoji} gameTitle="EuroGuess" song={song} attempts={attempts.length} maxAttempts={6}
+          onClose={() => setShowModal(false)} onReturn={onReturn}
+        />
+      ) : (
         <>
           <div className="flex items-center gap-3 mb-4">
             <h1 className="text-2xl md:text-4xl font-black bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroGuess</h1>
@@ -278,27 +284,19 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
                </button>
             </div>
           )}
+
+          {/* How to Play Section */}
+          <div className="mt-16 pt-12 border-t border-white/5 w-full max-w-2xl mx-auto">
+            <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-white mb-6 text-center">
+              {t('common.howToPlay')}
+            </h2>
+            <div className="bg-white/5 rounded-2xl p-6 md:p-8">
+              <p className="text-gray-400 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-wrap">
+                {t('games.euroguess.rulesLong')}
+              </p>
+            </div>
+          </div>
         </>
-      )}
-
-      {/* How to Play Section */}
-      <div className="mt-16 pt-12 border-t border-white/5 w-full max-w-2xl mx-auto">
-        <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-white mb-6 text-center">
-          {t('common.howToPlay')}
-        </h2>
-        <div className="bg-white/5 rounded-2xl p-6 md:p-8">
-          <p className="text-gray-400 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-wrap">
-            {t('games.euroguess.rulesLong')}
-          </p>
-        </div>
-      </div>
-
-      {isGameOver && showModal && (
-        <GameScoreCard 
-          won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
-          historyEmoji={historyEmoji} gameTitle="EuroGuess" song={song} attempts={attempts.length} maxAttempts={6}
-          onClose={() => setShowModal(false)} onReturn={onReturn}
-        />
       )}
 
       <style>{`

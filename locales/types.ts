@@ -217,6 +217,19 @@ export interface TranslationSchema {
       p1: string;
     };
   };
+  terms: {
+    lastUpdated: string;
+    title: string;
+    acceptance: { title: string; p1: string };
+    description: { title: string; p1: string };
+    ip: { title: string; p1: string; p2: string };
+    conduct: { title: string; p1: string; items: string[] };
+    disclaimer: { title: string; p1: string };
+    limitation: { title: string; p1: string };
+    governingLaw: { title: string; p1: string };
+    changes: { title: string; p1: string };
+    contact: { title: string; p1: string };
+  };
   ranks: Record<string, string>;
   metadata: {
     countries: Record<string, string>;

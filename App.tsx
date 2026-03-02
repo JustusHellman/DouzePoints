@@ -14,6 +14,7 @@ import { RankUpCelebration } from './components/RankUpCelebration.tsx';
 import { getDayString } from './utils/daily.ts';
 import { useTranslation } from './context/LanguageContext.tsx';
 import { PrivacyPolicy } from './components/PrivacyPolicy.tsx';
+import TermsOfService from './components/TermsOfService.tsx';
 import { CountdownTimer } from './components/CountdownTimer.tsx';
 
 const ScrollToTop = () => {
@@ -567,6 +568,7 @@ const App: React.FC = () => {
           <Route path="/euro-guess" element={<EuroGuess onReturn={handleReturn} data={MASTER_DATA} />} />
           <Route path="/euro-arena" element={<EuroArena onReturn={handleReturn} data={MASTER_DATA} />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
@@ -587,6 +589,7 @@ const App: React.FC = () => {
           <div className="flex gap-8 text-[9px] font-black uppercase tracking-widest text-gray-500">
             <Link to="/privacy" className="hover:text-white transition-colors">{t('cookies.privacyPolicy')}</Link>
             <a href="mailto:douzepointsgame@gmail.com" className="hover:text-white transition-colors">Contact</a>
+            <Link to="/terms" className="hover:text-white transition-colors">{t('terms.title')}</Link>
           </div>
         </div>
       </footer>

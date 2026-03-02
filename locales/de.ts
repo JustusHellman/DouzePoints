@@ -50,37 +50,37 @@ export const de: TranslationSchema = {
     eurosong: { 
       title: "EuroSong", 
       desc: "Tägliche Eurovision Titel-Herausforderung.",
-      rulesShort: "Identifiziere den versteckten Eurovision-Songtitel in 6 Versuchen. Die Kacheln ändern ihre Farbe: Grün für die richtige Stelle, Gelb für die falsche Stelle und Grau, wenn der Buchstabe nicht im Titel enthalten ist.",
+      rulesShort: "Identifiziere den versteckten Eurovision-Songtitel in 6 Versuchen. Die Kacheln ändern ihre Farbe:\n🟩 Richtige Stelle\n🟨 Falsche Stelle\n⬛ Nicht im Titel",
       rulesLong: "EuroSong ist ein Worträtselspiel, das dem riesigen Katalog der Eurovision-Songtitel gewidmet ist. Ihr Ziel ist es, einen bestimmten Songtitel aus der Geschichte des Wettbewerbs innerhalb von sechs Versuchen zu identifizieren.\n\nSpielanleitung:\n• Geben Sie eine beliebige Buchstabenkombination ein, um einen Tipp abzugeben.\n• Nach jedem Tipp ändert sich die Farbe der Kacheln, um Feedback zu geben:\n  - 🟩 (Grün): Der Buchstabe ist im Titel und an der richtigen Stelle.\n  - 🟨 (Gelb): Der Buchstabe ist im Titel, aber an der falschen Stelle.\n  - ⬛ (Grau): Der Buchstabe ist überhaupt nicht im Titel enthalten.\n• Nutzen Sie das Feedback jedes Tipps, um die Möglichkeiten einzugrenzen.\n• Das Spiel bietet Titel aus allen Epochen der Eurovision, von den 1950er Jahren bis heute."
     },
     euroartist: { 
       title: "EuroArtist", 
       desc: "Tägliche ESC Künstler-Herausforderung.",
-      rulesShort: "Errate den Namen des Eurovision-Künstlers oder der Gruppe in 6 Versuchen. Nutze das farbcodierte Feedback, um die richtigen Buchstaben und ihre Positionen zu finden.",
+      rulesShort: "Errate den Namen des Eurovision-Künstlers oder der Gruppe in 6 Versuchen. Die Kacheln ändern ihre Farbe:\n🟩 Richtige Stelle\n🟨 Falsche Stelle\n⬛ Nicht im Namen",
       rulesLong: "EuroArtist fordert Sie heraus, die berühmten Interpreten und Gruppen zu identifizieren, die die Eurovision-Bühne beehrt haben. Von legendären Gewinnern bis hin zu Kult-Favoriten – können Sie den täglichen Künstler in sechs Versuchen erraten?\n\nSpielanleitung:\n• Geben Sie den Namen eines Künstlers oder einer Gruppe als Tipp ein.\n• Die Kacheln ändern ihre Farbe, je nachdem, wie nah Ihr Tipp am Zielnamen liegt:\n  - 🟩 (Grün): Richtiger Buchstabe an der richtigen Position.\n  - 🟨 (Gelb): Richtiger Buchstabe an der falschen Position.\n  - ⬛ (Grau): Dieser Buchstabe ist nicht Teil des Künstlernamens.\n• Denken Sie daran, dass Künstlernamen Leerzeichen und Sonderzeichen enthalten können, die oft auf dem Spielfeld fixiert sind, um Ihnen zu helfen."
     },
     eurorefrain: {
       title: "EuroRefrain",
       desc: "Verbinde 4 Wörter aus einem Lyric-Hook.",
-      rulesShort: "Verbinde 16 Wörter in vier Vierergruppen, die jeweils zum Refrain eines anderen Eurovision-Songs gehören. Du hast 6 Fehler erlaubt, um das Raster zu lösen.",
+      rulesShort: "Verbinde 16 Wörter in vier Vierergruppen. Jede Gruppe gehört zu einem anderen Eurovision-Refrain. 6 Fehler erlaubt.",
       rulesLong: "EuroRefrain testet Ihr Gedächtnis für die ikonischsten Songtexte der Eurovision-Geschichte. Ihnen wird ein Raster mit 16 Wörtern präsentiert, die aus vier verschiedenen Song-Refrains stammen.\n\nSpielanleitung:\n• Ihre Aufgabe ist es, diese 16 Wörter in vier Vierergruppen zu unterteilen, wobei jede Gruppe zum Refrain eines Songs gehört.\n• Wählen Sie vier Wörter aus, von denen Sie glauben, dass sie zusammengehören, und tippen Sie auf 'Absenden'.\n• Wenn sie korrekt sind, werden die Wörter vom Spielfeld entfernt und der Songtitel wird enthüllt.\n• Wenn sie falsch sind, zählt dies als Fehler. Sie dürfen bis zu 6 Fehler machen, bevor das Spiel endet.\n• Die Wörter sind sorgfältig ausgewählt, um herausfordernd zu sein, und enthalten oft häufige Wörter, die zu mehreren Songs gehören könnten!"
     },
     eurolinks: { 
       title: "EuroLinks", 
       desc: "Gruppiere 4 Eurovision Begriffe.",
-      rulesShort: "Gruppiere 16 Eurovision-bezogene Elemente in vier Viererkategorien basierend auf einer gemeinsamen Verbindung. Sei vorsichtig – du hast nur 6 Fehler erlaubt!",
+      rulesShort: "Gruppiere 16 Eurovision-bezogene Elemente in vier Viererkategorien basierend auf einer gemeinsamen Verbindung. 6 Fehler erlaubt.",
       rulesLong: "EuroLinks ist ein Spiel für Logik und Eurovision-Trivia. Sie müssen die versteckten Verbindungen zwischen 16 verschiedenen Elementen im Zusammenhang mit dem Wettbewerb finden.\n\nSpielanleitung:\n• Das Raster enthält 16 Elemente, die in vier Kategorien zu je vier Elementen gruppiert werden können.\n• Die Kategorien können von 'Gewinner aus den 90ern' bis hin zu 'Länder, die noch nie gewonnen haben' oder 'Künstler, die mehrmals teilgenommen haben' reichen.\n• Wählen Sie vier Elemente aus und tippen Sie auf 'Absenden', um zu prüfen, ob sie eine Kategorie teilen.\n• Sie haben 6 Fehler erlaubt, um das gesamte Rätsel zu lösen.\n• Jede Kategorie hat einen Schwierigkeitsgrad, der von einfach bis hin zu Experten-Trivia reicht!"
     },
     euroguess: { 
       title: "EuroGuess", 
       desc: "Erkenne den Beitrag über ESC Hinweise.",
-      rulesShort: "Identifiziere den geheimnisvollen Eurovision-Beitrag mit bis zu 6 zunehmend spezifischen Hinweisen. Je weniger Hinweise du benötigst, desto mehr Punkte erhältst du.",
+      rulesShort: "Identifiziere den geheimnisvollen Eurovision-Beitrag in 6 Versuchen. Jeder falsche Tipp enthüllt einen neuen, spezifischeren Hinweis.",
       rulesLong: "EuroGuess ist ein Detektivspiel, bei dem Sie einen geheimnisvollen Eurovision-Beitrag anhand einer Reihe von Hinweisen identifizieren. Die Herausforderung besteht darin, den Beitrag mit so wenigen Hinweisen wie möglich zu erraten.\n\nSpielanleitung:\n• Sie beginnen mit einem ersten Hinweis (normalerweise dem Jahr).\n• Wenn Ihr Tipp falsch ist, wird ein neuer, spezifischerer Hinweis enthüllt (Land, Genre, Platzierung usw.).\n• Sie haben insgesamt 6 Versuche, um den richtigen Beitrag zu identifizieren.\n• Nutzen Sie die Suchleiste, um Ihren Tipp in unserer umfassenden Datenbank von Eurovision-Beiträgen zu finden und auszuwählen.\n• Die Punktzahl basiert darauf, wie viele Hinweise Sie benötigt haben – wer früh rät, erhält die maximale Punktzahl!"
     },
     euroarena: { 
       title: "EuroArena", 
       desc: "Errate über Statistiken des Contests.",
-      rulesShort: "Finde den Ziel-Eurovision-Beitrag, indem du deine Tipps mit seinen Attributen (Jahr, Rang, Land, Genre) vergleichst. Nutze die Farbmarker und Pfeile, um deine Suche in 7 Versuchen einzugrenzen.",
+      rulesShort: "Finde den Ziel-Eurovision-Beitrag in 7 Versuchen. Feedback-Marker zeigen:\n🟩 Richtige Übereinstimmung\n🟨 Nahe Übereinstimmung\n⬛ Keine Übereinstimmung\nNutze Pfeile (⬆️⬇️) für Jahr und Rang.",
       rulesLong: "EuroArena ist ein datenbasiertes Ratespiel, bei dem Sie vergleichende Statistiken verwenden, um einen versteckten Eurovision-Beitrag zu finden. Es ist ein Test für Ihr Wissen über Wettbewerbsergebnisse und Künstlerattribute.\n\nSpielanleitung:\n• Geben Sie einen Tipp ein, um zu sehen, wie seine Attribute im Vergleich zum Zielbeitrag abschneiden.\n• Zu den Attributen gehören Jahr, Rang, Land, Genre und Künstlergröße/-geschlecht.\n• Feedback-Marker leiten Ihren nächsten Schritt:\n  - 🟩 (Grün): Eine perfekte Übereinstimmung für dieses Attribut.\n  - 🟨 (Gelb): Eine knappe Übereinstimmung (z. B. liegt das Jahr innerhalb von 3 Jahren oder das Land in derselben Region).\n  - ⬛ (Grau): Keine Übereinstimmung für dieses Attribut.\n• Pfeile neben Jahr und Rang sagen Ihnen, ob der Zielwert höher oder niedriger als Ihr Tipp ist.\n• Sie haben 7 Versuche, um den richtigen Beitrag zu finden."
     }
   },
@@ -246,6 +246,53 @@ export const de: TranslationSchema = {
     changes: {
       title: "Änderungen an dieser Richtlinie",
       p1: "Wir können diese Datenschutzrichtlinie von Zeit zu Zeit aktualisieren. Alle Aktualisierungen werden auf dieser Seite mit einem überarbeiteten Datum „Zuletzt aktualisiert“ veröffentlicht."
+    }
+  },
+  terms: {
+    lastUpdated: "Februar 2026",
+    title: "Nutzungsbedingungen",
+    acceptance: {
+      title: "Annahme der Bedingungen",
+      p1: "Durch den Zugriff auf oder die Nutzung von Douze Points (www.douzepoints.net) erklären Sie sich damit einverstanden, an diese Nutzungsbedingungen gebunden zu sein. Wenn Sie diesen Bedingungen nicht zustimmen, nutzen Sie die Website bitte nicht."
+    },
+    description: {
+      title: "Beschreibung des Dienstes",
+      p1: "Douze Points ist eine von Fans erstellte Website, die Eurovision-Themenspiele und Trivia zu Unterhaltungszwecken anbietet. Der Dienst wird 'wie besehen' bereitgestellt und kann jederzeit geändert oder eingestellt werden."
+    },
+    ip: {
+      title: "Geistiges Eigentum",
+      p1: "Der Eurovision Song Contest und verwandte Marken sind Eigentum der Europäischen Rundfunkunion (EBU). Diese Website ist nicht mit der EBU verbunden, wird nicht von ihr unterstützt oder gesponsert.",
+      p2: "Alle Originalinhalte, Codes und Designs auf dieser Website sind Eigentum des Website-Besitzers. Sie dürfen keinen Teil dieser Website ohne Erlaubnis vervielfältigen oder verbreiten."
+    },
+    conduct: {
+      title: "Nutzerverhalten",
+      p1: "Sie erklären sich damit einverstanden, die Website nur für rechtmäßige Zwecke und in einer Weise zu nutzen, die die Rechte anderer nicht verletzt. Verbotenes Verhalten umfasst:",
+      items: [
+        "Versuch, den Betrieb der Website zu stören",
+        "Verwendung automatisierter Skripte zum Sammeln von Daten oder zum Spielen von Spielen",
+        "Sich als andere ausgeben oder falsche Informationen bereitstellen",
+        "Teilnahme an Aktivitäten, die dem Ruf der Website schaden könnten"
+      ]
+    },
+    disclaimer: {
+      title: "Haftungsausschluss",
+      p1: "Die Website wird auf einer 'wie besehen' und 'wie verfügbar' Basis bereitgestellt. Wir geben keine Garantien, weder ausdrücklich noch stillschweigend, hinsichtlich der Genauigkeit, Zuverlässigkeit oder Verfügbarkeit des Dienstes."
+    },
+    limitation: {
+      title: "Haftungsbeschränkung",
+      p1: "Soweit gesetzlich zulässig, haftet der Website-Besitzer nicht für direkte, indirekte, zufällige oder Folgeschäden, die aus Ihrer Nutzung der Website entstehen."
+    },
+    governingLaw: {
+      title: "Anwendbares Recht",
+      p1: "Diese Nutzungsbedingungen unterliegen den Gesetzen von Schweden und werden in Übereinstimmung mit diesen ausgelegt."
+    },
+    changes: {
+      title: "Änderungen der Bedingungen",
+      p1: "Wir behalten uns das Recht vor, diese Nutzungsbedingungen jederzeit zu ändern. Ihre fortgesetzte Nutzung der Website nach Änderungen stellt die Annahme der neuen Bedingungen dar."
+    },
+    contact: {
+      title: "Kontaktinformationen",
+      p1: "Wenn Sie Fragen zu diesen Nutzungsbedingungen haben, kontaktieren Sie uns bitte unter: douzepointsgame@gmail.com"
     }
   },
   ranks: {

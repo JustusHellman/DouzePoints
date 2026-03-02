@@ -290,7 +290,27 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
         </div>
       )}
 
-      {(!isGameOver || !showModal) && (
+      {isGameOver && showModal ? (
+        <GameScoreCard 
+          won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
+          historyEmoji={historyEmoji} gameTitle="EuroRefrain" attempts={mistakes} maxAttempts={6}
+          onClose={() => setShowModal(false)} onReturn={onReturn} onShare={handleShare}
+          extraInfo={
+            <div className="space-y-4">
+              <p className="text-[10px] text-gray-600 font-black uppercase tracking-[0.4em] text-center mb-1">{t('links.lyricsDiscovered')}</p>
+              {completedGroups.map((g, i) => (
+                <div key={i} className={`flex flex-col gap-1 p-5 rounded-3xl border border-white/5 ${getDiffColor(g.difficulty)}/20 backdrop-blur-sm animate-in zoom-in-95 duration-500`}>
+                   <div className="flex items-center gap-3">
+                     <div className={`w-3 h-3 rounded-full ${getDiffColor(g.difficulty)} shadow-[0_0_10px_rgba(255,255,255,0.2)]`}></div>
+                     <span className="text-xs font-black uppercase tracking-tight text-white/90">{g.category}</span>
+                   </div>
+                   <span className="text-[10px] font-bold text-white/50 uppercase ml-6">{g.items.join(", ")}</span>
+                </div>
+              ))}
+            </div>
+          }
+        />
+      ) : (
         <>
           <div className="flex items-center gap-3 mb-3">
             <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroRefrain</h1>
@@ -364,41 +384,19 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
               {t('scorecard.viewScorecard')}
             </button>
           )}
-        </>
-      )}
 
-      {/* How to Play Section */}
-      <div className="mt-16 pt-12 border-t border-white/5 w-full max-w-2xl mx-auto">
-        <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-white mb-6 text-center">
-          {t('common.howToPlay')}
-        </h2>
-        <div className="bg-white/5 rounded-2xl p-6 md:p-8">
-          <p className="text-gray-400 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-wrap">
-            {t('games.eurorefrain.rulesLong')}
-          </p>
-        </div>
-      </div>
-
-      {isGameOver && showModal && (
-        <GameScoreCard 
-          won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
-          historyEmoji={historyEmoji} gameTitle="EuroRefrain" attempts={mistakes} maxAttempts={6}
-          onClose={() => setShowModal(false)} onReturn={onReturn} onShare={handleShare}
-          extraInfo={
-            <div className="space-y-4">
-              <p className="text-[10px] text-gray-600 font-black uppercase tracking-[0.4em] text-center mb-1">{t('links.lyricsDiscovered')}</p>
-              {completedGroups.map((g, i) => (
-                <div key={i} className={`flex flex-col gap-1 p-5 rounded-3xl border border-white/5 ${getDiffColor(g.difficulty)}/20 backdrop-blur-sm animate-in zoom-in-95 duration-500`}>
-                   <div className="flex items-center gap-3">
-                     <div className={`w-3 h-3 rounded-full ${getDiffColor(g.difficulty)} shadow-[0_0_10px_rgba(255,255,255,0.2)]`}></div>
-                     <span className="text-xs font-black uppercase tracking-tight text-white/90">{g.category}</span>
-                   </div>
-                   <span className="text-[10px] font-bold text-white/50 uppercase ml-6">{g.items.join(", ")}</span>
-                </div>
-              ))}
+          {/* How to Play Section */}
+          <div className="mt-16 pt-12 border-t border-white/5 w-full max-w-2xl mx-auto">
+            <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-white mb-6 text-center">
+              {t('common.howToPlay')}
+            </h2>
+            <div className="bg-white/5 rounded-2xl p-6 md:p-8">
+              <p className="text-gray-400 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-wrap">
+                {t('games.eurorefrain.rulesLong')}
+              </p>
             </div>
-          }
-        />
+          </div>
+        </>
       )}
       <style>{`
         .animate-fade-in-out { animation: fade-in-out 1.2s ease-in-out forwards; }
