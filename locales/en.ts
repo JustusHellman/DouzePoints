@@ -42,9 +42,9 @@ export const en: TranslationSchema = {
     historyTitle: "The Legacy of Eurovision",
     historyP1: "The Eurovision Song Contest began in 1956 as a technical experiment in live, simultaneous, transnational broadcasting. Since then, it has grown into one of the world's most-watched non-sporting events, reaching hundreds of millions of viewers across the globe. It is a unique celebration of music, diversity, and international cooperation.",
     historyP2: "From the early days of orchestral ballads to the modern era of high-octane pop, rock, and experimental performance, Eurovision has always been a mirror of European culture and identity. It has launched the careers of global icons like ABBA and Celine Dion, and continues to be a platform for artistic innovation and cultural exchange every single year.",
-    historyP3: "At Douze Points, we celebrate this rich history through our daily challenges. Whether you're a casual viewer or a hardcore superfan who knows every entry since Lugano, our games are designed to test your knowledge and passion for the contest. Join us every day to prove your expertise, discover new favorite songs, and climb the ranks of the Eurovision fandom.",
-    historyP4: "As the contest continues to evolve with new technologies and musical trends, its core mission remains the same: to bring people together through the power of music. From the introduction of televoting to the spectacular stage designs of the 21st century, Eurovision has always pushed the boundaries of what is possible in live entertainment. We are proud to be a part of this vibrant community and to provide a space where fans can engage with the contest's legacy in a fun and interactive way.",
-    historyP5: "Beyond the competition, Eurovision has fostered a massive global community of fans who share a deep appreciation for the diverse musical styles and cultural expressions showcased on stage. This community is the heart of the contest, and at Douze Points, we aim to provide a platform that honors this spirit. Our mission is to keep the Eurovision magic alive all year round, offering a space where fans can test their knowledge, celebrate their favorite entries, and connect with the history of the world's most beloved song contest."
+    historyP3: "At Douze Points, I celebrate this rich history through my daily challenges. Whether you're a casual viewer or a hardcore superfan who knows every entry since Lugano, my games are designed to test your knowledge and passion for the contest. Join me every day to prove your expertise, discover new favorite songs, and climb the ranks of the Eurovision fandom.",
+    historyP4: "As the contest continues to evolve with new technologies and musical trends, its core mission remains the same: to bring people together through the power of music. From the introduction of televoting to the spectacular stage designs of the 21st century, Eurovision has always pushed the boundaries of what is possible in live entertainment. I am proud to be a part of this vibrant community and to provide a space where fans can engage with the contest's legacy in a fun and interactive way.",
+    historyP5: "Beyond the competition, Eurovision has fostered a massive global community of fans who share a deep appreciation for the diverse musical styles and cultural expressions showcased on stage. This community is the heart of the contest, and at Douze Points, I aim to provide a platform that honors this spirit. My mission is to keep the Eurovision magic alive all year round, offering a space where fans can test their knowledge, celebrate their favorite entries, and connect with the history of the world's most beloved song contest."
   },
   games: {
     eurosong: { 
@@ -246,6 +246,56 @@ export const en: TranslationSchema = {
     changes: {
       title: "Changes to This Policy",
       p1: "We may update this Privacy Policy from time to time. Any updates will be posted on this page with a revised “Last Updated” date."
+    }
+  },
+  about: {
+    title: "About Douze Points",
+    mission: {
+      title: "Our Mission",
+      p1: "Douze Points was born out of a deep love for the Eurovision Song Contest. My mission is to provide a year-round hub for fans to engage with the contest's rich history through fun, challenging, and interactive daily games. I believe that the spirit of Eurovision—unity through music—should be celebrated every day, not just during the contest week in May.",
+      p2: "I believe Eurovision is more than just a music competition—it's a celebration of diversity, culture, and unity. My games are designed to honor that spirit while testing the knowledge of even the most dedicated superfans. From the orchestral ballads of the 1950s to the high-energy pop and rock of the modern era, I cover it all."
+    },
+    story: {
+      title: "The Story",
+      p1: "Created by a fan for the fans, Douze Points started as a small project to keep the Eurovision magic alive between contests. The idea was simple: create a daily ritual for fans to test their knowledge and discover new songs from the contest's vast catalog. What began as a single game has evolved into a comprehensive hub with six unique daily challenges.",
+      p2: "Whether you're a 'First-Time Voter' who just discovered the contest or a 'Eurovision Legend' who has watched every show since 1956, there's always something new to discover. Our database is constantly growing, featuring thousands of entries, artists, and lyrics from over 65 years of competition."
+    },
+    history: {
+      title: "Eurovision History",
+      p1: "The Eurovision Song Contest is one of the longest-running and most-watched non-sporting events in the world. Established in 1956 by the European Broadcasting Union (EBU), it was designed to bring European nations together through a live, simultaneous transnational broadcast. Since then, it has become a platform for musical innovation, cultural exchange, and spectacular television production.",
+      p2: "Over the years, the contest has launched the careers of global icons and provided a stage for diverse musical expressions. It has survived political shifts, technological revolutions, and changing musical tastes, always remaining a beloved fixture in the international cultural calendar. At Douze Points, I aim to preserve and celebrate this incredible legacy."
+    },
+    games: {
+      title: "The Games",
+      p1: "Our daily challenges are inspired by popular word and logic puzzles, adapted specifically for the ESC community. Each game is designed to test a different area of your knowledge, from lyrics and artists to statistics and history:"
+    },
+    community: {
+      title: "Community First",
+      p1: "I am not affiliated with the EBU or any official broadcaster. I am simply a fan who wants to share my passion for Eurovision with the world. I am committed to maintaining a fair and fun environment for all players, and I welcome feedback from the global Eurovision community to help me improve the site."
+    }
+  },
+  contact: {
+    title: "Contact Us",
+    methods: {
+      title: "Get in Touch",
+      p1: "Have a question, feedback, or found a bug? I'd love to hear from you! Whether you have a suggestion for a new feature, a correction for our database, or just want to share your love for a particular Eurovision entry, my inbox is always open. You can reach me via email or find me in the Eurovision community."
+    },
+    faq: {
+      title: "Frequently Asked Questions",
+      q1: "When do the games reset?",
+      a1: "The daily challenges reset every day at midnight (UTC). This ensures that fans all over the world can start their new challenges at the same time.",
+      q2: "How is my rank calculated?",
+      a2: "Your rank is based on your total career points accumulated across all games. The more you play and the better you perform, the higher you climb! Points are awarded based on how few attempts or mistakes you make in each game.",
+      q3: "Can I suggest a song or artist?",
+      a3: "Absolutely! I am always looking to improve the database and ensure accuracy. If you notice a missing entry or have a suggestion for a future challenge, please send me an email.",
+      q4: "Is Douze Points free to play?",
+      a4: "Yes, Douze Points is completely free for everyone. Our goal is to make Eurovision trivia accessible to all fans around the world.",
+      q5: "How do I share my results?",
+      a5: "After completing a game, you'll see a 'Share' button. This will copy a spoiler-free summary of your performance to your clipboard, which you can then paste into social media or group chats."
+    },
+    feedback: {
+      title: "Feedback",
+      p1: "Your feedback helps me make Douze Points better for everyone. I am a fan who appreciates every message I receive. Don't hesitate to share your thoughts on how I can improve the experience, add new games, or make the site more accessible."
     }
   },
   terms: {

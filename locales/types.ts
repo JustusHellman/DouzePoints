@@ -217,6 +217,27 @@ export interface TranslationSchema {
       p1: string;
     };
   };
+  about: {
+    title: string;
+    mission: { title: string; p1: string; p2: string };
+    story: { title: string; p1: string; p2: string };
+    history: { title: string; p1: string; p2: string };
+    games: { title: string; p1: string };
+    community: { title: string; p1: string };
+  };
+  contact: {
+    title: string;
+    methods: { title: string; p1: string };
+    faq: {
+      title: string;
+      q1: string; a1: string;
+      q2: string; a2: string;
+      q3: string; a3: string;
+      q4: string; a4: string;
+      q5: string; a5: string;
+    };
+    feedback: { title: string; p1: string };
+  };
   terms: {
     lastUpdated: string;
     title: string;
