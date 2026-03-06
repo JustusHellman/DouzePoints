@@ -276,7 +276,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
   }, [guessHistory]);
 
   const handleShare = () => {
-    const shareText = `${won ? '🏆' : '❌'} EuroRefrain • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')}\n\n${historyEmoji}\n\nhttps://www.douzepoints.net/euro-refrain`;
+    const shareText = `${won ? '🏆' : '❌'} EuroRefrain • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')}\n\n${historyEmoji}\n\n${window.location.origin}/euro-refrain`;
     navigator.clipboard.writeText(shareText);
   };
 

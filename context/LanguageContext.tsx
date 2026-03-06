@@ -1,11 +1,11 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { en } from '../locales/en';
-import { es } from '../locales/es';
-import { fr } from '../locales/fr';
-import { it } from '../locales/it';
-import { de } from '../locales/de';
-import { TranslationSchema } from '../locales/types';
+import { en } from '../locales/en.ts';
+import { es } from '../locales/es.ts';
+import { fr } from '../locales/fr.ts';
+import { it } from '../locales/it.ts';
+import { de } from '../locales/de.ts';
+import { TranslationSchema } from '../locales/types.ts';
 
 type Language = 'en' | 'es' | 'fr' | 'it' | 'de';
 

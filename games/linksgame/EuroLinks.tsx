@@ -238,7 +238,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   }, [guessHistory]);
 
   const handleShare = () => {
-    const shareText = `${won ? '🏆' : '❌'} EuroLinks • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')}\n\n${historyEmoji}\n\nhttps://www.douzepoints.net/euro-links`;
+    const shareText = `${won ? '🏆' : '❌'} EuroLinks • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')}\n\n${historyEmoji}\n\n${window.location.origin}/euro-links`;
     navigator.clipboard.writeText(shareText);
   };
 

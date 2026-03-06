@@ -378,7 +378,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
 
   const handleShare = () => {
     const gamePath = gameId === 'eurosong' ? '/euro-song' : '/euro-artist';
-    const shareText = `${won ? '🏆' : '❌'} ${title} • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')} • ${guesses.length}/${MAX_ATTEMPTS} ${t('common.attempts')}\n\n${historyEmoji}\n\nhttps://www.douzepoints.net${gamePath}`;
+    const shareText = `${won ? '🏆' : '❌'} ${title} • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')} • ${guesses.length}/${MAX_ATTEMPTS} ${t('common.attempts')}\n\n${historyEmoji}\n\n${window.location.origin}${gamePath}`;
     navigator.clipboard.writeText(shareText);
   };
 

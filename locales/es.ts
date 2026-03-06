@@ -249,100 +249,100 @@ export const es: TranslationSchema = {
     }
   },
   about: {
-    title: "Sobre Douze Points",
+    title: "About Douze Points",
     mission: {
-      title: "Nuestra Misión",
-      p1: "Douze Points nació de un profundo amor por el Festival de la Canción de Eurovisión. Mi misión es proporcionar un centro durante todo el año para que los fans interactúen con la rica historia del concurso a través de juegos diarios divertidos, desafiantes e interactivos. Creo que el espíritu de Eurovisión —la unidad a través de la música— debe celebrarse todos los días, no solo durante la semana del concurso en mayo.",
-      p2: "Creo que Eurovisión es más que una simple competición musical: es una celebración de la diversidad, la cultura y la unidad. Mis juegos están diseñados para honrar ese espíritu mientras ponen a prueba los conocimientos incluso de los superfans más dedicados. Desde las baladas orquestales de los años 50 hasta el pop y el rock de alta energía de la era moderna, lo cubro todo."
+      title: "Our Mission",
+      p1: "Douze Points was born out of a deep love for the Eurovision Song Contest. My mission is to provide a year-round hub for fans to engage with the contest's rich history through fun, challenging, and interactive daily games. I believe that the spirit of Eurovision—unity through music—should be celebrated every day, not just during the contest week in May.",
+      p2: "I believe Eurovision is more than just a music competition—it's a celebration of diversity, culture, and unity. My games are designed to honor that spirit while testing the knowledge of even the most dedicated superfans. From the orchestral ballads of the 1950s to the high-energy pop and rock of the modern era, I cover it all."
     },
     story: {
-      title: "La Historia",
-      p1: "Creado por un fan para los fans, Douze Points comenzó como un pequeño proyecto para mantener viva la magia de Eurovisión entre concursos. Hoy en día, cuenta con seis juegos diarios únicos que cubren todo desde 1956 hasta la actualidad.",
-      p2: "Tanto si eres un 'Primer Votante' como una 'Leyenda de Eurovisión', siempre hay algo nuevo que descubrir sobre el concurso de canciones favorito del mundo."
+      title: "The Story",
+      p1: "Created by a fan for the fans, Douze Points started as a small project to keep the Eurovision magic alive between contests. Today, it features six unique daily games that cover everything from 1956 to the present day.",
+      p2: "Whether you're a 'First-Time Voter' or a 'Eurovision Legend', there's always something new to discover about the world's favorite song contest."
     },
     history: {
-      title: "Historia de Eurovisión",
-      p1: "El Festival de la Canción de Eurovisión es uno de los eventos no deportivos más antiguos y vistos del mundo.",
-      p2: "A lo largo de los años, el concurso ha lanzado las carreras de iconos globales y ha proporcionado un escenario para diversas expresiones musicales. En Douze Points, mi objetivo es preservar y celebrar este increíble legado."
+      title: "Eurovision History",
+      p1: "The Eurovision Song Contest is one of the longest-running and most-watched non-sporting events in the world.",
+      p2: "Over the years, the contest has launched the careers of global icons and provided a stage for diverse musical expressions. At Douze Points, I aim to preserve and celebrate this incredible legacy."
     },
     games: {
-      title: "Los Juegos",
-      p1: "Nuestros retos diarios están inspirados en populares rompecabezas de palabras y lógica, adaptados específicamente para la comunidad del ESC:"
+      title: "The Games",
+      p1: "Our daily challenges are inspired by popular word and logic puzzles, adapted specifically for the ESC community:"
     },
     community: {
-      title: "La Comunidad Primero",
-      p1: "No estoy afiliado a la UER ni a ninguna emisora oficial. Soy simplemente un fan que quiere compartir su pasión por Eurovisión con el mundo."
+      title: "Community First",
+      p1: "I am not affiliated with the EBU or any official broadcaster. I am simply a fan who wants to share my passion for Eurovision with the world."
     }
   },
   contact: {
-    title: "Contáctanos",
+    title: "Contact Us",
     methods: {
-      title: "Ponte en Contacto",
-      p1: "¿Tienes alguna pregunta, comentario o has encontrado un error? ¡Me encantaría saber de ti! Puedes contactarme por correo electrónico o encontrarme en la comunidad de Eurovisión."
+      title: "Get in Touch",
+      p1: "Have a question, feedback, or found a bug? I'd love to hear from you! You can reach me via email or find me in the Eurovision community."
     },
     faq: {
-      title: "Preguntas Frecuentes",
-      q1: "¿Cuándo se reinician los juegos?",
-      a1: "Los retos diarios se reinician todos los días a medianoche (UTC).",
-      q2: "¿Cómo se calcula mi rango?",
-      a2: "Tu rango se basa en el total de puntos de tu carrera acumulados en todos los juegos. ¡Cuanto más juegues y mejor lo hagas, más alto subirás!",
-      q3: "¿Puedo sugerir una canción o artista?",
-      a3: "¡Absolutamente! Siempre estoy buscando mejorar nuestra base de datos. Envíame un correo electrónico con tus sugerencias.",
-      q4: "¿Es Douze Points gratis?",
-      a4: "Sí, Douze Points es completamente gratis para todos.",
-      q5: "¿Cómo comparto mis resultados?",
-      a5: "Después de completar un juego, verás un botón de 'Compartir'."
+      title: "Frequently Asked Questions",
+      q1: "When do the games reset?",
+      a1: "The daily challenges reset every day at midnight (UTC).",
+      q2: "How is my rank calculated?",
+      a2: "Your rank is based on your total career points accumulated across all games. The more you play and the better you perform, the higher you climb!",
+      q3: "Can I suggest a song or artist?",
+      a3: "Absolutely! I am always looking to improve our database. Send me an email with your suggestions.",
+      q4: "Is Douze Points free to play?",
+      a4: "Yes, Douze Points is completely free for everyone.",
+      q5: "How do I share my results?",
+      a5: "After completing a game, you'll see a 'Share' button."
     },
     feedback: {
-      title: "Comentarios",
-      p1: "Tus comentarios me ayudan a mejorar Douze Points para todos. No dudes en compartir tus ideas sobre cómo puedo mejorar la experiencia."
+      title: "Feedback",
+      p1: "Your feedback helps me make Douze Points better for everyone. Don't hesitate to share your thoughts on how I can improve the experience."
     }
   },
   terms: {
-    lastUpdated: "Febrero 2026",
-    title: "Condiciones del Servicio",
+    lastUpdated: "February 2026",
+    title: "Terms of Service",
     acceptance: {
-      title: "Aceptación de las Condiciones",
-      p1: "Al acceder o utilizar Douze Points (www.douzepoints.net), aceptas quedar vinculado por estas Condiciones del Servicio. Si no estás de acuerdo con estas condiciones, por favor no utilices el sitio web."
+      title: "Acceptance of Terms",
+      p1: "By accessing or using Douze Points (www.douzepoints.net), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the website."
     },
     description: {
-      title: "Descripción del Servicio",
-      p1: "Douze Points es un sitio web hecho por fans que ofrece juegos y curiosidades con temática de Eurovisión con fines de entretenimiento. El servicio se proporciona 'tal cual' y puede ser modificado o interrumpido en cualquier momento."
+      title: "Description of Service",
+      p1: "Douze Points is a fan-made website providing Eurovision-themed games and trivia for entertainment purposes. The service is provided 'as is' and may be modified or discontinued at any time."
     },
     ip: {
-      title: "Propiedad Intelectual",
-      p1: "El Festival de la Canción de Eurovisión y las marcas comerciales relacionadas son propiedad de la Unión Europea de Radiodifusión (UER). Este sitio web no está afiliado, respaldado ni patrocinado por la UER.",
-      p2: "Todo el contenido original, el código y el diseño de este sitio web son propiedad del dueño del sitio web. No puedes reproducir ni distribuir ninguna parte de este sitio web sin permiso."
+      title: "Intellectual Property",
+      p1: "The Eurovision Song Contest and related trademarks are the property of the European Broadcasting Union (EBU). This website is not affiliated with, endorsed by, or sponsored by the EBU.",
+      p2: "All original content, code, and design on this website are the property of the website owner. You may not reproduce or distribute any part of this website without permission."
     },
     conduct: {
-      title: "Conducta del Usuario",
-      p1: "Aceptas utilizar el sitio web solo para fines legales y de una manera que no infrinja los derechos de otros. El comportamiento prohibido incluye:",
+      title: "User Conduct",
+      p1: "You agree to use the website only for lawful purposes and in a way that does not infringe the rights of others. Prohibited behavior includes:",
       items: [
-        "Intentar interferir con el funcionamiento del sitio web",
-        "Usar scripts automatizados para recopilar datos o jugar",
-        "Suplantar a otros o proporcionar información falsa",
-        "Participar en cualquier actividad que pueda dañar la reputación del sitio web"
+        "Attempting to interfere with the website's operation",
+        "Using automated scripts to collect data or play games",
+        "Impersonating others or providing false information",
+        "Engaging in any activity that could damage the website's reputation"
       ]
     },
     disclaimer: {
-      title: "Descargo de Responsabilidad",
-      p1: "El sitio web se proporciona 'tal cual' y 'según disponibilidad'. No ofrecemos garantías, expresas o implícitas, con respecto a la exactitud, fiabilidad o disponibilidad del servicio."
+      title: "Disclaimer of Warranties",
+      p1: "The website is provided on an 'as is' and 'as available' basis. We make no warranties, express or implied, regarding the accuracy, reliability, or availability of the service."
     },
     limitation: {
-      title: "Limitación de Responsabilidad",
-      p1: "En la medida máxima permitida por la ley, el propietario del sitio web no será responsable de ningún daño directo, indirecto, incidental o consecuente que surja de tu uso del sitio web."
+      title: "Limitation of Liability",
+      p1: "To the maximum extent permitted by law, the website owner shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of the website."
     },
     governingLaw: {
-      title: "Ley Aplicable",
-      p1: "Estas Condiciones del Servicio se regirán e interpretarán de acuerdo con las leyes de Suecia."
+      title: "Governing Law",
+      p1: "These Terms of Service shall be governed by and construed in accordance with the laws of Sweden."
     },
     changes: {
-      title: "Cambios en las Condiciones",
-      p1: "Nos reservamos el derecho de modificar estas Condiciones del Servicio en cualquier momento. Tu uso continuado del sitio web después de cualquier cambio constituye la aceptación de las nuevas condiciones."
+      title: "Changes to Terms",
+      p1: "We reserve the right to modify these Terms of Service at any time. Your continued use of the website after any changes constitutes acceptance of the new terms."
     },
     contact: {
-      title: "Información de Contacto",
-      p1: "Si tienes alguna pregunta sobre estas Condiciones del Servicio, contáctanos en: douzepointsgame@gmail.com"
+      title: "Contact Information",
+      p1: "If you have any questions about these Terms of Service, please contact us at: douzepointsgame@gmail.com"
     }
   },
   ranks: {

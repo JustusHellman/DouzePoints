@@ -64,24 +64,30 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "canvas-confetti": "https://esm.sh/canvas-confetti@^1.9.4",
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.4"
+  }
+}
+</script>
 </head>
 <body>
     <div class="euro-bg"></div>
     <div class="euro-grid"></div>
     <div id="root">
-        <noscript>
-            <div style="background: #050510; color: white; padding: 40px; font-family: sans-serif; text-align: center; min-height: 100vh; display: flex; flex-direction: column; justify-content: center;">
-                <h1 style="color: #ec4899;">JavaScript Required</h1>
-                <p>Douze Points requires JavaScript to run the daily Eurovision challenges.</p>
-                <p>Please enable JavaScript in your browser settings to continue.</p>
-            </div>
-        </noscript>
         <!-- Pre-rendered content for SEO and AdSense Crawlers -->
-        <article style="max-width: 800px; margin: 0 auto; padding: 40px; font-family: sans-serif; line-height: 1.6; color: #ffffff; background: #050510;">
+        <article style="max-width: 800px; margin: 0 auto; padding: 40px; font-family: sans-serif; line-height: 1.6; color: #333;">
             <header>
                 <h1>Douze Points | The Ultimate Eurovision Fan Hub & Daily Games</h1>
                 <p>Welcome to <strong>Douze Points</strong>, the premier destination for Eurovision Song Contest enthusiasts and trivia masters. Our platform is dedicated to celebrating the rich, vibrant history of the world's most beloved music competition through a series of engaging, daily-updated challenges.</p>
-                <p style="color: #ec4899; font-weight: bold;">[ Loading the Greenroom... Please wait ]</p>
             </header>
             
             <section>
@@ -146,31 +152,6 @@
         </article>
     </div>
     <!-- Entry point for Vite build -->
-    <script>
-        // Unregister any active service workers to prevent caching issues
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                for (let registration of registrations) {
-                    registration.unregister();
-                    console.log('Service Worker unregistered');
-                }
-            });
-        }
-
-        window.addEventListener('error', function(e) {
-            console.error('Runtime error caught in index.html:', e);
-            var root = document.getElementById('root');
-            if (root && !root.innerHTML.trim()) {
-                root.innerHTML = '<div style="background:#050510;color:white;padding:50px;text-align:center;font-family:sans-serif;">' +
-                    '<h1 style="color:#ec4899;">Broadcast Error</h1>' +
-                    '<p>The application failed to load. This might be due to a connection issue or a script error.</p>' +
-                    '<p style="font-size:12px;color:#666;">' + (e.message || 'Unknown error') + '</p>' +
-                    '<button onclick="window.location.reload()" style="margin-top:20px;padding:10px 20px;background:white;color:black;border:none;border-radius:8px;cursor:pointer;">Retry</button>' +
-                    '</div>';
-            }
-        });
-        console.log('Index.html: Diagnostic script active');
-    </script>
-    <script type="module" src="./index.tsx"></script>
+    <script type="module" src="/index.tsx"></script>
 </body>
 </html>

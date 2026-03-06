@@ -66,7 +66,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({ games, onClose
       text += `✨ Grand Final Qualified ✨\n`;
     }
     
-    text += `\nhttps://www.douzepoints.net`;
+    text += `\n${window.location.origin}`;
     return text;
   }, [games, today, completedCount, totalCount, totalDailyPoints]);
 

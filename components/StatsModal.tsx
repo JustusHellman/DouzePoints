@@ -117,7 +117,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, initialT
       text += `Total Points: ${stats.totalPoints}\n`;
       text += `Total Wins: ${wins}\n`;
       text += `Douze Points: ${stats.totalDouzePoints} 🏆\n\n`;
-      text += `Come and join the jury at Douze Points!\nhttps://www.douzepoints.net`;
+      text += `Come and join the jury at Douze Points!\n${window.location.origin}`;
     } else if (activeGameStats) {
       const gameLabel = activeTab === GameType.WORD_GAME ? "Song" : 
                         activeTab === GameType.ARTIST_WORD_GAME ? "Artist" : 
@@ -140,7 +140,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, initialT
       text += `Douze Points: ${activeGameStats.perfectGames} 🏆\n`;
       text += `Best Streak: ${activeGameStats.maxStreak} 🔥\n`;
       text += `Current Streak: ${activeGameStats.currentStreak}\n\n`;
-      text += `Rank: ${t(`ranks.${rankInfo.current.title}`)}\nhttps://www.douzepoints.net`;
+      text += `Rank: ${t(`ranks.${rankInfo.current.title}`)}\n${window.location.origin}`;
     }
 
     navigator.clipboard.writeText(text).then(() => {

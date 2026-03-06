@@ -20,6 +20,13 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error, errorInfo);
+    
+    // Check for ChunkLoadError - this happens when a new version is deployed
+    // and the browser tries to load a stale JS chunk that no longer exists.
+    if (error.name === 'ChunkLoadError' || error.message.includes('Failed to fetch dynamically imported module')) {
+      console.log('ChunkLoadError detected, reloading page...');
+      window.location.reload();
+    }
   }
 
   public render() {

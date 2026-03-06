@@ -145,7 +145,7 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
       'EuroArena': '/euro-arena'
     };
     const gamePath = gamePaths[gameTitle] || '';
-    const shareText = `✨ DOUZE POINTS ✨\n${headline}\n\n${gameTitle} • ${getDayString()}\n${t('scorecard.score')}: ${points} ${t('common.pointsShort')} • ${attempts}/${maxAttempts} ${t('common.steps')}\n\n${displayHistory}\n\nhttps://www.douzepoints.net${gamePath}`;
+    const shareText = `✨ DOUZE POINTS ✨\n${headline}\n\n${gameTitle} • ${getDayString()}\n${t('scorecard.score')}: ${points} ${t('common.pointsShort')} • ${attempts}/${maxAttempts} ${t('common.steps')}\n\n${displayHistory}\n\n${window.location.origin}${gamePath}`;
     
     navigator.clipboard.writeText(shareText).then(() => {
       setShowCopied(true);

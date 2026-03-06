@@ -1,23 +1,23 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
-import EuroWordGame from './games/wordGame/EuroWordGame';
-import EuroLinks from './games/linksgame/EuroLinks';
-import EuroRefrain from './games/refrain/EuroRefrain';
-import EuroGuess from './games/guesser/EuroGuess';
-import EuroArena from './games/arena/EuroArena';
-import { GameType, GlobalStats } from './data/types';
-import { MASTER_DATA } from './data/masterData';
-import { getStoredStats, getCurrentRank, getDailyGameState } from './utils/stats';
-import { StatsModal } from './components/StatsModal';
-import { DailyShareModal } from './components/DailyShareModal';
-import { RankUpCelebration } from './components/RankUpCelebration';
-import { getDayString } from './utils/daily';
-import { useTranslation } from './context/LanguageContext';
-import { PrivacyPolicy } from './components/PrivacyPolicy';
-import TermsOfService from './components/TermsOfService';
-import About from './components/About';
-import Contact from './components/Contact';
-import { CountdownTimer } from './components/CountdownTimer';
+import EuroWordGame from './games/wordGame/EuroWordGame.tsx';
+import EuroLinks from './games/linksgame/EuroLinks.tsx';
+import EuroRefrain from './games/refrain/EuroRefrain.tsx';
+import EuroGuess from './games/guesser/EuroGuess.tsx';
+import EuroArena from './games/arena/EuroArena.tsx';
+import { GameType, GlobalStats } from './data/types.ts';
+import { MASTER_DATA } from './data/masterData.ts';
+import { getStoredStats, getCurrentRank, getDailyGameState } from './utils/stats.ts';
+import { StatsModal } from './components/StatsModal.tsx';
+import { DailyShareModal } from './components/DailyShareModal.tsx';
+import { RankUpCelebration } from './components/RankUpCelebration.tsx';
+import { getDayString } from './utils/daily.ts';
+import { useTranslation } from './context/LanguageContext.tsx';
+import { PrivacyPolicy } from './components/PrivacyPolicy.tsx';
+import TermsOfService from './components/TermsOfService.tsx';
+import About from './components/About.tsx';
+import Contact from './components/Contact.tsx';
+import { CountdownTimer } from './components/CountdownTimer.tsx';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -408,7 +408,10 @@ const App: React.FC = () => {
     if (ogDesc) ogDesc.setAttribute('content', currentDesc);
 
     const ogUrl = document.querySelector('meta[property="og:url"]');
-    if (ogUrl) ogUrl.setAttribute('content', `https://www.douzepoints.net${location.pathname}`);
+    if (ogUrl) ogUrl.setAttribute('content', `${window.location.origin}${location.pathname}`);
+    
+    const twitterUrl = document.querySelector('meta[property="twitter:url"]');
+    if (twitterUrl) twitterUrl.setAttribute('content', `${window.location.origin}${location.pathname}`);
 
     const twitterTitle = document.querySelector('meta[property="twitter:title"]');
     if (twitterTitle) twitterTitle.setAttribute('content', currentTitle);
@@ -416,14 +419,11 @@ const App: React.FC = () => {
     const twitterDesc = document.querySelector('meta[property="twitter:description"]');
     if (twitterDesc) twitterDesc.setAttribute('content', currentDesc);
 
-    const twitterUrl = document.querySelector('meta[property="twitter:url"]');
-    if (twitterUrl) twitterUrl.setAttribute('content', `https://www.douzepoints.net${location.pathname}`);
-
     const ogImage = document.querySelector('meta[property="og:image"]');
-    if (ogImage) ogImage.setAttribute('content', 'https://www.douzepoints.net/og-image.png');
+    if (ogImage) ogImage.setAttribute('content', `${window.location.origin}/og-image.png`);
 
     const twitterImage = document.querySelector('meta[property="twitter:image"]');
-    if (twitterImage) twitterImage.setAttribute('content', 'https://www.douzepoints.net/og-image.png');
+    if (twitterImage) twitterImage.setAttribute('content', `${window.location.origin}/og-image.png`);
 
     const metaKeywords = document.querySelector('meta[name="keywords"]');
     if (metaKeywords) {
@@ -437,7 +437,7 @@ const App: React.FC = () => {
       canonical.setAttribute('rel', 'canonical');
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute('href', `https://www.douzepoints.net${location.pathname}`);
+    canonical.setAttribute('href', `${window.location.origin}${location.pathname}`);
 
     // Update HTML lang attribute
     document.documentElement.lang = language;
@@ -455,7 +455,7 @@ const App: React.FC = () => {
       "@type": "VideoGame",
       "name": currentTitle,
       "description": currentDesc,
-      "url": `https://www.douzepoints.net${location.pathname}`,
+      "url": `${window.location.origin}${location.pathname}`,
       "genre": ["Puzzle Game", "Music Game"],
       "author": { "@type": "Person", "name": "Justus Hellman" }
     };
@@ -483,22 +483,23 @@ const App: React.FC = () => {
     const wasInGame = prevPathRef.current !== '/' && !prevPathRef.current.endsWith('index.html');
     if (wasInGame && isLobby) {
       const refreshedStats = getStoredStats();
-      const oldRank = getCurrentRank(stats?.totalPoints || 0);
-      const newRank = getCurrentRank(refreshedStats.totalPoints || 0);
+      const oldPoints = stats?.totalPoints || 0;
+      const newPoints = refreshedStats.totalPoints || 0;
       
-      // Use a timeout to avoid setState during render/effect cycle if needed, 
-      // but here we just want to avoid the lint error by being careful.
-      // Actually, the lint error is about cascading renders.
+      const oldRank = getCurrentRank(oldPoints);
+      const newRank = getCurrentRank(newPoints);
+      
       if (newRank.threshold > oldRank.threshold) {
         setTimeout(() => setRankUpData(newRank), 0);
       }
       
-      if (JSON.stringify(refreshedStats) !== JSON.stringify(stats)) {
+      // Only update if points actually changed to avoid unnecessary re-renders
+      if (newPoints !== oldPoints) {
         setTimeout(() => setStats(refreshedStats), 0);
       }
     }
     prevPathRef.current = location.pathname;
-  }, [location.pathname, isLobby, stats]);
+  }, [location.pathname, isLobby]); // Removed stats from dependencies to prevent loops
 
   const currentRank = useMemo(() => getCurrentRank(stats?.totalPoints || 0), [stats?.totalPoints]);
   const handleReturn = () => navigate('/');
