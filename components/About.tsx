@@ -66,7 +66,7 @@ const About: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">04</span> {t('about.community.title')}
+            <span className="text-pink-500 italic">05</span> {t('about.community.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('about.community.p1')}</p>
