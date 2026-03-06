@@ -146,6 +146,21 @@
         </article>
     </div>
     <!-- Entry point for Vite build -->
-    <script type="module" src="/index.tsx"></script>
+    <script>
+        window.addEventListener('error', function(e) {
+            console.error('Runtime error caught in index.html:', e);
+            var root = document.getElementById('root');
+            if (root && !root.innerHTML.trim()) {
+                root.innerHTML = '<div style="background:#050510;color:white;padding:50px;text-align:center;font-family:sans-serif;">' +
+                    '<h1 style="color:#ec4899;">Broadcast Error</h1>' +
+                    '<p>The application failed to load. This might be due to a connection issue or a script error.</p>' +
+                    '<p style="font-size:12px;color:#666;">' + (e.message || 'Unknown error') + '</p>' +
+                    '<button onclick="window.location.reload()" style="margin-top:20px;padding:10px 20px;background:white;color:black;border:none;border-radius:8px;cursor:pointer;">Retry</button>' +
+                    '</div>';
+            }
+        });
+        console.log('Index.html: Diagnostic script active');
+    </script>
+    <script type="module" src="./index.tsx"></script>
 </body>
 </html>
