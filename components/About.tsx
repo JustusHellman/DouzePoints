@@ -54,12 +54,12 @@ const About: React.FC = () => {
           <div className="pl-12 space-y-4">
             <p>{t('about.games.p1')}</p>
             <ul className="list-disc pl-6 space-y-2 opacity-80 italic text-sm">
-              <li><strong>EuroSong:</strong> A Wordle-style song title guessing game.</li>
-              <li><strong>EuroArtist:</strong> Identify the performer in 6 tries.</li>
-              <li><strong>EuroRefrain:</strong> Connect lyrics to their iconic hooks.</li>
-              <li><strong>EuroLinks:</strong> Find the hidden connections between ESC items.</li>
-              <li><strong>EuroGuess:</strong> The ultimate mystery entry quiz.</li>
-              <li><strong>EuroArena:</strong> A data-driven battle of Eurovision stats.</li>
+              <li><strong>{t('games.eurosong.title')}:</strong> {t('games.eurosong.desc')}</li>
+              <li><strong>{t('games.euroartist.title')}:</strong> {t('games.euroartist.desc')}</li>
+              <li><strong>{t('games.eurorefrain.title')}:</strong> {t('games.eurorefrain.desc')}</li>
+              <li><strong>{t('games.eurolinks.title')}:</strong> {t('games.eurolinks.desc')}</li>
+              <li><strong>{t('games.euroguess.title')}:</strong> {t('games.euroguess.desc')}</li>
+              <li><strong>{t('games.euroarena.title')}:</strong> {t('games.euroarena.desc')}</li>
             </ul>
           </div>
         </section>

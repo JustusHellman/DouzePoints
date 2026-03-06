@@ -69,6 +69,13 @@
     <div class="euro-bg"></div>
     <div class="euro-grid"></div>
     <div id="root">
+        <noscript>
+            <div style="background: #050510; color: white; padding: 40px; font-family: sans-serif; text-align: center; min-height: 100vh; display: flex; flex-direction: column; justify-content: center;">
+                <h1 style="color: #ec4899;">JavaScript Required</h1>
+                <p>Douze Points requires JavaScript to run the daily Eurovision challenges.</p>
+                <p>Please enable JavaScript in your browser settings to continue.</p>
+            </div>
+        </noscript>
         <!-- Pre-rendered content for SEO and AdSense Crawlers -->
         <article style="max-width: 800px; margin: 0 auto; padding: 40px; font-family: sans-serif; line-height: 1.6; color: #ffffff; background: #050510;">
             <header>
@@ -139,6 +146,6 @@
         </article>
     </div>
     <!-- Entry point for Vite build -->
-    <script type="module" src="./index.tsx"></script>
+    <script type="module" src="/index.tsx"></script>
 </body>
 </html>
