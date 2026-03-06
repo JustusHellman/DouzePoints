@@ -147,6 +147,16 @@
     </div>
     <!-- Entry point for Vite build -->
     <script>
+        // Unregister any active service workers to prevent caching issues
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for (let registration of registrations) {
+                    registration.unregister();
+                    console.log('Service Worker unregistered');
+                }
+            });
+        }
+
         window.addEventListener('error', function(e) {
             console.error('Runtime error caught in index.html:', e);
             var root = document.getElementById('root');
