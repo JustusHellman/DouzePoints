@@ -10,49 +10,31 @@ interface AdBannerProps {
 export const AdBanner: React.FC<AdBannerProps> = ({ adKey, width, height, className }) => {
   const bannerRef = useRef<HTMLDivElement>(null);
   const isDev = import.meta.env.DEV;
-  const [hasPersonalizedConsent, setHasPersonalizedConsent] = React.useState(() => {
-    if (typeof window === 'undefined') return false;
-    const consentStr = localStorage.getItem('eu_cookie_consent_v1');
-    if (!consentStr) return false;
-    try {
-      const consent = JSON.parse(consentStr);
-      return !!consent.personalized;
-    } catch {
-      return false;
-    }
-  });
-
-  useEffect(() => {
-    const handleStorage = () => {
-      const consentStr = localStorage.getItem('eu_cookie_consent_v1');
-      if (!consentStr) {
-        setHasPersonalizedConsent(false);
-        return;
-      }
-      try {
-        const consent = JSON.parse(consentStr);
-        setHasPersonalizedConsent(!!consent.personalized);
-      } catch {
-        setHasPersonalizedConsent(false);
-      }
-    };
-
-    window.addEventListener('storage', handleStorage);
-    return () => window.removeEventListener('storage', handleStorage);
-  }, []);
 
   useEffect(() => {
     const checkConsentAndLoad = () => {
       if (isDev) return;
-      if (!hasPersonalizedConsent) {
+
+      const consentStr = localStorage.getItem('eu_cookie_consent_v1');
+      let personalized = false;
+
+      if (consentStr) {
+        try {
+          const consent = JSON.parse(consentStr);
+          personalized = !!consent.personalized;
+        } catch (e) {
+          console.error('Error parsing cookie consent', e);
+        }
+      }
+
+      if (!personalized) {
         if (bannerRef.current) bannerRef.current.innerHTML = '';
         return;
       }
 
       if (bannerRef.current) {
-        // Clear previous content
         bannerRef.current.innerHTML = '';
-        
+
         const configScript = document.createElement('script');
         configScript.type = 'text/javascript';
         configScript.innerHTML = `
@@ -64,24 +46,24 @@ export const AdBanner: React.FC<AdBannerProps> = ({ adKey, width, height, classN
             'params' : {}
           };
         `;
-        
+
         const invokeScript = document.createElement('script');
         invokeScript.type = 'text/javascript';
         invokeScript.src = `//www.highperformanceformat.com/${adKey}/invoke.js`;
-        
+
         bannerRef.current.appendChild(configScript);
         bannerRef.current.appendChild(invokeScript);
       }
     };
 
     checkConsentAndLoad();
-  }, [adKey, width, height, isDev, hasPersonalizedConsent]);
-
-  if (!hasPersonalizedConsent) return null;
+    window.addEventListener('storage', checkConsentAndLoad);
+    return () => window.removeEventListener('storage', checkConsentAndLoad);
+  }, [adKey, width, height, isDev]);
 
   return (
-    <div 
-      ref={bannerRef} 
+    <div
+      ref={bannerRef}
       className={`flex justify-center items-center overflow-hidden ${className} ${isDev ? 'bg-white/5 border-2 border-dashed border-white/20 rounded-xl' : ''}`}
       style={{ minWidth: isDev ? `${width}px` : 'auto', minHeight: isDev ? `${height}px` : 'auto' }}
     >
