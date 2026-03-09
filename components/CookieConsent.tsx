@@ -5,11 +5,6 @@ import { motion, AnimatePresence } from 'motion/react';
 
 const CONSENT_KEY = 'eu_cookie_consent_v1';
 
-interface GtagWindow extends Window {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  gtag?: (command: string, action: string, params: any) => void;
-}
-
 export const CookieConsent: React.FC = () => {
   const { t } = useTranslation();
   const location = useLocation();
@@ -33,16 +28,6 @@ export const CookieConsent: React.FC = () => {
     const consent = { personalized, timestamp: Date.now() };
     localStorage.setItem(CONSENT_KEY, JSON.stringify(consent));
     
-    const win = window as unknown as GtagWindow;
-    if (win.gtag) {
-      win.gtag('consent', 'update', {
-        'ad_storage': personalized ? 'granted' : 'denied',
-        'analytics_storage': personalized ? 'granted' : 'denied',
-        'ad_user_data': personalized ? 'granted' : 'denied',
-        'ad_personalization': personalized ? 'granted' : 'denied'
-      });
-    }
-
     // Notify other components
     window.dispatchEvent(new Event('storage'));
     setShow(false);
