@@ -7,6 +7,8 @@ import { REFRAIN_POOL } from '../../data/refrainData.ts';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
+import { AdBanner } from '../../components/AdBanner.tsx';
+import { AD_KEYS } from '../../data/adConstants.ts';
 
 interface Tile {
   id: string;
@@ -394,6 +396,10 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
               <p className="text-gray-400 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-wrap">
                 {t('games.eurorefrain.rulesLong')}
               </p>
+            </div>
+            
+            <div className="mt-8 flex justify-center">
+              <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} />
             </div>
           </div>
         </>

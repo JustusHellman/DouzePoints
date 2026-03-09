@@ -3,6 +3,7 @@ import { MasterSong } from '../data/types.ts';
 import { useTranslation } from '../context/LanguageContext.tsx';
 import { getDayString } from '../utils/daily.ts';
 import { CountdownTimer } from './CountdownTimer.tsx';
+import { NativeAd } from './NativeAd.tsx';
 
 interface GameScoreCardProps {
   won: boolean;
@@ -275,6 +276,10 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
                 {extraInfo}
              </div>
           )}
+
+          <div className="pt-2">
+            <NativeAd />
+          </div>
 
           <div className="pt-4 border-t border-white/5 flex flex-col items-center gap-2">
              <CountdownTimer label={t('scorecard.nextGame')} />

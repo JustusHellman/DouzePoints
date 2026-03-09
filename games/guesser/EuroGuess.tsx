@@ -8,6 +8,8 @@ import { getMemberLabel } from '../../data/constants.tsx';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
+import { AdBanner } from '../../components/AdBanner.tsx';
+import { AD_KEYS } from '../../data/adConstants.ts';
 
 interface EuroGuessProps {
   onReturn: () => void;
@@ -294,6 +296,10 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
               <p className="text-gray-400 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-wrap">
                 {t('games.euroguess.rulesLong')}
               </p>
+            </div>
+            
+            <div className="mt-8 flex justify-center">
+              <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} />
             </div>
           </div>
         </>

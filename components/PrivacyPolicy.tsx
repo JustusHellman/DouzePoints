@@ -4,6 +4,17 @@ import { useTranslation } from '../context/LanguageContext.tsx';
 
 export const PrivacyPolicy: React.FC = () => {
   const { t } = useTranslation();
+
+  const renderTextWithLinks = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s)]+)/g;
+    const parts = text.split(urlRegex);
+    return parts.map((part, i) => {
+      if (part.match(urlRegex)) {
+        return <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline break-all">{part}</a>;
+      }
+      return part;
+    });
+  };
   
   return (
     <div className="max-w-4xl mx-auto py-16 px-6 page-fade">
@@ -75,9 +86,9 @@ export const PrivacyPolicy: React.FC = () => {
             <span className="text-pink-500 italic">03</span> {t('privacy.advertising.title')}
           </h2>
           <div className="pl-12 space-y-4">
-            <p>{t('privacy.advertising.p1')}</p>
-            <p>{t('privacy.advertising.p2')}</p>
-            <p>{t('privacy.advertising.p3')}</p>
+            <p>{renderTextWithLinks(t('privacy.advertising.p1'))}</p>
+            <p>{renderTextWithLinks(t('privacy.advertising.p2'))}</p>
+            <p>{renderTextWithLinks(t('privacy.advertising.p3'))}</p>
           </div>
         </section>
 

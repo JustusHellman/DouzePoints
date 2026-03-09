@@ -12,7 +12,7 @@ const About: React.FC = () => {
         </h1>
         <div className="h-1.5 w-32 bg-gradient-to-r from-pink-500 to-purple-600 mt-6 rounded-full"></div>
         <p className="mt-8 text-[10px] font-black uppercase tracking-[0.5em] text-gray-500">
-          Celebrating the Eurovision Song Contest
+          {t('about.subtitle')}
         </p>
       </header>
 
@@ -54,19 +54,16 @@ const About: React.FC = () => {
           <div className="pl-12 space-y-4">
             <p>{t('about.games.p1')}</p>
             <ul className="list-disc pl-6 space-y-2 opacity-80 italic text-sm">
-              <li><strong>EuroSong:</strong> A Wordle-style song title guessing game.</li>
-              <li><strong>EuroArtist:</strong> Identify the performer in 6 tries.</li>
-              <li><strong>EuroRefrain:</strong> Connect lyrics to their iconic hooks.</li>
-              <li><strong>EuroLinks:</strong> Find the hidden connections between ESC items.</li>
-              <li><strong>EuroGuess:</strong> The ultimate mystery entry quiz.</li>
-              <li><strong>EuroArena:</strong> A data-driven battle of Eurovision stats.</li>
+              {t('about.games.gameList').map((game: { name: string, desc: string }, i: number) => (
+                <li key={i}><strong>{game.name}:</strong> {game.desc}</li>
+              ))}
             </ul>
           </div>
         </section>
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">04</span> {t('about.community.title')}
+            <span className="text-pink-500 italic">05</span> {t('about.community.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('about.community.p1')}</p>

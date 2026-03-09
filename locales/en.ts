@@ -38,13 +38,7 @@ export const en: TranslationSchema = {
     todayScore: "Today's Score",
     howToPlayTitle: "How to Play Douze Points",
     howToPlayP1: "Douze Points is your daily Eurovision challenge hub. Every day, six unique games are released to test your knowledge of the contest's history, artists, and lyrics. Your goal is to complete each challenge with as few mistakes as possible to earn the maximum score of 12 points—the legendary 'Douze Points'!",
-    howToPlayP2: "As you accumulate points across all games, you will climb the global fandom ranks, evolving from a 'First-Time Voter' to a true 'Eurovision Legend'. You can track your daily progress, career milestones, and current rank by clicking the 'Stats' button in the header at any time. Good luck, and may the best fan win!",
-    historyTitle: "The Legacy of Eurovision",
-    historyP1: "The Eurovision Song Contest began in 1956 as a technical experiment in live, simultaneous, transnational broadcasting. Since then, it has grown into one of the world's most-watched non-sporting events, reaching hundreds of millions of viewers across the globe. It is a unique celebration of music, diversity, and international cooperation.",
-    historyP2: "From the early days of orchestral ballads to the modern era of high-octane pop, rock, and experimental performance, Eurovision has always been a mirror of European culture and identity. It has launched the careers of global icons like ABBA and Celine Dion, and continues to be a platform for artistic innovation and cultural exchange every single year.",
-    historyP3: "At Douze Points, I celebrate this rich history through my daily challenges. Whether you're a casual viewer or a hardcore superfan who knows every entry since Lugano, my games are designed to test your knowledge and passion for the contest. Join me every day to prove your expertise, discover new favorite songs, and climb the ranks of the Eurovision fandom.",
-    historyP4: "As the contest continues to evolve with new technologies and musical trends, its core mission remains the same: to bring people together through the power of music. From the introduction of televoting to the spectacular stage designs of the 21st century, Eurovision has always pushed the boundaries of what is possible in live entertainment. I am proud to be a part of this vibrant community and to provide a space where fans can engage with the contest's legacy in a fun and interactive way.",
-    historyP5: "Beyond the competition, Eurovision has fostered a massive global community of fans who share a deep appreciation for the diverse musical styles and cultural expressions showcased on stage. This community is the heart of the contest, and at Douze Points, I aim to provide a platform that honors this spirit. My mission is to keep the Eurovision magic alive all year round, offering a space where fans can test their knowledge, celebrate their favorite entries, and connect with the history of the world's most beloved song contest."
+    howToPlayP2: "As you accumulate points across all games, you will climb the global fandom ranks, evolving from a 'First-Time Voter' to a true 'Eurovision Legend'. You can track your daily progress, career milestones, and current rank by clicking the 'Stats' button in the header at any time. Good luck, and may the best fan win!"
   },
   games: {
     eurosong: { 
@@ -175,7 +169,26 @@ export const en: TranslationSchema = {
     privacyPolicy: "Privacy Policy",
     cookiePolicy: "Cookie Policy",
     privacySettings: "Privacy",
-    lastUpdated: "Last Updated"
+    lastUpdated: "Last Updated",
+    whatAreCookies: "What are cookies?",
+    whatAreCookiesDesc: "Cookies are small text files stored on your device by your browser. They help websites remember you and your preferences.",
+    typesWeUse: "Types we use",
+    essential: "Essential Cookies",
+    essentialDesc: "Used for site stability and to remember your privacy choices. These do not track personal data.",
+    advertising: "Advertising Cookies",
+    advertisingDesc: "Set through our site by our advertising partners (like AdsTerra). They may be used by those companies to build a profile of your interests and show you relevant adverts on other sites. AdsTerra may set its own cookies for ad targeting and personalization.",
+    yourChoices: "Your choices",
+    yourChoicesDesc: "We respect your right to privacy. You can choose not to allow certain types of cookies.",
+    status: "Current Status",
+    allAllowed: "All Allowed",
+    essentialOnly: "Essential Only",
+    notSet: "Not Set",
+    partners: "Advertising Partners",
+    partnersDesc: "We use AdsTerra to show advertisements. AdsTerra and its partners use cookies to serve ads based on your visit to this site and/or other sites on the Internet.",
+    partnersOptOut: "You can manage your advertising preferences by using our 'Essential Only' toggle above or by visiting the AdsTerra Privacy Policy (https://adsterra.com/privacy-policy/) for more information on how they process data.",
+    moreInfo: "More Information",
+    moreInfoDesc: "For more information on privacy practices and your rights, please visit our Privacy Policy page.",
+    settingsSaved: "Settings Saved Successfully"
   },
   privacy: {
     lastUpdated: "February 2026",
@@ -190,17 +203,17 @@ export const en: TranslationSchema = {
       autoTitle: "a) Automatically Collected Data",
       autoDesc: "When you visit the website, certain information may be automatically collected, including:",
       autoItems: ["IP address", "Browser type and version", "Device information", "Operating system", "Pages visited", "Date and time of access", "Referring website"],
-      autoFootnote: "This information may be processed by our advertising and analytics providers.",
+      autoFootnote: "This information may be processed by our advertising and analytics providers (AdsTerra).",
       cookiesTitle: "b) Cookies and Similar Technologies",
       cookiesDesc1: "We use cookies and similar technologies for Advertising, Measuring ad performance, and Website functionality.",
-      cookiesDesc2: "Consent for cookies is collected and managed through Google Funding Choices, which provides our consent management platform (CMP). Users in applicable regions (such as the EU/EEA and UK) are asked to provide consent before non-essential cookies are used.",
+      cookiesDesc2: "Consent for cookies is collected and managed through our integrated consent system. Users in applicable regions (such as the EU/EEA and UK) are asked to provide consent before non-essential cookies are used.",
       cookiesDesc3: "You can change your consent preferences at any time via the consent options available on the website."
     },
     advertising: {
       title: "Advertising",
-      p1: "We use Google AdSense to display advertisements. Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to our website or other websites. Google's use of advertising cookies enables it and its partners to serve ads to our users based on their visit to our site and/or other sites on the Internet.",
-      p2: "You can manage your advertising preferences via: adssettings.google.com",
-      p3: "More information about how Google processes personal data is available in Google’s Privacy Policy."
+      p1: "We use AdsTerra to display advertisements. AdsTerra and its partners use cookies to serve ads based on a user's prior visits to our website or other websites. This enables them to serve ads to our users based on their visit to our site and/or other sites on the Internet.",
+      p2: "You can manage your advertising preferences via our Cookie Policy page or by using the 'Essential Only' option in our consent banner.",
+      p3: "More information about how AdsTerra processes personal data is available in AdsTerra’s Privacy Policy (https://adsterra.com/privacy-policy/)."
     },
     legalBasis: {
       title: "Legal Basis (GDPR)",
@@ -220,15 +233,15 @@ export const en: TranslationSchema = {
     dataSharing: {
       title: "Data Sharing",
       p1: "We do not sell personal data. However, data may be processed by third-party service providers, including:",
-      items: ["Google (advertising and consent management)", "Hosting providers", "Technical service providers necessary for website operation"]
+      items: ["AdsTerra (advertising)", "Hosting providers", "Technical service providers necessary for website operation"]
     },
     internationalTransfers: {
       title: "International Transfers",
-      p1: "Some third-party providers, including Google, may process data outside the EU or EEA. Where such transfers occur, appropriate safeguards such as Standard Contractual Clauses are used."
+      p1: "Some third-party providers, including AdsTerra, may process data outside the EU or EEA. Where such transfers occur, appropriate safeguards such as Standard Contractual Clauses are used."
     },
     dataRetention: {
       title: "Data Retention",
-      p1: "We do not maintain a user database. Advertising data is retained according to Google’s policies, technical logs for security purposes, and local storage remains until you delete it."
+      p1: "We do not maintain a user database. Advertising data is retained according to AdsTerra's policies, technical logs for security purposes, and local storage remains until you delete it."
     },
     yourRights: {
       title: "Your Rights (EU/EEA)",
@@ -250,6 +263,7 @@ export const en: TranslationSchema = {
   },
   about: {
     title: "About Douze Points",
+    subtitle: "Celebrating the Eurovision Song Contest",
     mission: {
       title: "Our Mission",
       p1: "Douze Points was born out of a deep love for the Eurovision Song Contest. My mission is to provide a year-round hub for fans to engage with the contest's rich history through fun, challenging, and interactive daily games. I believe that the spirit of Eurovision—unity through music—should be celebrated every day, not just during the contest week in May.",
@@ -267,7 +281,15 @@ export const en: TranslationSchema = {
     },
     games: {
       title: "The Games",
-      p1: "Our daily challenges are inspired by popular word and logic puzzles, adapted specifically for the ESC community. Each game is designed to test a different area of your knowledge, from lyrics and artists to statistics and history:"
+      p1: "Our daily challenges are inspired by popular word and logic puzzles, adapted specifically for the ESC community. Each game is designed to test a different area of your knowledge, from lyrics and artists to statistics and history:",
+      gameList: [
+        { name: "EuroSong", desc: "A Wordle-style song title guessing game." },
+        { name: "EuroArtist", desc: "Identify the performer in 6 tries." },
+        { name: "EuroRefrain", desc: "Connect lyrics to their iconic hooks." },
+        { name: "EuroLinks", desc: "Find the hidden connections between ESC items." },
+        { name: "EuroGuess", desc: "The ultimate mystery entry quiz." },
+        { name: "EuroArena", desc: "A data-driven battle of Eurovision stats." }
+      ]
     },
     community: {
       title: "Community First",

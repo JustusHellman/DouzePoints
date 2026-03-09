@@ -34,15 +34,9 @@ export interface TranslationSchema {
     statsButton: string;
     careerStats: string;
     todayScore: string;
-    historyTitle: string;
     howToPlayTitle: string;
     howToPlayP1: string;
     howToPlayP2: string;
-    historyP1: string;
-    historyP2: string;
-    historyP3: string;
-    historyP4: string;
-    historyP5: string;
   };
   games: {
     eurosong: { title: string; desc: string; rulesShort: string; rulesLong: string };
@@ -145,6 +139,25 @@ export interface TranslationSchema {
     cookiePolicy: string;
     privacySettings: string;
     lastUpdated: string;
+    whatAreCookies: string;
+    whatAreCookiesDesc: string;
+    typesWeUse: string;
+    essential: string;
+    essentialDesc: string;
+    advertising: string;
+    advertisingDesc: string;
+    yourChoices: string;
+    yourChoicesDesc: string;
+    status: string;
+    allAllowed: string;
+    essentialOnly: string;
+    notSet: string;
+    partners: string;
+    partnersDesc: string;
+    partnersOptOut: string;
+    moreInfo: string;
+    moreInfoDesc: string;
+    settingsSaved: string;
   };
   privacy: {
     lastUpdated: string;
@@ -219,10 +232,11 @@ export interface TranslationSchema {
   };
   about: {
     title: string;
+    subtitle: string;
     mission: { title: string; p1: string; p2: string };
     story: { title: string; p1: string; p2: string };
     history: { title: string; p1: string; p2: string };
-    games: { title: string; p1: string };
+    games: { title: string; p1: string; gameList: { name: string; desc: string }[] };
     community: { title: string; p1: string };
   };
   contact: {
