@@ -8,66 +8,48 @@ interface NativeAdProps {
 export const NativeAd: React.FC<NativeAdProps> = ({ className }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const isDev = import.meta.env.DEV;
-  const [hasPersonalizedConsent, setHasPersonalizedConsent] = React.useState(() => {
-    if (typeof window === 'undefined') return false;
-    const consentStr = localStorage.getItem('eu_cookie_consent_v1');
-    if (!consentStr) return false;
-    try {
-      const consent = JSON.parse(consentStr);
-      return !!consent.personalized;
-    } catch {
-      return false;
-    }
-  });
-
-  useEffect(() => {
-    const handleStorage = () => {
-      const consentStr = localStorage.getItem('eu_cookie_consent_v1');
-      if (!consentStr) {
-        setHasPersonalizedConsent(false);
-        return;
-      }
-      try {
-        const consent = JSON.parse(consentStr);
-        setHasPersonalizedConsent(!!consent.personalized);
-      } catch {
-        setHasPersonalizedConsent(false);
-      }
-    };
-
-    window.addEventListener('storage', handleStorage);
-    return () => window.removeEventListener('storage', handleStorage);
-  }, []);
 
   useEffect(() => {
     const checkConsentAndLoad = () => {
       if (isDev) return;
-      if (!hasPersonalizedConsent) {
+
+      const consentStr = localStorage.getItem('eu_cookie_consent_v1');
+      let personalized = false;
+
+      if (consentStr) {
+        try {
+          const consent = JSON.parse(consentStr);
+          personalized = !!consent.personalized;
+        } catch (e) {
+          console.error('Error parsing cookie consent', e);
+        }
+      }
+
+      if (!personalized) {
         if (containerRef.current) containerRef.current.innerHTML = '';
         return;
       }
 
       if (containerRef.current) {
-        // Clear previous content
         containerRef.current.innerHTML = '';
-        
+
         const script = document.createElement('script');
         script.async = true;
         script.setAttribute('data-cfasync', 'false');
         script.src = `//pl28874471.effectivegatecpm.com/${AD_KEYS.NATIVE_BANNER}/invoke.js`;
-        
+
         const adContainer = document.createElement('div');
         adContainer.id = `container-${AD_KEYS.NATIVE_BANNER}`;
-        
+
         containerRef.current.appendChild(script);
         containerRef.current.appendChild(adContainer);
       }
     };
 
     checkConsentAndLoad();
-  }, [isDev, hasPersonalizedConsent]);
-
-  if (!hasPersonalizedConsent) return null;
+    window.addEventListener('storage', checkConsentAndLoad);
+    return () => window.removeEventListener('storage', checkConsentAndLoad);
+  }, [isDev]);
 
   return (
     <div className={`w-full flex justify-center py-4 ${className}`} ref={containerRef}>
