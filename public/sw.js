@@ -1,4 +1,4 @@
-const CACHE_NAME = 'douze-points-v4'; // Incremented version
+const CACHE_NAME = 'douze-points-v5'; // Incremented version
 const ASSETS = [
   '/',
   '/index.html',
