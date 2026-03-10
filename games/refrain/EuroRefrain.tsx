@@ -13,12 +13,14 @@ import { AD_KEYS } from '../../data/adConstants.ts';
 interface Tile {
   id: string;
   text: string;
+  groupIdx: number;
   difficulty: string;
 }
 
 interface CompletedGroup {
   category: string;
   items: string[];
+  groupIdx: number;
   difficulty: string;
 }
 
@@ -72,9 +74,10 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     selection.push(pickSnippet(hardPool, 3));
     selection.push(pickSnippet(expertPool, 4));
 
-    const groups = selection.map(s => ({
+    const groups = selection.map((s, idx) => ({
       category: `${s.title} (${s.artist})`,
       items: s.words.map(w => w.toUpperCase()),
+      groupIdx: idx,
       difficulty: s.tier
     }));
 
@@ -82,6 +85,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
       g.items.map((text, i) => ({
         id: `tile-${gIdx}-${i}`,
         text,
+        groupIdx: gIdx,
         difficulty: g.difficulty
       }))
     );
@@ -194,10 +198,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     
     for (const group of remaining) {
       // Find the tiles for this group that are still on the board
-      const groupTiles = allTiles.filter(t => {
-        const groupIdx = boardGroups.indexOf(group);
-        return t.id.startsWith(`tile-${groupIdx}-`);
-      });
+      const groupTiles = allTiles.filter(t => t.groupIdx === group.groupIdx);
 
       // Select them one by one
       for (const tile of groupTiles) {
@@ -210,7 +211,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
 
       // Collapse into category
       setCompletedGroups(prev => [...prev, group]);
-      setDisplayTiles(prev => prev.filter(tile => !group.items.includes(tile.text)));
+      setDisplayTiles(prev => prev.filter(tile => tile.groupIdx !== group.groupIdx));
       setSelectedIds([]);
 
       // Pause before next group
@@ -229,12 +230,11 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     const attemptDiffs = selectedTiles.map(t => t.difficulty);
     setGuessHistory(prev => [...prev, attemptDiffs]);
 
-    const foundGroup = boardGroups.find(bg => 
-      selectedTiles.every(st => bg.items.includes(st.text)) && 
-      bg.items.every(text => selectedTiles.some(st => st.text === text))
-    );
+    const firstGroupIdx = selectedTiles[0].groupIdx;
+    const isCorrect = selectedTiles.every(t => t.groupIdx === firstGroupIdx);
 
-    if (foundGroup) {
+    if (isCorrect) {
+      const foundGroup = boardGroups[firstGroupIdx];
       const newCompleted = [...completedGroups, foundGroup];
       setCompletedGroups(newCompleted);
       setDisplayTiles(prev => prev.filter(tile => !selectedIds.includes(tile.id)));
@@ -248,7 +248,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     } else {
       let oneAway = false;
       boardGroups.forEach(bg => {
-        const matches = selectedTiles.filter(st => bg.items.includes(st.text)).length;
+        const matches = selectedTiles.filter(t => t.groupIdx === bg.groupIdx).length;
         if (matches === 3) oneAway = true;
       });
       setShaking(true);
@@ -288,15 +288,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
   };
 
   return (
-    <div className="flex flex-col items-center pt-4 pb-12 px-1 sm:px-4 w-full max-w-3xl mx-auto">
-      {message && (
-        <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[600] p-4">
-          <div className="bg-white/80 backdrop-blur-xl text-black font-black uppercase text-[12px] md:text-[16px] tracking-[0.2em] px-5 py-2.5 rounded-xl shadow-3xl border-[2px] border-white/40 animate-fade-in-out text-center">
-            {message}
-          </div>
-        </div>
-      )}
-
+    <div className="flex flex-col items-center pt-4 pb-12 px-1 sm:px-4 w-full max-w-3xl mx-auto relative">
       {isGameOver && showModal ? (
         <GameScoreCard 
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
@@ -372,7 +364,14 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
           </div>
 
           {!isGameOver && (
-            <div className="flex flex-col items-center gap-4 w-full">
+            <div className="flex flex-col items-center gap-4 w-full relative">
+              {message && (
+                <div className="absolute -top-12 left-1/2 -translate-x-1/2 pointer-events-none z-[600] w-full flex justify-center px-4">
+                  <div className="bg-white/95 backdrop-blur-xl text-black font-black uppercase text-[10px] md:text-[13px] tracking-[0.2em] px-5 py-2.5 rounded-xl shadow-2xl border-[2px] border-white/50 animate-fade-in-out text-center whitespace-nowrap">
+                    {message}
+                  </div>
+                </div>
+              )}
               <button 
                 onClick={submit} disabled={selectedIds.length !== 4 || showWrongFlash} 
                 className={`w-full max-w-xs py-4 rounded-full font-black shadow-xl transition-all text-xs tracking-widest uppercase ${selectedIds.length === 4 && !showWrongFlash ? 'bg-white text-black scale-105 active:scale-95' : 'bg-gray-800 text-gray-500 opacity-50 cursor-not-allowed'}`}
