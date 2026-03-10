@@ -246,14 +246,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   };
 
   return (
-    <div className="flex flex-col items-center pt-4 pb-12 px-1 sm:px-4 w-full max-w-3xl mx-auto">
-      {message && (
-        <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[600] p-4">
-          <div className="bg-white/80 backdrop-blur-xl text-black font-black uppercase text-[12px] md:text-[16px] tracking-[0.2em] px-5 py-2.5 rounded-xl shadow-3xl border-[2px] border-white/40 animate-fade-in-out text-center">
-            {message}
-          </div>
-        </div>
-      )}
+    <div className="flex flex-col items-center pt-4 pb-12 px-1 sm:px-4 w-full max-w-3xl mx-auto relative">
       {isGameOver && showModal ? (
         <GameScoreCard 
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
@@ -329,7 +322,14 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
           </div>
 
           {!isGameOver && (
-            <div className="flex flex-col items-center gap-4 w-full">
+            <div className="flex flex-col items-center gap-4 w-full relative">
+              {message && (
+                <div className="absolute -top-12 left-1/2 -translate-x-1/2 pointer-events-none z-[600] w-full flex justify-center px-4">
+                  <div className="bg-white/95 backdrop-blur-xl text-black font-black uppercase text-[10px] md:text-[13px] tracking-[0.2em] px-5 py-2.5 rounded-xl shadow-2xl border-[2px] border-white/50 animate-fade-in-out text-center whitespace-nowrap">
+                    {message}
+                  </div>
+                </div>
+              )}
               <button 
                 onClick={submit} disabled={selectedIds.length !== 4 || showWrongFlash} 
                 className={`w-full max-w-xs py-4 rounded-full font-black shadow-xl transition-all text-xs tracking-widest uppercase ${selectedIds.length === 4 && !showWrongFlash ? 'bg-white text-black scale-105 active:scale-95' : 'bg-gray-800 text-gray-500 opacity-50 cursor-not-allowed'}`}
