@@ -165,7 +165,6 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     if (completedGroups.length === 0 && mistakes === 0 && !isGameOver) return;
     localStorage.setItem(`eurorefrain-${getDayString()}`, JSON.stringify({ completedGroups, guessHistory, mistakes, isGameOver, won }));
     if (isGameOver) {
-      updateGameStats(GameType.REFRAIN_GAME, won, { mistakes });
       if (won) confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
     }
   }, [completedGroups, guessHistory, mistakes, isGameOver, won]);
@@ -220,6 +219,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     
     // Final wait before scorecard
     await new Promise(r => setTimeout(r, 1000));
+    updateGameStats(GameType.REFRAIN_GAME, false, { mistakes: 6 });
     setShowModal(true);
   }, [boardGroups, completedGroups, allTiles, t, setIsGameOver, setSelectedIds, setCompletedGroups, setDisplayTiles, setShowModal]);
 
@@ -239,7 +239,12 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
       setCompletedGroups(newCompleted);
       setDisplayTiles(prev => prev.filter(tile => !selectedIds.includes(tile.id)));
       setSelectedIds([]);
-      if (newCompleted.length === 4) { setWon(true); setIsGameOver(true); setShowModal(true); }
+      if (newCompleted.length === 4) { 
+        setWon(true); 
+        setIsGameOver(true); 
+        updateGameStats(GameType.REFRAIN_GAME, true, { mistakes });
+        setShowModal(true); 
+      }
     } else {
       let oneAway = false;
       boardGroups.forEach(bg => {
@@ -283,7 +288,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
   };
 
   return (
-    <div className="flex flex-col items-center pt-4 pb-12 px-1 sm:px-4 w-full max-w-lg mx-auto">
+    <div className="flex flex-col items-center pt-4 pb-12 px-1 sm:px-4 w-full max-w-3xl mx-auto">
       {message && (
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[600] p-4">
           <div className="bg-white/80 backdrop-blur-xl text-black font-black uppercase text-[12px] md:text-[16px] tracking-[0.2em] px-5 py-2.5 rounded-xl shadow-3xl border-[2px] border-white/40 animate-fade-in-out text-center">
@@ -296,7 +301,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
         <GameScoreCard 
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
           historyEmoji={historyEmoji} gameTitle="EuroRefrain" attempts={mistakes} maxAttempts={6}
-          onClose={() => setShowModal(false)} onReturn={onReturn} onShare={handleShare}
+          onClose={() => setShowModal(false)} onReturn={onReturn} onShare={handleShare} gameType={GameType.REFRAIN_GAME}
           extraInfo={
             <div className="space-y-4">
               <p className="text-[10px] text-gray-600 font-black uppercase tracking-[0.4em] text-center mb-1">{t('links.lyricsDiscovered')}</p>
@@ -388,7 +393,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
           )}
 
           {/* How to Play Section */}
-          <div className="mt-16 pt-12 border-t border-white/5 w-full max-w-2xl mx-auto">
+          <div className="mt-16 pt-12 border-t border-white/5 w-full max-w-3xl mx-auto">
             <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-white mb-6 text-center">
               {t('common.howToPlay')}
             </h2>
@@ -398,8 +403,9 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
               </p>
             </div>
             
-            <div className="mt-8 flex justify-center">
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
               <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} />
+              <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} className="hidden md:flex" />
             </div>
           </div>
         </>

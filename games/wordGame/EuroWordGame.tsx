@@ -242,7 +242,6 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
     if (guesses.length === 0 && !isGameOver) return;
     localStorage.setItem(`${gameId}-${getDayString()}`, JSON.stringify({ guesses, isGameOver, won }));
     if (isGameOver) {
-      updateGameStats(gameType, won, { attempts: guesses.length });
       if (won) {
         const pts = getPointsInfo.points;
         confetti({
@@ -339,11 +338,13 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
           setTimeout(() => {
             setIsGameOver(true);
             setWon(true);
+            updateGameStats(gameType, true, { attempts: newGuesses.length });
             setShowModal(true);
           }, target.length * animationDelay + 500);
         } else if (newGuesses.length >= MAX_ATTEMPTS) {
           setTimeout(() => {
             setIsGameOver(true);
+            updateGameStats(gameType, false, { attempts: newGuesses.length });
             setShowModal(true);
           }, target.length * animationDelay + 500);
         }
@@ -358,7 +359,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
         setCurrentGuess(prev => (prev + e.key).toUpperCase());
       }
     }
-  }, [currentGuess, guesses, isGameOver, target, inputLength, animationDelay, setGuesses, setCurrentGuess, setIsGameOver, setWon, setShowModal, setMessage, t]);
+  }, [currentGuess, guesses, isGameOver, target, inputLength, animationDelay, setGuesses, setCurrentGuess, setIsGameOver, setWon, setShowModal, setMessage, t, gameType]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => onKeyPress(e);
@@ -421,7 +422,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
         <GameScoreCard 
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
           historyEmoji={historyEmoji} gameTitle={title} song={song} attempts={guesses.length} maxAttempts={MAX_ATTEMPTS}
-          onClose={() => setShowModal(false)} onReturn={onReturn} onShare={handleShare}
+          onClose={() => setShowModal(false)} onReturn={onReturn} onShare={handleShare} gameType={gameType}
         />
       ) : (
         <>
@@ -555,8 +556,9 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
               </p>
             </div>
             
-            <div className="mt-8 flex justify-center">
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
               <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} />
+              <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} className="hidden md:flex" />
             </div>
           </div>
         </>

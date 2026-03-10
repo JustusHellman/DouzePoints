@@ -21,7 +21,6 @@ import { CookiePolicy } from './components/CookiePolicy.tsx';
 import { CookieConsent } from './components/CookieConsent.tsx';
 import { CountdownTimer } from './components/CountdownTimer.tsx';
 import { AdBanner } from './components/AdBanner.tsx';
-import { NativeAd } from './components/NativeAd.tsx';
 import { AD_KEYS } from './data/adConstants.ts';
 
 const ScrollToTop = () => {
@@ -139,7 +138,7 @@ interface GameInstance {
   };
 }
 
-const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstance[]) => void }> = ({ stats, onShareDaily }) => {
+const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstance[]) => void; isMobile: boolean }> = ({ stats, onShareDaily, isMobile }) => {
   const { t } = useTranslation();
   const today = getDayString();
   
@@ -262,7 +261,13 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
 
       {completedCount > 0 && (
         <div className="px-2 md:px-6 mb-6">
-          <NativeAd />
+          <div className="flex justify-center">
+            {isMobile ? (
+              <AdBanner adKey={AD_KEYS.STICKY_FOOTER_MOBILE} width={320} height={50} />
+            ) : (
+              <AdBanner adKey={AD_KEYS.STICKY_FOOTER_DESKTOP} width={728} height={90} />
+            )}
+          </div>
         </div>
       )}
 
@@ -323,8 +328,14 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
           </div>
         </div>
         
-        <div className="mt-8 flex justify-center">
+        <div className="mt-8 flex flex-wrap justify-center gap-4">
           <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} />
+          {!isMobile && (
+            <>
+              <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} className="hidden md:flex" />
+              <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} className="hidden lg:flex" />
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -371,6 +382,15 @@ const App: React.FC = () => {
     };
     window.addEventListener('storage', handleStorage);
     return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   // SEO: Dynamic Page Titles and Descriptions based on Route
@@ -541,13 +561,17 @@ const App: React.FC = () => {
       </a>
       <ScrollToTop />
       
-      {/* Side Ads for Desktop */}
-      <div className="hidden xl:block fixed left-4 top-1/2 -translate-y-1/2 z-10 opacity-50 hover:opacity-100 transition-opacity">
-        <AdBanner adKey={AD_KEYS.SIDE_SKYSCRAPER} width={160} height={600} />
-      </div>
-      <div className="hidden xl:block fixed right-4 top-1/2 -translate-y-1/2 z-10 opacity-50 hover:opacity-100 transition-opacity">
-        <AdBanner adKey={AD_KEYS.SIDE_SKYSCRAPER} width={160} height={600} />
-      </div>
+      {/* Side Ads for Desktop - Only show on very wide screens to avoid overlap. Hidden on Cookie Policy page. */}
+      {location.pathname !== '/cookies' && (
+        <>
+          <div className={`hidden ${isLobby ? '2xl:block' : 'lg:block'} fixed left-2 top-1/2 -translate-y-1/2 z-10 transition-opacity`}>
+            <AdBanner adKey={AD_KEYS.SIDE_SKYSCRAPER} width={160} height={600} />
+          </div>
+          <div className={`hidden ${isLobby ? '2xl:block' : 'lg:block'} fixed right-2 top-1/2 -translate-y-1/2 z-10 transition-opacity`}>
+            <AdBanner adKey={AD_KEYS.SIDE_SKYSCRAPER} width={160} height={600} />
+          </div>
+        </>
+      )}
 
       <header className="px-4 md:px-8 border-b border-white/10 backdrop-blur-md sticky top-0 z-[100] flex items-center justify-between bg-black/40 h-12 md:h-16 transition-all duration-300" role="banner">
         <div className="flex items-center gap-2 md:gap-4">
@@ -598,7 +622,7 @@ const App: React.FC = () => {
         )}
         
         <Routes>
-          <Route path="/" element={<Dashboard stats={stats} onShareDaily={(games) => { setDailyShareGames(games); setShowDailyShare(true); }} />} />
+          <Route path="/" element={<Dashboard stats={stats} onShareDaily={(games) => { setDailyShareGames(games); setShowDailyShare(true); }} isMobile={isMobile} />} />
           <Route path="/euro-song" element={<EuroWordGame onReturn={handleReturn} data={MASTER_DATA} gameType={GameType.WORD_GAME} gameId="eurosong" title={t('games.eurosong.title')} />} />
           <Route path="/euro-artist" element={<EuroWordGame onReturn={handleReturn} data={MASTER_DATA} gameType={GameType.ARTIST_WORD_GAME} gameId="euroartist" title={t('games.euroartist.title')} />} />
           <Route path="/euro-refrain" element={<EuroRefrain onReturn={handleReturn} />} />
@@ -623,12 +647,11 @@ const App: React.FC = () => {
       {/* Sticky Footer Ad - Only show if personalized consent is given and not on policy page */}
       {hasPersonalizedConsent && location.pathname !== '/cookie-policy' && (
         <div className="fixed bottom-0 left-0 right-0 z-[1000] bg-black/80 backdrop-blur-sm border-t border-white/10 flex justify-center items-center py-1">
-          <div className="block md:hidden">
+          {isMobile ? (
             <AdBanner adKey={AD_KEYS.STICKY_FOOTER_MOBILE} width={320} height={50} />
-          </div>
-          <div className="hidden md:block">
+          ) : (
             <AdBanner adKey={AD_KEYS.STICKY_FOOTER_DESKTOP} width={728} height={90} />
-          </div>
+          )}
         </div>
       )}
 

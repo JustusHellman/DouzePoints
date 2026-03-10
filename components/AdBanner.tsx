@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { AD_KEYS } from '../data/adConstants.ts';
 
 interface AdBannerProps {
   adKey: string;
@@ -61,6 +62,11 @@ export const AdBanner: React.FC<AdBannerProps> = ({ adKey, width, height, classN
     return () => window.removeEventListener('storage', checkConsentAndLoad);
   }, [adKey, width, height, isDev]);
 
+  const getAdLabel = () => {
+    const key = Object.keys(AD_KEYS).find(k => (AD_KEYS as Record<string, string>)[k] === adKey);
+    return key ? key.replace(/_/g, ' ') : 'Sponsor Slot';
+  };
+
   return (
     <div
       ref={bannerRef}
@@ -68,8 +74,8 @@ export const AdBanner: React.FC<AdBannerProps> = ({ adKey, width, height, classN
       style={{ minWidth: isDev ? `${width}px` : 'auto', minHeight: isDev ? `${height}px` : 'auto' }}
     >
       {isDev && (
-        <div className="flex flex-col items-center gap-1 opacity-40">
-          <span className="text-[10px] font-black uppercase tracking-widest">Sponsor Slot</span>
+        <div className="flex flex-col items-center gap-1 opacity-40 text-center px-2">
+          <span className="text-[10px] font-black uppercase tracking-widest">{getAdLabel()}</span>
           <span className="text-[8px] font-mono">{width}x{height}</span>
         </div>
       )}

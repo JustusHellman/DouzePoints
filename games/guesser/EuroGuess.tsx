@@ -146,7 +146,6 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
     if (attempts.length === 0 && !isGameOver) return;
     localStorage.setItem(`euroguess-${getDayString()}`, JSON.stringify({ attempts, isGameOver, revealedHints, won }));
     if (isGameOver) {
-      updateGameStats(GameType.GUESSER, won, { attempts: attempts.length });
       if (won) {
         const pts = getPointsInfo.points;
         confetti({
@@ -184,8 +183,10 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
     if (isCorrect) {
       setWon(true); 
       setIsGameOver(true); 
-      setAttempts([...attempts, selectedTitle]); 
+      const newAttempts = [...attempts, selectedTitle];
+      setAttempts(newAttempts); 
       setRevealedHints(6); 
+      updateGameStats(GameType.GUESSER, true, { attempts: newAttempts.length });
       setTimeout(() => setShowModal(true), 1500);
     } else {
       const newAttempts = [...attempts, selectedTitle];
@@ -193,6 +194,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
       setRevealedHints(Math.min(newAttempts.length + 1, 6));
       if (newAttempts.length >= 6) { 
         setIsGameOver(true); 
+        updateGameStats(GameType.GUESSER, false, { attempts: newAttempts.length });
         setTimeout(() => setShowModal(true), 1500);
       }
       setQuery("");
@@ -222,7 +224,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
         <GameScoreCard 
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
           historyEmoji={historyEmoji} gameTitle="EuroGuess" song={song} attempts={attempts.length} maxAttempts={6}
-          onClose={() => setShowModal(false)} onReturn={onReturn}
+          onClose={() => setShowModal(false)} onReturn={onReturn} gameType={GameType.GUESSER}
         />
       ) : (
         <>
@@ -298,8 +300,9 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
               </p>
             </div>
             
-            <div className="mt-8 flex justify-center">
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
               <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} />
+              <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} className="hidden md:flex" />
             </div>
           </div>
         </>

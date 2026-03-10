@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
-import { MasterSong } from '../data/types.ts';
+import React, { useState, useMemo } from 'react';
+import { GameType, MasterSong } from '../data/types.ts';
 import { useTranslation } from '../context/LanguageContext.tsx';
 import { getDayString } from '../utils/daily.ts';
+import { getStoredStats } from '../utils/stats.ts';
 import { CountdownTimer } from './CountdownTimer.tsx';
-import { NativeAd } from './NativeAd.tsx';
+import { AdBanner } from './AdBanner.tsx';
+import { PointsDistribution } from './PointsDistribution.tsx';
+import { AD_KEYS } from '../data/adConstants.ts';
 
 interface GameScoreCardProps {
   won: boolean;
@@ -19,6 +22,7 @@ interface GameScoreCardProps {
   onReturn: () => void;
   onShare?: () => void;
   extraInfo?: React.ReactNode;
+  gameType?: GameType;
 }
 
 const PerformanceLogRenderer: React.FC<{ 
@@ -114,10 +118,27 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
   onClose,
   onReturn,
   onShare,
-  extraInfo
+  extraInfo,
+  gameType
 }) => {
   const { t } = useTranslation();
   const [showCopied, setShowCopied] = useState(false);
+
+  const distribution = useMemo(() => {
+    if (!gameType) return null;
+    const stats = getStoredStats();
+    let key: 'word_game' | 'artists' | 'links' | 'guesser' | 'arena' | 'refrain';
+    switch(gameType) {
+      case GameType.WORD_GAME: key = 'word_game'; break;
+      case GameType.ARTIST_WORD_GAME: key = 'artists'; break;
+      case GameType.LINKS_GAME: key = 'links'; break;
+      case GameType.GUESSER: key = 'guesser'; break;
+      case GameType.ARENA: key = 'arena'; break;
+      case GameType.REFRAIN_GAME: key = 'refrain'; break;
+      default: return null;
+    }
+    return stats[key].distribution;
+  }, [gameType]);
 
   const displayHistory = historyEmoji || [...Array(maxAttempts)].map((_, i) => (
     i < attempts ? (won && i === attempts - 1 ? '🟩' : '⬛') : '⬜'
@@ -179,7 +200,7 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
   };
 
   return (
-    <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out py-1">
+    <div className="w-full max-w-md mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out py-1">
       <div className={`bg-[#0b0b18] border border-white/10 rounded-[2rem] w-full relative flex flex-col overflow-hidden ${theme.card}`}>
         
         <button 
@@ -277,8 +298,14 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
              </div>
           )}
 
-          <div className="pt-2">
-            <NativeAd />
+          {distribution && (
+            <div className="animate-in fade-in duration-1000 delay-300">
+              <PointsDistribution distribution={distribution} />
+            </div>
+          )}
+
+          <div className="pt-2 flex justify-center">
+            <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} />
           </div>
 
           <div className="pt-4 border-t border-white/5 flex flex-col items-center gap-2">

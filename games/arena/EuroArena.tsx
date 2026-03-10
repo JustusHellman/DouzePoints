@@ -130,7 +130,6 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
     if (guesses.length === 0 && !isGameOver) return;
     localStorage.setItem(`euroarena-${getDayString()}`, JSON.stringify({ guesses, isGameOver, won }));
     if (isGameOver) {
-      updateGameStats(GameType.ARENA, won, { attempts: guesses.length });
       if (won) confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
     }
   }, [guesses, isGameOver, won, getPointsInfo]);
@@ -140,8 +139,17 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
     const isWin = String(selected.id) === String(target.id);
     const newGuesses = [selected, ...guesses];
     setGuesses(newGuesses); setQuery(""); setShowResults(false);
-    if (isWin) { setWon(true); setIsGameOver(true); setTimeout(() => setShowModal(true), 1500); }
-    else if (newGuesses.length >= MAX_GUESSES) { setIsGameOver(true); setTimeout(() => setShowModal(true), 1500); }
+    if (isWin) { 
+      setWon(true); 
+      setIsGameOver(true); 
+      updateGameStats(GameType.ARENA, true, { attempts: newGuesses.length });
+      setTimeout(() => setShowModal(true), 1500); 
+    }
+    else if (newGuesses.length >= MAX_GUESSES) { 
+      setIsGameOver(true); 
+      updateGameStats(GameType.ARENA, false, { attempts: newGuesses.length });
+      setTimeout(() => setShowModal(true), 1500); 
+    }
   };
 
   const filteredData = useMemo(() => {
@@ -190,7 +198,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
         <GameScoreCard 
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
           historyEmoji={historyEmoji} gameTitle={t('games.euroarena.title')} song={target} attempts={guesses.length} maxAttempts={MAX_GUESSES}
-          onClose={() => setShowModal(false)} onReturn={onReturn}
+          onClose={() => setShowModal(false)} onReturn={onReturn} gameType={GameType.ARENA}
         />
       ) : (
         <>
@@ -283,8 +291,9 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
               </p>
             </div>
             
-            <div className="mt-8 flex justify-center">
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
               <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} />
+              <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} className="hidden md:flex" />
             </div>
           </div>
         </>
