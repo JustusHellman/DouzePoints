@@ -245,7 +245,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   };
 
   return (
-    <div className="flex flex-col items-center pt-4 pb-12 px-1 sm:px-4 w-full max-w-3xl mx-auto relative">
+    <div className="flex flex-col items-center pt-4 pb-24 md:pb-32 px-1 sm:px-4 w-full max-w-3xl mx-auto relative">
       {isGameOver && showModal ? (
         <GameScoreCard 
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}

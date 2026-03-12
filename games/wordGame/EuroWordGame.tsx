@@ -115,7 +115,19 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
     
     let maxTileSize = isMobile ? 80 : 120;
 
-    const reservedHeight = isMobile ? 240 : 300; 
+    const consentStr = localStorage.getItem('eu_cookie_consent_v1');
+    let hasAds = false;
+    if (consentStr) {
+      try {
+        const consent = JSON.parse(consentStr);
+        hasAds = !!consent.personalized;
+      } catch (e) {}
+    }
+    const stickyFooterHeight = hasAds ? (isMobile ? 60 : 100) : 0;
+    
+    // Accurately calculate reserved height (header + title + margins + keyboard)
+    const baseReservedHeight = isMobile ? 300 : 430;
+    const reservedHeight = baseReservedHeight + stickyFooterHeight; 
     const availableBoardHeight = viewportHeight - reservedHeight;
     const heightBasedSize = Math.floor((availableBoardHeight - (5 * rowGap)) / 6);
     
@@ -136,8 +148,8 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
     
     // Keyboard Scaling
     const kGap = isMobile ? 2 : 4;
-    // Keyboard should match board width but stay within reasonable bounds
-    const targetKWidth = Math.max(isMobile ? 280 : 400, Math.min(containerWidth - 8, boardWidth));
+    // Decouple keyboard width from board width so it stays large and easy to tap
+    const targetKWidth = Math.min(containerWidth - 8, isMobile ? 380 : 600);
     const kKeyWidth = Math.floor((targetKWidth - (9 * kGap)) / 10);
     const kActionWidth = Math.floor((3 * kKeyWidth + kGap) / 2);
     
@@ -408,7 +420,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
   const gameRuleKey = gameType === GameType.WORD_GAME ? 'eurosong' : 'euroartist';
 
   return (
-    <div ref={containerRef} className="flex flex-col items-center pt-4 pb-12 w-full max-w-2xl mx-auto px-0.5">
+    <div ref={containerRef} className="flex flex-col items-center pt-4 pb-24 md:pb-32 w-full max-w-2xl mx-auto px-0.5">
       {message && (
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[600] p-4">
           <div className="bg-white/80 backdrop-blur-xl text-black font-black uppercase text-[14px] md:text-[18px] tracking-[0.2em] px-6 py-3 rounded-2xl shadow-3xl border-[3px] border-white/40 animate-fade-in-out text-center">

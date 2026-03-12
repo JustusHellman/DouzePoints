@@ -457,6 +457,9 @@ const App: React.FC = () => {
     const twitterUrl = document.querySelector('meta[property="twitter:url"]');
     if (twitterUrl) twitterUrl.setAttribute('content', `${window.location.origin}${location.pathname}`);
 
+    const canonicalUrl = document.querySelector('link[rel="canonical"]');
+    if (canonicalUrl) canonicalUrl.setAttribute('href', `https://www.douzepoints.net${location.pathname}`);
+
     const twitterTitle = document.querySelector('meta[property="twitter:title"]');
     if (twitterTitle) twitterTitle.setAttribute('content', currentTitle);
 

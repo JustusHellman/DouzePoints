@@ -34,6 +34,10 @@ export const NativeAd: React.FC<NativeAdProps> = ({ className }) => {
     return key ? key.replace(/_/g, ' ') : 'Native Banner';
   };
 
+  if (!isDev && !hasConsent) {
+    return null;
+  }
+
   return (
     <div className={`w-full flex justify-center py-4 ${className}`}>
       {isDev ? (
@@ -41,7 +45,7 @@ export const NativeAd: React.FC<NativeAdProps> = ({ className }) => {
           <span className="text-xs font-black uppercase tracking-[0.3em]">{getAdLabel()}</span>
           <span className="text-[10px] font-mono italic">Responsive Broadcast Slot</span>
         </div>
-      ) : hasConsent ? (
+      ) : (
         <iframe
           src={`/native-ad.html?key=${AD_KEYS.NATIVE_BANNER}`}
           className="w-full max-w-4xl aspect-[4/1]"
@@ -49,7 +53,7 @@ export const NativeAd: React.FC<NativeAdProps> = ({ className }) => {
           scrolling="no"
           title="Native Ad"
         />
-      ) : null}
+      )}
     </div>
   );
 };

@@ -218,7 +218,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
   }, [attempts, song]);
 
   return (
-    <div className="flex flex-col items-center pt-6 pb-12 px-1 sm:px-4 w-full max-w-2xl mx-auto">
+    <div className="flex flex-col items-center pt-6 pb-24 md:pb-32 px-1 sm:px-4 w-full max-w-2xl mx-auto">
       {isGameOver && showModal ? (
         <GameScoreCard 
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}

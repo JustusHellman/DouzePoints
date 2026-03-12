@@ -37,6 +37,10 @@ export const AdBanner: React.FC<AdBannerProps> = ({ adKey, width, height, classN
     return key ? key.replace(/_/g, ' ') : 'Sponsor Slot';
   };
 
+  if (!isDev && !hasConsent) {
+    return null;
+  }
+
   return (
     <div
       className={`flex justify-center items-center overflow-hidden ${className} ${isDev ? 'bg-white/5 border-2 border-dashed border-white/20 rounded-xl' : ''}`}
@@ -47,7 +51,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({ adKey, width, height, classN
           <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest">{getAdLabel()}</span>
           <span className="text-[8px] sm:text-[10px] font-mono">{width}x{height}</span>
         </div>
-      ) : hasConsent ? (
+      ) : (
         <iframe
           src={`/ad.html?key=${adKey}&width=${width}&height=${height}`}
           width={width}
@@ -56,7 +60,7 @@ export const AdBanner: React.FC<AdBannerProps> = ({ adKey, width, height, classN
           scrolling="no"
           title={`Ad ${width}x${height}`}
         />
-      ) : null}
+      )}
     </div>
   );
 };
