@@ -8,8 +8,7 @@ import { getFuzzyScore } from '../../utils/fuzzy.ts';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
-import { AdBanner } from '../../components/AdBanner.tsx';
-import { AD_KEYS } from '../../data/adConstants.ts';
+import { NativeAd } from '../../components/NativeAd.tsx';
 
 interface EuroArenaProps {
   onReturn: () => void;
@@ -291,9 +290,8 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
               </p>
             </div>
             
-            <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} />
-              <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} className="hidden md:flex" />
+            <div className="mt-8 w-full max-w-3xl mx-auto">
+              <NativeAd />
             </div>
           </div>
         </>

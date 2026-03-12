@@ -26,8 +26,8 @@ export const CountdownTimer: React.FC<{ label?: string }> = ({ label }) => {
 
   return (
     <div className="flex flex-col items-center gap-1">
-      {label && <span className="text-[7px] font-black text-gray-500 uppercase tracking-[0.3em]">{label}</span>}
-      <div className="font-mono text-xl md:text-2xl font-black text-white tracking-widest bg-white/5 px-4 py-2 rounded-xl border border-white/10 shadow-inner">
+      {label && <span className="text-[8px] sm:text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">{label}</span>}
+      <div className="font-mono text-xl md:text-3xl font-black text-white tracking-widest bg-white/5 px-4 py-2 rounded-xl border border-white/10 shadow-inner">
         {timeLeft}
       </div>
     </div>

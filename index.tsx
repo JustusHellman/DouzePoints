@@ -24,14 +24,17 @@ root.render(
   </React.StrictMode>
 );
 
+declare const __BUILD_DATE__: string;
+
 if ('serviceWorker' in navigator) {
   // Track if the page was already controlled by a service worker at load time
   const wasControlled = !!navigator.serviceWorker.controller;
 
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(registration => {
-        console.log('SW registered: ', registration);
+    const swUrl = `/sw.js?v=${encodeURIComponent(__BUILD_DATE__)}`;
+    navigator.serviceWorker.register(swUrl)
+      .then(() => {
+        console.log('SW registered with version:', __BUILD_DATE__);
       })
       .catch(err => {
         console.log('SW registration failed: ', err);

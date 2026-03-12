@@ -22,10 +22,10 @@ interface StatBoxProps {
 const StatBox = ({ label, value, color = "white", icon }: StatBoxProps) => (
   <div className="bg-white/5 p-4 rounded-3xl border border-white/5 flex flex-col items-center group relative overflow-hidden transition-all hover:bg-white/10">
     <div className="flex items-baseline gap-1">
-      <span className={`text-2xl font-black mb-1 text-${color}`}>{value}</span>
-      {icon && <span>{icon}</span>}
+      <span className={`text-2xl sm:text-3xl font-black mb-1 text-${color}`}>{value}</span>
+      {icon && <span className="text-lg sm:text-xl">{icon}</span>}
     </div>
-    <span className="text-[8px] text-gray-500 uppercase font-black tracking-widest">{label}</span>
+    <span className="text-[8px] sm:text-[10px] text-gray-500 uppercase font-black tracking-widest">{label}</span>
   </div>
 );
 
@@ -129,7 +129,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, initialT
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-2xl z-[200] flex items-center justify-center p-4 animate-in fade-in duration-300">
-      <div className="bg-[#0a0a1a] border border-white/10 rounded-[2.5rem] p-8 max-w-md md:max-w-4xl w-full relative shadow-3xl overflow-hidden border-t-purple-500/50 max-h-[90vh] overflow-y-auto scrollbar-hide transition-all">
+      <div className="bg-[#0a0a1a] border border-white/10 rounded-[2.5rem] p-8 max-w-md md:max-w-4xl w-fit relative shadow-3xl overflow-hidden border-t-purple-500/50 max-h-[90vh] overflow-y-auto scrollbar-hide transition-all">
         <button onClick={onClose} className="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors p-2 z-10 hover:bg-white/5 rounded-full">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
@@ -184,7 +184,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, initialT
                   <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full transition-all duration-1000" style={{ width: `${rankInfo.progress}%` }}></div>
                 </div>
                 {rankInfo.next && (
-                  <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{rankInfo.next.threshold - stats.totalPoints} {t('stats.pointsNeeded')} {t(`ranks.${rankInfo.next.title}`)}</p>
+                  <p className="text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-widest">{rankInfo.next.threshold - stats.totalPoints} {t('stats.pointsNeeded')} {t(`ranks.${rankInfo.next.title}`)}</p>
                 )}
               </div>
 

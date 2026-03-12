@@ -1,4 +1,9 @@
-const CACHE_NAME = 'douze-points-v5'; // Incremented version
+// Build Hash: __BUILD_HASH__
+// Extract version from query parameter or fallback to a default
+const urlParams = new URL(self.location.href).searchParams;
+const version = urlParams.get('v') || '__BUILD_HASH__';
+const CACHE_NAME = `douze-points-${version}`;
+
 const ASSETS = [
   '/',
   '/index.html',

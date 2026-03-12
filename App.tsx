@@ -21,6 +21,7 @@ import { CookiePolicy } from './components/CookiePolicy.tsx';
 import { CookieConsent } from './components/CookieConsent.tsx';
 import { CountdownTimer } from './components/CountdownTimer.tsx';
 import { AdBanner } from './components/AdBanner.tsx';
+import { NativeAd } from './components/NativeAd.tsx';
 import { AD_KEYS } from './data/adConstants.ts';
 
 const ScrollToTop = () => {
@@ -263,9 +264,9 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
         <div className="px-2 md:px-6 mb-6">
           <div className="flex justify-center">
             {isMobile ? (
-              <AdBanner adKey={AD_KEYS.STICKY_FOOTER_MOBILE} width={320} height={50} />
+              <AdBanner adKey={AD_KEYS.STICKY_FOOTER_MOBILE_320_50} width={320} height={50} />
             ) : (
-              <AdBanner adKey={AD_KEYS.STICKY_FOOTER_DESKTOP} width={728} height={90} />
+              <AdBanner adKey={AD_KEYS.STICKY_FOOTER_DESKTOP_728_90} width={728} height={90} />
             )}
           </div>
         </div>
@@ -328,14 +329,8 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
           </div>
         </div>
         
-        <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} />
-          {!isMobile && (
-            <>
-              <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} className="hidden md:flex" />
-              <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} className="hidden lg:flex" />
-            </>
-          )}
+        <div className="mt-8 w-full max-w-4xl mx-auto">
+          <NativeAd />
         </div>
       </div>
     </div>
@@ -565,10 +560,10 @@ const App: React.FC = () => {
       {location.pathname !== '/cookies' && (
         <>
           <div className={`hidden ${isLobby ? '2xl:block' : 'lg:block'} fixed left-2 top-1/2 -translate-y-1/2 z-10 transition-opacity`}>
-            <AdBanner adKey={AD_KEYS.SIDE_SKYSCRAPER} width={160} height={600} />
+            <AdBanner adKey={AD_KEYS.SIDE_SKYSCRAPER_160_600} width={160} height={600} />
           </div>
           <div className={`hidden ${isLobby ? '2xl:block' : 'lg:block'} fixed right-2 top-1/2 -translate-y-1/2 z-10 transition-opacity`}>
-            <AdBanner adKey={AD_KEYS.SIDE_SKYSCRAPER} width={160} height={600} />
+            <AdBanner adKey={AD_KEYS.SIDE_SKYSCRAPER_160_600} width={160} height={600} />
           </div>
         </>
       )}
@@ -648,9 +643,9 @@ const App: React.FC = () => {
       {hasPersonalizedConsent && location.pathname !== '/cookie-policy' && (
         <div className="fixed bottom-0 left-0 right-0 z-[1000] bg-black/80 backdrop-blur-sm border-t border-white/10 flex justify-center items-center py-1">
           {isMobile ? (
-            <AdBanner adKey={AD_KEYS.STICKY_FOOTER_MOBILE} width={320} height={50} />
+            <AdBanner adKey={AD_KEYS.STICKY_FOOTER_MOBILE_320_50} width={320} height={50} />
           ) : (
-            <AdBanner adKey={AD_KEYS.STICKY_FOOTER_DESKTOP} width={728} height={90} />
+            <AdBanner adKey={AD_KEYS.STICKY_FOOTER_DESKTOP_728_90} width={728} height={90} />
           )}
         </div>
       )}

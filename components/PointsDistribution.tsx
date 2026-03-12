@@ -29,22 +29,22 @@ export const PointsDistribution: React.FC<PointsDistributionProps> = ({ distribu
   ];
   
   return (
-    <div className="mt-4 pt-4 border-t border-white/5 w-full max-w-[260px] mx-auto">
-      <p className="text-[10px] font-black uppercase text-gray-500 tracking-[0.3em] mb-4 text-center">{t('stats.scoreHistory')}</p>
+    <div className="mt-4 pt-4 border-t border-white/5 w-full">
+      <p className="text-[10px] sm:text-xs font-black uppercase text-gray-500 tracking-[0.3em] mb-4 text-center">{t('stats.scoreHistory')}</p>
       <div className="space-y-2">
         {distribution.map((count, i) => (
           <div key={i} className="flex items-center gap-2 group">
-            <span className={`text-[8px] font-black w-10 text-right transition-colors ${textColors[i]}`}>
+            <span className={`text-[8px] sm:text-[10px] font-black w-10 sm:w-12 text-right transition-colors ${textColors[i]}`}>
               {labels[i]}
             </span>
-            <div className="flex-1 bg-white/5 h-5 rounded-full overflow-hidden border border-white/5 relative">
+            <div className="flex-1 bg-white/5 h-5 sm:h-6 rounded-full overflow-hidden border border-white/5 relative">
               <div 
                 className={`h-full transition-all duration-1000 ease-out flex items-center justify-end px-2 rounded-full ${colors[i]}`}
                 style={{ width: `${Math.max((count / max) * 100, count > 0 ? 8 : 0)}%` }}
               >
-                {count > 0 && <span className="text-[9px] font-black text-white">{count}</span>}
+                {count > 0 && <span className="text-[9px] sm:text-xs font-black text-white">{count}</span>}
               </div>
-              {count === 0 && <div className="absolute inset-0 flex items-center justify-center opacity-10"><span className="text-[7px] font-bold">0</span></div>}
+              {count === 0 && <div className="absolute inset-0 flex items-center justify-center opacity-10"><span className="text-[7px] sm:text-[9px] font-bold">0</span></div>}
             </div>
           </div>
         ))}

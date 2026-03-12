@@ -51,12 +51,17 @@ export const NativeAd: React.FC<NativeAdProps> = ({ className }) => {
     return () => window.removeEventListener('storage', checkConsentAndLoad);
   }, [isDev]);
 
+  const getAdLabel = () => {
+    const key = Object.keys(AD_KEYS).find(k => (AD_KEYS as Record<string, string>)[k] === AD_KEYS.NATIVE_BANNER);
+    return key ? key.replace(/_/g, ' ') : 'Native Banner';
+  };
+
   return (
     <div className={`w-full flex justify-center py-4 ${className}`} ref={containerRef}>
       {isDev && (
         <div className="w-full max-w-4xl aspect-[4/1] bg-white/5 border-2 border-dashed border-white/20 rounded-3xl flex flex-col items-center justify-center gap-2 opacity-40">
-          <span className="text-xs font-black uppercase tracking-[0.3em]">Native Broadcast Sponsor</span>
-          <span className="text-[10px] font-mono italic">Responsive 4:1 Slot</span>
+          <span className="text-xs font-black uppercase tracking-[0.3em]">{getAdLabel()}</span>
+          <span className="text-[10px] font-mono italic">Responsive Broadcast Slot</span>
         </div>
       )}
     </div>

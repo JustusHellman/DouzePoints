@@ -39,17 +39,17 @@ const PerformanceLogRenderer: React.FC<{
     const rows = history.trim().split('\n');
     const headers = ['Y', 'R', 'C', 'G', 'S', 'X']; 
     return (
-      <div className="flex flex-col items-center gap-1.5 w-full max-w-[150px] mx-auto">
-        <div className="grid grid-cols-6 gap-1.5 w-full border-b border-white/10 pb-1 px-1">
+      <div className="flex flex-col items-center gap-1.5 w-full max-w-[180px] mx-auto">
+        <div className="grid grid-cols-6 gap-1.5 w-full border-b border-white/10 pb-1.5 px-1">
           {headers.map((h, i) => (
-            <div key={i} className="text-[7px] font-black text-gray-500 text-center tracking-tighter uppercase">{h}</div>
+            <div key={i} className="text-[8px] sm:text-[10px] font-black text-gray-500 text-center tracking-tighter uppercase">{h}</div>
           ))}
         </div>
-        <div className="flex flex-col gap-1 w-full px-1">
+        <div className="flex flex-col gap-1.5 w-full px-1">
           {rows.map((row, i) => (
             <div key={i} className="grid grid-cols-6 gap-1.5 items-center">
               {Array.from(row).map((emoji, j) => (
-                <span key={j} className="text-[12px] sm:text-[13px] leading-none text-center filter drop-shadow-sm grayscale-[0.2]">{emoji}</span>
+                <span key={j} className="text-[14px] sm:text-[16px] leading-none text-center filter drop-shadow-sm grayscale-[0.2]">{emoji}</span>
               ))}
             </div>
           ))}
@@ -60,8 +60,8 @@ const PerformanceLogRenderer: React.FC<{
 
   if (isGuess) {
     return (
-      <div className="flex flex-col items-center py-2">
-        <div className="flex items-center gap-1.5 sm:gap-2">
+      <div className="flex flex-col items-center py-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {[...Array(6)].map((_, i) => {
             const stepNum = i + 1;
             const isTarget = stepNum === attempts && won;
@@ -70,7 +70,7 @@ const PerformanceLogRenderer: React.FC<{
             return (
               <React.Fragment key={i}>
                 <div className={`
-                  w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center border-2 transition-all duration-700 relative
+                  w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center border-2 transition-all duration-700 relative
                   ${isTarget ? 'bg-green-500 border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.5)] z-10 scale-110' : 
                     isIncorrect ? 'bg-red-500/20 border-red-500/40 opacity-80' : 
                     'bg-gray-950 border-white/5 opacity-40'}
@@ -78,20 +78,20 @@ const PerformanceLogRenderer: React.FC<{
                   {isTarget && (
                     <>
                       <div className="absolute inset-0 bg-green-400 rounded-full animate-ping opacity-20"></div>
-                      <span className="text-[8px] font-black text-black">✓</span>
+                      <span className="text-[10px] sm:text-[12px] font-black text-black">✓</span>
                     </>
                   )}
-                  {isIncorrect && <span className="text-[8px] font-black text-red-500/60">✕</span>}
-                  {!isTarget && !isIncorrect && <span className="text-[6px] font-black text-gray-700">{stepNum}</span>}
+                  {isIncorrect && <span className="text-[10px] sm:text-[12px] font-black text-red-500/60">✕</span>}
+                  {!isTarget && !isIncorrect && <span className="text-[8px] sm:text-[10px] font-black text-gray-700">{stepNum}</span>}
                 </div>
                 {i < 5 && (
-                  <div className={`h-[1px] w-2 sm:w-3 ${stepNum < attempts ? 'bg-red-500/20' : 'bg-white/5'}`}></div>
+                  <div className={`h-[1px] w-3 sm:w-4 ${stepNum < attempts ? 'bg-red-500/20' : 'bg-white/5'}`}></div>
                 )}
               </React.Fragment>
             );
           })}
         </div>
-        <p className="mt-3 text-[6px] font-black text-gray-600 uppercase tracking-widest italic">
+        <p className="mt-4 text-[8px] sm:text-[10px] font-black text-gray-600 uppercase tracking-widest italic">
           {won ? `${t('scorecard.breakthrough')} ${attempts}` : t('scorecard.signalLost')}
         </p>
       </div>
@@ -200,8 +200,8 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
   };
 
   return (
-    <div className="w-full max-w-md mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out py-1">
-      <div className={`bg-[#0b0b18] border border-white/10 rounded-[2rem] w-full relative flex flex-col overflow-hidden ${theme.card}`}>
+    <div className="w-full max-w-md mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out py-1 flex justify-center">
+      <div className={`bg-[#0b0b18] border border-white/10 rounded-[2rem] w-fit min-w-[280px] relative flex flex-col overflow-hidden ${theme.card}`}>
         
         <button 
           onClick={onClose} 
@@ -215,66 +215,66 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
 
         <div className={`px-6 pt-6 pb-4 text-center border-b border-white/5 bg-gradient-to-b ${theme.header}`}>
           <div className="flex justify-center mb-1.5">
-            <span className={`px-2 py-0.5 rounded-full text-[6px] font-black uppercase tracking-[0.2em] ${theme.badge}`}>
+            <span className={`px-2 py-0.5 rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] ${theme.badge}`}>
               {t('scorecard.performanceVerdict')}
             </span>
           </div>
-          <h3 className={`text-3xl sm:text-4xl font-black italic uppercase tracking-tighter mb-0.5 ${pointsColor} leading-tight`}>
+          <h3 className={`text-3xl sm:text-4xl md:text-5xl font-black italic uppercase tracking-tighter mb-0.5 ${pointsColor} leading-tight`}>
             {pointsLabel}
           </h3>
-          <p className="text-[6px] font-black uppercase tracking-[0.4em] text-gray-500">
+          <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.4em] text-gray-500">
             {gameTitle} • {t('scorecard.dailyResult')}
           </p>
         </div>
 
         <div className="px-5 sm:px-8 py-5 space-y-5">
           {song && (
-            <div className="bg-white/[0.02] p-5 rounded-3xl border border-white/5 relative z-10 overflow-hidden shadow-lg">
-               <div className="flex flex-col gap-0.5 mb-3">
-                 <p className="text-[5px] text-pink-500 font-black uppercase tracking-[0.4em]">{t('scorecard.revealedEntry')}</p>
+            <div className="bg-white/[0.02] p-5 sm:p-6 rounded-3xl border border-white/5 relative z-10 overflow-hidden shadow-lg">
+               <div className="flex flex-col gap-1 mb-4">
+                 <p className="text-[8px] sm:text-[10px] text-pink-500 font-black uppercase tracking-[0.4em]">{t('scorecard.revealedEntry')}</p>
                  <div className="flex justify-between items-start gap-4">
                     <div className="flex-1">
-                       <h4 className="text-lg sm:text-xl font-black text-white uppercase tracking-tighter leading-none">{song.title}</h4>
-                       <p className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-tight">{song.artist}</p>
+                       <h4 className="text-xl sm:text-2xl md:text-3xl font-black text-white uppercase tracking-tighter leading-none">{song.title}</h4>
+                       <p className="text-sm sm:text-base font-bold text-gray-400 uppercase tracking-tight">{song.artist}</p>
                     </div>
                     <a 
                       href={getWatchUrl(song)} 
                       target="_blank" rel="noopener noreferrer" 
-                      className="bg-[#ff0000] px-2.5 py-1.5 rounded-lg text-[6px] font-black text-white transition-all hover:bg-[#cc0000] flex flex-col items-center gap-0.5 shadow-lg shadow-red-600/10"
+                      className="bg-[#ff0000] px-3 py-2 rounded-lg text-[8px] sm:text-[10px] font-black text-white transition-all hover:bg-[#cc0000] flex flex-col items-center gap-1 shadow-lg shadow-red-600/10"
                     >
-                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
                       {t('scorecard.watch')}
                     </a>
                  </div>
                </div>
 
-               <div className="grid grid-cols-3 gap-2 border-t border-white/10 pt-3 mb-3">
+               <div className="grid grid-cols-3 gap-3 border-t border-white/10 pt-4 mb-4">
                   <div className="flex flex-col">
-                    <span className="text-[5px] font-black text-gray-600 uppercase tracking-widest">{t('scorecard.origin')}</span>
-                    <span className="text-[9px] font-black text-white uppercase truncate">{t(`metadata.countries.${song.country}`)}</span>
+                    <span className="text-[8px] sm:text-[10px] font-black text-gray-600 uppercase tracking-widest">{t('scorecard.origin')}</span>
+                    <span className="text-xs sm:text-sm font-black text-white uppercase truncate">{t(`metadata.countries.${song.country}`)}</span>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[5px] font-black text-gray-600 uppercase tracking-widest">{t('scorecard.year')}</span>
-                    <span className="text-[9px] font-black text-white uppercase">{song.year}</span>
+                    <span className="text-[8px] sm:text-[10px] font-black text-gray-600 uppercase tracking-widest">{t('scorecard.year')}</span>
+                    <span className="text-xs sm:text-sm font-black text-white uppercase">{song.year}</span>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[5px] font-black text-gray-600 uppercase tracking-widest">{t('scorecard.placing')}</span>
-                    <span className="text-[9px] font-black text-yellow-500 uppercase flex items-center gap-1">
+                    <span className="text-[8px] sm:text-[10px] font-black text-gray-600 uppercase tracking-widest">{t('scorecard.placing')}</span>
+                    <span className="text-xs sm:text-sm font-black text-yellow-500 uppercase flex items-center gap-1">
                       {song.placing === 1 ? '🏆' : '#'} {song.placing}
                     </span>
                   </div>
                </div>
 
-               <div className="bg-black/30 p-2.5 rounded-xl border border-white/5">
-                  <span className="text-[5px] font-black text-gray-600 uppercase tracking-[0.3em] block mb-0.5">{t('scorecard.greenroomGossip')}</span>
-                  <p className="text-[8.5px] font-bold text-gray-300 leading-tight italic">"{song.fact}"</p>
+               <div className="bg-black/30 p-3 sm:p-4 rounded-xl border border-white/5">
+                  <span className="text-[8px] sm:text-[10px] font-black text-gray-600 uppercase tracking-[0.3em] block mb-1">{t('scorecard.greenroomGossip')}</span>
+                  <p className="text-xs sm:text-sm font-bold text-gray-300 leading-tight italic">"{song.fact}"</p>
                </div>
             </div>
           )}
 
           <div className="text-center">
-            <p className="text-[6px] text-gray-600 font-black uppercase tracking-[0.4em] mb-2">{t('scorecard.performanceLog')}</p>
-            <div className="bg-black/40 p-3 rounded-2xl border border-white/10 inline-block mx-auto min-w-[160px] shadow-inner text-white mb-3">
+            <p className="text-[8px] sm:text-[10px] text-gray-600 font-black uppercase tracking-[0.4em] mb-3">{t('scorecard.performanceLog')}</p>
+            <div className="bg-black/40 p-4 rounded-2xl border border-white/10 inline-block mx-auto min-w-[180px] shadow-inner text-white mb-4">
               <PerformanceLogRenderer 
                 history={displayHistory} 
                 title={gameTitle} 
@@ -285,9 +285,9 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
             
             <button 
               onClick={handleShare} 
-              className="w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white/90 py-3 rounded-xl font-black uppercase text-[8px] tracking-[0.15em] transition-all flex items-center justify-center gap-2 active:scale-95"
+              className="w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white/90 py-4 rounded-xl font-black uppercase text-[10px] sm:text-[11px] tracking-[0.15em] transition-all flex items-center justify-center gap-2 active:scale-95"
             >
-              <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
               {showCopied ? t('scorecard.resultsCopied') : t('scorecard.shareResult')}
             </button>
           </div>
@@ -305,7 +305,7 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
           )}
 
           <div className="pt-2 flex justify-center">
-            <AdBanner adKey={AD_KEYS.HOW_TO_PLAY} width={300} height={250} />
+            <AdBanner adKey={AD_KEYS.BANNER_300_250} width={300} height={250} />
           </div>
 
           <div className="pt-4 border-t border-white/5 flex flex-col items-center gap-2">
