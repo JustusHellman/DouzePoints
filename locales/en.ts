@@ -259,6 +259,17 @@ export const en: TranslationSchema = {
     changes: {
       title: "Changes to This Policy",
       p1: "We may update this Privacy Policy from time to time. Any updates will be posted on this page with a revised “Last Updated” date."
+    },
+    about: {
+      title: "About Douze Points",
+      p1: "Douze Points is a passion project created for the Eurovision Song Contest community. Our goal is to provide a fun, daily interactive experience for fans to test their knowledge and celebrate the rich history of the contest.",
+      p2: "The game is completely free to play and is maintained as a tribute to the world's greatest music competition."
+    },
+    stats: {
+      title: "Game Statistics & Analytics",
+      p1: "To help us understand how the community is performing and to improve the game balance, Douze Points collects anonymous game statistics.",
+      p2: "When you complete a game, we record the game type, the score achieved, and the date. This information is aggregated and does not contain any personally identifiable information (such as your name, IP address, or email).",
+      p3: "We use Google Firebase (a service provided by Google) to store and process these aggregated statistics. This data is used solely for the purpose of analyzing game popularity and difficulty levels."
     }
   },
   about: {

@@ -1,0 +1,49 @@
+{
+  "entities": {
+    "DailyGameStats": {
+      "title": "Daily Game Stats",
+      "description": "Aggregated statistics for a specific game on a specific day.",
+      "type": "object",
+      "properties": {
+        "gameType": {
+          "type": "string",
+          "description": "The type of game (e.g., word_game, artists, links)."
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date in YYYY-MM-DD format."
+        },
+        "distribution": {
+          "type": "object",
+          "description": "Count of each score achieved.",
+          "properties": {
+            "12": { "type": "integer" },
+            "10": { "type": "integer" },
+            "8": { "type": "integer" },
+            "6": { "type": "integer" },
+            "4": { "type": "integer" },
+            "2": { "type": "integer" },
+            "0": { "type": "integer" }
+          }
+        },
+        "totalPlayed": {
+          "type": "integer",
+          "description": "Total number of games played for this type on this day."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time this record was updated."
+        }
+      },
+      "required": ["gameType", "date", "distribution", "totalPlayed", "lastUpdated"]
+    }
+  },
+  "firestore": {
+    "/game_stats/{statsId}": {
+      "schema": "DailyGameStats",
+      "description": "Collection of daily aggregated game statistics."
+    }
+  }
+}

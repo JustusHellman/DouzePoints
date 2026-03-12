@@ -229,6 +229,17 @@ export interface TranslationSchema {
       title: string;
       p1: string;
     };
+    about: {
+      title: string;
+      p1: string;
+      p2: string;
+    };
+    stats: {
+      title: string;
+      p1: string;
+      p2: string;
+      p3: string;
+    };
   };
   about: {
     title: string;

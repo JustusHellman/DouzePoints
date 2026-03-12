@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AD_KEYS } from '../data/adConstants.ts';
 
 interface NativeAdProps {
@@ -6,50 +6,28 @@ interface NativeAdProps {
 }
 
 export const NativeAd: React.FC<NativeAdProps> = ({ className }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const isDev = import.meta.env.DEV;
+  const [hasConsent, setHasConsent] = useState(false);
 
   useEffect(() => {
-    const checkConsentAndLoad = () => {
-      if (isDev) return;
-
+    const checkConsent = () => {
       const consentStr = localStorage.getItem('eu_cookie_consent_v1');
-      let personalized = false;
-
       if (consentStr) {
         try {
           const consent = JSON.parse(consentStr);
-          personalized = !!consent.personalized;
+          setHasConsent(!!consent.personalized);
         } catch (e) {
           console.error('Error parsing cookie consent', e);
         }
-      }
-
-      if (!personalized) {
-        if (containerRef.current) containerRef.current.innerHTML = '';
-        return;
-      }
-
-      if (containerRef.current) {
-        containerRef.current.innerHTML = '';
-
-        const script = document.createElement('script');
-        script.async = true;
-        script.setAttribute('data-cfasync', 'false');
-        script.src = `//pl28874471.effectivegatecpm.com/${AD_KEYS.NATIVE_BANNER}/invoke.js`;
-
-        const adContainer = document.createElement('div');
-        adContainer.id = `container-${AD_KEYS.NATIVE_BANNER}`;
-
-        containerRef.current.appendChild(script);
-        containerRef.current.appendChild(adContainer);
+      } else {
+        setHasConsent(false);
       }
     };
 
-    checkConsentAndLoad();
-    window.addEventListener('storage', checkConsentAndLoad);
-    return () => window.removeEventListener('storage', checkConsentAndLoad);
-  }, [isDev]);
+    checkConsent();
+    window.addEventListener('storage', checkConsent);
+    return () => window.removeEventListener('storage', checkConsent);
+  }, []);
 
   const getAdLabel = () => {
     const key = Object.keys(AD_KEYS).find(k => (AD_KEYS as Record<string, string>)[k] === AD_KEYS.NATIVE_BANNER);
@@ -57,13 +35,21 @@ export const NativeAd: React.FC<NativeAdProps> = ({ className }) => {
   };
 
   return (
-    <div className={`w-full flex justify-center py-4 ${className}`} ref={containerRef}>
-      {isDev && (
+    <div className={`w-full flex justify-center py-4 ${className}`}>
+      {isDev ? (
         <div className="w-full max-w-4xl aspect-[4/1] bg-white/5 border-2 border-dashed border-white/20 rounded-3xl flex flex-col items-center justify-center gap-2 opacity-40">
           <span className="text-xs font-black uppercase tracking-[0.3em]">{getAdLabel()}</span>
           <span className="text-[10px] font-mono italic">Responsive Broadcast Slot</span>
         </div>
-      )}
+      ) : hasConsent ? (
+        <iframe
+          src={`/native-ad.html?key=${AD_KEYS.NATIVE_BANNER}`}
+          className="w-full max-w-4xl aspect-[4/1]"
+          style={{ border: 'none', overflow: 'hidden', background: 'transparent' }}
+          scrolling="no"
+          title="Native Ad"
+        />
+      ) : null}
     </div>
   );
 };

@@ -1,0 +1,64 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: game_stats
+    // Document ID: {date}_{gameType} (e.g., 2026-03-12_word_game)
+    // Fields:
+    //   - gameType: string (required)
+    //   - date: string (required, YYYY-MM-DD)
+    //   - distribution: map (required)
+    //       - "12": number
+    //       - "10": number
+    //       - "8": number
+    //       - "6": number
+    //       - "4": number
+    //       - "2": number
+    //       - "0": number
+    //   - totalPlayed: number (required)
+    //   - lastUpdated: timestamp (required)
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+        (request.auth.token.email == "justusmhellman@gmail.com" && request.auth.token.email_verified == true);
+    }
+
+    function isValidStatsDoc(data) {
+      return data.gameType is string &&
+             data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.distribution is map &&
+             data.totalPlayed is number &&
+             data.lastUpdated is timestamp;
+    }
+
+    match /game_stats/{statsId} {
+      // Only the admin can see the global stats
+      allow read: if isAdmin();
+      
+      // Anyone can report a score (create or update)
+      // We validate the schema to prevent junk data
+      allow create: if isValidStatsDoc(request.resource.data);
+      
+      // For updates, we ensure they are only incrementing and not changing metadata
+      allow update: if isValidStatsDoc(request.resource.data) &&
+                      request.resource.data.gameType == resource.data.gameType &&
+                      request.resource.data.date == resource.data.date;
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

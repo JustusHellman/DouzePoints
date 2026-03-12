@@ -30,18 +30,11 @@ export const PrivacyPolicy: React.FC = () => {
         
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">00</span> About Douze Points
+            <span className="text-pink-500 italic">00</span> {t('privacy.about.title')}
           </h2>
           <div className="pl-12 space-y-4">
-            <p>
-              Douze Points is a passion project created for the Eurovision Song Contest community. 
-              Our goal is to provide a fun, daily interactive experience for fans to test their knowledge 
-              and celebrate the rich history of the contest.
-            </p>
-            <p>
-              The game is completely free to play and is maintained as a tribute to the world's 
-              greatest music competition.
-            </p>
+            <p>{t('privacy.about.p1')}</p>
+            <p>{t('privacy.about.p2')}</p>
           </div>
         </section>
 
@@ -58,7 +51,18 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">02</span> {t('privacy.dataCollection.title')}
+            <span className="text-pink-500 italic">02</span> {t('privacy.stats.title')}
+          </h2>
+          <div className="pl-12 space-y-4">
+            <p>{t('privacy.stats.p1')}</p>
+            <p>{t('privacy.stats.p2')}</p>
+            <p>{t('privacy.stats.p3')}</p>
+          </div>
+        </section>
+
+        <section className="space-y-6">
+          <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
+            <span className="text-pink-500 italic">03</span> {t('privacy.dataCollection.title')}
           </h2>
           <div className="pl-12 space-y-8">
             <div>
@@ -83,7 +87,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">03</span> {t('privacy.advertising.title')}
+            <span className="text-pink-500 italic">04</span> {t('privacy.advertising.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{renderTextWithLinks(t('privacy.advertising.p1'))}</p>
@@ -94,7 +98,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">04</span> {t('privacy.legalBasis.title')}
+            <span className="text-pink-500 italic">05</span> {t('privacy.legalBasis.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.legalBasis.p1')}</p>
@@ -117,7 +121,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">05</span> {t('privacy.localStorage.title')}
+            <span className="text-pink-500 italic">06</span> {t('privacy.localStorage.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.localStorage.p1')}</p>
@@ -131,7 +135,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">06</span> {t('privacy.dataSharing.title')}
+            <span className="text-pink-500 italic">07</span> {t('privacy.dataSharing.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.dataSharing.p1')}</p>
@@ -145,7 +149,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">07</span> {t('privacy.internationalTransfers.title')}
+            <span className="text-pink-500 italic">08</span> {t('privacy.internationalTransfers.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.internationalTransfers.p1')}</p>
@@ -154,7 +158,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">08</span> {t('privacy.dataRetention.title')}
+            <span className="text-pink-500 italic">09</span> {t('privacy.dataRetention.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.dataRetention.p1')}</p>
@@ -163,7 +167,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">09</span> {t('privacy.yourRights.title')}
+            <span className="text-pink-500 italic">10</span> {t('privacy.yourRights.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.yourRights.p1')}</p>
@@ -173,7 +177,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">10</span> {t('privacy.dataSecurity.title')}
+            <span className="text-pink-500 italic">11</span> {t('privacy.dataSecurity.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.dataSecurity.p1')}</p>
@@ -182,7 +186,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">11</span> {t('privacy.thirdPartyLinks.title')}
+            <span className="text-pink-500 italic">12</span> {t('privacy.thirdPartyLinks.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.thirdPartyLinks.p1')}</p>
@@ -191,7 +195,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">12</span> {t('privacy.changes.title')}
+            <span className="text-pink-500 italic">13</span> {t('privacy.changes.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.changes.p1')}</p>

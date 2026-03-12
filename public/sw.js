@@ -4,6 +4,11 @@ const urlParams = new URL(self.location.href).searchParams;
 const version = urlParams.get('v') || '__BUILD_HASH__';
 const CACHE_NAME = `douze-points-${version}`;
 
+// In production, the build process replaces all instances of __BUILD_HASH__ 
+// with the actual build date. In development, it remains unchanged.
+const RAW_HASH = '__BUILD_HASH__';
+const IS_DEV = RAW_HASH === '__BUILD' + '_HASH__';
+
 const ASSETS = [
   '/',
   '/index.html',
@@ -15,6 +20,9 @@ const ASSETS = [
 // Install event - cache core assets
 self.addEventListener('install', (event) => {
   self.skipWaiting(); // Force the waiting service worker to become the active service worker
+  
+  if (IS_DEV) return; // Don't cache anything in development
+  
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS);
@@ -30,7 +38,9 @@ self.addEventListener('activate', (event) => {
       caches.keys().then((cacheNames) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
-            if (cacheName !== CACHE_NAME) {
+            // In dev mode, delete ALL caches to prevent stale data.
+            // In prod mode, delete old version caches.
+            if (IS_DEV || cacheName !== CACHE_NAME) {
               return caches.delete(cacheName);
             }
           })
@@ -42,6 +52,12 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event - Network First strategy for the main page, Cache First for others
 self.addEventListener('fetch', (event) => {
+  // In development, ALWAYS use the network and never touch the cache
+  if (IS_DEV) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
   const url = new URL(event.request.url);
   
   // For the main page and navigation, use Network First

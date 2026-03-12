@@ -337,6 +337,8 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
   );
 };
 
+import { ErrorBoundary } from './components/ErrorBoundary.tsx';
+
 const App: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -605,33 +607,35 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <main id="main-content" className="flex-1 container mx-auto pb-4 px-2 md:px-4 page-fade" key={location.pathname} role="main">
-        {isLobby && (
-          <section className="text-center pt-6 md:pt-12 pb-6 md:pb-8">
-            <div className="inline-flex items-center gap-2 bg-pink-500/10 border border-pink-500/20 px-3 py-1 rounded-full mb-3 md:mb-4">
-              <span className="text-[9px] md:text-[11px] font-black text-pink-500 uppercase tracking-[0.2em] italic pr-[0.15em]">{t(`ranks.${currentRank?.title}`)}</span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black italic pr-[0.1em] tracking-tighter mb-2 md:mb-4 uppercase leading-none text-white drop-shadow-2xl">{t('greenroom.greenroom')}</h1>
-            <p className="text-gray-400 text-[9px] sm:text-xs md:text-sm max-w-2xl mx-auto font-medium tracking-tight opacity-70 px-4 leading-relaxed">{t('greenroom.description')}</p>
-          </section>
-        )}
-        
-        <Routes>
-          <Route path="/" element={<Dashboard stats={stats} onShareDaily={(games) => { setDailyShareGames(games); setShowDailyShare(true); }} isMobile={isMobile} />} />
-          <Route path="/euro-song" element={<EuroWordGame onReturn={handleReturn} data={MASTER_DATA} gameType={GameType.WORD_GAME} gameId="eurosong" title={t('games.eurosong.title')} />} />
-          <Route path="/euro-artist" element={<EuroWordGame onReturn={handleReturn} data={MASTER_DATA} gameType={GameType.ARTIST_WORD_GAME} gameId="euroartist" title={t('games.euroartist.title')} />} />
-          <Route path="/euro-refrain" element={<EuroRefrain onReturn={handleReturn} />} />
-          <Route path="/euro-links" element={<EuroLinks onReturn={handleReturn} />} />
-          <Route path="/euro-guess" element={<EuroGuess onReturn={handleReturn} data={MASTER_DATA} />} />
-          <Route path="/euro-arena" element={<EuroArena onReturn={handleReturn} data={MASTER_DATA} />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/terms" element={<TermsOfService />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/cookie-policy" element={<CookiePolicy />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </main>
+      <ErrorBoundary>
+        <main id="main-content" className="flex-1 container mx-auto pb-4 px-2 md:px-4 page-fade" key={location.pathname} role="main">
+          {isLobby && (
+            <section className="text-center pt-6 md:pt-12 pb-6 md:pb-8">
+              <div className="inline-flex items-center gap-2 bg-pink-500/10 border border-pink-500/20 px-3 py-1 rounded-full mb-3 md:mb-4">
+                <span className="text-[9px] md:text-[11px] font-black text-pink-500 uppercase tracking-[0.2em] italic pr-[0.15em]">{t(`ranks.${currentRank?.title}`)}</span>
+              </div>
+              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black italic pr-[0.1em] tracking-tighter mb-2 md:mb-4 uppercase leading-none text-white drop-shadow-2xl">{t('greenroom.greenroom')}</h1>
+              <p className="text-gray-400 text-[9px] sm:text-xs md:text-sm max-w-2xl mx-auto font-medium tracking-tight opacity-70 px-4 leading-relaxed">{t('greenroom.description')}</p>
+            </section>
+          )}
+          
+          <Routes>
+            <Route path="/" element={<Dashboard stats={stats} onShareDaily={(games) => { setDailyShareGames(games); setShowDailyShare(true); }} isMobile={isMobile} />} />
+            <Route path="/euro-song" element={<EuroWordGame onReturn={handleReturn} data={MASTER_DATA} gameType={GameType.WORD_GAME} gameId="eurosong" title={t('games.eurosong.title')} />} />
+            <Route path="/euro-artist" element={<EuroWordGame onReturn={handleReturn} data={MASTER_DATA} gameType={GameType.ARTIST_WORD_GAME} gameId="euroartist" title={t('games.euroartist.title')} />} />
+            <Route path="/euro-refrain" element={<EuroRefrain onReturn={handleReturn} />} />
+            <Route path="/euro-links" element={<EuroLinks onReturn={handleReturn} />} />
+            <Route path="/euro-guess" element={<EuroGuess onReturn={handleReturn} data={MASTER_DATA} />} />
+            <Route path="/euro-arena" element={<EuroArena onReturn={handleReturn} data={MASTER_DATA} />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/cookie-policy" element={<CookiePolicy />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+      </ErrorBoundary>
 
       {rankUpData && <RankUpCelebration newRank={rankUpData} onClose={() => setRankUpData(null)} />}
       {showStats && <StatsModal stats={stats} onClose={() => setShowStats(false)} onShowInfo={() => {}} initialTab="TOTAL" />}

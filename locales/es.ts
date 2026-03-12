@@ -259,6 +259,17 @@ export const es: TranslationSchema = {
     changes: {
       title: "Cambios en esta política",
       p1: "Podemos actualizar esta Política de Privacidad de vez en cuando. Cualquier actualización se publicará en esta página con una fecha de “Última actualización” revisada."
+    },
+    about: {
+      title: "Sobre Douze Points",
+      p1: "Douze Points es un proyecto apasionado creado para la comunidad del Festival de la Canción de Eurovisión. Nuestro objetivo es proporcionar una experiencia interactiva diaria y divertida para que los fans pongan a prueba sus conocimientos y celebren la rica historia del festival.",
+      p2: "El juego es completamente gratuito y se mantiene como un tributo a la mayor competición musical del mundo."
+    },
+    stats: {
+      title: "Estadísticas y análisis del juego",
+      p1: "Para ayudarnos a entender cómo se desempeña la comunidad y mejorar el equilibrio del juego, Douze Points recopila estadísticas anónimas del juego.",
+      p2: "Cuando completas un juego, registramos el tipo de juego, la puntuación obtenida y la fecha. Esta información es agregada y no contiene ninguna información de identificación personal (como su nombre, dirección IP o correo electrónico).",
+      p3: "Utilizamos Google Firebase (un servicio proporcionado por Google) para almacenar y procesar estas estadísticas agregadas. Estos datos se utilizan únicamente con el fin de analizar la popularidad del juego y los niveles de dificultad."
     }
   },
   about: {

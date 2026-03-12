@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AD_KEYS } from '../data/adConstants.ts';
 
 interface AdBannerProps {
@@ -8,77 +8,29 @@ interface AdBannerProps {
   className?: string;
 }
 
-let adLoadIndex = 0;
-
 export const AdBanner: React.FC<AdBannerProps> = ({ adKey, width, height, className }) => {
-  const bannerRef = useRef<HTMLDivElement>(null);
   const isDev = import.meta.env.DEV;
+  const [hasConsent, setHasConsent] = useState(false);
 
   useEffect(() => {
-    let isMounted = true;
-    const currentIndex = adLoadIndex++;
-    
-    const checkConsentAndLoad = () => {
-      if (isDev || !isMounted) return;
-
+    const checkConsent = () => {
       const consentStr = localStorage.getItem('eu_cookie_consent_v1');
-      let personalized = false;
-
       if (consentStr) {
         try {
           const consent = JSON.parse(consentStr);
-          personalized = !!consent.personalized;
+          setHasConsent(!!consent.personalized);
         } catch (e) {
           console.error('Error parsing cookie consent', e);
         }
-      }
-
-      if (!personalized) {
-        if (bannerRef.current) bannerRef.current.innerHTML = '';
-        return;
-      }
-
-      if (bannerRef.current) {
-        bannerRef.current.innerHTML = '';
-
-        // Stagger the loading slightly to ensure atOptions isn't overwritten 
-        // before the previous invoke.js has a chance to read it
-        setTimeout(() => {
-          if (!isMounted || !bannerRef.current) return;
-
-          const configScript = document.createElement('script');
-          configScript.type = 'text/javascript';
-          configScript.innerHTML = `
-            atOptions = {
-              'key' : '${adKey}',
-              'format' : 'iframe',
-              'height' : ${height},
-              'width' : ${width},
-              'params' : {}
-            };
-          `;
-
-          const invokeScript = document.createElement('script');
-          invokeScript.type = 'text/javascript';
-          invokeScript.src = `//www.highperformanceformat.com/${adKey}/invoke.js`;
-
-          bannerRef.current.appendChild(configScript);
-          bannerRef.current.appendChild(invokeScript);
-        }, currentIndex * 150); // 150ms stagger
+      } else {
+        setHasConsent(false);
       }
     };
 
-    checkConsentAndLoad();
-    window.addEventListener('storage', checkConsentAndLoad);
-    
-    return () => {
-      isMounted = false;
-      window.removeEventListener('storage', checkConsentAndLoad);
-      // We don't decrement the index to keep the stagger consistent for new mounts
-      // but we could reset it if it gets too high
-      if (adLoadIndex > 50) adLoadIndex = 0;
-    };
-  }, [adKey, width, height, isDev]);
+    checkConsent();
+    window.addEventListener('storage', checkConsent);
+    return () => window.removeEventListener('storage', checkConsent);
+  }, []);
 
   const getAdLabel = () => {
     const key = Object.keys(AD_KEYS).find(k => (AD_KEYS as Record<string, string>)[k] === adKey);
@@ -87,16 +39,24 @@ export const AdBanner: React.FC<AdBannerProps> = ({ adKey, width, height, classN
 
   return (
     <div
-      ref={bannerRef}
       className={`flex justify-center items-center overflow-hidden ${className} ${isDev ? 'bg-white/5 border-2 border-dashed border-white/20 rounded-xl' : ''}`}
       style={{ minWidth: isDev ? `${width}px` : 'auto', minHeight: isDev ? `${height}px` : 'auto' }}
     >
-      {isDev && (
+      {isDev ? (
         <div className="flex flex-col items-center gap-1 opacity-40 text-center px-2">
           <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest">{getAdLabel()}</span>
           <span className="text-[8px] sm:text-[10px] font-mono">{width}x{height}</span>
         </div>
-      )}
+      ) : hasConsent ? (
+        <iframe
+          src={`/ad.html?key=${adKey}&width=${width}&height=${height}`}
+          width={width}
+          height={height}
+          style={{ border: 'none', overflow: 'hidden', background: 'transparent' }}
+          scrolling="no"
+          title={`Ad ${width}x${height}`}
+        />
+      ) : null}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import { GlobalStats, DetailedStats, GameType } from '../data/types.ts';
 import { getDayString } from './daily.ts';
+import { reportGameScore } from './firebaseService.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getDailyGameState = (config: any, today: string) => {
@@ -155,12 +156,14 @@ export const updateGameStats = (gameType: GameType, won: boolean, performanceMet
   stats[gameKey].played += 1;
   stats[gameKey].lastPlayed = today;
 
+  const { points: pointsEarned, isPerfect } = won 
+    ? calculatePoints(gameType, performanceMetrics)
+    : { points: 0, isPerfect: false };
+
   if (won) {
     stats[gameKey].wins += 1;
     stats[gameKey].currentStreak += 1;
     stats[gameKey].maxStreak = Math.max(stats[gameKey].maxStreak, stats[gameKey].currentStreak);
-
-    const { points: pointsEarned, isPerfect } = calculatePoints(gameType, performanceMetrics);
 
     if (gameType === GameType.WORD_GAME || gameType === GameType.ARTIST_WORD_GAME) {
       const attempts = performanceMetrics.attempts;
@@ -202,6 +205,9 @@ export const updateGameStats = (gameType: GameType, won: boolean, performanceMet
   } else {
     stats[gameKey].currentStreak = 0;
   }
+
+  // Report to Firebase (one write per day per game type per device)
+  reportGameScore(gameType, pointsEarned);
 
   try {
     localStorage.setItem('euro-stats-v2', JSON.stringify(stats));
