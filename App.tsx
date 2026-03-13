@@ -8,6 +8,7 @@ import EuroArena from './games/arena/EuroArena.tsx';
 import { GameType, GlobalStats } from './data/types.ts';
 import { MASTER_DATA } from './data/masterData.ts';
 import { getStoredStats, getCurrentRank, getDailyGameState } from './utils/stats.ts';
+import { reportSupportClick } from './utils/firebaseService.ts';
 import { StatsModal } from './components/StatsModal.tsx';
 import { DailyShareModal } from './components/DailyShareModal.tsx';
 import { RankUpCelebration } from './components/RankUpCelebration.tsx';
@@ -17,12 +18,8 @@ import { PrivacyPolicy } from './components/PrivacyPolicy.tsx';
 import TermsOfService from './components/TermsOfService.tsx';
 import About from './components/About.tsx';
 import Contact from './components/Contact.tsx';
-import { CookiePolicy } from './components/CookiePolicy.tsx';
-import { CookieConsent } from './components/CookieConsent.tsx';
+import Admin from './components/Admin.tsx';
 import { CountdownTimer } from './components/CountdownTimer.tsx';
-import { AdBanner } from './components/AdBanner.tsx';
-import { NativeAd } from './components/NativeAd.tsx';
-import { AD_KEYS } from './data/adConstants.ts';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -198,7 +195,7 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
   const isQualified = completedCount === games.length;
 
   return (
-    <div className="max-w-[1200px] mx-auto pb-8">
+    <div className="max-w-4xl mx-auto pb-8">
       {/* Daily Progress Bar */}
       <div className="px-2 md:px-6 mb-4 md:mb-6">
         <div className="bg-[#0b0b18]/60 backdrop-blur-xl border border-white/10 rounded-[1.25rem] md:rounded-[1.5rem] p-4 md:p-6 relative overflow-hidden group">
@@ -263,11 +260,6 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
       {completedCount > 0 && (
         <div className="px-2 md:px-6 mb-6">
           <div className="flex justify-center">
-            {isMobile ? (
-              <AdBanner adKey={AD_KEYS.STICKY_FOOTER_MOBILE_320_50} width={320} height={50} />
-            ) : (
-              <AdBanner adKey={AD_KEYS.STICKY_FOOTER_DESKTOP_728_90} width={728} height={90} />
-            )}
           </div>
         </div>
       )}
@@ -316,6 +308,39 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
         ))}
       </div>
 
+      {/* Support Section */}
+      {completedCount > 0 && (
+        <div className="mt-8 px-2 md:px-6">
+          <a
+            href="https://buymeacoffee.com/DouzePointsGame"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => reportSupportClick()}
+            className={`group flex flex-col sm:flex-row items-center justify-between px-5 py-3 md:py-4 rounded-xl transition-colors duration-300 ${
+              completedCount === games.length 
+                ? 'bg-[#FFDD00]/10 hover:bg-[#FFDD00]/20' 
+                : 'bg-white/5 hover:bg-white/10'
+            }`}
+          >
+            <div className="flex items-center gap-3 mb-3 sm:mb-0 text-center sm:text-left">
+              <svg className="w-4 h-4 text-[#FFDD00] shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/>
+              </svg>
+              <span className="text-xs md:text-sm font-medium text-gray-300">
+                {completedCount === games.length ? t('support.completed') : t('support.title')} <span className="opacity-70 hidden sm:inline">— Support the project</span>
+              </span>
+            </div>
+            <div className={`text-[10px] font-bold uppercase tracking-widest text-white transition-colors px-4 py-1.5 rounded-full sm:ml-4 whitespace-nowrap ${
+              completedCount === games.length
+                ? 'bg-[#FFDD00]/20 group-hover:bg-[#FFDD00]/30'
+                : 'bg-[#FFDD00]/10 group-hover:bg-[#FFDD00]/20'
+            }`}>
+              {t('support.button')}
+            </div>
+          </a>
+        </div>
+      )}
+
       {/* How to Play General Section */}
       <div className="mt-12 px-2 md:px-6">
         <div className="bg-white/5 border border-white/5 rounded-[1.5rem] p-6 md:p-10 text-left relative overflow-hidden">
@@ -327,10 +352,6 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
             <p>{t('greenroom.howToPlayP1')}</p>
             <p>{t('greenroom.howToPlayP2')}</p>
           </div>
-        </div>
-        
-        <div className="mt-8 w-full max-w-4xl mx-auto">
-          <NativeAd />
         </div>
       </div>
     </div>
@@ -351,35 +372,6 @@ const App: React.FC = () => {
   const [dailyShareGames, setDailyShareGames] = useState<GameInstance[]>([]);
   const [stats, setStats] = useState<GlobalStats>(() => getStoredStats());
   const [rankUpData, setRankUpData] = useState<{ title: string; threshold: number } | null>(null);
-  const [hasPersonalizedConsent, setHasPersonalizedConsent] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    const consentStr = localStorage.getItem('eu_cookie_consent_v1');
-    if (!consentStr) return false;
-    try {
-      const consent = JSON.parse(consentStr);
-      return !!consent.personalized;
-    } catch {
-      return false;
-    }
-  });
-
-  useEffect(() => {
-    const handleStorage = () => {
-      const consentStr = localStorage.getItem('eu_cookie_consent_v1');
-      if (!consentStr) {
-        setHasPersonalizedConsent(false);
-        return;
-      }
-      try {
-        const consent = JSON.parse(consentStr);
-        setHasPersonalizedConsent(!!consent.personalized);
-      } catch {
-        setHasPersonalizedConsent(false);
-      }
-    };
-    window.addEventListener('storage', handleStorage);
-    return () => window.removeEventListener('storage', handleStorage);
-  }, []);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -561,18 +553,6 @@ const App: React.FC = () => {
       </a>
       <ScrollToTop />
       
-      {/* Side Ads for Desktop - Only show on very wide screens to avoid overlap. Hidden on Cookie Policy page. */}
-      {location.pathname !== '/cookies' && (
-        <>
-          <div className={`hidden ${isLobby ? '2xl:block' : 'lg:block'} fixed left-2 top-1/2 -translate-y-1/2 z-10 transition-opacity`}>
-            <AdBanner adKey={AD_KEYS.SIDE_SKYSCRAPER_160_600} width={160} height={600} />
-          </div>
-          <div className={`hidden ${isLobby ? '2xl:block' : 'lg:block'} fixed right-2 top-1/2 -translate-y-1/2 z-10 transition-opacity`}>
-            <AdBanner adKey={AD_KEYS.SIDE_SKYSCRAPER_160_600} width={160} height={600} />
-          </div>
-        </>
-      )}
-
       <header className="px-4 md:px-8 border-b border-white/10 backdrop-blur-md sticky top-0 z-[100] flex items-center justify-between bg-black/40 h-12 md:h-16 transition-all duration-300" role="banner">
         <div className="flex items-center gap-2 md:gap-4">
            {!isLobby && (
@@ -611,7 +591,7 @@ const App: React.FC = () => {
       </header>
 
       <ErrorBoundary>
-        <main id="main-content" className="flex-1 container mx-auto pb-4 px-2 md:px-4 page-fade" key={location.pathname} role="main">
+        <main id="main-content" className="flex-1 w-full max-w-4xl mx-auto pb-4 px-2 md:px-4 page-fade" key={location.pathname} role="main">
           {isLobby && (
             <section className="text-center pt-6 md:pt-12 pb-6 md:pb-8">
               <div className="inline-flex items-center gap-2 bg-pink-500/10 border border-pink-500/20 px-3 py-1 rounded-full mb-3 md:mb-4">
@@ -634,7 +614,7 @@ const App: React.FC = () => {
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/cookie-policy" element={<CookiePolicy />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
@@ -644,19 +624,7 @@ const App: React.FC = () => {
       {showStats && <StatsModal stats={stats} onClose={() => setShowStats(false)} onShowInfo={() => {}} initialTab="TOTAL" />}
       {showDailyShare && <DailyShareModal games={dailyShareGames} onClose={() => setShowDailyShare(false)} totalPoints={stats.totalPoints} />}
       {showLang && <LanguageOverlay onClose={() => setShowLang(false)} />}
-      <CookieConsent />
       
-      {/* Sticky Footer Ad - Only show if personalized consent is given and not on policy page */}
-      {hasPersonalizedConsent && location.pathname !== '/cookie-policy' && (
-        <div className="fixed bottom-0 left-0 right-0 z-[1000] bg-black/80 backdrop-blur-sm border-t border-white/10 flex justify-center items-center py-1">
-          {isMobile ? (
-            <AdBanner adKey={AD_KEYS.STICKY_FOOTER_MOBILE_320_50} width={320} height={50} />
-          ) : (
-            <AdBanner adKey={AD_KEYS.STICKY_FOOTER_DESKTOP_728_90} width={728} height={90} />
-          )}
-        </div>
-      )}
-
       <footer className="pt-12 pb-24 text-center border-t border-white/5 px-6" role="contentinfo">
         <div className="flex flex-col items-center gap-8">
           <div className="max-w-2xl mx-auto space-y-4">
@@ -664,10 +632,19 @@ const App: React.FC = () => {
             <p className="text-[9px] font-bold text-gray-600 leading-relaxed uppercase tracking-widest px-4">
               This is a fan-made project inspired by Eurovision. It is not affiliated with or endorsed by the EBU or the official Eurovision Song Contest.
             </p>
+            <a 
+              href="https://buymeacoffee.com/DouzePointsGame" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              onClick={() => reportSupportClick()}
+              className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#FFDD00]/70 hover:text-[#FFDD00] transition-colors mt-2"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/></svg>
+              {t('support.button')}
+            </a>
           </div>
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[9px] font-black uppercase tracking-widest text-gray-500">
-            <Link to="/privacy" className="hover:text-white transition-colors">{t('cookies.privacyPolicy')}</Link>
-            <Link to="/cookie-policy" className="hover:text-white transition-colors">{t('cookies.cookiePolicy')}</Link>
+            <Link to="/privacy" className="hover:text-white transition-colors">{t('privacy.title')}</Link>
             <Link to="/about" className="hover:text-white transition-colors">{t('about.title')}</Link>
             <Link to="/contact" className="hover:text-white transition-colors">{t('contact.title')}</Link>
             <Link to="/terms" className="hover:text-white transition-colors">{t('terms.title')}</Link>

@@ -21,6 +21,13 @@ service cloud.firestore {
     //   - totalPlayed: number (required)
     //   - lastUpdated: timestamp (required)
     //
+    // Collection: support_clicks
+    // Document ID: {date} (e.g., 2026-03-12)
+    // Fields:
+    //   - date: string (required, YYYY-MM-DD)
+    //   - count: number (required)
+    //   - lastUpdated: timestamp (required)
+    //
     // ===============================================================
 
     // Helper Functions
@@ -29,8 +36,10 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      return isAuthenticated() && 
-        (request.auth.token.email == "justusmhellman@gmail.com" && request.auth.token.email_verified == true);
+      return isAuthenticated() && request.auth.token.email_verified == true &&
+        (request.auth.token.email == "justusmhellman@gmail.com" ||
+         request.auth.token.email == "justus.jo.li@gmail.com" ||
+         request.auth.token.email == "douzepointsgame@gmail.com");
     }
 
     function isValidStatsDoc(data) {
@@ -39,6 +48,13 @@ service cloud.firestore {
              data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
              data.distribution is map &&
              data.totalPlayed is number &&
+             data.lastUpdated is timestamp;
+    }
+
+    function isValidSupportClicksDoc(data) {
+      return data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.count is number &&
              data.lastUpdated is timestamp;
     }
 
@@ -53,6 +69,15 @@ service cloud.firestore {
       // For updates, we ensure they are only incrementing and not changing metadata
       allow update: if isValidStatsDoc(request.resource.data) &&
                       request.resource.data.gameType == resource.data.gameType &&
+                      request.resource.data.date == resource.data.date;
+    }
+
+    match /support_clicks/{dateId} {
+      allow read: if isAdmin();
+      
+      allow create: if isValidSupportClicksDoc(request.resource.data);
+      
+      allow update: if isValidSupportClicksDoc(request.resource.data) &&
                       request.resource.data.date == resource.data.date;
     }
 

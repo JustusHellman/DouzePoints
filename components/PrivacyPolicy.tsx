@@ -20,10 +20,10 @@ export const PrivacyPolicy: React.FC = () => {
     <div className="max-w-4xl mx-auto py-16 px-6 page-fade">
       <header className="mb-16">
         <h1 className="text-5xl md:text-8xl font-black italic uppercase tracking-tighter text-white glow-text leading-none">
-          {t('cookies.privacyPolicy')}
+          {t('footer.privacy')}
         </h1>
         <div className="h-1.5 w-32 bg-gradient-to-r from-pink-500 to-purple-600 mt-6 rounded-full"></div>
-        <p className="mt-8 text-[10px] font-black uppercase tracking-[0.5em] text-gray-500">{t('cookies.lastUpdated')}: {t('privacy.lastUpdated')}</p>
+        <p className="mt-8 text-[10px] font-black uppercase tracking-[0.5em] text-gray-500">{t('privacy.lastUpdated')}</p>
       </header>
 
       <main className="space-y-16 leading-relaxed text-sm md:text-base text-gray-300 font-medium">
@@ -87,18 +87,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">04</span> {t('privacy.advertising.title')}
-          </h2>
-          <div className="pl-12 space-y-4">
-            <p>{renderTextWithLinks(t('privacy.advertising.p1'))}</p>
-            <p>{renderTextWithLinks(t('privacy.advertising.p2'))}</p>
-            <p>{renderTextWithLinks(t('privacy.advertising.p3'))}</p>
-          </div>
-        </section>
-
-        <section className="space-y-6">
-          <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">05</span> {t('privacy.legalBasis.title')}
+            <span className="text-pink-500 italic">04</span> {t('privacy.legalBasis.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.legalBasis.p1')}</p>
@@ -121,7 +110,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">06</span> {t('privacy.localStorage.title')}
+            <span className="text-pink-500 italic">05</span> {t('privacy.localStorage.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.localStorage.p1')}</p>
@@ -135,7 +124,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">07</span> {t('privacy.dataSharing.title')}
+            <span className="text-pink-500 italic">06</span> {t('privacy.dataSharing.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.dataSharing.p1')}</p>
@@ -149,7 +138,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">08</span> {t('privacy.internationalTransfers.title')}
+            <span className="text-pink-500 italic">07</span> {t('privacy.internationalTransfers.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.internationalTransfers.p1')}</p>
@@ -158,7 +147,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">09</span> {t('privacy.dataRetention.title')}
+            <span className="text-pink-500 italic">08</span> {t('privacy.dataRetention.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.dataRetention.p1')}</p>
@@ -167,7 +156,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">10</span> {t('privacy.yourRights.title')}
+            <span className="text-pink-500 italic">09</span> {t('privacy.yourRights.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.yourRights.p1')}</p>
@@ -177,7 +166,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">11</span> {t('privacy.dataSecurity.title')}
+            <span className="text-pink-500 italic">10</span> {t('privacy.dataSecurity.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.dataSecurity.p1')}</p>
@@ -186,7 +175,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">12</span> {t('privacy.thirdPartyLinks.title')}
+            <span className="text-pink-500 italic">11</span> {t('privacy.thirdPartyLinks.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.thirdPartyLinks.p1')}</p>
@@ -195,7 +184,7 @@ export const PrivacyPolicy: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">13</span> {t('privacy.changes.title')}
+            <span className="text-pink-500 italic">12</span> {t('privacy.changes.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('privacy.changes.p1')}</p>

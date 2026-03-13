@@ -7,7 +7,6 @@ import { PUZZLES } from '../../data/linksgameData.ts';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
-import { NativeAd } from '../../components/NativeAd.tsx';
 
 interface Tile {
   id: string;
@@ -245,7 +244,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   };
 
   return (
-    <div className="flex flex-col items-center pt-4 pb-24 md:pb-32 px-1 sm:px-4 w-full max-w-3xl mx-auto relative">
+    <div className="flex flex-col items-center pt-1 sm:pt-4 pb-24 md:pb-32 px-0.5 sm:px-4 w-full max-w-3xl mx-auto relative">
       {isGameOver && showModal ? (
         <GameScoreCard 
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
@@ -268,7 +267,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
         />
       ) : (
         <>
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex items-center gap-3 mb-2 sm:mb-3">
             <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroLinks</h1>
             <button 
               onClick={() => setShowHowToPlay(true)} 
@@ -281,14 +280,14 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
 
           <HowToPlayModal isOpen={showHowToPlay} onClose={() => setShowHowToPlay(false)} title="EuroLinks" rules={t('games.eurolinks.rulesShort')} />
           
-          <div className="mb-4 flex gap-1 h-5 items-center">
+          <div className="mb-2 sm:mb-4 flex gap-1 h-5 items-center">
             <span className="text-[8px] text-gray-500 font-black uppercase tracking-widest mr-2">{t('links.mistakesRemaining')}</span>
             {[...Array(6)].map((_, i) => (
               <div key={i} className={`w-2.5 h-2.5 rounded-full border border-white/20 transition-all duration-500 ${i < (6 - mistakes) ? 'bg-white shadow-[0_0_8px_white]' : 'bg-transparent scale-75 opacity-20'}`}></div>
             ))}
           </div>
 
-          <div className="grid grid-cols-4 gap-1 sm:gap-1.5 w-full mb-6">
+          <div className="grid grid-cols-4 gap-1 sm:gap-1.5 w-full mb-4 sm:mb-6">
             {completedGroups.map((g, idx) => (
               <div key={idx} className={`${getDiffColor(g.difficulty)} col-span-4 min-h-[50px] flex flex-col items-center justify-center px-3 py-1.5 rounded-xl text-center shadow-lg animate-in zoom-in-95 duration-500 overflow-hidden`}>
                 <p className="font-black text-[9px] sm:text-[12px] uppercase tracking-tighter text-black/60 leading-none mb-0.5">{g.category}</p>
@@ -357,10 +356,6 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
               <p className="text-gray-400 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-wrap">
                 {t('games.eurolinks.rulesLong')}
               </p>
-            </div>
-            
-            <div className="mt-8 w-full max-w-3xl mx-auto">
-              <NativeAd />
             </div>
           </div>
         </>

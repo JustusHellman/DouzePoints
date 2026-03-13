@@ -6,7 +6,6 @@ import { GameType, MasterSong } from '../../data/types.ts';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
-import { NativeAd } from '../../components/NativeAd.tsx';
 
 const MAX_ATTEMPTS = 6;
 
@@ -109,24 +108,17 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
     }
     
     const isMobile = window.innerWidth < 640;
-    const gap = isMobile ? 2 : 8; 
-    const rowGap = isMobile ? 6 : 8; 
-    const spaceWidth = isMobile ? 6 : 16;
+    const gap = isMobile ? 1 : 8; 
+    const rowGap = isMobile ? 4 : 8; 
+    const spaceWidth = isMobile ? 4 : 16;
     
-    let maxTileSize = isMobile ? 80 : 120;
+    let maxTileSize = isMobile ? 90 : 120;
 
-    const consentStr = localStorage.getItem('eu_cookie_consent_v1');
-    let hasAds = false;
-    if (consentStr) {
-      try {
-        const consent = JSON.parse(consentStr);
-        hasAds = !!consent.personalized;
-      } catch (e) {}
-    }
-    const stickyFooterHeight = hasAds ? (isMobile ? 60 : 100) : 0;
+    const stickyFooterHeight = 0;
     
     // Accurately calculate reserved height (header + title + margins + keyboard)
-    const baseReservedHeight = isMobile ? 300 : 430;
+    // Reduced baseReservedHeight for mobile to allow larger tiles
+    const baseReservedHeight = isMobile ? 220 : 430;
     const reservedHeight = baseReservedHeight + stickyFooterHeight; 
     const availableBoardHeight = viewportHeight - reservedHeight;
     const heightBasedSize = Math.floor((availableBoardHeight - (5 * rowGap)) / 6);
@@ -136,7 +128,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
     const numSpaces = chars.filter(c => c === ' ').length;
     const numLetters = len - numSpaces;
     
-    const availableWidth = containerWidth - (numSpaces * spaceWidth) - ((len - 1) * gap) - 4;
+    const availableWidth = containerWidth - (numSpaces * spaceWidth) - ((len - 1) * gap) - 2;
     const widthBasedSize = Math.floor(availableWidth / numLetters);
     
     const finalSize = Math.max(12, Math.min(maxTileSize, widthBasedSize));
@@ -147,9 +139,10 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
     const boardWidth = (numLetters * finalSize) + (numSpaces * spaceWidth) + ((len - 1) * gap);
     
     // Keyboard Scaling
-    const kGap = isMobile ? 2 : 4;
+    const kGap = isMobile ? 1 : 4;
     // Decouple keyboard width from board width so it stays large and easy to tap
-    const targetKWidth = Math.min(containerWidth - 8, isMobile ? 380 : 600);
+    // Use more width on mobile (containerWidth - 2)
+    const targetKWidth = Math.min(containerWidth - 2, isMobile ? 500 : 800);
     const kKeyWidth = Math.floor((targetKWidth - (9 * kGap)) / 10);
     const kActionWidth = Math.floor((3 * kKeyWidth + kGap) / 2);
     
@@ -420,7 +413,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
   const gameRuleKey = gameType === GameType.WORD_GAME ? 'eurosong' : 'euroartist';
 
   return (
-    <div ref={containerRef} className="flex flex-col items-center pt-4 pb-24 md:pb-32 w-full max-w-2xl mx-auto px-0.5">
+    <div ref={containerRef} className="flex flex-col items-center pt-1 sm:pt-4 pb-24 md:pb-32 w-full max-w-2xl mx-auto px-0.5">
       {message && (
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[600] p-4">
           <div className="bg-white/80 backdrop-blur-xl text-black font-black uppercase text-[14px] md:text-[18px] tracking-[0.2em] px-6 py-3 rounded-2xl shadow-3xl border-[3px] border-white/40 animate-fade-in-out text-center">
@@ -437,7 +430,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
         />
       ) : (
         <>
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-2 sm:mb-6">
             <h1 className="text-2xl md:text-4xl font-black bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">{title}</h1>
             <button 
               onClick={() => setShowHowToPlay(true)}
@@ -455,7 +448,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
             rules={t(`games.${gameRuleKey}.rulesShort`)} 
           />
           
-          <div className="flex flex-col gap-1.5 sm:gap-2 mb-8 items-center px-0.5 sm:px-2 w-full" aria-label={t('wordGame.board')}>
+          <div className="flex flex-col gap-1 sm:gap-2 mb-2 sm:mb-8 items-center px-0.5 sm:px-2 w-full" aria-label={t('wordGame.board')}>
             {[...Array(MAX_ATTEMPTS)].map((_, i) => {
               const guess = guesses[i] || (i === guesses.length ? currentGuess : "");
               const isSubmitted = i < guesses.length;
@@ -518,7 +511,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
           )}
 
           {!isGameOver && (
-            <div className="w-full px-1 sm:px-2 space-y-1 mt-auto" aria-label={t('wordGame.keyboard')}>
+            <div className="w-full px-0.5 sm:px-2 space-y-1 mt-auto" aria-label={t('wordGame.keyboard')}>
               {["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"].map((row, i) => (
                 <div key={i} className="flex justify-center gap-0.5 sm:gap-1">
                   {i === 2 && (
@@ -565,10 +558,6 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
               <p className="text-gray-400 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-wrap">
                 {gameRuleKey === 'eurosong' ? t('games.eurosong.rulesLong') : t('games.euroartist.rulesLong')}
               </p>
-            </div>
-            
-            <div className="mt-8 w-full max-w-3xl mx-auto">
-              <NativeAd />
             </div>
           </div>
         </>

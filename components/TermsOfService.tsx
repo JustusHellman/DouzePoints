@@ -12,7 +12,7 @@ const TermsOfService: React.FC = () => {
         </h1>
         <div className="h-1.5 w-32 bg-gradient-to-r from-pink-500 to-purple-600 mt-6 rounded-full"></div>
         <p className="mt-8 text-[10px] font-black uppercase tracking-[0.5em] text-gray-500">
-          {t('cookies.lastUpdated')}: {t('terms.lastUpdated')}
+          {t('terms.lastUpdated')}
         </p>
       </header>
 

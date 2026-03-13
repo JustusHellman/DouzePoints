@@ -129,36 +129,6 @@ export interface TranslationSchema {
       qualified: string;
     };
   };
-  cookies: {
-    bannerText: string;
-    learnMore: string;
-    acceptAll: string;
-    decline: string;
-    manage: string;
-    privacyPolicy: string;
-    cookiePolicy: string;
-    privacySettings: string;
-    lastUpdated: string;
-    whatAreCookies: string;
-    whatAreCookiesDesc: string;
-    typesWeUse: string;
-    essential: string;
-    essentialDesc: string;
-    advertising: string;
-    advertisingDesc: string;
-    yourChoices: string;
-    yourChoicesDesc: string;
-    status: string;
-    allAllowed: string;
-    essentialOnly: string;
-    notSet: string;
-    partners: string;
-    partnersDesc: string;
-    partnersOptOut: string;
-    moreInfo: string;
-    moreInfoDesc: string;
-    settingsSaved: string;
-  };
   privacy: {
     lastUpdated: string;
     introduction: {
@@ -177,12 +147,6 @@ export interface TranslationSchema {
       cookiesDesc1: string;
       cookiesDesc2: string;
       cookiesDesc3: string;
-    };
-    advertising: {
-      title: string;
-      p1: string;
-      p2: string;
-      p3: string;
     };
     legalBasis: {
       title: string;
@@ -285,5 +249,10 @@ export interface TranslationSchema {
       solo: string;
       duo: string;
     };
+  };
+  support: {
+    title: string;
+    completed: string;
+    button: string;
   };
 }

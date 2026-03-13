@@ -160,36 +160,6 @@ export const en: TranslationSchema = {
       qualified: "🗳️ QUALIFIED! 🎤"
     }
   },
-  cookies: {
-    bannerText: "We use cookies to personalise content and ads, to provide social media features, and to analyse our traffic.",
-    learnMore: "Learn more",
-    acceptAll: "Accept all",
-    decline: "Use essential only",
-    manage: "Manage",
-    privacyPolicy: "Privacy Policy",
-    cookiePolicy: "Cookie Policy",
-    privacySettings: "Privacy",
-    lastUpdated: "Last Updated",
-    whatAreCookies: "What are cookies?",
-    whatAreCookiesDesc: "Cookies are small text files stored on your device by your browser. They help websites remember you and your preferences.",
-    typesWeUse: "Types we use",
-    essential: "Essential Cookies",
-    essentialDesc: "Used for site stability and to remember your privacy choices. These do not track personal data.",
-    advertising: "Advertising Cookies",
-    advertisingDesc: "Set through our site by our advertising partners (like AdsTerra). They may be used by those companies to build a profile of your interests and show you relevant adverts on other sites. AdsTerra may set its own cookies for ad targeting and personalization.",
-    yourChoices: "Your choices",
-    yourChoicesDesc: "We respect your right to privacy. You can choose not to allow certain types of cookies.",
-    status: "Current Status",
-    allAllowed: "All Allowed",
-    essentialOnly: "Essential Only",
-    notSet: "Not Set",
-    partners: "Advertising Partners",
-    partnersDesc: "We use AdsTerra to show advertisements. AdsTerra and its partners use cookies to serve ads based on your visit to this site and/or other sites on the Internet.",
-    partnersOptOut: "You can manage your advertising preferences by using our 'Essential Only' toggle above or by visiting the AdsTerra Privacy Policy (https://adsterra.com/privacy-policy/) for more information on how they process data.",
-    moreInfo: "More Information",
-    moreInfoDesc: "For more information on privacy practices and your rights, please visit our Privacy Policy page.",
-    settingsSaved: "Settings Saved Successfully"
-  },
   privacy: {
     lastUpdated: "February 2026",
     introduction: {
@@ -203,23 +173,17 @@ export const en: TranslationSchema = {
       autoTitle: "a) Automatically Collected Data",
       autoDesc: "When you visit the website, certain information may be automatically collected, including:",
       autoItems: ["IP address", "Browser type and version", "Device information", "Operating system", "Pages visited", "Date and time of access", "Referring website"],
-      autoFootnote: "This information may be processed by our advertising and analytics providers (AdsTerra).",
-      cookiesTitle: "b) Cookies and Similar Technologies",
-      cookiesDesc1: "We use cookies and similar technologies for Advertising, Measuring ad performance, and Website functionality.",
-      cookiesDesc2: "Consent for cookies is collected and managed through our integrated consent system. Users in applicable regions (such as the EU/EEA and UK) are asked to provide consent before non-essential cookies are used.",
-      cookiesDesc3: "You can change your consent preferences at any time via the consent options available on the website."
-    },
-    advertising: {
-      title: "Advertising",
-      p1: "We use AdsTerra to display advertisements. AdsTerra and its partners use cookies to serve ads based on a user's prior visits to our website or other websites. This enables them to serve ads to our users based on their visit to our site and/or other sites on the Internet.",
-      p2: "You can manage your advertising preferences via our Cookie Policy page or by using the 'Essential Only' option in our consent banner.",
-      p3: "More information about how AdsTerra processes personal data is available in AdsTerra’s Privacy Policy (https://adsterra.com/privacy-policy/)."
+      autoFootnote: "This information may be processed by our analytics providers.",
+      cookiesTitle: "b) Local Storage",
+      cookiesDesc1: "We use your browser's local storage exclusively to save your game progress, scores, and statistics.",
+      cookiesDesc2: "This data is stored only on your device, is not transmitted to our servers, and can be deleted by clearing your browser data.",
+      cookiesDesc3: "We do not use tracking cookies or third-party advertising cookies."
     },
     legalBasis: {
       title: "Legal Basis (GDPR)",
       p1: "If you are located in the EU/EEA, we process personal data on the following legal bases:",
       consentLabel: "Consent",
-      consent: "for personalized advertising and non-essential cookies.",
+      consent: "for non-essential cookies (if any).",
       legitimacyLabel: "Legitimacy",
       legitimacy: "for basic website functionality, security, and fraud prevention.",
       legalLabel: "Legal",
@@ -233,15 +197,15 @@ export const en: TranslationSchema = {
     dataSharing: {
       title: "Data Sharing",
       p1: "We do not sell personal data. However, data may be processed by third-party service providers, including:",
-      items: ["AdsTerra (advertising)", "Hosting providers", "Technical service providers necessary for website operation"]
+      items: ["Hosting providers", "Technical service providers necessary for website operation"]
     },
     internationalTransfers: {
       title: "International Transfers",
-      p1: "Some third-party providers, including AdsTerra, may process data outside the EU or EEA. Where such transfers occur, appropriate safeguards such as Standard Contractual Clauses are used."
+      p1: "Some third-party providers may process data outside the EU or EEA. Where such transfers occur, appropriate safeguards such as Standard Contractual Clauses are used."
     },
     dataRetention: {
       title: "Data Retention",
-      p1: "We do not maintain a user database. Advertising data is retained according to AdsTerra's policies, technical logs for security purposes, and local storage remains until you delete it."
+      p1: "We do not maintain a user database. Technical logs for security purposes are retained according to our providers' policies, and local storage remains until you delete it."
     },
     yourRights: {
       title: "Your Rights (EU/EEA)",
@@ -440,5 +404,10 @@ export const en: TranslationSchema = {
       solo: "Solo",
       duo: "Duo"
     }
+  },
+  support: {
+    title: "Enjoying Douze Points?",
+    completed: "You completed today's challenges!",
+    button: "Buy me a coffee"
   }
 };

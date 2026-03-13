@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from '../context/LanguageContext.tsx';
+import { reportSupportClick } from '../utils/firebaseService.ts';
 
 const About: React.FC = () => {
   const { t } = useTranslation();
@@ -67,6 +68,23 @@ const About: React.FC = () => {
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('about.community.p1')}</p>
+          </div>
+        </section>
+
+        <section className="space-y-6 mt-12">
+          <div className="pl-12">
+            <a
+              href="https://buymeacoffee.com/DouzePointsGame"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => reportSupportClick()}
+              className="inline-flex items-center gap-3 px-6 py-4 bg-[#FFDD00] text-black rounded-xl font-black uppercase text-xs tracking-widest hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,221,0,0.3)]"
+            >
+              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/>
+              </svg>
+              {t('support.button')}
+            </a>
           </div>
         </section>
       </main>

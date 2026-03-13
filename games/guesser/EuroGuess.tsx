@@ -8,7 +8,6 @@ import { getMemberLabel } from '../../data/constants.tsx';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
-import { NativeAd } from '../../components/NativeAd.tsx';
 
 interface EuroGuessProps {
   onReturn: () => void;
@@ -218,7 +217,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
   }, [attempts, song]);
 
   return (
-    <div className="flex flex-col items-center pt-6 pb-24 md:pb-32 px-1 sm:px-4 w-full max-w-2xl mx-auto">
+    <div className="flex flex-col items-center pt-2 sm:pt-6 pb-24 md:pb-32 px-1 sm:px-4 w-full max-w-2xl mx-auto">
       {isGameOver && showModal ? (
         <GameScoreCard 
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
@@ -227,7 +226,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
         />
       ) : (
         <>
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-2 sm:mb-4">
             <h1 className="text-2xl md:text-4xl font-black bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter">EuroGuess</h1>
             <button 
               onClick={() => setShowHowToPlay(true)}
@@ -297,10 +296,6 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
               <p className="text-gray-400 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-wrap">
                 {t('games.euroguess.rulesLong')}
               </p>
-            </div>
-            
-            <div className="mt-8 w-full max-w-3xl mx-auto">
-              <NativeAd />
             </div>
           </div>
         </>

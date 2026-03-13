@@ -38,12 +38,38 @@
         }
       },
       "required": ["gameType", "date", "distribution", "totalPlayed", "lastUpdated"]
+    },
+    "SupportClicks": {
+      "title": "Support Clicks",
+      "description": "Daily count of clicks on the 'Buy me a coffee' link.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date in YYYY-MM-DD format."
+        },
+        "count": {
+          "type": "integer",
+          "description": "Total number of clicks on this day."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time this record was updated."
+        }
+      },
+      "required": ["date", "count", "lastUpdated"]
     }
   },
   "firestore": {
     "/game_stats/{statsId}": {
       "schema": "DailyGameStats",
       "description": "Collection of daily aggregated game statistics."
+    },
+    "/support_clicks/{dateId}": {
+      "schema": "SupportClicks",
+      "description": "Collection of daily support click counts."
     }
   }
 }

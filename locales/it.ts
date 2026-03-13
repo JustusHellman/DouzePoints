@@ -160,36 +160,6 @@ export const it: TranslationSchema = {
       qualified: "🗳️ QUALIFICATO! 🎤"
     }
   },
-  cookies: {
-    bannerText: "Utilizziamo i cookie per personalizzare contenuti e annunci, fornire funzioni social e analizzare il traffico.",
-    learnMore: "Scopri di più",
-    acceptAll: "Accetta tutti",
-    decline: "Solo essenziali",
-    manage: "Gestisci",
-    privacyPolicy: "Privacy Policy",
-    cookiePolicy: "Cookie Policy",
-    privacySettings: "Privacy",
-    lastUpdated: "Ultimo aggiornamento",
-    whatAreCookies: "Cosa sono i cookie?",
-    whatAreCookiesDesc: "I cookie sono piccoli file di testo memorizzati sul tuo dispositivo dal tuo browser. Aiutano i siti web a ricordare te e le tue preferenze.",
-    typesWeUse: "Tipi che utilizziamo",
-    essential: "Cookie essenziali",
-    essentialDesc: "Utilizzati per la stabilità del sito e per ricordare le tue scelte sulla privacy. Questi non tracciano dati personali.",
-    advertising: "Cookie pubblicitari",
-    advertisingDesc: "Impostati tramite il nostro sito dai nostri partner pubblicitari (come AdsTerra). Possono essere utilizzati da tali società per creare un profilo dei tuoi interessi e mostrarti annunci pertinenti su altri siti. AdsTerra può impostare i propri cookie per il targeting e la personalizzazione degli annunci.",
-    yourChoices: "Le tue scelte",
-    yourChoicesDesc: "Rispettiamo il tuo diritto alla privacy. Puoi scegliere di non consentire determinati tipi di cookie.",
-    status: "Stato attuale",
-    allAllowed: "Tutti consentiti",
-    essentialOnly: "Solo essenziali",
-    notSet: "Non impostato",
-    partners: "Partner pubblicitari",
-    partnersDesc: "Utilizziamo AdsTerra per mostrare annunci pubblicitari. AdsTerra e i suoi partner utilizzano i cookie per pubblicare annunci in base alla tua visita a questo sito e/o ad altri siti su Internet.",
-    partnersOptOut: "Puoi gestire le tue preferenze pubblicitarie utilizzando l'interruttore 'Solo essenziali' sopra o visitando l'Informativa sulla privacy di AdsTerra (https://adsterra.com/privacy-policy/) per ulteriori informazioni su come elaborano i dati.",
-    moreInfo: "Ulteriori informazioni",
-    moreInfoDesc: "Per ulteriori informazioni sulle pratiche relative alla privacy e sui tuoi diritti, visita la nostra pagina della Privacy Policy.",
-    settingsSaved: "Impostazioni salvate con successo"
-  },
   privacy: {
     lastUpdated: "Febbraio 2026",
     introduction: {
@@ -203,23 +173,17 @@ export const it: TranslationSchema = {
       autoTitle: "a) Dati raccolti automaticamente",
       autoDesc: "Quando visiti il sito web, alcune informazioni possono essere raccolte automaticamente, tra cui:",
       autoItems: ["Indirizzo IP", "Tipo e versione del browser", "Informazioni sul dispositivo", "Sistema operativo", "Pagine visitate", "Data e ora di accesso", "Sito web di provenienza"],
-      autoFootnote: "Queste informazioni possono essere elaborate dai nostri fornitori di pubblicità e analisi (AdsTerra).",
-      cookiesTitle: "b) Cookie e tecnologie simili",
-      cookiesDesc1: "Utilizziamo i cookie e tecnologie simili per la pubblicità, la misurazione delle prestazioni degli annunci e la funzionalità del sito web.",
-      cookiesDesc2: "Il consenso per i cookie viene raccolto e gestito tramite il nostro sistema di consenso integrato. Agli utenti nelle regioni applicabili (come l'UE/SEE e il Regno Unito) viene chiesto di fornire il consenso prima dell'utilizzo di cookie non essenziali.",
-      cookiesDesc3: "È possibile modificare le proprie preferenze di consenso in qualsiasi momento tramite le opzioni di consenso disponibili sul sito web."
-    },
-    advertising: {
-      title: "Pubblicità",
-      p1: "Utilizziamo AdsTerra per visualizzare annunci pubblicitari. AdsTerra e i suoi partner utilizzano i cookie per pubblicare annunci in base alle precedenti visite di un utente al nostro sito Web o ad altri siti Web. Ciò consente loro di pubblicare annunci per i nostri utenti in base alla loro visita al nostro sito e/o ad altri siti su Internet.",
-      p2: "È possibile gestire le proprie preferenze pubblicitarie tramite la nostra pagina della Cookie Policy o utilizzando l'opzione 'Solo essenziali' nel nostro banner di consenso.",
-      p3: "Ulteriori informazioni su come AdsTerra elabora i dati personali sono disponibili nell'Informativa sulla privacy di AdsTerra (https://adsterra.com/privacy-policy/)."
+      autoFootnote: "Queste informazioni possono essere elaborate dai nostri fornitori di analisi.",
+      cookiesTitle: "b) Memoria locale",
+      cookiesDesc1: "Utilizziamo la memoria locale del tuo browser esclusivamente per salvare i tuoi progressi di gioco, i punteggi e le statistiche.",
+      cookiesDesc2: "Questi dati sono memorizzati solo sul tuo dispositivo, non vengono trasmessi ai nostri server e possono essere eliminati cancellando i dati del browser.",
+      cookiesDesc3: "Non utilizziamo cookie di tracciamento o cookie pubblicitari di terze parti."
     },
     legalBasis: {
       title: "Base giuridica (GDPR)",
       p1: "Se ti trovi nell'UE/SEE, trattiamo i dati personali sulle seguenti basi giuridiche:",
       consentLabel: "Consenso",
-      consent: "per la pubblicità personalizzata e i cookie non essenziali.",
+      consent: "per i cookie non essenziali (se presenti).",
       legitimacyLabel: "Legittimità",
       legitimacy: "per la funzionalità di base del sito web, la sicurezza e la prevenzione delle frodi.",
       legalLabel: "Legale",
@@ -232,16 +196,16 @@ export const it: TranslationSchema = {
     },
     dataSharing: {
       title: "Condivisione dei dati",
-      p1: "Non vendiamo dati personali. Tuttavia, i datos possono essere elaborati da fornitori di servizi terzi, tra cui:",
-      items: ["AdsTerra (pubblicità)", "Fornitori di hosting", "Fornitori di servizi tecnici necessari per il funzionamento del sito web"]
+      p1: "Non vendiamo dati personali. Tuttavia, i dati possono essere elaborati da fornitori di servizi terzi, tra cui:",
+      items: ["Fornitori di hosting", "Fornitori di servizi tecnici necessari per il funzionamento del sito web"]
     },
     internationalTransfers: {
       title: "Trasferimenti internazionali",
-      p1: "Alcuni fornitori terzi, tra cui AdsTerra, possono elaborare i dati al di fuori dell'UE o del SEE. Laddove si verifichino tali trasferimenti, vengono utilizzate garanzie adeguate come le Clausole contrattuali standard."
+      p1: "Alcuni fornitori terzi possono elaborare i dati al di fuori dell'UE o del SEE. Laddove si verifichino tali trasferimenti, vengono utilizzate garanzie adeguate come le Clausole contrattuali standard."
     },
     dataRetention: {
       title: "Conservazione dei dati",
-      p1: "Non manteniamo un database di utenti. I dati pubblicitari vengono conservati in conformità con le politiche di AdsTerra, i log tecnici per scopi di sicurezza e la memoria locale rimane fino a quando non viene eliminata."
+      p1: "Non manteniamo un database di utenti. I log tecnici per scopi di sicurezza vengono conservati in conformità con le politiche dei nostri fornitori e la memoria locale rimane fino a quando non viene eliminata."
     },
     yourRights: {
       title: "I tuoi diritti (UE/SEE)",
@@ -440,5 +404,10 @@ export const it: TranslationSchema = {
       solo: "Solista",
       duo: "Duo"
     }
+  },
+  support: {
+    title: "Ti piace Douze Points?",
+    completed: "Hai completato le sfide di oggi!",
+    button: "Offrimi un caffè"
   }
 };

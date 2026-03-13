@@ -4,9 +4,7 @@ import { useTranslation } from '../context/LanguageContext.tsx';
 import { getDayString } from '../utils/daily.ts';
 import { getStoredStats } from '../utils/stats.ts';
 import { CountdownTimer } from './CountdownTimer.tsx';
-import { AdBanner } from './AdBanner.tsx';
 import { PointsDistribution } from './PointsDistribution.tsx';
-import { AD_KEYS } from '../data/adConstants.ts';
 
 interface GameScoreCardProps {
   won: boolean;
@@ -303,10 +301,6 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
               <PointsDistribution distribution={distribution} />
             </div>
           )}
-
-          <div className="pt-2 flex justify-center">
-            <AdBanner adKey={AD_KEYS.BANNER_300_250} width={300} height={250} />
-          </div>
 
           <div className="pt-4 border-t border-white/5 flex flex-col items-center gap-2">
              <CountdownTimer label={t('scorecard.nextGame')} />

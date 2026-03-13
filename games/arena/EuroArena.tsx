@@ -8,7 +8,6 @@ import { getFuzzyScore } from '../../utils/fuzzy.ts';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
-import { NativeAd } from '../../components/NativeAd.tsx';
 
 interface EuroArenaProps {
   onReturn: () => void;
@@ -192,7 +191,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
   };
 
   return (
-    <div className="flex flex-col items-center pt-6 pb-24 md:pb-32 px-1 sm:px-4 w-full max-w-2xl mx-auto">
+    <div className="flex flex-col items-center pt-2 sm:pt-6 pb-24 md:pb-32 px-1 sm:px-4 w-full max-w-2xl mx-auto">
       {isGameOver && showModal ? (
         <GameScoreCard 
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
@@ -288,10 +287,6 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
               <p className="text-gray-400 text-xs md:text-sm font-medium leading-relaxed whitespace-pre-wrap">
                 {t('games.euroarena.rulesLong')}
               </p>
-            </div>
-            
-            <div className="mt-8 w-full max-w-3xl mx-auto">
-              <NativeAd />
             </div>
           </div>
         </>
