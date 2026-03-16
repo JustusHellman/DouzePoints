@@ -240,7 +240,7 @@ export const MASTER_DATA: MasterSong[] = [
   { id: "1971-1", title: "Un banc, un arbre, une rue", artist: "Séverine", year: 1971, placing: 1, country: "Monaco", sex: "Female", genre: "Chanson", members: 1, fact: "The only victory for Monaco in history.", tier: "golden" },
 
   // 1970
-  { id: "1970-1", title: "All Kinds of Everything", artist: "Dana", year: 1970, placing: 1, country: "Ireland", sex: "Female", genre: "Pop", members: 1, fact: "Ireland's first ever win that also became an international hit.", tier: "cult" },
+  { id: "1970-8", title: "Bambola", artist: "Patty Pravo", year: 1970, placing: 8, country: "Italy", sex: "Female", genre: "Pop", members: 1, fact: "Classic Italian pop entry and fan favorite.", tier: "cult" },
 
   // 1969
   { id: "1969-1-1", title: "Boom Bang-a-Bang", artist: "Lulu", year: 1969, placing: 1, country: "United Kingdom", sex: "Female", genre: "Pop", members: 1, fact: "One of the four joint winners in 1969.", tier: "golden" },

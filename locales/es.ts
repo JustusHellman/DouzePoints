@@ -25,7 +25,8 @@ export const es: TranslationSchema = {
     close: "Cerrar",
     selectLanguage: "Seleccionar Idioma",
     languages: "Idiomas",
-    qualified: "Calificado"
+    qualified: "Calificado",
+    playBonusRound: "Jugar ronda de bonificación"
   },
   greenroom: {
     greenroom: "La Sala Verde",
@@ -147,6 +148,8 @@ export const es: TranslationSchema = {
     watch: "VER",
     reviewBoard: "Revisar Tablero",
     shareResult: "Compartir Resultado",
+    saveImage: "Guardar tarjeta",
+    copyImage: "Copiar tarjeta",
     resultsCopied: "¡Resultado Copiado!",
     breakthrough: "Acierto en Pista",
     signalLost: "Señal Perdida...",
@@ -161,6 +164,7 @@ export const es: TranslationSchema = {
     }
   },
   privacy: {
+    title: "Política de Privacidad",
     lastUpdated: "Febrero 2026",
     introduction: {
       title: "Introducción",

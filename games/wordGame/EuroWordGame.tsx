@@ -17,6 +17,7 @@ interface EuroWordGameProps {
   gameType: GameType;
   gameId: string;
   title: string;
+  bonusSong?: MasterSong;
 }
 
 const normalize = (str: string) => {
@@ -28,7 +29,7 @@ const isLetter = (char: string) => {
   return /^[A-Z]$/.test(normalized);
 };
 
-const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, gameId, title }) => {
+const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, gameId, title, bonusSong }) => {
   const { t } = useTranslation();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
 
@@ -42,10 +43,11 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
   }, [data, gameType]);
 
   const song = useMemo(() => {
+    if (bonusSong) return bonusSong;
     const salt = `DAILY-V3-${gameType}-${gameId}-SALT-VERIFIED`;
     const idx = getDailyIndex(validPool, salt);
     return validPool[idx];
-  }, [validPool, gameId, gameType]);
+  }, [validPool, gameId, gameType, bonusSong]);
 
   const targetText = useMemo(() => {
     return (gameType === GameType.WORD_GAME) ? song.title : song.artist;
@@ -135,9 +137,6 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
     const fontSize = Math.floor(finalSize * 0.65);
     const borderRadius = Math.max(4, Math.floor(finalSize * 0.25));
 
-    // Calculate actual board width to match keyboard to it
-    const boardWidth = (numLetters * finalSize) + (numSpaces * spaceWidth) + ((len - 1) * gap);
-    
     // Keyboard Scaling
     const kGap = isMobile ? 1 : 4;
     // Decouple keyboard width from board width so it stays large and easy to tap
@@ -342,13 +341,17 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
           setTimeout(() => {
             setIsGameOver(true);
             setWon(true);
-            updateGameStats(gameType, true, { attempts: newGuesses.length });
+            if (!bonusSong) {
+              updateGameStats(gameType, true, { attempts: newGuesses.length });
+            }
             setShowModal(true);
           }, target.length * animationDelay + 500);
         } else if (newGuesses.length >= MAX_ATTEMPTS) {
           setTimeout(() => {
             setIsGameOver(true);
-            updateGameStats(gameType, false, { attempts: newGuesses.length });
+            if (!bonusSong) {
+              updateGameStats(gameType, false, { attempts: newGuesses.length });
+            }
             setShowModal(true);
           }, target.length * animationDelay + 500);
         }
@@ -363,7 +366,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
         setCurrentGuess(prev => (prev + e.key).toUpperCase());
       }
     }
-  }, [currentGuess, guesses, isGameOver, target, inputLength, animationDelay, setGuesses, setCurrentGuess, setIsGameOver, setWon, setShowModal, setMessage, t, gameType]);
+  }, [currentGuess, guesses, isGameOver, target, inputLength, animationDelay, setGuesses, setCurrentGuess, setIsGameOver, setWon, setShowModal, setMessage, t, gameType, bonusSong]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => onKeyPress(e);

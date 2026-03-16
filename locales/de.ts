@@ -25,7 +25,8 @@ export const de: TranslationSchema = {
     close: "Schließen",
     selectLanguage: "Sprache Wählen",
     languages: "Sprachen",
-    qualified: "Qualifiziert"
+    qualified: "Qualifiziert",
+    playBonusRound: "Bonusrunde spielen"
   },
   greenroom: {
     greenroom: "Der Greenroom",
@@ -147,6 +148,8 @@ export const de: TranslationSchema = {
     watch: "ANSEHEN",
     reviewBoard: "Feld überprüfen",
     shareResult: "Ergebnis teilen",
+    saveImage: "Scorecard speichern",
+    copyImage: "Scorecard kopieren",
     resultsCopied: "Ergebnis kopiert!",
     breakthrough: "Durchbruch bei Hinweis",
     signalLost: "Signal verloren...",
@@ -161,6 +164,7 @@ export const de: TranslationSchema = {
     }
   },
   privacy: {
+    title: "Datenschutz",
     lastUpdated: "Februar 2026",
     introduction: {
       title: "Einleitung",

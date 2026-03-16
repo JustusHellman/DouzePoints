@@ -25,7 +25,8 @@ export const it: TranslationSchema = {
     close: "Chiudi",
     selectLanguage: "Seleziona Lingua",
     languages: "Lingue",
-    qualified: "Qualificato"
+    qualified: "Qualificato",
+    playBonusRound: "Gioca il round bonus"
   },
   greenroom: {
     greenroom: "La Greenroom",
@@ -147,6 +148,8 @@ export const it: TranslationSchema = {
     watch: "GUARDA",
     reviewBoard: "Rivedi Tabellone",
     shareResult: "Condividi Risultato",
+    saveImage: "Salva scheda",
+    copyImage: "Copia scheda",
     resultsCopied: "Risultati Copiati!",
     breakthrough: "Successo all'indizio",
     signalLost: "Segnale perso...",
@@ -161,6 +164,7 @@ export const it: TranslationSchema = {
     }
   },
   privacy: {
+    title: "Informativa sulla Privacy",
     lastUpdated: "Febbraio 2026",
     introduction: {
       title: "Introduzione",

@@ -224,3 +224,71 @@ export const getCurrentRank = (points: number) => {
 export const getNextRank = (points: number) => {
   return RANK_TIERS.find(tier => tier.threshold > points);
 };
+
+export const resetDailyProgressForDev = () => {
+  if (!import.meta.env.DEV) return;
+  
+  const today = getDayString();
+  const stats = getStoredStats();
+  
+  const games = [
+    { id: 'eurosong', type: GameType.WORD_GAME, key: 'word_game' },
+    { id: 'euroartist', type: GameType.ARTIST_WORD_GAME, key: 'artists' },
+    { id: 'eurolinks', type: GameType.LINKS_GAME, key: 'links' },
+    { id: 'euroguess', type: GameType.GUESSER, key: 'guesser' },
+    { id: 'euroarena', type: GameType.ARENA, key: 'arena' },
+    { id: 'eurorefrain', type: GameType.REFRAIN_GAME, key: 'refrain' }
+  ];
+
+  let pointsToSubtract = 0;
+  let douzePointsToSubtract = 0;
+
+  games.forEach(game => {
+    const saved = localStorage.getItem(`${game.id}-${today}`);
+    if (saved) {
+      try {
+        const dailyData = JSON.parse(saved);
+        if (dailyData.isGameOver && dailyData.won) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          let metrics: any = {};
+          if (game.id === 'eurosong' || game.id === 'euroartist' || game.id === 'euroarena') {
+            metrics = { attempts: dailyData.guesses?.length || dailyData.attempts?.length || 0 };
+          } else if (game.id === 'eurolinks' || game.id === 'eurorefrain') {
+            metrics = { mistakes: dailyData.mistakes };
+          } else if (game.id === 'euroguess') {
+            metrics = { attempts: dailyData.attempts?.length || 0 };
+          }
+          
+          const { points, isPerfect } = calculatePoints(game.type, metrics);
+          pointsToSubtract += points;
+          if (isPerfect) douzePointsToSubtract += 1;
+          
+          // Also decrement stats
+          if (stats[game.key as keyof GlobalStats]) {
+            const gameStats = stats[game.key as keyof GlobalStats] as DetailedStats;
+            if (gameStats.lastPlayed === today) {
+              gameStats.played = Math.max(0, gameStats.played - 1);
+              gameStats.wins = Math.max(0, gameStats.wins - 1);
+              if (isPerfect) gameStats.perfectGames = Math.max(0, gameStats.perfectGames - 1);
+              gameStats.currentStreak = Math.max(0, gameStats.currentStreak - 1);
+              gameStats.lastPlayed = ""; // Reset last played
+            }
+          }
+        }
+      } catch {
+        // ignore parse errors
+      }
+      
+      // Remove the daily save
+      localStorage.removeItem(`${game.id}-${today}`);
+    }
+  });
+
+  stats.totalPoints = Math.max(0, stats.totalPoints - pointsToSubtract);
+  stats.totalDouzePoints = Math.max(0, stats.totalDouzePoints - douzePointsToSubtract);
+  
+  localStorage.setItem('euro-stats-v2', JSON.stringify(stats));
+  
+  // Reload the page to reflect changes
+  window.location.reload();
+};

@@ -5,22 +5,11 @@ import { useTranslation } from '../context/LanguageContext.tsx';
 export const PrivacyPolicy: React.FC = () => {
   const { t } = useTranslation();
 
-  const renderTextWithLinks = (text: string) => {
-    const urlRegex = /(https?:\/\/[^\s)]+)/g;
-    const parts = text.split(urlRegex);
-    return parts.map((part, i) => {
-      if (part.match(urlRegex)) {
-        return <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline break-all">{part}</a>;
-      }
-      return part;
-    });
-  };
-  
   return (
     <div className="max-w-4xl mx-auto py-16 px-6 page-fade">
       <header className="mb-16">
         <h1 className="text-5xl md:text-8xl font-black italic uppercase tracking-tighter text-white glow-text leading-none">
-          {t('footer.privacy')}
+          {t('privacy.title')}
         </h1>
         <div className="h-1.5 w-32 bg-gradient-to-r from-pink-500 to-purple-600 mt-6 rounded-full"></div>
         <p className="mt-8 text-[10px] font-black uppercase tracking-[0.5em] text-gray-500">{t('privacy.lastUpdated')}</p>

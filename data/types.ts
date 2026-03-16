@@ -54,7 +54,9 @@ export interface MasterSong {
   members: number;
   fact: string;
   youtubeId?: string;
-  tier: 'golden' | 'cult';
+  tier?: 'golden' | 'cult';
+  weight?: number;
+  weightModifiers?: string[];
 }
 
 export type ArenaSong = MasterSong;

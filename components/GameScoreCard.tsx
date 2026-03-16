@@ -308,6 +308,18 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
         </div>
 
         <div className="p-5 border-t border-white/5 bg-black/40 flex flex-col gap-2">
+           {/* 
+           <button 
+             onClick={() => window.location.href = '/bonus'} 
+             className="w-full bg-pink-600 text-white py-4 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:scale-[1.01] active:scale-[0.98] transition-all shadow-xl shadow-pink-600/20 flex items-center justify-center gap-2 mb-1"
+           >
+             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+             </svg>
+             {t('common.playBonusRound') || 'Play Bonus Round'}
+           </button>
+           */}
+
            <button 
              onClick={onReturn} 
              className="w-full bg-white text-black py-4 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:scale-[1.01] active:scale-[0.98] transition-all shadow-xl shadow-white/10 flex items-center justify-center gap-2"

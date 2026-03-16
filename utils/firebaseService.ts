@@ -3,6 +3,11 @@ import { db } from '../firebase.ts';
 import { GameType } from '../data/types.ts';
 
 export const reportGameScore = async (gameType: GameType, points: number) => {
+  if (import.meta.env.DEV) {
+    console.log(`[DEV MODE] Would have reported ${points} points for ${gameType}`);
+    return;
+  }
+
   const date = new Date().toISOString().split('T')[0];
   const statsId = `${date}_${gameType}`;
 
@@ -28,6 +33,11 @@ export const reportGameScore = async (gameType: GameType, points: number) => {
 };
 
 export const reportSupportClick = async () => {
+  if (import.meta.env.DEV) {
+    console.log(`[DEV MODE] Would have reported support click`);
+    return;
+  }
+
   const date = new Date().toISOString().split('T')[0];
 
   try {

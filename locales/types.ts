@@ -24,6 +24,7 @@ export interface TranslationSchema {
     selectLanguage: string;
     languages: string;
     qualified: string;
+    playBonusRound: string;
   };
   greenroom: {
     greenroom: string;
@@ -116,6 +117,8 @@ export interface TranslationSchema {
     watch: string;
     reviewBoard: string;
     shareResult: string;
+    saveImage: string;
+    copyImage: string;
     resultsCopied: string;
     breakthrough: string;
     signalLost: string;
@@ -130,6 +133,7 @@ export interface TranslationSchema {
     };
   };
   privacy: {
+    title: string;
     lastUpdated: string;
     introduction: {
       title: string;

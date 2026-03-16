@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { getDayString } from '../../utils/daily.ts';
 import { updateGameStats } from '../../utils/stats.ts';
@@ -29,6 +29,38 @@ interface EuroRefrainProps {
 const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
   const { t } = useTranslation();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        setDimensions({
+          width: containerRef.current.offsetWidth,
+          height: window.innerHeight
+        });
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
+
+  const tileStyle = useMemo(() => {
+    if (dimensions.width === 0) return { minHeight: '60px' };
+    
+    const isMobile = window.innerWidth < 640;
+    const reservedHeight = isMobile ? 300 : 420;
+    const availableHeight = Math.max(240, dimensions.height - reservedHeight);
+    const calculatedHeight = Math.floor(availableHeight / 4);
+    
+    const finalHeight = Math.min(isMobile ? 110 : 160, Math.max(isMobile ? 55 : 75, calculatedHeight));
+    
+    return {
+      height: `${finalHeight}px`
+    };
+  }, [dimensions]);
 
   // Determinstic Board Generation from Seed
   const { boardGroups, allTiles } = useMemo(() => {
@@ -329,30 +361,36 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
             ))}
           </div>
 
-          <div className="grid grid-cols-4 gap-1 sm:gap-1.5 w-full mb-4 sm:mb-6">
+          <div ref={containerRef} className="grid grid-cols-4 gap-1 sm:gap-1.5 w-full mb-4 sm:mb-6">
             {completedGroups.map((g, idx) => (
-              <div key={idx} className={`${getDiffColor(g.difficulty)} col-span-4 min-h-[50px] flex flex-col items-center justify-center px-3 py-1.5 rounded-xl text-center shadow-lg animate-in zoom-in-95 duration-500 overflow-hidden`}>
-                <p className="font-black text-[9px] sm:text-[12px] uppercase tracking-tighter text-black/60 leading-none mb-0.5">{g.category}</p>
-                <p className="font-bold text-[8px] sm:text-[10px] text-white/95 leading-tight uppercase line-clamp-2">{g.items.join(", ")}</p>
+              <div 
+                key={idx} 
+                style={tileStyle}
+                className={`${getDiffColor(g.difficulty)} col-span-4 flex flex-col items-center justify-center px-3 py-1.5 rounded-xl text-center shadow-lg animate-in zoom-in-95 duration-500 overflow-hidden`}
+              >
+                <p className="font-black text-[9px] sm:text-[12px] uppercase tracking-tighter text-black/60 leading-none mb-1">{g.category}</p>
+                <p className="font-bold text-[8px] sm:text-[11px] text-white/95 leading-tight uppercase line-clamp-3">{g.items.join(", ")}</p>
               </div>
             ))}
             {displayTiles.map(tile => {
               const isSelected = selectedIds.includes(tile.id);
               return (
                 <button
-                  key={tile.id} onClick={() => handleSelect(tile.id)}
-                  className={`min-h-[50px] sm:min-h-[70px] flex flex-col items-center justify-center rounded-xl font-black transition-all duration-200 border-2 uppercase tracking-tight overflow-hidden ${
+                  key={tile.id} 
+                  onClick={() => handleSelect(tile.id)}
+                  style={tileStyle}
+                  className={`flex flex-col items-center justify-center rounded-xl font-black transition-all duration-200 border-2 uppercase tracking-tight overflow-hidden ${
                     isSelected && showWrongFlash ? 'bg-red-500/10 border-red-500/40 text-white scale-105' : 
                     isSelected ? 'bg-indigo-500 text-white border-indigo-400 scale-95 shadow-inner' : 
                     'bg-gray-900 border-white/5 text-white hover:border-white/20'
                   } ${isSelected && shaking ? 'animate-shake' : ''}`}
                 >
-                  <span className={`text-center w-full px-1 leading-tight flex items-center justify-center break-words hyphens-auto ${
-                    tile.text.length > 18 ? 'text-[6px] sm:text-[8px]' :
-                    tile.text.length > 14 ? 'text-[7px] sm:text-[9px]' :
-                    tile.text.length > 10 ? 'text-[8px] sm:text-[11px]' : 
-                    tile.text.length > 7 ? 'text-[9px] sm:text-[12px]' :
-                    'text-[10px] sm:text-[14px]'
+                  <span className={`text-center w-full px-1.5 leading-tight flex items-center justify-center break-words hyphens-auto ${
+                    tile.text.length > 18 ? 'text-[7px] sm:text-[10px]' :
+                    tile.text.length > 14 ? 'text-[8px] sm:text-[11px]' :
+                    tile.text.length > 10 ? 'text-[9px] sm:text-[13px]' : 
+                    tile.text.length > 7 ? 'text-[10px] sm:text-[15px]' :
+                    'text-[11px] sm:text-[17px]'
                   }`}>
                     {tile.text}
                   </span>

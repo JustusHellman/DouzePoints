@@ -12,6 +12,7 @@ import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
 interface EuroGuessProps {
   onReturn: () => void;
   data: MasterSong[];
+  bonusSong?: MasterSong;
 }
 
 const MAX_ATTEMPTS = 6;
@@ -72,14 +73,15 @@ const HintBox: React.FC<HintBoxProps> = ({ hint, attempt, idx, isActive, songTit
   );
 };
 
-const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
+const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, bonusSong }) => {
   const { t } = useTranslation();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
 
   const song = useMemo(() => {
+    if (bonusSong) return bonusSong;
     const idx = getDailyIndex(data, "euroguess");
     return data[idx];
-  }, [data]);
+  }, [data, bonusSong]);
 
   const [query, setQuery] = useState("");
   const [attempts, setAttempts] = useState<string[]>([]);
@@ -166,7 +168,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
       })
       .filter(item => item.score > 0)
       .sort((a, b) => b.score - a.score)
-      .slice(0, 8)
+      .slice(0, 100)
       .map(item => item.song);
   }, [query, data]);
 
@@ -184,7 +186,9 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
       const newAttempts = [...attempts, selectedTitle];
       setAttempts(newAttempts); 
       setRevealedHints(6); 
-      updateGameStats(GameType.GUESSER, true, { attempts: newAttempts.length });
+      if (!bonusSong) {
+        updateGameStats(GameType.GUESSER, true, { attempts: newAttempts.length });
+      }
       setTimeout(() => setShowModal(true), 1500);
     } else {
       const newAttempts = [...attempts, selectedTitle];
@@ -192,7 +196,9 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data }) => {
       setRevealedHints(Math.min(newAttempts.length + 1, 6));
       if (newAttempts.length >= 6) { 
         setIsGameOver(true); 
-        updateGameStats(GameType.GUESSER, false, { attempts: newAttempts.length });
+        if (!bonusSong) {
+          updateGameStats(GameType.GUESSER, false, { attempts: newAttempts.length });
+        }
         setTimeout(() => setShowModal(true), 1500);
       }
       setQuery("");

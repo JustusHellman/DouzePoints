@@ -19,6 +19,7 @@ import TermsOfService from './components/TermsOfService.tsx';
 import About from './components/About.tsx';
 import Contact from './components/Contact.tsx';
 import Admin from './components/Admin.tsx';
+import PatchNotes from './components/PatchNotes.tsx';
 import { CountdownTimer } from './components/CountdownTimer.tsx';
 
 const ScrollToTop = () => {
@@ -136,7 +137,7 @@ interface GameInstance {
   };
 }
 
-const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstance[]) => void; isMobile: boolean }> = ({ stats, onShareDaily, isMobile }) => {
+const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstance[]) => void }> = ({ stats, onShareDaily }) => {
   const { t } = useTranslation();
   const today = getDayString();
   
@@ -235,6 +236,16 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
             </div>
 
             <div className="flex items-center gap-4">
+              {import.meta.env.DEV && (
+                <button 
+                  onClick={() => {
+                    import('./utils/stats.ts').then(m => m.resetDailyProgressForDev());
+                  }}
+                  className="flex items-center gap-2 px-5 py-3 bg-red-500/20 text-red-400 rounded-xl font-black uppercase text-[9px] tracking-widest hover:bg-red-500 hover:text-white transition-all active:scale-95 shadow-lg border border-red-500/30"
+                >
+                  DEV RESET
+                </button>
+              )}
               {completedCount > 0 && (
                 <button 
                   onClick={() => onShareDaily(games)}
@@ -316,24 +327,20 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => reportSupportClick()}
-            className={`group flex flex-col sm:flex-row items-center justify-between px-5 py-3 md:py-4 rounded-xl transition-colors duration-300 ${
-              completedCount === games.length 
-                ? 'bg-[#FFDD00]/10 hover:bg-[#FFDD00]/20' 
-                : 'bg-white/5 hover:bg-white/10'
-            }`}
+            className="group flex flex-col sm:flex-row items-center justify-between px-5 py-3 md:py-4 rounded-xl transition-colors duration-300 bg-white/5 hover:bg-white/10"
           >
             <div className="flex items-center gap-3 mb-3 sm:mb-0 text-center sm:text-left">
               <svg className="w-4 h-4 text-[#FFDD00] shrink-0" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/>
               </svg>
               <span className="text-xs md:text-sm font-medium text-gray-300">
-                {completedCount === games.length ? t('support.completed') : t('support.title')} <span className="opacity-70 hidden sm:inline">— Support the project</span>
+                {t('support.title')} <span className="opacity-70 hidden sm:inline">— Support the project</span>
               </span>
             </div>
-            <div className={`text-[10px] font-bold uppercase tracking-widest text-white transition-colors px-4 py-1.5 rounded-full sm:ml-4 whitespace-nowrap ${
+            <div className={`text-[10px] font-bold uppercase tracking-widest transition-colors px-4 py-1.5 rounded-full sm:ml-4 whitespace-nowrap ${
               completedCount === games.length
-                ? 'bg-[#FFDD00]/20 group-hover:bg-[#FFDD00]/30'
-                : 'bg-[#FFDD00]/10 group-hover:bg-[#FFDD00]/20'
+                ? 'bg-[#FFDD00]/20 text-white group-hover:bg-[#FFDD00]/30'
+                : 'bg-[#FFDD00]/10 text-white group-hover:bg-[#FFDD00]/20'
             }`}>
               {t('support.button')}
             </div>
@@ -372,15 +379,6 @@ const App: React.FC = () => {
   const [dailyShareGames, setDailyShareGames] = useState<GameInstance[]>([]);
   const [stats, setStats] = useState<GlobalStats>(() => getStoredStats());
   const [rankUpData, setRankUpData] = useState<{ title: string; threshold: number } | null>(null);
-
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   // SEO: Dynamic Page Titles and Descriptions based on Route
   useEffect(() => {
@@ -603,7 +601,7 @@ const App: React.FC = () => {
           )}
           
           <Routes>
-            <Route path="/" element={<Dashboard stats={stats} onShareDaily={(games) => { setDailyShareGames(games); setShowDailyShare(true); }} isMobile={isMobile} />} />
+            <Route path="/" element={<Dashboard stats={stats} onShareDaily={(games) => { setDailyShareGames(games); setShowDailyShare(true); }} />} />
             <Route path="/euro-song" element={<EuroWordGame onReturn={handleReturn} data={MASTER_DATA} gameType={GameType.WORD_GAME} gameId="eurosong" title={t('games.eurosong.title')} />} />
             <Route path="/euro-artist" element={<EuroWordGame onReturn={handleReturn} data={MASTER_DATA} gameType={GameType.ARTIST_WORD_GAME} gameId="euroartist" title={t('games.euroartist.title')} />} />
             <Route path="/euro-refrain" element={<EuroRefrain onReturn={handleReturn} />} />
@@ -615,6 +613,14 @@ const App: React.FC = () => {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/patch-notes" element={<PatchNotes />} />
+            {/* 
+            <Route path="/bonus" element={<BonusDashboard />} />
+            <Route path="/bonus/euro-song" element={<BonusGameWrapper gameType="euro-song" onReturn={() => window.location.href = '/bonus'} />} />
+            <Route path="/bonus/euro-artist" element={<BonusGameWrapper gameType="euro-artist" onReturn={() => window.location.href = '/bonus'} />} />
+            <Route path="/bonus/euro-guess" element={<BonusGameWrapper gameType="euro-guess" onReturn={() => window.location.href = '/bonus'} />} />
+            <Route path="/bonus/euro-arena" element={<BonusGameWrapper gameType="euro-arena" onReturn={() => window.location.href = '/bonus'} />} />
+            */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
@@ -644,6 +650,7 @@ const App: React.FC = () => {
             </a>
           </div>
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[9px] font-black uppercase tracking-widest text-gray-500">
+            <Link to="/patch-notes" className="hover:text-white transition-colors">Patch Notes</Link>
             <Link to="/privacy" className="hover:text-white transition-colors">{t('privacy.title')}</Link>
             <Link to="/about" className="hover:text-white transition-colors">{t('about.title')}</Link>
             <Link to="/contact" className="hover:text-white transition-colors">{t('contact.title')}</Link>

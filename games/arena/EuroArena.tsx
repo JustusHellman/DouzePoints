@@ -12,6 +12,7 @@ import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
 interface EuroArenaProps {
   onReturn: () => void;
   data: MasterSong[];
+  bonusSong?: MasterSong;
 }
 
 const MAX_GUESSES = 7;
@@ -41,14 +42,15 @@ const ComparisonBox = ({ label, value, status, arrow, delay }: { label: string, 
   );
 };
 
-const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
+const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, bonusSong }) => {
   const { t } = useTranslation();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
 
   const target = useMemo(() => {
+    if (bonusSong) return bonusSong;
     const idx = getDailyIndex(data, "euroarena");
     return data[idx];
-  }, [data]);
+  }, [data, bonusSong]);
 
   const [query, setQuery] = useState("");
   const [guesses, setGuesses] = useState<MasterSong[]>([]);
@@ -140,12 +142,16 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
     if (isWin) { 
       setWon(true); 
       setIsGameOver(true); 
-      updateGameStats(GameType.ARENA, true, { attempts: newGuesses.length });
+      if (!bonusSong) {
+        updateGameStats(GameType.ARENA, true, { attempts: newGuesses.length });
+      }
       setTimeout(() => setShowModal(true), 1500); 
     }
     else if (newGuesses.length >= MAX_GUESSES) { 
       setIsGameOver(true); 
-      updateGameStats(GameType.ARENA, false, { attempts: newGuesses.length });
+      if (!bonusSong) {
+        updateGameStats(GameType.ARENA, false, { attempts: newGuesses.length });
+      }
       setTimeout(() => setShowModal(true), 1500); 
     }
   };
@@ -160,7 +166,8 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data }) => {
       })
       .filter(item => item.score > 0)
       .sort((a, b) => b.score - a.score)
-      .slice(0, 8).map(item => item.song);
+      .slice(0, 100)
+      .map(item => item.song);
   }, [query, data]);
 
   const historyEmoji = useMemo(() => {

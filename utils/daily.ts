@@ -1,6 +1,16 @@
-export const getDayString = () => {
+export const normalize = (str: string) => {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+};
+
+export const isLetter = (char: string) => {
+  const normalized = normalize(char);
+  return /^[A-Z]$/.test(normalized);
+};
+
+export const getDayString = (date?: Date) => {
   // Use UTC date to ensure everyone gets the same puzzle at the same time
-  return new Date().toISOString().split('T')[0];
+  const d = date || new Date();
+  return d.toISOString().split('T')[0];
 };
 
 const hashCode = (str: string) => {
@@ -18,8 +28,8 @@ const hashCode = (str: string) => {
  * Implements a 70/30 weighting for 'golden' vs 'cult' tiers if metadata is present.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getDailyIndex = (data: any[], salt: string) => {
-  const seed = hashCode(getDayString() + salt);
+export const getDailyIndex = (data: any[], salt: string, dateStr?: string) => {
+  const seed = hashCode((dateStr || getDayString()) + salt);
   
   if (!data || data.length === 0) return 0;
 
