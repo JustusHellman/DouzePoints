@@ -77,7 +77,7 @@ const About: React.FC = () => {
               href="https://buymeacoffee.com/DouzePointsGame"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => reportSupportClick()}
+              onClick={() => reportSupportClick('About_Page')}
               className="inline-flex items-center gap-3 px-6 py-4 bg-[#FFDD00] text-black rounded-xl font-black uppercase text-xs tracking-widest hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,221,0,0.3)]"
             >
               <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">

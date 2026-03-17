@@ -195,6 +195,12 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
   const totalDailyPoints = games.reduce((acc, g) => acc + g.points, 0);
   const isQualified = completedCount === games.length;
 
+  useEffect(() => {
+    if (isQualified) {
+      import('./utils/firebaseService.ts').then(m => m.reportDailyCompletion(totalDailyPoints));
+    }
+  }, [isQualified, totalDailyPoints]);
+
   return (
     <div className="max-w-4xl mx-auto pb-8">
       {/* Daily Progress Bar */}
@@ -326,7 +332,7 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
             href="https://buymeacoffee.com/DouzePointsGame"
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => reportSupportClick()}
+            onClick={() => reportSupportClick('App_GamesList')}
             className="group flex flex-col sm:flex-row items-center justify-between px-5 py-3 md:py-4 rounded-xl transition-colors duration-300 bg-white/5 hover:bg-white/10"
           >
             <div className="flex items-center gap-3 mb-3 sm:mb-0 text-center sm:text-left">
@@ -373,6 +379,10 @@ const App: React.FC = () => {
   const prevPathRef = useRef(location.pathname);
   const { t, language } = useTranslation();
   
+  useEffect(() => {
+    import('./utils/firebaseService.ts').then(m => m.reportDailyLanguage(language));
+  }, [language]);
+
   const [showStats, setShowStats] = useState(false);
   const [showLang, setShowLang] = useState(false);
   const [showDailyShare, setShowDailyShare] = useState(false);
@@ -642,7 +652,7 @@ const App: React.FC = () => {
               href="https://buymeacoffee.com/DouzePointsGame" 
               target="_blank" 
               rel="noopener noreferrer"
-              onClick={() => reportSupportClick()}
+              onClick={() => reportSupportClick('App_Footer')}
               className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#FFDD00]/70 hover:text-[#FFDD00] transition-colors mt-2"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/></svg>

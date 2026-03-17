@@ -11,7 +11,7 @@ export const MASTER_DATA: MasterSong[] = [
   { id: "2025-11", title: "Ich komme", artist: "Erika Vikman", year: 2025, placing: 11, country: "Finland", sex: "Female", genre: "Schlager", members: 1, fact: "One of the most talked-about performances of the year due to its bold staging.", tier: "cult" },
   { id: "2025-12", title: "C'est la vie", artist: "Claude", year: 2025, placing: 12, country: "The Netherlands", sex: "Male", genre: "Pop", members: 1, fact: "Generated pre-contest hype and strong streaming numbers before the final.", tier: "cult" },
   { id: "2025-15", title: "Baller", artist: "Marie Reim", year: 2025, placing: 15, country: "Germany", sex: "Female", genre: "Dance Pop", members: 1, fact: "One of the more radio-friendly entries of the year in German media.", tier: "cult" },
-  { id: "2025-26", title: "Tutta l'Italia", artist: "Angelina Mango", year: 2025, placing: 26, country: "San Marino", sex: "Female", genre: "Pop", members: 1, fact: "Created significant fan buzz online despite finishing lower in the table.", tier: "cult" },
+  { id: "2025-26", title: "Tutta l'Italia", artist: "Angelina Mango", year: 2025, placing: 26, country: "San Marino", sex: "Male", genre: "Pop", members: 1, fact: "Created significant fan buzz online despite finishing lower in the table.", tier: "cult" },
 
   // 2024
   { id: "2024-1", title: "The Code", artist: "Nemo", year: 2024, placing: 1, country: "Switzerland", sex: "Other", genre: "Drum and Bass / Opera", members: 1, fact: "Broke the trophy on stage within minutes of winning.", tier: "golden" },

@@ -32,9 +32,9 @@ export const reportGameScore = async (gameType: GameType, points: number) => {
   }
 };
 
-export const reportSupportClick = async () => {
+export const reportSupportClick = async (source: string = 'unknown') => {
   if (import.meta.env.DEV) {
-    console.log(`[DEV MODE] Would have reported support click`);
+    console.log(`[DEV MODE] Would have reported support click from ${source}`);
     return;
   }
 
@@ -46,11 +46,102 @@ export const reportSupportClick = async () => {
     await setDoc(docRef, {
       date,
       count: increment(1),
+      sources: {
+        [source]: increment(1)
+      },
       lastUpdated: serverTimestamp()
     }, { merge: true });
     
-    console.log(`Reported support click on ${date}`);
+    console.log(`Reported support click on ${date} from ${source}`);
   } catch (error) {
     console.error('Failed to report support click to Firebase:', error instanceof Error ? error.message : String(error));
+  }
+};
+
+export const reportShareClick = async (source: string = 'unknown') => {
+  if (import.meta.env.DEV) {
+    console.log(`[DEV MODE] Would have reported share click from ${source}`);
+    return;
+  }
+
+  const date = new Date().toISOString().split('T')[0];
+
+  try {
+    const docRef = doc(db, 'share_clicks', date);
+    
+    await setDoc(docRef, {
+      date,
+      count: increment(1),
+      sources: {
+        [source]: increment(1)
+      },
+      lastUpdated: serverTimestamp()
+    }, { merge: true });
+    
+    console.log(`Reported share click on ${date} from ${source}`);
+  } catch (error) {
+    console.error('Failed to report share click to Firebase:', error instanceof Error ? error.message : String(error));
+  }
+};
+
+export const reportDailyLanguage = async (language: string) => {
+  if (import.meta.env.DEV) {
+    console.log(`[DEV MODE] Would have reported daily language: ${language}`);
+    return;
+  }
+
+  const date = new Date().toISOString().split('T')[0];
+  const storageKey = 'last_language_reported_date';
+  
+  if (localStorage.getItem(storageKey) === date) {
+    return;
+  }
+
+  try {
+    const docRef = doc(db, 'language_stats', date);
+    await setDoc(docRef, {
+      date,
+      total: increment(1),
+      languages: {
+        [language]: increment(1)
+      },
+      lastUpdated: serverTimestamp()
+    }, { merge: true });
+    
+    localStorage.setItem(storageKey, date);
+    console.log(`Reported language ${language} on ${date}`);
+  } catch (error) {
+    console.error('Failed to report language to Firebase:', error instanceof Error ? error.message : String(error));
+  }
+};
+
+export const reportDailyCompletion = async (totalScore: number) => {
+  if (import.meta.env.DEV) {
+    console.log(`[DEV MODE] Would have reported daily completion with score: ${totalScore}`);
+    return;
+  }
+
+  const date = new Date().toISOString().split('T')[0];
+  const storageKey = 'last_completion_reported_date';
+  
+  if (localStorage.getItem(storageKey) === date) {
+    return;
+  }
+
+  try {
+    const docRef = doc(db, 'completion_stats', date);
+    await setDoc(docRef, {
+      date,
+      totalCompleted: increment(1),
+      distribution: {
+        [totalScore.toString()]: increment(1)
+      },
+      lastUpdated: serverTimestamp()
+    }, { merge: true });
+    
+    localStorage.setItem(storageKey, date);
+    console.log(`Reported daily completion with score ${totalScore} on ${date}`);
+  } catch (error) {
+    console.error('Failed to report completion to Firebase:', error instanceof Error ? error.message : String(error));
   }
 };

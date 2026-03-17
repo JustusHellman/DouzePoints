@@ -2,6 +2,7 @@ import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { useTranslation } from '../context/LanguageContext.tsx';
 import { getDayString } from '../utils/daily.ts';
 import { getCurrentRank } from '../utils/stats.ts';
+import { reportShareClick } from '../utils/firebaseService.ts';
 
 interface GameInstance {
   id: string;
@@ -240,6 +241,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({ games, onClose
   }, [generateCanvas]);
 
   const handleShareText = () => {
+    reportShareClick('DailyShare_Text');
     navigator.clipboard.writeText(shareText).then(() => {
       setShowCopied(true);
       setTimeout(() => setShowCopied(false), 2000);
@@ -247,6 +249,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({ games, onClose
   };
 
   const handleSaveImage = () => {
+    reportShareClick('DailyShare_SaveImage');
     const canvas = canvasRef.current;
     if (!canvas) return;
     const link = document.createElement('a');
@@ -256,6 +259,7 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({ games, onClose
   };
 
   const handleShareImage = async () => {
+    reportShareClick('DailyShare_ShareImage');
     const canvas = canvasRef.current;
     if (!canvas) return;
 

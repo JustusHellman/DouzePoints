@@ -3,6 +3,7 @@ import { GameType, MasterSong } from '../data/types.ts';
 import { useTranslation } from '../context/LanguageContext.tsx';
 import { getDayString } from '../utils/daily.ts';
 import { getStoredStats } from '../utils/stats.ts';
+import { reportShareClick } from '../utils/firebaseService.ts';
 import { CountdownTimer } from './CountdownTimer.tsx';
 import { PointsDistribution } from './PointsDistribution.tsx';
 
@@ -143,6 +144,7 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
   )).join(' ');
 
   const handleShare = () => {
+    reportShareClick(`GameScoreCard_${gameTitle.replace(/\s+/g, '')}`);
     if (onShare) {
       onShare();
       setShowCopied(true);

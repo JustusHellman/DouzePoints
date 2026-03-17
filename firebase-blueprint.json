@@ -53,6 +53,10 @@
           "type": "integer",
           "description": "Total number of clicks on this day."
         },
+        "sources": {
+          "type": "object",
+          "description": "Breakdown of clicks by source button."
+        },
         "lastUpdated": {
           "type": "string",
           "format": "date-time",
@@ -60,6 +64,84 @@
         }
       },
       "required": ["date", "count", "lastUpdated"]
+    },
+    "ShareClicks": {
+      "title": "Share Clicks",
+      "description": "Daily count of clicks on the share buttons.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date in YYYY-MM-DD format."
+        },
+        "count": {
+          "type": "integer",
+          "description": "Total number of share clicks on this day."
+        },
+        "sources": {
+          "type": "object",
+          "description": "Breakdown of share clicks by source button."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time this record was updated."
+        }
+      },
+      "required": ["date", "count", "lastUpdated"]
+    },
+    "DailyLanguageStats": {
+      "title": "Daily Language Stats",
+      "description": "Daily count of active users by language.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date in YYYY-MM-DD format."
+        },
+        "total": {
+          "type": "integer",
+          "description": "Total number of active users on this day."
+        },
+        "languages": {
+          "type": "object",
+          "description": "Breakdown of active users by language."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time this record was updated."
+        }
+      },
+      "required": ["date", "total", "lastUpdated"]
+    },
+    "DailyCompletionStats": {
+      "title": "Daily Completion Stats",
+      "description": "Daily count of users who completed all games and their total scores.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date in YYYY-MM-DD format."
+        },
+        "totalCompleted": {
+          "type": "integer",
+          "description": "Total number of users who completed all games on this day."
+        },
+        "distribution": {
+          "type": "object",
+          "description": "Count of each total score achieved."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time this record was updated."
+        }
+      },
+      "required": ["date", "totalCompleted", "lastUpdated"]
     }
   },
   "firestore": {
@@ -70,6 +152,18 @@
     "/support_clicks/{dateId}": {
       "schema": "SupportClicks",
       "description": "Collection of daily support click counts."
+    },
+    "/share_clicks/{dateId}": {
+      "schema": "ShareClicks",
+      "description": "Collection of daily share click counts."
+    },
+    "/language_stats/{dateId}": {
+      "schema": "DailyLanguageStats",
+      "description": "Collection of daily active users by language."
+    },
+    "/completion_stats/{dateId}": {
+      "schema": "DailyCompletionStats",
+      "description": "Collection of daily completion stats and scores."
     }
   }
 }

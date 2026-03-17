@@ -2,6 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GameType, GlobalStats, DetailedStats } from '../data/types.ts';
 import { getCurrentRank, getNextRank } from '../utils/stats.ts';
+import { reportShareClick } from '../utils/firebaseService.ts';
 import { useTranslation } from '../context/LanguageContext.tsx';
 import { PointsDistribution } from './PointsDistribution.tsx';
 
@@ -62,6 +63,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, initialT
   }, [activeTab, stats]);
 
   const handleShareStats = useCallback(() => {
+    reportShareClick(`StatsModal_${activeTab}`);
     let text = "✨ DOUZE POINTS ✨\n";
     if (activeTab === 'TOTAL') {
       const wins = stats.word_game.wins + stats.artists.wins + stats.links.wins + stats.refrain.wins + stats.guesser.wins + stats.arena.wins;

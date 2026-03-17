@@ -55,6 +55,31 @@ service cloud.firestore {
       return data.date is string &&
              data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
              data.count is number &&
+             (!('sources' in data) || data.sources is map) &&
+             data.lastUpdated is timestamp;
+    }
+
+    function isValidShareClicksDoc(data) {
+      return data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.count is number &&
+             (!('sources' in data) || data.sources is map) &&
+             data.lastUpdated is timestamp;
+    }
+
+    function isValidLanguageStatsDoc(data) {
+      return data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.total is number &&
+             (!('languages' in data) || data.languages is map) &&
+             data.lastUpdated is timestamp;
+    }
+
+    function isValidCompletionStatsDoc(data) {
+      return data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.totalCompleted is number &&
+             (!('distribution' in data) || data.distribution is map) &&
              data.lastUpdated is timestamp;
     }
 
@@ -78,6 +103,33 @@ service cloud.firestore {
       allow create: if isValidSupportClicksDoc(request.resource.data);
       
       allow update: if isValidSupportClicksDoc(request.resource.data) &&
+                      request.resource.data.date == resource.data.date;
+    }
+
+    match /share_clicks/{dateId} {
+      allow read: if isAdmin();
+      
+      allow create: if isValidShareClicksDoc(request.resource.data);
+      
+      allow update: if isValidShareClicksDoc(request.resource.data) &&
+                      request.resource.data.date == resource.data.date;
+    }
+
+    match /language_stats/{dateId} {
+      allow read: if isAdmin();
+      
+      allow create: if isValidLanguageStatsDoc(request.resource.data);
+      
+      allow update: if isValidLanguageStatsDoc(request.resource.data) &&
+                      request.resource.data.date == resource.data.date;
+    }
+
+    match /completion_stats/{dateId} {
+      allow read: if isAdmin();
+      
+      allow create: if isValidCompletionStatsDoc(request.resource.data);
+      
+      allow update: if isValidCompletionStatsDoc(request.resource.data) &&
                       request.resource.data.date == resource.data.date;
     }
 
