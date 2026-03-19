@@ -428,7 +428,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
     { category: "Female trios at Eurovision", items: ["FEMINNEM", "OG3NE", "SEREBRO", "HURRICANE"], difficulty: "expert" }
   ],
   [
-    { category: "One-word titles of four letters", items: ["HALO", "HOME", "SNAP", "TIME - BELARUS"], difficulty: "easy" },
+    { category: "One-word titles of four letters", items: ["HALO", "HOME", "SNAP", "TIME"], difficulty: "easy" },
     { category: "Heaven and hell imagery in titles", items: ["ANGEL", "FALLEN ANGEL", "EL DIABLO", "TAKE ME TO YOUR HEAVEN"], difficulty: "medium" },
     { category: "Entries credited to multiple artists", items: ["PLAYING WITH FIRE", "RUN AWAY", "IGRANKA", "ADRENALINA"], difficulty: "hard" },
     { category: "Host cities that stepped in for another country", items: ["EDINBURGH", "BRIGHTON", "THE HAGUE", "LIVERPOOL"], difficulty: "expert" }
