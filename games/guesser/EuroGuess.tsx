@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import confetti from 'canvas-confetti';
-import { getDailyIndex, getDayString } from '../../utils/daily.ts';
+import { getDailyIndex, getDayString, normalize } from '../../utils/daily.ts';
 import { updateGameStats } from '../../utils/stats.ts';
 import { GameType, MasterSong } from '../../data/types.ts';
 import { getFuzzyScore } from '../../utils/fuzzy.ts';
@@ -73,14 +73,19 @@ const HintBox: React.FC<HintBoxProps> = ({ hint, attempt, idx, isActive, songTit
   );
 };
 
+import { SEARCH_WEIGHT_THRESHOLD, isNewDatabaseActive } from '../../data/activeData.ts';
+
 const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, bonusSong }) => {
   const { t } = useTranslation();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
 
   const song = useMemo(() => {
     if (bonusSong) return bonusSong;
-    const idx = getDailyIndex(data, "euroguess");
-    return data[idx];
+    const isNew = isNewDatabaseActive();
+    const validPool = isNew ? data.filter(s => (s.weight || 0) >= SEARCH_WEIGHT_THRESHOLD) : data;
+    const poolToUse = validPool.length > 0 ? validPool : data;
+    const idx = getDailyIndex(poolToUse, "euroguess");
+    return poolToUse[idx];
   }, [data, bonusSong]);
 
   const [query, setQuery] = useState("");
@@ -160,7 +165,20 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, bonusSong }) => {
 
   const filteredSongs = useMemo(() => {
     if (!query || query.length < 1) return [];
-    return data.map(s => {
+    const isNew = isNewDatabaseActive();
+    
+    if (!isNew) {
+      const q = normalize(query);
+      return data.filter(s => 
+        normalize(s.title).includes(q) || 
+        normalize(s.artist).includes(q) || 
+        normalize(s.country).includes(q)
+      ).slice(0, 100);
+    }
+
+    return data
+      .filter(s => (s.weight || 0) >= SEARCH_WEIGHT_THRESHOLD || s.id === song.id)
+      .map(s => {
         const titleScore = getFuzzyScore(query, s.title);
         const artistScore = getFuzzyScore(query, s.artist);
         const countryScore = getFuzzyScore(query, s.country);
@@ -170,7 +188,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, bonusSong }) => {
       .sort((a, b) => b.score - a.score)
       .slice(0, 100)
       .map(item => item.song);
-  }, [query, data]);
+  }, [query, data, song]);
 
   const handleSelectSong = (selected: MasterSong) => {
     setQuery(selected.title);

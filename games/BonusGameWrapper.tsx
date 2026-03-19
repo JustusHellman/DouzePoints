@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GameType } from '../data/types';
-import { MASTER_DATA } from '../data/masterData';
+import { getActiveMasterData } from '../data/activeData';
 import EuroWordGame from './wordGame/EuroWordGame';
 import EuroGuess from './guesser/EuroGuess';
 import EuroArena from './arena/EuroArena';
@@ -13,9 +13,10 @@ interface BonusGameWrapperProps {
 const BONUS_CUTOFF = 50;
 
 const BonusGameWrapper: React.FC<BonusGameWrapperProps> = ({ gameType, onReturn }) => {
+  const activeData = getActiveMasterData();
   const [randomSong] = useState(() => {
-    const bonusPool = MASTER_DATA.filter(s => (s.weight || 0) < BONUS_CUTOFF);
-    if (bonusPool.length === 0) return MASTER_DATA[Math.floor(Math.random() * MASTER_DATA.length)];
+    const bonusPool = activeData.filter(s => (s.weight || 0) < BONUS_CUTOFF);
+    if (bonusPool.length === 0) return activeData[Math.floor(Math.random() * activeData.length)];
     return bonusPool[Math.floor(Math.random() * bonusPool.length)];
   });
 
@@ -23,7 +24,7 @@ const BonusGameWrapper: React.FC<BonusGameWrapperProps> = ({ gameType, onReturn 
     return (
       <EuroWordGame 
         onReturn={onReturn} 
-        data={MASTER_DATA} 
+        data={activeData} 
         gameType={GameType.WORD_GAME} 
         gameId="bonus" 
         title="EuroSong" 
@@ -36,7 +37,7 @@ const BonusGameWrapper: React.FC<BonusGameWrapperProps> = ({ gameType, onReturn 
     return (
       <EuroWordGame 
         onReturn={onReturn} 
-        data={MASTER_DATA} 
+        data={activeData} 
         gameType={GameType.ARTIST_WORD_GAME} 
         gameId="bonus" 
         title="EuroArtist" 
@@ -49,7 +50,7 @@ const BonusGameWrapper: React.FC<BonusGameWrapperProps> = ({ gameType, onReturn 
     return (
       <EuroGuess 
         onReturn={onReturn} 
-        data={MASTER_DATA} 
+        data={activeData} 
         bonusSong={randomSong}
       />
     );
@@ -59,7 +60,7 @@ const BonusGameWrapper: React.FC<BonusGameWrapperProps> = ({ gameType, onReturn 
     return (
       <EuroArena 
         onReturn={onReturn} 
-        data={MASTER_DATA} 
+        data={activeData} 
         bonusSong={randomSong}
       />
     );

@@ -6,7 +6,7 @@ import EuroRefrain from './games/refrain/EuroRefrain.tsx';
 import EuroGuess from './games/guesser/EuroGuess.tsx';
 import EuroArena from './games/arena/EuroArena.tsx';
 import { GameType, GlobalStats } from './data/types.ts';
-import { MASTER_DATA } from './data/masterData.ts';
+import { getActiveMasterData } from './data/activeData.ts';
 import { getStoredStats, getCurrentRank, getDailyGameState } from './utils/stats.ts';
 import { reportSupportClick } from './utils/firebaseService.ts';
 import { StatsModal } from './components/StatsModal.tsx';
@@ -413,9 +413,10 @@ const App: React.FC = () => {
       '/euro-arena': 'EuroArena, Eurovision stats, ESC history battle, competitive trivia'
     };
 
-    // Generate a rich description using MASTER_DATA for the home page
+    // Generate a rich description using getActiveMasterData() for the home page
     const getRichDescription = () => {
-      const goldenSongs = MASTER_DATA.filter(s => s.tier === 'golden');
+      const activeData = getActiveMasterData();
+      const goldenSongs = activeData.filter(s => s.tier === 'golden');
       const featured = goldenSongs.sort(() => 0.5 - Math.random()).slice(0, 3);
       const songList = featured.map(s => `${s.artist} ("${s.title}")`).join(', ');
       return `Play Douze Points, the ultimate Eurovision fan hub. Daily challenges featuring classics like ${songList}, and the latest entries. Test your ESC knowledge!`;
@@ -612,12 +613,12 @@ const App: React.FC = () => {
           
           <Routes>
             <Route path="/" element={<Dashboard stats={stats} onShareDaily={(games) => { setDailyShareGames(games); setShowDailyShare(true); }} />} />
-            <Route path="/euro-song" element={<EuroWordGame onReturn={handleReturn} data={MASTER_DATA} gameType={GameType.WORD_GAME} gameId="eurosong" title={t('games.eurosong.title')} />} />
-            <Route path="/euro-artist" element={<EuroWordGame onReturn={handleReturn} data={MASTER_DATA} gameType={GameType.ARTIST_WORD_GAME} gameId="euroartist" title={t('games.euroartist.title')} />} />
+            <Route path="/euro-song" element={<EuroWordGame onReturn={handleReturn} data={getActiveMasterData()} gameType={GameType.WORD_GAME} gameId="eurosong" title={t('games.eurosong.title')} />} />
+            <Route path="/euro-artist" element={<EuroWordGame onReturn={handleReturn} data={getActiveMasterData()} gameType={GameType.ARTIST_WORD_GAME} gameId="euroartist" title={t('games.euroartist.title')} />} />
             <Route path="/euro-refrain" element={<EuroRefrain onReturn={handleReturn} />} />
             <Route path="/euro-links" element={<EuroLinks onReturn={handleReturn} />} />
-            <Route path="/euro-guess" element={<EuroGuess onReturn={handleReturn} data={MASTER_DATA} />} />
-            <Route path="/euro-arena" element={<EuroArena onReturn={handleReturn} data={MASTER_DATA} />} />
+            <Route path="/euro-guess" element={<EuroGuess onReturn={handleReturn} data={getActiveMasterData()} />} />
+            <Route path="/euro-arena" element={<EuroArena onReturn={handleReturn} data={getActiveMasterData()} />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/about" element={<About />} />

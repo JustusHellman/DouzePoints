@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { FULL_MASTER_DATA } from '../data/fullMasterData.ts';
+import { MASTER_DATA as FULL_MASTER_DATA } from '../data/fullMasterData.ts';
+import { MasterSong } from '../data/types.ts';
 
 interface WeightParams {
   basePoints: number;
@@ -100,7 +101,7 @@ const WeightSimulator: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const calculatedData = useMemo(() => {
-    return FULL_MASTER_DATA.map(song => {
+    return FULL_MASTER_DATA.map((song: MasterSong) => {
       let score = params.basePoints;
 
       // Placement Bonus (Mutually Exclusive)
@@ -140,20 +141,41 @@ const WeightSimulator: React.FC = () => {
 
       const finalWeight = Math.round(score * multiplier);
       return { ...song, weight: finalWeight };
-    }).sort((a, b) => (b.weight || 0) - (a.weight || 0));
+    }).sort((a: MasterSong, b: MasterSong) => (b.weight || 0) - (a.weight || 0));
   }, [params]);
 
-  const dailyPool = calculatedData.filter(s => (s.weight || 0) >= params.cutoff);
-  const bonusPool = calculatedData.filter(s => (s.weight || 0) < params.cutoff);
+  const dailyPool = calculatedData.filter((s: MasterSong) => (s.weight || 0) >= params.cutoff);
+  const bonusPool = calculatedData.filter((s: MasterSong) => (s.weight || 0) < params.cutoff);
 
-  const filteredData = calculatedData.filter(s => 
+  const filteredData = calculatedData.filter((s: MasterSong) => 
     s.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     s.artist.toLowerCase().includes(searchTerm.toLowerCase()) ||
     s.country.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const generateCode = () => {
-    const code = `import { MasterSong } from './types.ts';\n\nexport const FULL_MASTER_DATA: MasterSong[] = ${JSON.stringify(calculatedData, null, 2)};`;
+    const lines = FULL_MASTER_DATA.map((originalSong: MasterSong) => {
+      const calculatedSong = calculatedData.find((s: MasterSong) => s.id === originalSong.id);
+      const weight = calculatedSong ? calculatedSong.weight : 0;
+      
+      const parts = [];
+      parts.push(`id: ${JSON.stringify(originalSong.id)}`);
+      parts.push(`year: ${originalSong.year}`);
+      parts.push(`country: ${JSON.stringify(originalSong.country)}`);
+      parts.push(`artist: ${JSON.stringify(originalSong.artist)}`);
+      parts.push(`title: ${JSON.stringify(originalSong.title)}`);
+      parts.push(`placing: ${originalSong.placing}`);
+      parts.push(`sex: ${JSON.stringify(originalSong.sex)}`);
+      parts.push(`genre: ${JSON.stringify(originalSong.genre)}`);
+      parts.push(`members: ${originalSong.members}`);
+      if (originalSong.fact) parts.push(`fact: ${JSON.stringify(originalSong.fact)}`);
+      if (originalSong.youtubeId) parts.push(`youtubeId: ${JSON.stringify(originalSong.youtubeId)}`);
+      if (originalSong.tier) parts.push(`tier: ${JSON.stringify(originalSong.tier)}`);
+      if (originalSong.weightModifiers) parts.push(`weightModifiers: ${JSON.stringify(originalSong.weightModifiers)}`);
+      parts.push(`weight: ${weight}`);
+      return `  {${parts.join(',')}}`;
+    });
+    const code = `import { MasterSong } from './types.ts';\n\n/**\n * Full Eurovision dataset including TidyTuesday historical data.\n */\nexport const MASTER_DATA: MasterSong[] = [\n${lines.join(',\n')}\n];\n`;
     const blob = new Blob([code], { type: 'text/typescript' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -281,7 +303,7 @@ const WeightSimulator: React.FC = () => {
             </div>
 
             <div className="max-h-[600px] overflow-y-auto space-y-2 pr-2 custom-scrollbar">
-              {filteredData.map(song => (
+              {filteredData.map((song: MasterSong) => (
                 <div 
                   key={song.id} 
                   className={`flex items-center justify-between p-3 rounded-xl border transition-all ${

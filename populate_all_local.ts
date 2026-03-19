@@ -8,9 +8,9 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 async function run() {
   console.log("Reading fullMasterData.ts...");
   const content = fs.readFileSync('./data/fullMasterData.ts', 'utf8');
-  const match = content.match(/export const FULL_MASTER_DATA: MasterSong\[\] = \[\s*([\s\S]*?)\];/);
+  const match = content.match(/export const MASTER_DATA: MasterSong\[\] = \[\s*([\s\S]*?)\];/);
   if (!match) {
-    console.error("Could not find FULL_MASTER_DATA");
+    console.error("Could not find MASTER_DATA");
     return;
   }
   
@@ -98,7 +98,7 @@ async function run() {
       newLines.push("/**");
       newLines.push(" * Full Eurovision dataset including TidyTuesday historical data.");
       newLines.push(" */");
-      newLines.push("export const FULL_MASTER_DATA: MasterSong[] = [");
+      newLines.push("export const MASTER_DATA: MasterSong[] = [");
       for (const song of masterData) {
         newLines.push(`  ${JSON.stringify(song).replace(/"([^"]+)":/g, '$1: ')},`);
       }

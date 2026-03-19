@@ -1,10 +1,7 @@
 import React from 'react';
 import { PATCH_NOTES } from '../data/patchNotes.ts';
-import { useTranslation } from '../context/LanguageContext.tsx';
 
 const PatchNotes: React.FC = () => {
-  const { t } = useTranslation();
-
   return (
     <div className="max-w-3xl mx-auto px-4 py-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="mb-12 text-center">
@@ -17,7 +14,7 @@ const PatchNotes: React.FC = () => {
       </div>
 
       <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-white/10 before:to-transparent">
-        {[...PATCH_NOTES].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((note, index) => (
+        {[...PATCH_NOTES].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((note) => (
           <div key={note.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
             {/* Timeline dot */}
             <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-[#0b0b18] bg-pink-500 shadow-[0_0_15px_rgba(236,72,153,0.5)] shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
@@ -45,7 +42,7 @@ const PatchNotes: React.FC = () => {
                   </time>
                 </div>
               </div>
-              <p className="text-sm text-gray-400 leading-relaxed font-medium">
+              <p className="text-sm text-gray-400 leading-relaxed font-medium whitespace-pre-line">
                 {note.description}
               </p>
             </div>

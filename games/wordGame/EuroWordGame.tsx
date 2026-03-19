@@ -29,6 +29,8 @@ const isLetter = (char: string) => {
   return /^[A-Z]$/.test(normalized);
 };
 
+import { SEARCH_WEIGHT_THRESHOLD, isNewDatabaseActive } from '../../data/activeData.ts';
+
 const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, gameId, title, bonusSong }) => {
   const { t } = useTranslation();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
@@ -36,10 +38,13 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
   const [message, setMessage] = useState<string | null>(null);
 
   const validPool = useMemo(() => {
-    return data.filter(song => {
+    const pool = data.filter(song => {
       const targetText = (gameType === GameType.WORD_GAME) ? song.title : song.artist;
       return normalize(targetText).split('').some(char => isLetter(char));
     });
+    const isNew = isNewDatabaseActive();
+    const weightedPool = isNew ? pool.filter(s => (s.weight || 0) >= SEARCH_WEIGHT_THRESHOLD) : pool;
+    return weightedPool.length > 0 ? weightedPool : pool;
   }, [data, gameType]);
 
   const song = useMemo(() => {
