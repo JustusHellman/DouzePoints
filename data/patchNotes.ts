@@ -30,5 +30,11 @@ export const PATCH_NOTES: PatchNote[] = [
     date: "2026-03-19",
     title: "Major update - All entries of Eurovision",
     description: "Finally I've managed to gather all of the entries in the Eurovision history into the database! That means from tomorrow (20:th of March) the games will be able to pull challenges from a bigger pool and I'll be able to soonish make new game modes! Stay put for more fun in the future!\n\n Also a thank you to Gracie who pointed out that Tutta L'Italia had the wrong artist - It has now been fixed!",
+  },
+  {
+    id: "5",
+    date: "2026-03-20",
+    title: "EuroLink poor options",
+    description: "I'd like to appologize for today's EuroLinks having quite poor categories. I've updated it today around lunchtime so if you play after that, you'll have better options. I'm sorry if it caused any annoyance to anyone.",
   }
 ];
