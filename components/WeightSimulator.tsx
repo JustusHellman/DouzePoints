@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { MASTER_DATA as FULL_MASTER_DATA } from '../data/fullMasterData.ts';
 import { MasterSong } from '../data/types.ts';
+import { getPlacingLabel } from '../data/constants.tsx';
+import { useTranslation } from '../context/LanguageContext.tsx';
 
 interface WeightParams {
   basePoints: number;
@@ -67,6 +69,7 @@ const ControlRow: React.FC<{
 };
 
 const WeightSimulator: React.FC = () => {
+  const { t } = useTranslation();
   const [params, setParams] = useState<WeightParams>({
     basePoints: 50,
     winnerBonus: 150,
@@ -327,7 +330,7 @@ const WeightSimulator: React.FC = () => {
                     }`}>
                       {(song.weight || 0) >= params.cutoff ? 'Daily' : 'Bonus'}
                     </div>
-                    <div className="text-[10px] text-gray-500 mt-1">Place: {song.placing}</div>
+                    <div className="text-[10px] text-gray-500 mt-1">Place: {getPlacingLabel(song.placing, t)}</div>
                   </div>
                 </div>
               ))}

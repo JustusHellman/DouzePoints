@@ -253,3 +253,10 @@ export const getMemberLabel = (count: number) => {
 export const getGenreParent = (genre: string) => {
   return GENRE_PARENT_MAP[genre] || "Other";
 };
+
+export const getPlacingLabel = (placing: number, t: (key: string) => string) => {
+  if (placing > 100) {
+    return `${t('common.semiFinal')} (${placing - 100})`;
+  }
+  return placing.toString();
+};

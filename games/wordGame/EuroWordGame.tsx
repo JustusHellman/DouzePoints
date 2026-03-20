@@ -29,7 +29,7 @@ const isLetter = (char: string) => {
   return /^[A-Z]$/.test(normalized);
 };
 
-import { SEARCH_WEIGHT_THRESHOLD, isNewDatabaseActive } from '../../data/activeData.ts';
+import { SEARCH_WEIGHT_THRESHOLD } from '../../data/activeData.ts';
 
 const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, gameId, title, bonusSong }) => {
   const { t } = useTranslation();
@@ -42,8 +42,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
       const targetText = (gameType === GameType.WORD_GAME) ? song.title : song.artist;
       return normalize(targetText).split('').some(char => isLetter(char));
     });
-    const isNew = isNewDatabaseActive();
-    const weightedPool = isNew ? pool.filter(s => (s.weight || 0) >= SEARCH_WEIGHT_THRESHOLD) : pool;
+    const weightedPool = pool.filter(s => (s.weight || 0) >= SEARCH_WEIGHT_THRESHOLD);
     return weightedPool.length > 0 ? weightedPool : pool;
   }, [data, gameType]);
 

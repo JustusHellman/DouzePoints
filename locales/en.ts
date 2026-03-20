@@ -26,7 +26,8 @@ export const en: TranslationSchema = {
     selectLanguage: "Select Language",
     languages: "Languages",
     qualified: "Qualified",
-    playBonusRound: "Play Bonus Round"
+    playBonusRound: "Play Bonus Round",
+    semiFinal: "Semi Final"
   },
   greenroom: {
     greenroom: "The Greenroom",

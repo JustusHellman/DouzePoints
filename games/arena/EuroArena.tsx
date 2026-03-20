@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';
-import { getDailyIndex, getDayString, normalize } from '../../utils/daily.ts';
+import { getDailyIndex, getDayString } from '../../utils/daily.ts';
 import { updateGameStats } from '../../utils/stats.ts';
 import { GameType, MasterSong } from '../../data/types.ts';
-import { REGION_MAP, getMemberLabel, getGenreParent } from '../../data/constants.tsx';
+import { REGION_MAP, getMemberLabel, getGenreParent, getPlacingLabel } from '../../data/constants.tsx';
 import { getFuzzyScore } from '../../utils/fuzzy.ts';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
@@ -42,7 +42,7 @@ const ComparisonBox = ({ label, value, status, arrow, delay }: { label: string, 
   );
 };
 
-import { SEARCH_WEIGHT_THRESHOLD, isNewDatabaseActive } from '../../data/activeData.ts';
+import { SEARCH_WEIGHT_THRESHOLD } from '../../data/activeData.ts';
 
 const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, bonusSong }) => {
   const { t } = useTranslation();
@@ -50,8 +50,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, bonusSong }) => {
 
   const target = useMemo(() => {
     if (bonusSong) return bonusSong;
-    const isNew = isNewDatabaseActive();
-    const validPool = isNew ? data.filter(s => (s.weight || 0) >= SEARCH_WEIGHT_THRESHOLD) : data;
+    const validPool = data.filter(s => (s.weight || 0) >= SEARCH_WEIGHT_THRESHOLD);
     const poolToUse = validPool.length > 0 ? validPool : data;
     const idx = getDailyIndex(poolToUse, "euroarena");
     return poolToUse[idx];
@@ -163,16 +162,6 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, bonusSong }) => {
 
   const filteredData = useMemo(() => {
     if (!query || query.length < 1) return [];
-    const isNew = isNewDatabaseActive();
-    
-    if (!isNew) {
-      const q = normalize(query);
-      return data.filter(s => 
-        normalize(s.title).includes(q) || 
-        normalize(s.artist).includes(q) || 
-        normalize(s.country).includes(q)
-      ).slice(0, 100);
-    }
 
     return data
       .filter(s => (s.weight || 0) >= SEARCH_WEIGHT_THRESHOLD || s.id === target.id)
@@ -282,7 +271,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, bonusSong }) => {
                  </div>
                  <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-3">
                     <ComparisonBox label={t('arena.labels.year')} value={g.year} status={getStatus('year', g.year, g)} arrow={g.year < target.year ? 'up' : g.year > target.year ? 'down' : undefined} delay={idx === 0 ? 100 : 0} />
-                    <ComparisonBox label={t('arena.labels.rank')} value={`#${g.placing}`} status={getStatus('placing', g.placing, g)} arrow={g.placing > target.placing ? 'up' : g.placing < target.placing ? 'down' : undefined} delay={idx === 0 ? 250 : 0} />
+                    <ComparisonBox label={t('arena.labels.rank')} value={getPlacingLabel(g.placing, t)} status={getStatus('placing', g.placing, g)} arrow={g.placing > target.placing ? 'up' : g.placing < target.placing ? 'down' : undefined} delay={idx === 0 ? 250 : 0} />
                     <ComparisonBox label={t('arena.labels.country')} value={t(`metadata.countries.${g.country}`)} status={getStatus('country', g.country, g)} delay={idx === 0 ? 400 : 0} />
                     <ComparisonBox label={t('arena.labels.genre')} value={translateGenre(g.genre)} status={getStatus('genre', g.genre, g)} delay={idx === 0 ? 550 : 0} />
                     <ComparisonBox label={t('arena.labels.size')} value={getMemberLabel(g.members)} status={getStatus('members', g.members, g)} delay={idx === 0 ? 700 : 0} />

@@ -25,6 +25,7 @@ export interface TranslationSchema {
     languages: string;
     qualified: string;
     playBonusRound: string;
+    semiFinal: string;
   };
   greenroom: {
     greenroom: string;

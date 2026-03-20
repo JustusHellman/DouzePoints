@@ -6,6 +6,7 @@ import { getStoredStats } from '../utils/stats.ts';
 import { reportShareClick } from '../utils/firebaseService.ts';
 import { CountdownTimer } from './CountdownTimer.tsx';
 import { PointsDistribution } from './PointsDistribution.tsx';
+import { getPlacingLabel } from '../data/constants.tsx';
 
 interface GameScoreCardProps {
   won: boolean;
@@ -260,7 +261,7 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
                   <div className="flex flex-col">
                     <span className="text-[8px] sm:text-[10px] font-black text-gray-600 uppercase tracking-widest">{t('scorecard.placing')}</span>
                     <span className="text-xs sm:text-sm font-black text-yellow-500 uppercase flex items-center gap-1">
-                      {song.placing === 1 ? '🏆' : '#'} {song.placing}
+                      {song.placing === 1 ? '🏆' : song.placing <= 100 ? '#' : ''} {getPlacingLabel(song.placing, t)}
                     </span>
                   </div>
                </div>

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import confetti from 'canvas-confetti';
-import { getDailyIndex, getDayString, normalize } from '../../utils/daily.ts';
+import { getDailyIndex, getDayString } from '../../utils/daily.ts';
 import { updateGameStats } from '../../utils/stats.ts';
 import { GameType, MasterSong } from '../../data/types.ts';
 import { getFuzzyScore } from '../../utils/fuzzy.ts';
-import { getMemberLabel } from '../../data/constants.tsx';
+import { getMemberLabel, getPlacingLabel } from '../../data/constants.tsx';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
@@ -73,7 +73,7 @@ const HintBox: React.FC<HintBoxProps> = ({ hint, attempt, idx, isActive, songTit
   );
 };
 
-import { SEARCH_WEIGHT_THRESHOLD, isNewDatabaseActive } from '../../data/activeData.ts';
+import { SEARCH_WEIGHT_THRESHOLD } from '../../data/activeData.ts';
 
 const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, bonusSong }) => {
   const { t } = useTranslation();
@@ -81,8 +81,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, bonusSong }) => {
 
   const song = useMemo(() => {
     if (bonusSong) return bonusSong;
-    const isNew = isNewDatabaseActive();
-    const validPool = isNew ? data.filter(s => (s.weight || 0) >= SEARCH_WEIGHT_THRESHOLD) : data;
+    const validPool = data.filter(s => (s.weight || 0) >= SEARCH_WEIGHT_THRESHOLD);
     const poolToUse = validPool.length > 0 ? validPool : data;
     const idx = getDailyIndex(poolToUse, "euroguess");
     return poolToUse[idx];
@@ -165,16 +164,6 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, bonusSong }) => {
 
   const filteredSongs = useMemo(() => {
     if (!query || query.length < 1) return [];
-    const isNew = isNewDatabaseActive();
-    
-    if (!isNew) {
-      const q = normalize(query);
-      return data.filter(s => 
-        normalize(s.title).includes(q) || 
-        normalize(s.artist).includes(q) || 
-        normalize(s.country).includes(q)
-      ).slice(0, 100);
-    }
 
     return data
       .filter(s => (s.weight || 0) >= SEARCH_WEIGHT_THRESHOLD || s.id === song.id)
@@ -225,7 +214,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, bonusSong }) => {
 
   const hints = useMemo(() => [
     { label: t('guesser.hintLabels.year'), value: song.year },
-    { label: t('guesser.hintLabels.placing'), value: song.placing },
+    { label: t('guesser.hintLabels.placing'), value: getPlacingLabel(song.placing, t) },
     { label: t('guesser.hintLabels.genre'), value: song.genre.split(' / ').map(g => t(`metadata.genres.${g}`) || g).join(' / ') },
     { label: t('guesser.hintLabels.artist'), value: getMemberLabel(song.members) },
     { label: t('guesser.hintLabels.country'), value: t(`metadata.countries.${song.country}`) },

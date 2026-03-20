@@ -5,7 +5,7 @@ import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, User } from 'f
 import { db, auth } from '../firebase.ts';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import WeightSimulator from './WeightSimulator.tsx';
-import { getActiveMasterData, SEARCH_WEIGHT_THRESHOLD, isNewDatabaseActive } from '../data/activeData.ts';
+import { getActiveMasterData, SEARCH_WEIGHT_THRESHOLD } from '../data/activeData.ts';
 import { PUZZLES } from '../data/linksgameData.ts';
 import { REFRAIN_POOL } from '../data/refrainData.ts';
 import { getDailyIndex, normalize, isLetter } from '../utils/daily.ts';
@@ -21,9 +21,8 @@ interface CompletionStats { date: string; totalCompleted: number; distribution: 
 
 const getDailyAnswer = (gameType: string, dateStr: string) => {
   try {
-    const activeData = getActiveMasterData(dateStr);
-    const isNew = isNewDatabaseActive(dateStr);
-    const weightedData = isNew ? activeData.filter(s => (s.weight || 0) >= SEARCH_WEIGHT_THRESHOLD) : activeData;
+    const activeData = getActiveMasterData();
+    const weightedData = activeData.filter(s => (s.weight || 0) >= SEARCH_WEIGHT_THRESHOLD);
     const pool = weightedData.length > 0 ? weightedData : activeData;
     
     if (gameType === 'WORD_GAME') { const validPool = pool.filter(song => normalize(song.title).split('').some(char => isLetter(char))); return validPool[getDailyIndex(validPool, "DAILY-V3-WORD_GAME-eurosong-SALT-VERIFIED", dateStr)]; }

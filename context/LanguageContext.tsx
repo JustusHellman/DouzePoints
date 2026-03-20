@@ -64,6 +64,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTranslation = () => {
   const context = useContext(LanguageContext);
   if (!context) throw new Error('useTranslation must be used within LanguageProvider');
