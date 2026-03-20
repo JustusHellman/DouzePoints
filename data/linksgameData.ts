@@ -515,7 +515,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
     { category: "Italian-language entries (2010s-2020s)", items: ["GRANDE AMORE", "OCCIDENTALI'S KARMA", "NON MI AVETE FATTO NIENTE", "DUE VITE"], difficulty: "easy" },
     { category: "Male-female duos", items: ["ELL & NIKKI", "THE COMMON LINNETS", "KOIT TOOME & LAURA", "MORLAND & DEBRAH SCARLETT"], difficulty: "medium" },
     { category: "Countries ending with -ia", items: ["SERBIA", "SLOVENIA", "ESTONIA", "LITHUANIA"], difficulty: "hard" },
-    { category: "Countries with a Black Sea coastline", items: ["BULGARIA", "ROMANIA", "GEORGIA", "UKRAINE"], difficulty: "expert" }
+    { category: "Countries withdrawn and not returned", items: ["TURKEY", "ANDORRA", "BOSNIA AND HERZEGOVINA", "MOROCCO"], difficulty: "expert" }
   ],
   [
     { category: "Addressing mother in the title", items: ["MAMO", "MOTHER", "HEY MAMMA!", "MAMA SC!"], difficulty: "easy" },
