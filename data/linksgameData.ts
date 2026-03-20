@@ -513,7 +513,7 @@ export const PUZZLES: ConnectionsGroup[][] = [
   ],
   [
     { category: "Italian-language entries (2010s-2020s)", items: ["GRANDE AMORE", "OCCIDENTALI'S KARMA", "NON MI AVETE FATTO NIENTE", "DUE VITE"], difficulty: "easy" },
-    { category: "Male-female duos credited with &", items: ["ELL & NIKKI", "THE COMMON LINNETS", "KOIT TOOME & LAURA", "MORLAND & DEBRAH SCARLETT"], difficulty: "medium" },
+    { category: "Male-female duos", items: ["ELL & NIKKI", "THE COMMON LINNETS", "KOIT TOOME & LAURA", "MORLAND & DEBRAH SCARLETT"], difficulty: "medium" },
     { category: "Countries ending with -ia", items: ["SERBIA", "SLOVENIA", "ESTONIA", "LITHUANIA"], difficulty: "hard" },
     { category: "Countries with a Black Sea coastline", items: ["BULGARIA", "ROMANIA", "GEORGIA", "UKRAINE"], difficulty: "expert" }
   ],
