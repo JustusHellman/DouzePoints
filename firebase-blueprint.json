@@ -142,6 +142,28 @@
         }
       },
       "required": ["date", "totalCompleted", "lastUpdated"]
+    },
+    "DailyDiscoveryStats": {
+      "title": "Daily Discovery Stats",
+      "description": "Daily count of new players who finished their first game.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date in YYYY-MM-DD format."
+        },
+        "count": {
+          "type": "integer",
+          "description": "Total number of new players discovered on this day."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time this record was updated."
+        }
+      },
+      "required": ["date", "count", "lastUpdated"]
     }
   },
   "firestore": {
@@ -164,6 +186,10 @@
     "/completion_stats/{dateId}": {
       "schema": "DailyCompletionStats",
       "description": "Collection of daily completion stats and scores."
+    },
+    "/discoveries/{dateId}": {
+      "schema": "DailyDiscoveryStats",
+      "description": "Collection of daily new player discovery counts."
     }
   }
 }

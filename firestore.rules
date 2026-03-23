@@ -83,6 +83,35 @@ service cloud.firestore {
              data.lastUpdated is timestamp;
     }
 
+    function isValidDiscoveryStatsDoc(data) {
+      return data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.count is number &&
+             data.lastUpdated is timestamp;
+    }
+
+    function isValidInfiniteDailyStatsDoc(data) {
+      return data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.gameId is string &&
+             data.difficulty is string &&
+             data.totalStarts is number &&
+             (!('totalCompletions' in data) || data.totalCompletions is number) &&
+             (!('totalLosses' in data) || data.totalLosses is number) &&
+             (!('totalScore' in data) || data.totalScore is number) &&
+             (!('totalStreak' in data) || data.totalStreak is number) &&
+             data.lastUpdated is timestamp;
+    }
+
+    function isValidInfiniteRunDoc(data) {
+      return data.gameId is string &&
+             data.difficulty is string &&
+             data.score is number &&
+             data.streak is number &&
+             data.wasCompleted is bool &&
+             data.timestamp is timestamp;
+    }
+
     match /game_stats/{statsId} {
       // Only the admin can see the global stats
       allow read: if isAdmin();
@@ -131,6 +160,35 @@ service cloud.firestore {
       
       allow update: if isValidCompletionStatsDoc(request.resource.data) &&
                       request.resource.data.date == resource.data.date;
+    }
+
+    match /discoveries/{dateId} {
+      allow read: if isAdmin();
+      
+      allow create: if isValidDiscoveryStatsDoc(request.resource.data);
+      
+      allow update: if isValidDiscoveryStatsDoc(request.resource.data) &&
+                      request.resource.data.date == resource.data.date;
+    }
+
+    match /infinite_daily_stats/{statsId} {
+      allow read: if isAdmin();
+      
+      allow create: if isValidInfiniteDailyStatsDoc(request.resource.data);
+      
+      allow update: if isValidInfiniteDailyStatsDoc(request.resource.data) &&
+                      request.resource.data.date == resource.data.date &&
+                      request.resource.data.gameId == resource.data.gameId &&
+                      request.resource.data.difficulty == resource.data.difficulty;
+    }
+
+    match /infinite_runs/{runId} {
+      allow read: if isAdmin();
+      
+      allow create: if isValidInfiniteRunDoc(request.resource.data);
+      
+      // Runs are immutable
+      allow update, delete: if false;
     }
 
     // Default deny

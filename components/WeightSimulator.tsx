@@ -27,7 +27,7 @@ interface WeightParams {
   decayScale: number;
   decayRate: number;
   
-  recency2020: number;
+  recency2021: number;
   recency2010: number;
   recency2000: number;
   recency1990: number;
@@ -93,7 +93,7 @@ const WeightSimulator: React.FC = () => {
     decayScale: 0.7,
     decayRate: 0.04,
     
-    recency2020: 1.0,
+    recency2021: 1.0,
     recency2010: 0.85,
     recency2000: 0.70,
     recency1990: 0.50,
@@ -136,7 +136,7 @@ const WeightSimulator: React.FC = () => {
         multiplier = params.decayBase + params.decayScale * Math.exp(-params.decayRate * (2025 - song.year));
       } else {
         multiplier = params.recencyPre1990;
-        if (song.year >= 2020) multiplier = params.recency2020;
+        if (song.year >= 2021) multiplier = params.recency2021;
         else if (song.year >= 2010) multiplier = params.recency2010;
         else if (song.year >= 2000) multiplier = params.recency2000;
         else if (song.year >= 1990) multiplier = params.recency1990;
@@ -254,7 +254,7 @@ const WeightSimulator: React.FC = () => {
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                  <ControlRow label="2020+" value={params.recency2020} min={0} max={2} step={0.05} color="purple" onChange={v => setParams({...params, recency2020: v})} />
+                  <ControlRow label="2021+" value={params.recency2021} min={0} max={2} step={0.05} color="purple" onChange={v => setParams({...params, recency2021: v})} />
                   <ControlRow label="2010s" value={params.recency2010} min={0} max={2} step={0.05} color="purple" onChange={v => setParams({...params, recency2010: v})} />
                   <ControlRow label="2000s" value={params.recency2000} min={0} max={2} step={0.05} color="purple" onChange={v => setParams({...params, recency2000: v})} />
                   <ControlRow label="90s" value={params.recency1990} min={0} max={2} step={0.05} color="purple" onChange={v => setParams({...params, recency1990: v})} />

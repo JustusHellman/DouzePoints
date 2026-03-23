@@ -1,6 +1,6 @@
 import { GlobalStats, DetailedStats, GameType } from '../data/types.ts';
 import { getDayString } from './daily.ts';
-import { reportGameScore } from './firebaseService.ts';
+import { reportGameScore, reportNewPlayerDiscovery } from './firebaseService.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getDailyGameState = (config: any, today: string) => {
@@ -208,6 +208,20 @@ export const updateGameStats = (gameType: GameType, won: boolean, performanceMet
 
   // Report to Firebase (one write per day per game type per device)
   reportGameScore(gameType, pointsEarned);
+
+  // Check if this is the first game ever finished by this user
+  const totalPlayedBefore = Object.values(stats).reduce((sum, s) => {
+    if (typeof s === 'object' && s !== null && 'played' in s) {
+      return sum + (s.played as number);
+    }
+    return sum;
+  }, 0);
+
+  // If total played was 0 before this update, it's their first game
+  // (Note: we already incremented stats[gameKey].played above, so we check if it was 1 after increment)
+  if (totalPlayedBefore === 1) {
+    reportNewPlayerDiscovery();
+  }
 
   try {
     localStorage.setItem('euro-stats-v2', JSON.stringify(stats));

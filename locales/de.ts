@@ -19,6 +19,7 @@ export const de: TranslationSchema = {
     points: "Punkte",
     pointsShort: "Pkt",
     attempts: "Versuche",
+    songs: "Lieder",
     steps: "Schritte",
     mistakesLeft: "Fehler verbleibend",
     howToPlay: "Spielanleitung",
@@ -27,7 +28,8 @@ export const de: TranslationSchema = {
     languages: "Sprachen",
     qualified: "Qualifiziert",
     playBonusRound: "Bonusrunde spielen",
-    semiFinal: "Halbfinale"
+    semiFinal: "Halbfinale",
+    joinCommunity: "Tritt der Community bei"
   },
   greenroom: {
     greenroom: "Der Greenroom",
@@ -274,6 +276,10 @@ export const de: TranslationSchema = {
     community: {
       title: "Community Zuerst",
       p1: "Ich bin nicht mit der EBU oder einem offiziellen Sender verbunden. Ich bin einfach ein Fan, der seine Leidenschaft für den Eurovision mit der Welt teilen möchte."
+    },
+    data: {
+      title: "Daten & Credits",
+      p1: "Ein riesiges Dankeschön an das TidyTuesday-Projekt und seine Mitwirkenden für die Bereitstellung des grundlegenden Datensatzes, der Douze Points möglich gemacht hat. Ihr Engagement für offene Daten hat es uns ermöglicht, die reiche Geschichte des Wettbewerbs für diese Spiele aufzubauen!"
     }
   },
   contact: {
@@ -588,7 +594,7 @@ export const de: TranslationSchema = {
       "Spaghetti Western Pop": "Spaghetti Western Pop",
       "Swing": "Swing",
       "Symphonic Rock": "Symphonic Rock",
-      "Synth-Pop": "Synth-Pop",
+          "Synth-Pop": "Synth-Pop",
       "Synthpop": "Synthpop",
       "Tango Pop": "Tango Pop",
       "Techno Pop": "Techno Pop",
@@ -616,7 +622,55 @@ export const de: TranslationSchema = {
   },
   support: {
     title: "Gefällt dir Douze Points?",
-    completed: "Du hast die heutigen Herausforderungen gemeistert!",
-    button: "Spendier mir einen Kaffee"
+    completed: "Du hast die heutigen Herausforderungen abgeschlossen!",
+    button: "Kauf mir einen Kaffee"
+  },
+  infinite: {
+    title: "Zugabe",
+    description: "Die tägliche Show ist vorbei, aber die Party geht weiter! Kehre auf die Bühne zurück und teste deine Ausdauer in unseren endlosen Spielmodi. Wie lange kannst du die Musik am Laufen halten, bevor du den falschen Ton triffst?",
+    difficulty: "Schwierigkeitsgrad wählen",
+    difficulties: {
+      top10: "Top 10 (2000-heute)",
+      modern: "2000-heute",
+      all: "Alle Zeiten (1956-heute)"
+    },
+    currentRun: "Aktueller Durchlauf",
+    bestRun: "Bester Durchlauf",
+    best: "Max",
+    songsFinished: "Songs beendet",
+    currentScore: "Aktueller Punktestand",
+    bestScore: "Bester Punktestand",
+    score: "Punkte",
+    nextSong: "Nächster Song",
+    gameOver: "Spiel vorbei!",
+    tryAgain: "Nochmal versuchen",
+    congratulations: "Herzlichen Glückwunsch!",
+    allSongsFinished: "Du hast alle Einträge in dieser Kategorie erfolgreich abgeschlossen! Du bist eine wahre Eurovision-Legende.",
+    streak: "Serie",
+    bestStreak: "Beste Serie",
+    continueRun: "Durchlauf fortsetzen",
+    exitToEncore: "Zurück zur Zugabe",
+    playAgain: "Nochmal spielen",
+    continue: "Weiter",
+    newBest: "Neue Bestleistung!",
+    infiniteMode: "Unendlicher Modus",
+    placement: "Platzierung",
+    era: "Ära",
+    placements: {
+      all: "Alle Platzierungen",
+      winners: "Nur Gewinner",
+      top3: "Top 3",
+      top5: "Top 5",
+      top10: "Top 10",
+      top15: "Top 15",
+      finalists: "Finalisten"
+    },
+    years: {
+      all: "Ganze Geschichte",
+      "2021": "2021-Heute",
+      "2010": "2010-Heute",
+      "2000": "2000-Heute",
+      "1956": "1956-1999"
+    }
   }
 };

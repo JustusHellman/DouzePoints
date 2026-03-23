@@ -7,6 +7,7 @@ import { REFRAIN_POOL } from '../../data/refrainData.ts';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
+import { reportSupportClick } from '../../utils/firebaseService.ts';
 
 interface Tile {
   id: string;
@@ -64,13 +65,15 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
 
   // Determinstic Board Generation from Seed
   const { boardGroups, allTiles } = useMemo(() => {
+    let seed = 0;
+    
     const seedStr = getDayString() + "eurorefrain-salt-v1";
     let hash = 0;
     for (let i = 0; i < seedStr.length; i++) {
       hash = (hash << 5) - hash + seedStr.charCodeAt(i);
       hash |= 0;
     }
-    const seed = Math.abs(hash);
+    seed = Math.abs(hash);
 
     const easyPool = REFRAIN_POOL.filter(s => s.tier === 'easy');
     const mediumPool = REFRAIN_POOL.filter(s => s.tier === 'medium');
@@ -123,7 +126,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     return { boardGroups: groups, allTiles: tiles };
   }, []);
 
-  const [displayTiles, setDisplayTiles] = useState<Tile[]>(() => [...allTiles].sort(() => Math.random() - 0.5));
+  const [displayTiles, setDisplayTiles] = useState<Tile[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [completedGroups, setCompletedGroups] = useState<CompletedGroup[]>([]);
   const [guessHistory, setGuessHistory] = useState<string[][]>([]);
@@ -135,16 +138,21 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
   const [showWrongFlash, setShowWrongFlash] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  /*
-  // Instant scroll on mount
-  useLayoutEffect(() => {
-    if (isGameOver) return;
-    const timer = requestAnimationFrame(() => {
-      window.scrollTo(0, 60);
-    });
-    return () => cancelAnimationFrame(timer);
-  }, [isGameOver]);
-  */
+  // Initialize display tiles when allTiles changes
+  useEffect(() => {
+    if (allTiles.length > 0 && !isGameOver) {
+      setTimeout(() => {
+        setDisplayTiles([...allTiles].sort(() => Math.random() - 0.5));
+        setCompletedGroups([]);
+        setSelectedIds([]);
+        setGuessHistory([]);
+        setMistakes(0);
+        setIsGameOver(false);
+        setWon(false);
+        setShowModal(false);
+      }, 0);
+    }
+  }, [allTiles, isGameOver]);
 
   useEffect(() => {
     const seenKey = 'hasSeenRules-refrain';
@@ -166,6 +174,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     };
   }, [won, mistakes, t]);
 
+  // Daily state loading
   useEffect(() => {
     const saved = localStorage.getItem(`eurorefrain-${getDayString()}`);
     if (saved) {
@@ -180,7 +189,6 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
           if (data.isGameOver) setShowModal(true);
           if (data.completedGroups) {
             const completedTileIds = new Set(data.completedGroups.flatMap((g: { category: string }) => {
-                // Find the source group to recover original IDs
                 const source = boardGroups.find(bg => bg.category === g.category);
                 if (!source) return [];
                 const groupIdx = boardGroups.indexOf(source);
@@ -195,6 +203,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     }
   }, [boardGroups]);
 
+  // Daily state saving
   useEffect(() => {
     if (completedGroups.length === 0 && mistakes === 0 && !isGameOver) return;
     localStorage.setItem(`eurorefrain-${getDayString()}`, JSON.stringify({ completedGroups, guessHistory, mistakes, isGameOver, won }));
@@ -223,38 +232,27 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     await new Promise(r => setTimeout(r, 1500));
     setMessage(null);
     
-    // Get groups that haven't been found yet
     const remaining = boardGroups.filter(g => !completedGroups.some(cg => cg.category === g.category));
     
     for (const group of remaining) {
-      // Find the tiles for this group that are still on the board
       const groupTiles = allTiles.filter(t => t.groupIdx === group.groupIdx);
-
-      // Select them one by one
       for (const tile of groupTiles) {
         setSelectedIds(prev => [...prev, tile.id]);
         await new Promise(r => setTimeout(r, 250));
       }
-
-      // Short pause before collapsing
       await new Promise(r => setTimeout(r, 300));
-
-      // Collapse into category
       setCompletedGroups(prev => [...prev, group]);
       setDisplayTiles(prev => prev.filter(tile => tile.groupIdx !== group.groupIdx));
       setSelectedIds([]);
-
-      // Pause before next group
       await new Promise(r => setTimeout(r, 500));
     }
     
-    // Final wait before scorecard
     await new Promise(r => setTimeout(r, 1000));
     updateGameStats(GameType.REFRAIN_GAME, false, { mistakes: 6 });
     setShowModal(true);
-  }, [boardGroups, completedGroups, allTiles, t, setIsGameOver, setSelectedIds, setCompletedGroups, setDisplayTiles, setShowModal]);
+  }, [boardGroups, completedGroups, allTiles, t]);
 
-  const submit = () => {
+  const submit = useCallback(() => {
     if (selectedIds.length !== 4) return;
     const selectedTiles = selectedIds.map(id => allTiles.find(t => t.id === id)!);
     const attemptDiffs = selectedTiles.map(t => t.difficulty);
@@ -272,7 +270,10 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
       if (newCompleted.length === 4) { 
         setWon(true); 
         setIsGameOver(true); 
+        
         updateGameStats(GameType.REFRAIN_GAME, true, { mistakes });
+        
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         setShowModal(true); 
       }
     } else {
@@ -295,7 +296,15 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
       }
       setTimeout(() => { setShaking(false); setShowWrongFlash(false); }, 800);
     }
-  };
+  }, [selectedIds, allTiles, boardGroups, completedGroups, mistakes, t, revealRemainingGroups]);
+
+  const handleContinue = useCallback(() => {
+    onReturn();
+  }, [onReturn]);
+
+  const handleTryAgain = useCallback(() => {
+    // Not applicable for daily mode
+  }, []);
 
   const getDiffColor = (diff: string) => {
     switch(diff) {
@@ -312,10 +321,10 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     return guessHistory.map(row => row.map(d => diffToEmoji[d] || '⬜').join('')).join('\n');
   }, [guessHistory]);
 
-  const handleShare = () => {
+  const handleShare = useCallback(() => {
     const shareText = `${won ? '🏆' : '❌'} EuroRefrain • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')}\n\n${historyEmoji}\n\n${window.location.origin}/euro-refrain`;
     navigator.clipboard.writeText(shareText);
-  };
+  }, [t, won, getPointsInfo.points, historyEmoji]);
 
   return (
     <div className="flex flex-col items-center pt-1 sm:pt-4 pb-24 md:pb-32 px-0.5 sm:px-4 w-full max-w-3xl mx-auto relative">
@@ -324,6 +333,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
           historyEmoji={historyEmoji} gameTitle="EuroRefrain" attempts={mistakes} maxAttempts={6}
           onClose={() => setShowModal(false)} onReturn={onReturn} onShare={handleShare} gameType={GameType.REFRAIN_GAME}
+          onContinue={handleContinue} onTryAgain={handleTryAgain}
           extraInfo={
             <div className="space-y-4">
               <p className="text-[10px] text-gray-600 font-black uppercase tracking-[0.4em] text-center mb-1">{t('links.lyricsDiscovered')}</p>
@@ -360,6 +370,8 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
               <div key={i} className={`w-2.5 h-2.5 rounded-full border border-white/20 transition-all duration-500 ${i < (6 - mistakes) ? 'bg-white shadow-[0_0_8px_white]' : 'bg-transparent scale-75 opacity-20'}`}></div>
             ))}
           </div>
+
+
 
           <div ref={containerRef} className="grid grid-cols-4 gap-1 sm:gap-1.5 w-full mb-4 sm:mb-6">
             {completedGroups.map((g, idx) => (

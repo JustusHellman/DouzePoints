@@ -1,11 +1,24 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import { getDailyIndex, getDayString } from '../../utils/daily.ts';
 import { updateGameStats } from '../../utils/stats.ts';
-import { GameType, MasterSong } from '../../data/types.ts';
+import { GameType, MasterSong, InfiniteDifficulty, InfinitePlacement, InfiniteYear } from '../../data/types.ts';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
+import { CategoryMasteredScreen } from '../../components/CategoryMasteredScreen.tsx';
+import { reportSupportClick, reportInfiniteRun } from '../../utils/firebaseService.ts';
+import { 
+  getInfiniteGameState, 
+  saveInfiniteGameState, 
+  saveInfiniteRecord,
+  getInfiniteDifficultyPool,
+  startNewInfiniteGame,
+  advanceInfiniteGame,
+  clearInfiniteGameState,
+  serializeDifficulty
+} from '../../utils/infinite.ts';
 
 const MAX_ATTEMPTS = 6;
 
@@ -13,11 +26,12 @@ type LetterStatus = 'green' | 'yellow' | 'gray' | 'unused' | 'space' | 'fixed';
 
 interface EuroWordGameProps {
   onReturn: () => void;
-  data: MasterSong[];
+  data?: MasterSong[];
   gameType: GameType;
   gameId: string;
   title: string;
   bonusSong?: MasterSong;
+  mode?: 'daily' | 'infinite';
 }
 
 const normalize = (str: string) => {
@@ -31,27 +45,54 @@ const isLetter = (char: string) => {
 
 import { SEARCH_WEIGHT_THRESHOLD } from '../../data/activeData.ts';
 
-const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, gameId, title, bonusSong }) => {
+const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameType, gameId, title, bonusSong, mode = 'daily' }) => {
   const { t } = useTranslation();
+  const location = useLocation();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
+  
+  const difficulty = useMemo(() => {
+    return (location.state?.difficulty as InfiniteDifficulty) || { placement: InfinitePlacement.TOP10, year: InfiniteYear.Y2000 };
+  }, [location.state]);
 
   const [message, setMessage] = useState<string | null>(null);
 
   const validPool = useMemo(() => {
-    const pool = data.filter(song => {
+    const sourceData = mode === 'infinite' ? getInfiniteDifficultyPool(difficulty) : data;
+    const pool = sourceData.filter(song => {
       const targetText = (gameType === GameType.WORD_GAME) ? song.title : song.artist;
       return normalize(targetText).split('').some(char => isLetter(char));
     });
+    if (mode === 'infinite') return pool;
     const weightedPool = pool.filter(s => (s.weight || 0) >= SEARCH_WEIGHT_THRESHOLD);
     return weightedPool.length > 0 ? weightedPool : pool;
-  }, [data, gameType]);
+  }, [data, gameType, mode, difficulty]);
+
+  const [infiniteState, setInfiniteState] = useState(() => {
+    if (mode === 'infinite') {
+      const saved = getInfiniteGameState(gameId, difficulty);
+      if (saved) return saved;
+      
+      const sourceData = getInfiniteDifficultyPool(difficulty);
+      const pool = sourceData.filter(song => {
+        const targetText = (gameType === GameType.WORD_GAME) ? song.title : song.artist;
+        return normalize(targetText).split('').some(char => isLetter(char));
+      });
+      return startNewInfiniteGame(gameId, difficulty, pool);
+    }
+    return null;
+  });
 
   const song = useMemo(() => {
     if (bonusSong) return bonusSong;
+    if (mode === 'infinite' && infiniteState) {
+      const currentSongId = infiniteState.shuffledIds[infiniteState.currentIndex];
+      const found = validPool.find(s => s.id === currentSongId);
+      return found || validPool[0];
+    }
     const salt = `DAILY-V3-${gameType}-${gameId}-SALT-VERIFIED`;
     const idx = getDailyIndex(validPool, salt);
     return validPool[idx];
-  }, [validPool, gameId, gameType, bonusSong]);
+  }, [validPool, gameId, gameType, bonusSong, mode, infiniteState]);
 
   const targetText = useMemo(() => {
     return (gameType === GameType.WORD_GAME) ? song.title : song.artist;
@@ -91,14 +132,22 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
     
     const obs = new ResizeObserver(entries => {
       if (entries[0]) {
-        setContainerWidth(entries[0].contentRect.width);
-        // Once we have the first real measurement, enable transitions
-        setIsReady(true);
+        const width = entries[0].contentRect.width;
+        if (width > 0) {
+          setContainerWidth(width);
+          setIsReady(true);
+        }
       }
     });
     obs.observe(containerRef.current);
     return () => obs.disconnect();
-  }, []);
+  }, [target]);
+
+  useEffect(() => {
+    if (isGameOver && !showModal) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [showModal, isGameOver]);
 
   const { tileStyle, spaceStyle, keyboardStyle, fallbackClass } = useMemo(() => {
     const chars = target.split('');
@@ -203,30 +252,49 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
     const seenKey = `hasSeenRules-${gameId}`;
     const hasSeen = localStorage.getItem(seenKey);
     if (!hasSeen) {
-      setShowHowToPlay(true);
+      setTimeout(() => setShowHowToPlay(true), 0);
       localStorage.setItem(seenKey, 'true');
     }
-  }, [gameId]);
+  }, [gameId, setShowHowToPlay]);
 
   useEffect(() => {
+    if (mode === 'infinite') {
+      if (infiniteState) {
+        setTimeout(() => {
+          if (infiniteState.guesses) setGuesses(infiniteState.guesses);
+          if (infiniteState.isGameOver) {
+            setIsGameOver(true);
+            setWon(infiniteState.lastResult?.won || false);
+            setShowModal(true);
+          } else {
+            setIsGameOver(false);
+            setWon(false);
+            setShowModal(false);
+          }
+        }, 0);
+      }
+      return;
+    }
     const saved = localStorage.getItem(`${gameId}-${getDayString()}`);
     if (saved) {
       try {
         const { guesses: sG, isGameOver: sGO, won: sW } = JSON.parse(saved);
-        if (sG) setGuesses(sG);
-        if (sGO !== undefined) setIsGameOver(Boolean(sGO));
-        if (sW !== undefined) setWon(Boolean(sW));
-        if (sGO) setShowModal(true);
+        setTimeout(() => {
+          if (sG) setGuesses(sG);
+          if (sGO !== undefined) setIsGameOver(Boolean(sGO));
+          if (sW !== undefined) setWon(Boolean(sW));
+          if (sGO) setShowModal(true);
+        }, 0);
       } catch (e) {
         console.error("Load failed", e);
       }
     }
-  }, [gameId]);
+  }, [gameId, mode, infiniteState, setIsGameOver, setWon, setGuesses, setShowModal]);
 
   const getPointsInfo = useMemo(() => {
     if (!won) return { points: 0, label: t('common.nulPoints'), color: "text-red-500" };
     const pointsMap = [12, 10, 8, 6, 4, 2];
-    const pts = pointsMap[guesses.length - 1];
+    const pts = pointsMap[Math.min(guesses.length - 1, pointsMap.length - 1)];
     
     if (pts === 12) return { points: 12, label: t('common.douzePoints'), color: "text-yellow-500" };
     
@@ -247,7 +315,25 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
 
   useEffect(() => {
     if (guesses.length === 0 && !isGameOver) return;
-    localStorage.setItem(`${gameId}-${getDayString()}`, JSON.stringify({ guesses, isGameOver, won }));
+    
+    if (mode === 'infinite') {
+      if (infiniteState) {
+        const newState = {
+          ...infiniteState,
+          guesses,
+          isGameOver,
+          ...(isGameOver ? { lastResult: { won, points: won ? getPointsInfo.points : 0 } } : {})
+        };
+        if (isGameOver && !won) {
+          clearInfiniteGameState(gameId, difficulty);
+        } else {
+          saveInfiniteGameState(gameId, difficulty, newState);
+        }
+      }
+    } else {
+      localStorage.setItem(`${gameId}-${getDayString()}`, JSON.stringify({ guesses, isGameOver, won }));
+    }
+
     if (isGameOver) {
       if (won) {
         const pts = getPointsInfo.points;
@@ -259,7 +345,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
         });
       }
     }
-  }, [guesses, isGameOver, won, gameType, gameId, getPointsInfo]);
+  }, [guesses, isGameOver, won, gameId, getPointsInfo, mode, infiniteState, difficulty]);
 
   const getGuessStatuses = useCallback((guess: string, targetWord: string): LetterStatus[] => {
     const targetArr = targetWord.split('');
@@ -330,8 +416,53 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
     return stats;
   }, [guesses, target, getGuessStatuses]);
 
+  const handleContinue = useCallback(() => {
+    console.log("handleContinue called, mode:", mode, "won:", won, "infiniteState:", infiniteState);
+    if (mode === 'infinite' && won && infiniteState) {
+      const pts = getPointsInfo.points;
+      console.log("Advancing game, pts:", pts);
+      const nextState = advanceInfiniteGame(gameId, difficulty, infiniteState, pts, true);
+      console.log("Next state:", nextState);
+      setInfiniteState(nextState);
+      saveInfiniteGameState(gameId, difficulty, nextState);
+      saveInfiniteRecord(gameId, difficulty, nextState.currentScore, nextState.currentStreak);
+      
+      // Reset local game state for the next round
+      setGuesses([]);
+      setCurrentGuess("");
+      setIsGameOver(false);
+      setWon(false);
+      setShowModal(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      onReturn();
+    }
+  }, [mode, won, infiniteState, getPointsInfo.points, gameId, difficulty, onReturn]);
+
+  const handleTryAgain = useCallback(() => {
+    if (mode === 'infinite') {
+      if (infiniteState) {
+        saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore, infiniteState.currentStreak);
+      }
+      const newState = startNewInfiniteGame(gameId, difficulty, validPool);
+      setInfiniteState(newState);
+      saveInfiniteGameState(gameId, difficulty, newState);
+      setGuesses([]);
+      setCurrentGuess("");
+      setIsGameOver(false);
+      setWon(false);
+      setShowModal(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [mode, infiniteState, gameId, difficulty, validPool]);
+
   const onKeyPress = useCallback((e: KeyboardEvent | { key: string }) => {
-    if (isGameOver) return;
+    if (isGameOver) {
+      if (e.key === 'Enter' && won && mode === 'infinite') {
+        handleContinue();
+      }
+      return;
+    }
 
     if (e.key === 'Enter') {
       if (currentGuess.length === inputLength) {
@@ -345,7 +476,15 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
           setTimeout(() => {
             setIsGameOver(true);
             setWon(true);
-            if (!bonusSong) {
+            if (mode === 'infinite' && infiniteState) {
+              const pointsMap = [12, 12, 10, 8, 6, 4, 2];
+              const pts = pointsMap[newGuesses.length - 1] || 2;
+              const nextState = { ...infiniteState, guesses: newGuesses, isGameOver: true, won: true, lastResult: { won: true, points: pts } };
+              saveInfiniteGameState(gameId, difficulty, nextState);
+              saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore + pts, infiniteState.currentStreak + 1);
+              setInfiniteState(nextState);
+              reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore + pts, infiniteState.currentStreak + 1, true);
+            } else if (!bonusSong) {
               updateGameStats(gameType, true, { attempts: newGuesses.length });
             }
             setShowModal(true);
@@ -353,7 +492,14 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
         } else if (newGuesses.length >= MAX_ATTEMPTS) {
           setTimeout(() => {
             setIsGameOver(true);
-            if (!bonusSong) {
+            if (mode === 'infinite' && infiniteState) {
+              // On loss, the run is over. We can save the record now.
+              const nextState = { ...infiniteState, guesses: newGuesses, isGameOver: true, won: false, lastResult: { won: false, points: 0 } };
+              saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore, infiniteState.currentStreak);
+              clearInfiniteGameState(gameId, difficulty);
+              setInfiniteState(nextState);
+              reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore, infiniteState.currentStreak, false);
+            } else if (!bonusSong) {
               updateGameStats(gameType, false, { attempts: newGuesses.length });
             }
             setShowModal(true);
@@ -370,7 +516,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
         setCurrentGuess(prev => (prev + e.key).toUpperCase());
       }
     }
-  }, [currentGuess, guesses, isGameOver, target, inputLength, animationDelay, setGuesses, setCurrentGuess, setIsGameOver, setWon, setShowModal, setMessage, t, gameType, bonusSong]);
+  }, [isGameOver, currentGuess, inputLength, guesses, target, animationDelay, mode, infiniteState, gameId, difficulty, bonusSong, gameType, t, won, handleContinue]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => onKeyPress(e);
@@ -390,11 +536,15 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
     }).join('\n');
   }, [guesses, target, getGuessStatuses]);
 
-  const handleShare = () => {
+  const handleShare = useCallback(() => {
     const gamePath = gameId === 'eurosong' ? '/euro-song' : '/euro-artist';
-    const shareText = `${won ? '🏆' : '❌'} ${title} • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')} • ${guesses.length}/${MAX_ATTEMPTS} ${t('common.attempts')}\n\n${historyEmoji}\n\n${window.location.origin}${gamePath}`;
+    const placementStr = t(`infinite.placements.${difficulty.placement}`);
+    const yearStr = t(`infinite.years.${difficulty.year}`);
+    const modeStr = mode === 'infinite' ? `[${placementStr} • ${yearStr}] ` : '';
+    const dateStr = mode === 'infinite' ? `${t('infinite.streak')}: ${infiniteState?.currentStreak || 0}` : getDayString();
+    const shareText = `${won ? '🏆' : '❌'} ${modeStr}${title} • ${dateStr}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')} • ${guesses.length}/${MAX_ATTEMPTS} ${t('common.attempts')}\n\n${historyEmoji}\n\n${window.location.origin}${gamePath}`;
     navigator.clipboard.writeText(shareText);
-  };
+  }, [won, getPointsInfo, guesses, historyEmoji, t, mode, difficulty, infiniteState, gameId, title]);
 
   const getTileClass = (status: LetterStatus) => {
     switch (status) {
@@ -419,6 +569,26 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
 
   const gameRuleKey = gameType === GameType.WORD_GAME ? 'eurosong' : 'euroartist';
 
+  const isPoolExhausted = mode === 'infinite' && infiniteState ? infiniteState.currentIndex >= infiniteState.shuffledIds.length : false;
+
+  if (isPoolExhausted) {
+    return (
+      <CategoryMasteredScreen 
+        styles={gameId === 'eurosong' ? {
+          bg: "bg-purple-600/20",
+          text: "text-purple-200",
+          glow: "bg-purple-500"
+        } : {
+          bg: "bg-pink-600/20",
+          text: "text-pink-200",
+          glow: "bg-pink-500"
+        }}
+        onPlayAgain={handleTryAgain}
+        onReturn={onReturn}
+      />
+    );
+  }
+
   return (
     <div ref={containerRef} className="flex flex-col items-center pt-1 sm:pt-4 pb-24 md:pb-32 w-full max-w-2xl mx-auto px-0.5">
       {message && (
@@ -434,6 +604,12 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data, gameType, g
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
           historyEmoji={historyEmoji} gameTitle={title} song={song} attempts={guesses.length} maxAttempts={MAX_ATTEMPTS}
           onClose={() => setShowModal(false)} onReturn={onReturn} onShare={handleShare} gameType={gameType}
+          mode={mode}
+          streak={infiniteState?.currentStreak}
+          runScore={infiniteState ? (infiniteState.currentScore + (won ? getPointsInfo.points : 0)) : undefined}
+          runStreak={infiniteState ? (infiniteState.currentStreak + (won ? 1 : 0)) : undefined}
+          onContinue={handleContinue}
+          onTryAgain={handleTryAgain}
         />
       ) : (
         <>

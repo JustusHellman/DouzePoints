@@ -36,5 +36,11 @@ export const PATCH_NOTES: PatchNote[] = [
     date: "2026-03-20",
     title: "EuroLink poor options",
     description: "I'd like to appologize for today's EuroLinks having quite poor categories. I've updated it today around lunchtime so if you play after that, you'll have better options. I'm sorry if it caused any annoyance to anyone.",
+  },
+  {
+    id: "6",
+    date: "2026-03-23",
+    title: "ENCORE - Infinite mode",
+    description: "It's time to release the game mode I've been longing for and that has been requested several times...\n\nENCORE\nThe new infinite game mode where you can set your own settings on which placements and era you'd like to play with and select the game you'd like to play out of EuroSong, EuroArtist, EuroGuess and EuroArena! If you actually manage to get through all entries in any game mode, I'll be in shock and you'll be a true Eurovision legend!",
   }
 ];

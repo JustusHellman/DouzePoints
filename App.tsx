@@ -21,6 +21,7 @@ import Contact from './components/Contact.tsx';
 import Admin from './components/Admin.tsx';
 import PatchNotes from './components/PatchNotes.tsx';
 import { CountdownTimer } from './components/CountdownTimer.tsx';
+import { InfiniteArena } from './components/InfiniteArena.tsx';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -290,7 +291,7 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
             className={`
               group relative flex flex-col min-h-[120px] sm:min-h-[140px] md:min-h-[160px] p-3 sm:p-4 md:p-5 rounded-[1rem] md:rounded-[1.5rem] 
               bg-gradient-to-br ${game.styles.bg} border-2 transition-all duration-300 
-              hover:scale-[1.02] active:scale-95 shadow-lg overflow-hidden block
+              hover:scale-[1.02] active:scale-95 shadow-lg overflow-hidden
               focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/20
               ${game.done ? 'border-green-500/30' : 'border-white/5'}
             `}
@@ -307,17 +308,17 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
               {game.desc}
             </p>
             
-            <div className="mt-auto flex items-center justify-between relative z-10 pt-1.5 border-t border-white/5">
-              <div className="flex items-center gap-1.5">
-                <div className={`px-2 py-0.5 rounded-full border text-[7px] sm:text-[8px] font-black uppercase tracking-widest transition-all ${game.done ? 'bg-green-500 text-black border-green-400' : 'bg-white/5 border-white/10 text-white group-hover:bg-white/10'}`}>
+            <div className="mt-auto flex items-center justify-between gap-2 relative z-10 pt-1.5 border-t border-white/5">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <div className={`px-2 py-0.5 rounded-full border text-[7px] sm:text-[8px] font-black uppercase tracking-widest transition-all truncate ${game.done ? 'bg-green-500 text-black border-green-400' : 'bg-white/5 border-white/10 text-white group-hover:bg-white/10'}`}>
                   {game.done ? t('common.qualified') : t('common.play')}
                 </div>
                 {game.done && game.points > 0 && (
-                  <span className="text-[9px] font-black text-yellow-500">+{game.points}</span>
+                  <span className="text-[9px] font-black text-yellow-500 shrink-0">+{game.points}</span>
                 )}
               </div>
               <div className="flex flex-col items-end shrink-0">
-                <span className="text-[6px] sm:text-[7px] font-black text-white/20 uppercase tracking-tighter">{t('common.perfect')}</span>
+                <span className="text-[6px] sm:text-[7px] font-black text-white/20 uppercase tracking-widest">{t('common.perfect')}</span>
                 <span className="text-xs sm:text-sm font-black leading-none">{game.stat}</span>
               </div>
             </div>
@@ -325,9 +326,32 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
         ))}
       </div>
 
+      {/* Infinite Mode Entrance */}
+      <div className="mt-8 px-2 md:px-6">
+        <Link
+          to="/infinite"
+          className="group relative flex items-center justify-between p-4 sm:p-6 rounded-[1rem] md:rounded-[1.5rem] bg-gradient-to-br from-amber-600/20 to-amber-900/40 border-2 border-amber-500/30 hover:scale-[1.01] active:scale-95 transition-all duration-300 shadow-lg overflow-hidden text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-500/20 w-full"
+        >
+          <div className="absolute inset-0 bg-amber-500/5 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+          
+          <div className="relative z-10">
+            <span className="text-[10px] font-black text-amber-500 uppercase tracking-[0.3em] mb-1 block">
+              Infinite Mode
+            </span>
+            <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-white leading-none">
+              {t('infinite.title')}
+            </h2>
+          </div>
+          
+          <div className="relative z-10 px-4 py-2 rounded-full bg-amber-500/20 border border-amber-500/30 text-[10px] font-black uppercase tracking-widest text-amber-100 group-hover:bg-amber-500/30 transition-colors">
+            {t('common.play')}
+          </div>
+        </Link>
+      </div>
+
       {/* Support Section */}
       {completedCount > 0 && (
-        <div className="mt-8 px-2 md:px-6">
+        <div className="mt-6 px-2 md:px-6">
           <a
             href="https://buymeacoffee.com/DouzePointsGame"
             target="_blank"
@@ -353,6 +377,37 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
           </a>
         </div>
       )}
+
+      {/* Socials Section */}
+      <div className="mt-10 mb-6">
+        <div className="flex flex-col items-center gap-4">
+          <span className="text-[10px] font-black text-white uppercase tracking-[0.3em]">{t('common.joinCommunity')}</span>
+          <div className="flex gap-4">
+            <a
+              href="https://www.reddit.com/r/douzepoints"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center gap-3 px-6 py-3 rounded-2xl bg-[#FF4500]/10 border border-[#FF4500]/20 hover:bg-[#FF4500]/20 transition-all duration-300"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-[#FF4500]">
+                <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.056 1.597.04.21.06.427.06.646 0 2.834-3.334 5.132-7.447 5.132-4.113 0-7.447-2.298-7.447-5.132 0-.215.021-.435.06-.646-.621-.264-1.056-.881-1.056-1.597 0-.968.786-1.754 1.754-1.754.463 0 .89.182 1.207.491 1.207-.856 2.843-1.427 4.674-1.488l.8-3.747 2.597.547c-.012.068-.02.137-.02.208 0 .688.562 1.25 1.25 1.25zM8.507 11.2c-.792 0-1.434.642-1.434 1.434s.642 1.434 1.434 1.434c.792 0 1.434-.642 1.434-1.434s-.642-1.434-1.434-1.434zm6.986 0c-.792 0-1.434.642-1.434 1.434s.642 1.434 1.434 1.434c.792 0 1.434-.642 1.434-1.434s-.642-1.434-1.434-1.434zm-1.145 4.852a5.412 5.412 0 0 1-2.348.513 5.412 5.412 0 0 1-2.348-.513.437.437 0 0 1-.223-.574.437.437 0 0 1 .574-.223c.651.285 1.326.429 1.997.429s1.346-.144 1.997-.429a.437.437 0 0 1 .574.223.437.437 0 0 1-.223.574z"/>
+              </svg>
+              <span className="text-[10px] font-black uppercase tracking-widest text-amber-100/70 group-hover:text-white transition-colors">r/douzepoints</span>
+            </a>
+            <a
+              href="https://discord.gg/kn6ETJpWc"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center gap-3 px-6 py-3 rounded-2xl bg-[#5865F2]/10 border border-[#5865F2]/20 hover:bg-[#5865F2]/20 transition-all duration-300"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-[#5865F2]">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.666 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+              </svg>
+              <span className="text-[10px] font-black uppercase tracking-widest text-amber-100/70 group-hover:text-white transition-colors">Discord</span>
+            </a>
+          </div>
+        </div>
+      </div>
 
       {/* How to Play General Section */}
       <div className="mt-12 px-2 md:px-6">
@@ -550,7 +605,14 @@ const App: React.FC = () => {
   }, [location.pathname, isLobby, stats?.totalPoints]); // Added stats?.totalPoints to dependencies
 
   const currentRank = useMemo(() => getCurrentRank(stats?.totalPoints || 0), [stats?.totalPoints]);
-  const handleReturn = () => navigate('/');
+  const handleReturn = () => {
+    const pathParts = location.pathname.split('/').filter(Boolean);
+    if (pathParts.length > 1) {
+      navigate('/' + pathParts.slice(0, -1).join('/'));
+    } else {
+      navigate('/');
+    }
+  };
 
   return (
     <div className="min-h-screen relative flex flex-col">
@@ -573,8 +635,8 @@ const App: React.FC = () => {
                 <svg className="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M15 19l-7-7 7-7"/></svg>
              </button>
            )}
-           <Link to="/" className="text-sm md:text-xl font-black tracking-tighter bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent uppercase italic pr-[0.2em] hover:opacity-80 transition-opacity whitespace-nowrap">
-             Douze Points
+           <Link to="/" className="text-sm md:text-xl font-black tracking-tighter uppercase italic pr-[0.2em] hover:opacity-80 transition-opacity whitespace-nowrap">
+             <span className="inline-block bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">Douze Points</span>
            </Link>
         </div>
         
@@ -619,6 +681,14 @@ const App: React.FC = () => {
             <Route path="/euro-links" element={<EuroLinks onReturn={handleReturn} />} />
             <Route path="/euro-guess" element={<EuroGuess onReturn={handleReturn} data={getActiveMasterData()} />} />
             <Route path="/euro-arena" element={<EuroArena onReturn={handleReturn} data={getActiveMasterData()} />} />
+            
+            {/* Infinite Mode Routes */}
+            <Route path="/infinite" element={<InfiniteArena />} />
+            <Route path="/infinite/euro-song" element={<EuroWordGame onReturn={() => navigate('/infinite')} mode="infinite" gameId="eurosong" title={t('games.eurosong.title')} gameType={GameType.WORD_GAME} />} />
+            <Route path="/infinite/euro-artist" element={<EuroWordGame onReturn={() => navigate('/infinite')} mode="infinite" gameId="euroartist" title={t('games.euroartist.title')} gameType={GameType.ARTIST_WORD_GAME} />} />
+            <Route path="/infinite/euro-guess" element={<EuroGuess onReturn={() => navigate('/infinite')} mode="infinite" gameId="euroguess" data={getActiveMasterData()} />} />
+            <Route path="/infinite/euro-arena" element={<EuroArena onReturn={() => navigate('/infinite')} mode="infinite" gameId="euroarena" data={getActiveMasterData()} />} />
+
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/about" element={<About />} />
@@ -658,6 +728,18 @@ const App: React.FC = () => {
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/></svg>
               {t('support.button')}
+            </a>
+          </div>
+          <div className="flex justify-center gap-6 border-t border-white/5 w-full max-w-xs mx-auto">
+            <a href="https://www.reddit.com/r/douzepoints" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-[#FF4500] transition-colors" aria-label="Reddit">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.056 1.597.04.21.06.427.06.646 0 2.834-3.334 5.132-7.447 5.132-4.113 0-7.447-2.298-7.447-5.132 0-.215.021-.435.06-.646-.621-.264-1.056-.881-1.056-1.597 0-.968.786-1.754 1.754-1.754.463 0 .89.182 1.207.491 1.207-.856 2.843-1.427 4.674-1.488l.8-3.747 2.597.547c-.012.068-.02.137-.02.208 0 .688.562 1.25 1.25 1.25zM8.507 11.2c-.792 0-1.434.642-1.434 1.434s.642 1.434 1.434 1.434c.792 0 1.434-.642 1.434-1.434s-.642-1.434-1.434-1.434zm6.986 0c-.792 0-1.434.642-1.434 1.434s.642 1.434 1.434 1.434c.792 0 1.434-.642 1.434-1.434s-.642-1.434-1.434-1.434zm-1.145 4.852a5.412 5.412 0 0 1-2.348.513 5.412 5.412 0 0 1-2.348-.513.437.437 0 0 1-.223-.574.437.437 0 0 1 .574-.223c.651.285 1.326.429 1.997.429s1.346-.144 1.997-.429a.437.437 0 0 1 .574.223.437.437 0 0 1-.223.574z"/>
+              </svg>
+            </a>
+            <a href="https://discord.gg/kn6ETJpWc" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-[#5865F2] transition-colors" aria-label="Discord">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.666 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.078.078 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+              </svg>
             </a>
           </div>
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[9px] font-black uppercase tracking-widest text-gray-500">

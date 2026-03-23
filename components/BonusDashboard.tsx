@@ -50,7 +50,7 @@ const BonusDashboard: React.FC = () => {
             className={`
               group relative flex flex-col min-h-[120px] sm:min-h-[140px] md:min-h-[160px] p-3 sm:p-4 md:p-5 rounded-[1rem] md:rounded-[1.5rem] 
               bg-gradient-to-br ${game.styles.bg} border-2 border-white/5 transition-all duration-300 
-              hover:scale-[1.02] active:scale-95 shadow-lg overflow-hidden block
+              hover:scale-[1.02] active:scale-95 shadow-lg overflow-hidden
             `}
           >
             <div className={`absolute -top-8 -right-8 w-24 h-24 md:w-32 md:h-32 ${game.styles.glow} rounded-full blur-[40px] md:blur-[60px] opacity-10 group-hover:opacity-20 transition-opacity`}></div>

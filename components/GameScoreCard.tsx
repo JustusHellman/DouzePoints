@@ -23,6 +23,12 @@ interface GameScoreCardProps {
   onShare?: () => void;
   extraInfo?: React.ReactNode;
   gameType?: GameType;
+  mode?: 'daily' | 'infinite';
+  streak?: number;
+  runScore?: number;
+  runStreak?: number;
+  onContinue?: () => void;
+  onTryAgain?: () => void;
 }
 
 const PerformanceLogRenderer: React.FC<{ 
@@ -42,7 +48,7 @@ const PerformanceLogRenderer: React.FC<{
       <div className="flex flex-col items-center gap-1.5 w-full max-w-[180px] mx-auto">
         <div className="grid grid-cols-6 gap-1.5 w-full border-b border-white/10 pb-1.5 px-1">
           {headers.map((h, i) => (
-            <div key={i} className="text-[8px] sm:text-[10px] font-black text-gray-500 text-center tracking-tighter uppercase">{h}</div>
+            <div key={i} className="text-[8px] sm:text-[10px] font-black text-gray-500 text-center tracking-widest uppercase">{h}</div>
           ))}
         </div>
         <div className="flex flex-col gap-1.5 w-full px-1">
@@ -119,7 +125,13 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
   onReturn,
   onShare,
   extraInfo,
-  gameType
+  gameType,
+  mode = 'daily',
+  streak = 0,
+  runScore,
+  runStreak,
+  onContinue,
+  onTryAgain
 }) => {
   const { t } = useTranslation();
   const [showCopied, setShowCopied] = useState(false);
@@ -224,8 +236,30 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
             {pointsLabel}
           </h3>
           <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.4em] text-gray-500">
-            {gameTitle} • {t('scorecard.dailyResult')}
+            {gameTitle} • {mode === 'infinite' ? t('infinite.title') : t('scorecard.dailyResult')}
           </p>
+          {mode === 'infinite' && (
+            <div className="mt-4 flex flex-col items-center gap-3">
+              {won && (
+                <button 
+                  onClick={onContinue} 
+                  className="w-full max-w-[200px] bg-pink-600 text-white py-3 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-pink-600/20 flex items-center justify-center gap-2"
+                >
+                  {t('infinite.continueRun')}
+                </button>
+              )}
+              <div className="flex justify-center gap-2 w-full">
+                <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl flex flex-col items-center flex-1">
+                  <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-0.5">{t('infinite.streak')}</span>
+                  <span className="text-lg font-black text-pink-500 leading-none">{isNaN(runStreak ?? streak) ? 0 : (runStreak ?? streak)}</span>
+                </div>
+                <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl flex flex-col items-center flex-1">
+                  <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-0.5">{t('infinite.currentScore')}</span>
+                  <span className="text-lg font-black text-yellow-500 leading-none">{isNaN(runScore ?? points) ? 0 : (runScore ?? points)}</span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="px-5 sm:px-8 py-5 space-y-5">
@@ -284,13 +318,15 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
               />
             </div>
             
-            <button 
-              onClick={handleShare} 
-              className="w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white/90 py-4 rounded-xl font-black uppercase text-[10px] sm:text-[11px] tracking-[0.15em] transition-all flex items-center justify-center gap-2 active:scale-95"
-            >
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
-              {showCopied ? t('scorecard.resultsCopied') : t('scorecard.shareResult')}
-            </button>
+            {mode !== 'infinite' && (
+              <button 
+                onClick={handleShare} 
+                className="w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white/90 py-4 rounded-xl font-black uppercase text-[10px] sm:text-[11px] tracking-[0.15em] transition-all flex items-center justify-center gap-2 active:scale-95"
+              >
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                {showCopied ? t('scorecard.resultsCopied') : t('scorecard.shareResult')}
+              </button>
+            )}
           </div>
 
           {extraInfo && (
@@ -299,35 +335,34 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
              </div>
           )}
 
-          {distribution && (
+          {distribution && mode !== 'infinite' && (
             <div className="animate-in fade-in duration-1000 delay-300">
               <PointsDistribution distribution={distribution} />
             </div>
           )}
 
-          <div className="pt-4 border-t border-white/5 flex flex-col items-center gap-2">
-             <CountdownTimer label={t('scorecard.nextGame')} />
-          </div>
+          {mode !== 'infinite' && (
+            <div className="pt-4 border-t border-white/5 flex flex-col items-center gap-2">
+               <CountdownTimer label={t('scorecard.nextGame')} />
+            </div>
+          )}
         </div>
 
         <div className="p-5 border-t border-white/5 bg-black/40 flex flex-col gap-2">
-           {/* 
-           <button 
-             onClick={() => window.location.href = '/bonus'} 
-             className="w-full bg-pink-600 text-white py-4 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:scale-[1.01] active:scale-[0.98] transition-all shadow-xl shadow-pink-600/20 flex items-center justify-center gap-2 mb-1"
-           >
-             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-             </svg>
-             {t('common.playBonusRound') || 'Play Bonus Round'}
-           </button>
-           */}
+           {mode === 'infinite' && !won && (
+             <button 
+               onClick={onTryAgain} 
+               className="w-full bg-pink-600 text-white py-4 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:scale-[1.01] active:scale-[0.98] transition-all shadow-xl shadow-pink-600/20 flex items-center justify-center gap-2 mb-1"
+             >
+               {t('infinite.tryAgain')}
+             </button>
+           )}
 
            <button 
              onClick={onReturn} 
-             className="w-full bg-white text-black py-4 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:scale-[1.01] active:scale-[0.98] transition-all shadow-xl shadow-white/10 flex items-center justify-center gap-2"
+             className={`w-full py-4 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:scale-[1.01] active:scale-[0.98] transition-all shadow-xl flex items-center justify-center gap-2 ${mode === 'infinite' && won ? 'bg-white/10 text-white border border-white/10' : 'bg-white text-black shadow-white/10'}`}
            >
-             {t('common.returnToGreenroom')}
+             {mode === 'infinite' ? t('infinite.exitToEncore') : t('common.returnToGreenroom')}
            </button>
            
            <button 

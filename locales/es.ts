@@ -19,6 +19,7 @@ export const es: TranslationSchema = {
     points: "Puntos",
     pointsShort: "pts",
     attempts: "intentos",
+    songs: "canciones",
     steps: "pasos",
     mistakesLeft: "Errores restantes",
     howToPlay: "Cómo jugar",
@@ -27,7 +28,8 @@ export const es: TranslationSchema = {
     languages: "Idiomas",
     qualified: "Calificado",
     playBonusRound: "Jugar ronda de bonificación",
-    semiFinal: "Semifinal"
+    semiFinal: "Semifinal",
+    joinCommunity: "Únete a la comunidad"
   },
   greenroom: {
     greenroom: "La Sala Verde",
@@ -274,6 +276,10 @@ export const es: TranslationSchema = {
     community: {
       title: "La Comunidad Primero",
       p1: "No estoy afiliado a la UER ni a ninguna emisora oficial. Soy simplemente un fan que quiere compartir mi pasión por Eurovisión con el mundo."
+    },
+    data: {
+      title: "Datos y Créditos",
+      p1: "¡Un enorme agradecimiento al proyecto TidyTuesday y a sus colaboradores por proporcionar el conjunto de datos fundamental que hizo posible Douze Points! ¡Su dedicación a los datos abiertos nos permitió construir la rica historia del concurso para estos juegos!"
     }
   },
   contact: {
@@ -618,5 +624,53 @@ export const es: TranslationSchema = {
     title: "¿Disfrutas de Douze Points?",
     completed: "¡Has completado los desafíos de hoy!",
     button: "Cómprame un café"
+  },
+  infinite: {
+    title: "Encore",
+    description: "¡El espectáculo diario ha terminado, pero la fiesta nunca se detiene! Vuelve al escenario y pon a prueba tu resistencia en nuestros modos de juego sin fin. ¿Cuánto tiempo puedes mantener la música sonando antes de tocar la nota equivocada?",
+    difficulty: "Seleccionar Dificultad",
+    difficulties: {
+      top10: "Top 10 (2000-Presente)",
+      modern: "2000-Presente",
+      all: "Toda la Historia (1956-Presente)"
+    },
+    currentRun: "Racha Actual",
+    bestRun: "Mejor Racha",
+    best: "Mejor",
+    songsFinished: "Canciones Terminadas",
+    currentScore: "Puntuación Actual",
+    bestScore: "Mejor Puntuación",
+    score: "Puntuación",
+    nextSong: "Siguiente Canción",
+    gameOver: "Fin del Juego",
+    tryAgain: "Intentar de Nuevo",
+    congratulations: "¡Felicidades!",
+    allSongsFinished: "¡Has terminado con éxito todas las entradas de esta categoría! Eres una verdadera Leyenda de Eurovisión.",
+    streak: "Racha",
+    bestStreak: "Mejor Racha",
+    continueRun: "Continuar Racha",
+    exitToEncore: "Salir al Encore",
+    playAgain: "Jugar de Nuevo",
+    continue: "Continuar",
+    newBest: "¡Nuevo Récord!",
+    infiniteMode: "Modo Infinito",
+    placement: "Posición",
+    era: "Época",
+    placements: {
+      all: "Todas las posiciones",
+      winners: "Solo ganadores",
+      top3: "Top 3",
+      top5: "Top 5",
+      top10: "Top 10",
+      top15: "Top 15",
+      finalists: "Finalistas"
+    },
+    years: {
+      all: "Toda la historia",
+      "2021": "2021-Presente",
+      "2010": "2010-Presente",
+      "2000": "2000-Presente",
+      "1956": "1956-1999"
+    }
   }
 };

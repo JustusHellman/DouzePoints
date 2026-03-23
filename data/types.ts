@@ -62,3 +62,47 @@ export interface MasterSong {
 export type ArenaSong = MasterSong;
 export type GuesserSong = MasterSong;
 export type WordleSong = MasterSong;
+
+export enum InfinitePlacement {
+  ALL = 'all',
+  WINNERS = 'winners',
+  TOP3 = 'top3',
+  TOP5 = 'top5',
+  TOP10 = 'top10',
+  TOP15 = 'top15',
+  FINALISTS = 'finalists'
+}
+
+export enum InfiniteYear {
+  ALL = 'all',
+  Y2021 = '2021',
+  Y2010 = '2010',
+  Y2000 = '2000',
+  Y1956 = '1956'
+}
+
+export interface InfiniteDifficulty {
+  placement: InfinitePlacement;
+  year: InfiniteYear;
+}
+
+export interface InfiniteGameState {
+  currentScore: number;
+  currentStreak: number;
+  shuffledIds: string[];
+  currentIndex: number;
+  isGameOver: boolean;
+  guesses?: string[];
+  lastResult?: {
+    points: number;
+    won: boolean;
+  };
+}
+
+export interface InfiniteRecord {
+  bestScore: number;
+  bestStreak: number;
+  mastered?: boolean;
+}
+
+export type InfiniteRecords = Record<string, InfiniteRecord>; // key: `${gameId}_${difficulty}`

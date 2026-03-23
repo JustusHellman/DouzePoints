@@ -19,6 +19,7 @@ export const en: TranslationSchema = {
     points: "Points",
     pointsShort: "pts",
     attempts: "attempts",
+    songs: "songs",
     steps: "steps",
     mistakesLeft: "Mistakes Left",
     howToPlay: "How to play",
@@ -27,7 +28,8 @@ export const en: TranslationSchema = {
     languages: "Languages",
     qualified: "Qualified",
     playBonusRound: "Play Bonus Round",
-    semiFinal: "Semi Final"
+    semiFinal: "Semi Final",
+    joinCommunity: "Join the Community"
   },
   greenroom: {
     greenroom: "The Greenroom",
@@ -274,6 +276,10 @@ export const en: TranslationSchema = {
     community: {
       title: "Community First",
       p1: "I am not affiliated with the EBU or any official broadcaster. I am simply a fan who wants to share my passion for Eurovision with the world. I am committed to maintaining a fair and fun environment for all players, and I welcome feedback from the global Eurovision community to help me improve the site."
+    },
+    data: {
+      title: "Data & Credits",
+      p1: "A massive thank you to the TidyTuesday project and their contributors for providing the foundational dataset that made Douze Points possible. Their dedication to open data allowed us to build out the rich history of the contest for these games!"
     }
   },
   contact: {
@@ -618,5 +624,53 @@ export const en: TranslationSchema = {
     title: "Enjoying Douze Points?",
     completed: "You completed today's challenges!",
     button: "Buy me a coffee"
+  },
+  infinite: {
+    title: "Encore",
+    description: "The daily show is over, but the party never stops! Step back onto the stage and test your endurance in our endless game modes. How long can you keep the music playing before you hit a wrong note?",
+    difficulty: "Select Difficulty",
+    difficulties: {
+      top10: "Top 10 (2000-Present)",
+      modern: "2000-Present",
+      all: "All History (1956-Present)"
+    },
+    currentRun: "Current Run",
+    bestRun: "Best Run",
+    best: "Best",
+    songsFinished: "Songs Finished",
+    currentScore: "Current Score",
+    bestScore: "Best Score",
+    score: "Score",
+    nextSong: "Next Song",
+    gameOver: "Game Over",
+    tryAgain: "Try Again",
+    congratulations: "Congratulations!",
+    allSongsFinished: "You have successfully finished all entries in this category! You are a true Eurovision Legend.",
+    streak: "Streak",
+    bestStreak: "Best Streak",
+    continueRun: "Continue Run",
+    exitToEncore: "Exit to Encore",
+    playAgain: "Play Again",
+    continue: "Continue",
+    newBest: "New Best!",
+    infiniteMode: "Infinite Mode",
+    placement: "Placement",
+    era: "Era",
+    placements: {
+      all: "All Placements",
+      winners: "Winners Only",
+      top3: "Top 3",
+      top5: "Top 5",
+      top10: "Top 10",
+      top15: "Top 15",
+      finalists: "Finalists"
+    },
+    years: {
+      all: "All History",
+      "2021": "2021-Present",
+      "2010": "2010-Present",
+      "2000": "2000-Present",
+      "1956": "1956-1999"
+    }
   }
 };

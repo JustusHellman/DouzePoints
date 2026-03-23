@@ -4,7 +4,7 @@ import { MasterSong } from './types.ts';
  * Full Eurovision dataset including TidyTuesday historical data.
  */
 export const MASTER_DATA: MasterSong[] = [
-  {id: "2025-Austria",year: 2025,country: "Austria",artist: "JJ",title: "Wasted Love",placing: 1,sex: "Female",genre: "Pop",members: 1,fact: "JJ, also known as Juri Judd, was internally selected by ORF to represent Austria in Basel.",weightModifiers: [],weight: 540},
+  {id: "2025-Austria",year: 2025,country: "Austria",artist: "JJ",title: "Wasted Love",placing: 1,sex: "Male",genre: "Pop",members: 1,fact: "JJ, also known as Juri Judd, was internally selected by ORF to represent Austria in Basel.",weightModifiers: [],weight: 540},
   {id: "2025-Israel",year: 2025,country: "Israel",artist: "Yuval Raphael",title: "New Day Will Rise",placing: 2,sex: "Female",genre: "Acoustic Ballad",members: 1,fact: "Yuval Raphael won the reality competition 'HaKokhav HaBa' to earn her spot at Eurovision 2025.",weightModifiers: [],weight: 390},
   {id: "2025-Estonia",year: 2025,country: "Estonia",artist: "Tommy Cash",title: "Espresso Macchiato",placing: 3,sex: "Male",genre: "Experimental",members: 1,fact: "Tommy Cash is a world-renowned Estonian rapper known for his surreal visual art and eccentric musical style.",weightModifiers: ["Cult classic","Viral phenomenon"],weight: 890},
   {id: "2025-Sweden",year: 2025,country: "Sweden",artist: "KAJ",title: "Bara Bada Bastu",placing: 4,sex: "Male",genre: "Comedy",members: 3,fact: "KAJ is a group from the Swedish-speaking part of Finland known for their humorous lyrics and folk-pop sensibilities.",weightModifiers: ["Novelty act"],weight: 380},

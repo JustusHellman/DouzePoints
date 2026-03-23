@@ -1,6 +1,67 @@
-import { doc, setDoc, increment, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, increment, serverTimestamp, collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase.ts';
 import { GameType } from '../data/types.ts';
+
+export const reportInfiniteStart = async (gameId: string, difficulty: string) => {
+  if (import.meta.env.DEV) {
+    console.log(`[DEV MODE] Would have reported infinite start for ${gameId} (${difficulty})`);
+    return;
+  }
+
+  const date = new Date().toISOString().split('T')[0];
+  const statsId = `${date}_${gameId}_${difficulty}`;
+
+  try {
+    const docRef = doc(db, 'infinite_daily_stats', statsId);
+    await setDoc(docRef, {
+      date,
+      gameId,
+      difficulty,
+      totalStarts: increment(1),
+      lastUpdated: serverTimestamp()
+    }, { merge: true });
+  } catch (error) {
+    console.error('Failed to report infinite start:', error);
+  }
+};
+
+export const reportInfiniteRun = async (gameId: string, difficulty: string, score: number, streak: number, wasCompleted: boolean) => {
+  if (import.meta.env.DEV) {
+    console.log(`[DEV MODE] Would have reported infinite run for ${gameId} (${difficulty}): score=${score}, streak=${streak}, completed=${wasCompleted}`);
+    return;
+  }
+
+  const date = new Date().toISOString().split('T')[0];
+  const statsId = `${date}_${gameId}_${difficulty}`;
+
+  try {
+    // 1. Update Aggregated Stats
+    const statsRef = doc(db, 'infinite_daily_stats', statsId);
+    await setDoc(statsRef, {
+      date,
+      gameId,
+      difficulty,
+      totalCompletions: wasCompleted ? increment(1) : increment(0),
+      totalLosses: !wasCompleted ? increment(1) : increment(0),
+      totalScore: increment(score),
+      totalStreak: increment(streak),
+      lastUpdated: serverTimestamp()
+    }, { merge: true });
+
+    // 2. Log Individual Run
+    const runsRef = collection(db, 'infinite_runs');
+    await addDoc(runsRef, {
+      gameId,
+      difficulty,
+      score,
+      streak,
+      wasCompleted,
+      timestamp: serverTimestamp()
+    });
+  } catch (error) {
+    console.error('Failed to report infinite run:', error);
+  }
+};
 
 export const reportGameScore = async (gameType: GameType, points: number) => {
   if (import.meta.env.DEV) {
@@ -143,5 +204,33 @@ export const reportDailyCompletion = async (totalScore: number) => {
     console.log(`Reported daily completion with score ${totalScore} on ${date}`);
   } catch (error) {
     console.error('Failed to report completion to Firebase:', error instanceof Error ? error.message : String(error));
+  }
+};
+
+export const reportNewPlayerDiscovery = async () => {
+  if (import.meta.env.DEV) {
+    console.log(`[DEV MODE] Would have reported new player discovery`);
+    return;
+  }
+
+  const date = new Date().toISOString().split('T')[0];
+  const storageKey = 'new_player_reported';
+  
+  if (localStorage.getItem(storageKey)) {
+    return;
+  }
+
+  try {
+    const docRef = doc(db, 'discoveries', date);
+    await setDoc(docRef, {
+      date,
+      count: increment(1),
+      lastUpdated: serverTimestamp()
+    }, { merge: true });
+    
+    localStorage.setItem(storageKey, 'true');
+    console.log(`Reported new player discovery on ${date}`);
+  } catch (error) {
+    console.error('Failed to report discovery to Firebase:', error instanceof Error ? error.message : String(error));
   }
 };

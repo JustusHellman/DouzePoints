@@ -7,6 +7,7 @@ import { PUZZLES } from '../../data/linksgameData.ts';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
+import { reportSupportClick } from '../../utils/firebaseService.ts';
 
 interface Tile {
   id: string;
@@ -101,7 +102,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
       setTimeout(() => setShowHowToPlay(true), 0);
       localStorage.setItem(seenKey, 'true');
     }
-  }, []);
+  }, [setShowHowToPlay]);
 
   const getPointsInfo = useMemo(() => {
     if (!won) return { points: 0, label: t('common.nulPoints'), color: "text-red-500" };
@@ -136,11 +137,13 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
         console.error("Failed to load saved links state", err);
       }
     }
-  }, []);
+  }, [setCompletedGroups, setGuessHistory, setMistakes, setIsGameOver, setWon, setShowModal, setDisplayTiles]);
 
   useEffect(() => {
     if (completedGroups.length === 0 && mistakes === 0 && !isGameOver) return;
+    
     localStorage.setItem(`eurolinks-${getDayString()}`, JSON.stringify({ completedGroups, guessHistory, mistakes, isGameOver, won }));
+
     if (isGameOver) {
       if (won) confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
     }
@@ -197,7 +200,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
     setShowModal(true);
   }, [dailyData, completedGroups, allTiles, t, setIsGameOver, setSelectedIds, setCompletedGroups, setDisplayTiles, setShowModal]);
 
-  const submit = () => {
+  const submit = useCallback(() => {
     if (selectedIds.length !== 4) return;
     
     const selectedTiles = selectedIds.map(id => allTiles.find(t => t.id === id)!);
@@ -253,7 +256,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
         setShowWrongFlash(false); 
       }, 800);
     }
-  };
+  }, [selectedIds, allTiles, dailyData, completedGroups, mistakes, t, revealRemainingGroups]);
 
   const getDiffColor = (diff: string) => {
     switch(diff) {
@@ -270,9 +273,18 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
     return guessHistory.map(row => row.map(d => diffToEmoji[d] || '⬜').join('')).join('\n');
   }, [guessHistory]);
 
-  const handleShare = () => {
-    const shareText = `${won ? '🏆' : '❌'} EuroLinks • ${getDayString()}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')}\n\n${historyEmoji}\n\n${window.location.origin}/euro-links`;
+  const handleShare = useCallback(() => {
+    const dateStr = getDayString();
+    const shareText = `${won ? '🏆' : '❌'} EuroLinks • ${dateStr}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')}\n\n${historyEmoji}\n\n${window.location.origin}/euro-links`;
     navigator.clipboard.writeText(shareText);
+  }, [t, won, getPointsInfo.points, historyEmoji]);
+
+  const handleContinue = () => {
+    onReturn();
+  };
+
+  const handleTryAgain = () => {
+    // Not applicable for daily mode
   };
 
   return (
@@ -282,6 +294,8 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
           historyEmoji={historyEmoji} gameTitle="EuroLinks" attempts={mistakes} maxAttempts={6}
           onClose={() => setShowModal(false)} onReturn={onReturn} onShare={handleShare} gameType={GameType.LINKS_GAME}
+          onContinue={handleContinue}
+          onTryAgain={handleTryAgain}
           extraInfo={
             <div className="space-y-4">
               <p className="text-[10px] text-gray-600 font-black uppercase tracking-[0.4em] text-center mb-1">{t('links.categoriesDiscovered')}</p>

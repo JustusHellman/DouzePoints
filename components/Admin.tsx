@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { collection, query, getDocs, orderBy, where } from 'firebase/firestore';
+import { collection, query, getDocs, orderBy, where, limit } from 'firebase/firestore';
 import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, User } from 'firebase/auth';
 import { db, auth } from '../firebase.ts';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
@@ -18,6 +18,9 @@ interface SupportClick { date: string; count: number; sources?: Record<string, n
 interface ShareClick { date: string; count: number; sources?: Record<string, number>; }
 interface LanguageStats { date: string; total: number; languages: Record<string, number>; }
 interface CompletionStats { date: string; totalCompleted: number; distribution: Record<string, number>; }
+interface DiscoveryStats { date: string; count: number; }
+interface InfiniteDailyStats { date: string; gameId: string; difficulty: string; totalStarts: number; totalCompletions?: number; totalLosses?: number; totalScore?: number; totalStreak?: number; }
+interface InfiniteRun { id: string; timestamp: { toDate: () => Date } | null; gameId: string; difficulty: string; score: number; streak: number; wasCompleted: boolean; }
 
 const getDailyAnswer = (gameType: string, dateStr: string) => {
   try {
@@ -67,6 +70,9 @@ const Admin: React.FC = () => {
   const [shareClicks, setShareClicks] = useState<ShareClick[]>([]);
   const [languageStats, setLanguageStats] = useState<LanguageStats[]>([]);
   const [completionStats, setCompletionStats] = useState<CompletionStats[]>([]);
+  const [discoveryStats, setDiscoveryStats] = useState<DiscoveryStats[]>([]);
+  const [infiniteStats, setInfiniteStats] = useState<InfiniteDailyStats[]>([]);
+  const [infiniteRuns, setInfiniteRuns] = useState<InfiniteRun[]>([]);
   const [daysSpan, setDaysSpan] = useState(30);
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
@@ -87,17 +93,56 @@ const Admin: React.FC = () => {
 
   const fetchData = useCallback(async () => {
     setRefreshing(true);
+    setError(null);
     try {
       const startDate = new Date(); startDate.setDate(startDate.getDate() - daysSpan);
       const s = startDate.toISOString().split('T')[0];
-      const fetch = async <T,>(col: string): Promise<T[]> => { const snap = await getDocs(query(collection(db, col), where('date', '>=', s), orderBy('date', 'asc'))); const d: T[] = []; snap.forEach(doc => d.push(doc.data() as T)); return d; };
-      setStats(await fetch('game_stats'));
-      setSupportClicks(await fetch('support_clicks'));
-      setShareClicks(await fetch('share_clicks'));
-      setLanguageStats(await fetch('language_stats'));
-      setCompletionStats(await fetch('completion_stats'));
+      
+      const safeFetch = async <T,>(col: string): Promise<T[]> => {
+        try {
+          const snap = await getDocs(query(collection(db, col), where('date', '>=', s), orderBy('date', 'asc')));
+          const d: T[] = [];
+          snap.forEach(doc => d.push(doc.data() as T));
+          return d;
+        } catch (e) {
+          console.warn(`Failed to fetch ${col}:`, e);
+          return [];
+        }
+      };
+
+      const [gs, sc, sh, ls, cs, ds, is] = await Promise.all([
+        safeFetch<DailyStats>('game_stats'),
+        safeFetch<SupportClick>('support_clicks'),
+        safeFetch<ShareClick>('share_clicks'),
+        safeFetch<LanguageStats>('language_stats'),
+        safeFetch<CompletionStats>('completion_stats'),
+        safeFetch<DiscoveryStats>('discoveries'),
+        safeFetch<InfiniteDailyStats>('infinite_daily_stats')
+      ]);
+
+      setStats(gs);
+      setSupportClicks(sc);
+      setShareClicks(sh);
+      setLanguageStats(ls);
+      setCompletionStats(cs);
+      setDiscoveryStats(ds);
+      setInfiniteStats(is);
+      
+      // Fetch infinite runs (limited to last 100 for performance)
+      try {
+        const runsSnap = await getDocs(query(collection(db, 'infinite_runs'), orderBy('timestamp', 'desc'), limit(100)));
+        const runs: InfiniteRun[] = [];
+        runsSnap.forEach(doc => runs.push({ id: doc.id, ...doc.data() } as InfiniteRun));
+        setInfiniteRuns(runs);
+      } catch (e) {
+        console.warn('Failed to fetch infinite_runs:', e);
+      }
+      
       setLastRefreshed(new Date());
-    } catch (err) { console.error('Error fetching admin data:', err); setError('Failed to load data. Make sure you have admin permissions.'); }
+    } catch (err) { 
+      console.error('Error in fetchData:', err); 
+      setError('Failed to load some data. Check console for details or ensure Firebase rules are deployed.'); 
+    }
     finally { setRefreshing(false); }
   }, [daysSpan]);
 
@@ -113,8 +158,18 @@ const Admin: React.FC = () => {
   const dailyTotals = stats.reduce((acc, c) => { if (!acc[c.date]) acc[c.date] = 0; acc[c.date] += c.totalPlayed; return acc; }, {} as Record<string, number>);
 
   const chartData = Object.keys(dailyTotals).map(date => {
-    const sup = supportClicks.find(c => c.date === date); const sh = shareClicks.find(c => c.date === date);
-    return { date, totalGames: dailyTotals[date], supportClicks: sup?.count || 0, supportSources: sup?.sources || {}, shareClicks: sh?.count || 0, shareSources: sh?.sources || {} };
+    const sup = supportClicks.find(c => c.date === date); 
+    const sh = shareClicks.find(c => c.date === date);
+    const disc = discoveryStats.find(c => c.date === date);
+    return { 
+      date, 
+      totalGames: dailyTotals[date], 
+      supportClicks: sup?.count || 0, 
+      supportSources: sup?.sources || {}, 
+      shareClicks: sh?.count || 0, 
+      shareSources: sh?.sources || {},
+      newPlayers: disc?.count || 0
+    };
   });
 
   const gameData = Object.keys(dailyTotals).map(date => {
@@ -205,6 +260,44 @@ const Admin: React.FC = () => {
       return possibleScores.map(score => ({ score: `${score} pts`, count: aggregated[score] || 0 }));
     }
   })();
+  const infiniteChartData = useMemo(() => {
+    const grouped: Record<string, { date: string; completions: number; losses: number; starts: number; details: any[] }> = {};
+    infiniteStats.forEach(s => {
+      if (!grouped[s.date]) grouped[s.date] = { date: s.date, completions: 0, losses: 0, starts: 0, details: [] };
+      const comp = s.totalCompletions || 0;
+      const loss = s.totalLosses || 0;
+      grouped[s.date].completions += comp;
+      grouped[s.date].losses += loss;
+      grouped[s.date].starts += s.totalStarts;
+      grouped[s.date].details.push(s);
+    });
+    return Object.values(grouped);
+  }, [infiniteStats]);
+
+  const CustomInfiniteTooltip = ({ active, payload, label }: any) => {
+    if (!active || !payload?.length) return null;
+    const data = payload[0].payload;
+    return (
+      <div className="bg-[#1a1a2e] border border-white/20 p-4 rounded-xl shadow-xl max-w-[300px]">
+        <p className="text-white font-bold mb-2">{label}</p>
+        <div className="flex justify-between mb-2 text-sm">
+          <span className="text-green-400">Completions: {data.completions}</span>
+          <span className="text-red-400 ml-4">Losses: {data.losses}</span>
+        </div>
+        <p className="text-blue-400 text-xs font-bold mb-2">Total Starts: {data.starts}</p>
+        <div className="space-y-2 border-t border-white/10 pt-2">
+          {data.details.map((d: any, i: number) => (
+            <div key={i} className="text-[10px] text-gray-400">
+              <span className="text-white font-bold uppercase">{d.gameId.replace('euro', '')}</span> ({d.difficulty}): 
+              <span className="text-green-400 ml-1">W:{d.totalCompletions || 0}</span>
+              <span className="text-red-400 ml-1">L:{d.totalLosses || 0}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   if (loading) return <div className="min-h-screen flex items-center justify-center text-white bg-[#050510]">Loading...</div>;
 
   if (!user) {
@@ -458,7 +551,58 @@ const Admin: React.FC = () => {
             </div>
           </section>
 
-          {/* 4. Active Users by Language (Line Chart) */}
+          {/* 4. Infinite Mode Stats (Stacked Bar Chart) */}
+          <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
+            <h2 className="text-xl font-black uppercase tracking-widest text-white mb-2">Infinite Mode Performance</h2>
+            <p className="text-xs text-gray-400 mb-6 uppercase tracking-widest">Completions vs Losses per day (Stacked)</p>
+            <div className="h-[400px] w-full">
+              {infiniteChartData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={infiniteChartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
+                    <XAxis dataKey="date" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
+                    <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
+                    <Tooltip content={<CustomInfiniteTooltip />} />
+                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                    <Bar dataKey="completions" name="Completions" stackId="a" fill="#10B981" radius={[0, 0, 0, 0]} />
+                    <Bar dataKey="losses" name="Losses" stackId="a" fill="#EF4444" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-500 italic">No infinite mode data available</div>
+              )}
+            </div>
+          </section>
+
+          {/* 5. New Players Discovery */}
+          <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
+            <h2 className="text-xl font-black uppercase tracking-widest text-white mb-6">New Players Discovery</h2>
+            <div className="h-[400px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
+                  <XAxis dataKey="date" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
+                  <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
+                  <Tooltip 
+                    content={({ active, payload, label }) => {
+                      if (!active || !payload?.length) return null;
+                      const data = payload[0].payload;
+                      return (
+                        <div className="bg-[#1a1a2e] border border-white/20 p-4 rounded-xl shadow-xl">
+                          <p className="text-white font-bold mb-1">{label}</p>
+                          <p className="text-pink-500 font-black text-lg">{data.newPlayers} New Players</p>
+                        </div>
+                      );
+                    }}
+                  />
+                  <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                  <Line type="monotone" dataKey="newPlayers" name="New Players" stroke="#EC4899" strokeWidth={3} dot={{ r: 6, fill: '#EC4899', strokeWidth: 2, stroke: '#000' }} activeDot={{ r: 8 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </section>
+
+          {/* 5. Active Users by Language (Line Chart) */}
           <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
             <h2 className="text-xl font-black uppercase tracking-widest text-white mb-2">Active Users by Language</h2>
             <p className="text-xs text-gray-400 mb-6 uppercase tracking-widest">One line per language over the selected period</p>
@@ -506,7 +650,7 @@ const Admin: React.FC = () => {
             </div>
           </section>
 
-          {/* 5. Share Clicks */}
+          {/* 6. Share Clicks */}
           <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
             <h2 className="text-xl font-black uppercase tracking-widest text-white mb-6">Share Clicks</h2>
             <div className="h-[400px] w-full">
@@ -523,7 +667,7 @@ const Admin: React.FC = () => {
             </div>
           </section>
 
-          {/* 6. Support Clicks */}
+          {/* 7. Support Clicks */}
           <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
             <h2 className="text-xl font-black uppercase tracking-widest text-white mb-6">Support Clicks</h2>
             <div className="h-[400px] w-full">
@@ -538,6 +682,47 @@ const Admin: React.FC = () => {
                 </LineChart>
               </ResponsiveContainer>
             </div>
+          </section>
+
+          {/* 8. Recent Infinite Runs */}
+          <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 overflow-x-auto">
+            <h2 className="text-xl font-black uppercase tracking-widest text-white mb-6">Recent Infinite Runs (Last 100)</h2>
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-white/10">
+                  <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-500">Time</th>
+                  <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-500">Game</th>
+                  <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-500">Diff</th>
+                  <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-500 text-center">Score</th>
+                  <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-500 text-center">Streak</th>
+                  <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-500 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {infiniteRuns.length > 0 ? (
+                  infiniteRuns.map((run) => (
+                    <tr key={run.id} className="hover:bg-white/5 transition-colors">
+                      <td className="py-3 px-4 text-[10px] font-medium text-gray-400">
+                        {run.timestamp?.toDate ? run.timestamp.toDate().toLocaleString() : 'N/A'}
+                      </td>
+                      <td className="py-3 px-4 text-xs font-bold text-white uppercase">{run.gameId.replace('euro', '')}</td>
+                      <td className="py-3 px-4 text-xs font-medium text-gray-400 capitalize">{run.difficulty}</td>
+                      <td className="py-3 px-4 text-xs font-black text-white text-center">{run.score}</td>
+                      <td className="py-3 px-4 text-xs font-black text-white text-center">{run.streak}</td>
+                      <td className="py-3 px-4 text-center">
+                        <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-full ${run.wasCompleted ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}>
+                          {run.wasCompleted ? 'Completed' : 'Loss'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="py-8 text-center text-gray-500 italic text-sm">No recent runs found</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </section>
 
         </div>

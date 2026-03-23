@@ -19,6 +19,7 @@ export const it: TranslationSchema = {
     points: "Punti",
     pointsShort: "pt",
     attempts: "tentativi",
+    songs: "canzoni",
     steps: "passaggi",
     mistakesLeft: "Errori rimasti",
     howToPlay: "Come giocare",
@@ -27,7 +28,8 @@ export const it: TranslationSchema = {
     languages: "Lingue",
     qualified: "Qualificato",
     playBonusRound: "Gioca il round bonus",
-    semiFinal: "Semifinale"
+    semiFinal: "Semifinale",
+    joinCommunity: "Unisciti alla community"
   },
   greenroom: {
     greenroom: "La Greenroom",
@@ -274,6 +276,10 @@ export const it: TranslationSchema = {
     community: {
       title: "La comunità prima di tutto",
       p1: "Non sono affiliato all'EBU né a alcun emittente ufficiale. Sono semplicemente un fan che vuole condividere la mia passione per l'Eurovision con il mondo."
+    },
+    data: {
+      title: "Dati e Crediti",
+      p1: "Un enorme ringraziamento al progetto TidyTuesday e ai suoi collaboratori per aver fornito il set di dati fondamentale che ha reso possibile Douze Points. La loro dedizione agli open data ci ha permesso di ricostruire la ricca storia del concorso per questi giochi!"
     }
   },
   contact: {
@@ -618,5 +624,53 @@ export const it: TranslationSchema = {
     title: "Ti piace Douze Points?",
     completed: "Hai completato le sfide di oggi!",
     button: "Offrimi un caffè"
+  },
+  infinite: {
+    title: "Encore",
+    description: "Lo spettacolo quotidiano è finito, ma la festa non si ferma mai! Torna sul palco e metti alla prova la tua resistenza nei nostri giochi infiniti. Quanto a lungo riesci a far suonare la musica prima di sbagliare nota?",
+    difficulty: "Seleziona Difficoltà",
+    difficulties: {
+      top10: "Top 10 (2000-Presente)",
+      modern: "2000-Presente",
+      all: "Tutta la Storia (1956-Presente)"
+    },
+    currentRun: "Serie Attuale",
+    bestRun: "Miglior Serie",
+    best: "Max",
+    songsFinished: "Canzoni Completate",
+    currentScore: "Punteggio Attuale",
+    bestScore: "Miglior Punteggio",
+    score: "Punteggio",
+    nextSong: "Prossima Canzone",
+    gameOver: "Fine Giochi",
+    tryAgain: "Riprova",
+    congratulations: "Congratulazioni!",
+    allSongsFinished: "Hai completato con successo tutte le voci di questa categoria! Sei una vera Leggenda dell'Eurovision.",
+    streak: "Serie",
+    bestStreak: "Miglior Serie",
+    continueRun: "Continua Serie",
+    exitToEncore: "Esci verso l'Encore",
+    playAgain: "Gioca Ancora",
+    continue: "Continua",
+    newBest: "Nuovo Record!",
+    infiniteMode: "Modalità Infinita",
+    placement: "Posizionamento",
+    era: "Era",
+    placements: {
+      all: "Tutti i posizionamenti",
+      winners: "Solo vincitori",
+      top3: "Top 3",
+      top5: "Top 5",
+      top10: "Top 10",
+      top15: "Top 15",
+      finalists: "Finalisti"
+    },
+    years: {
+      all: "Tutta la storia",
+      "2021": "2021-Presente",
+      "2010": "2010-Presente",
+      "2000": "2000-Presente",
+      "1956": "1956-1999"
+    }
   }
 };

@@ -17,6 +17,7 @@ export interface TranslationSchema {
     points: string;
     pointsShort: string;
     attempts: string;
+    songs: string;
     steps: string;
     mistakesLeft: string;
     howToPlay: string;
@@ -26,6 +27,7 @@ export interface TranslationSchema {
     qualified: string;
     playBonusRound: string;
     semiFinal: string;
+    joinCommunity: string;
   };
   greenroom: {
     greenroom: string;
@@ -218,6 +220,7 @@ export interface TranslationSchema {
     history: { title: string; p1: string; p2: string };
     games: { title: string; p1: string; gameList: { name: string; desc: string }[] };
     community: { title: string; p1: string };
+    data: { title: string; p1: string };
   };
   contact: {
     title: string;
@@ -259,5 +262,53 @@ export interface TranslationSchema {
     title: string;
     completed: string;
     button: string;
+  };
+  infinite: {
+    title: string;
+    description: string;
+    difficulty: string;
+    difficulties: {
+      top10: string;
+      modern: string;
+      all: string;
+    };
+    currentRun: string;
+    bestRun: string;
+    best: string;
+    songsFinished: string;
+    currentScore: string;
+    bestScore: string;
+    score: string;
+    nextSong: string;
+    gameOver: string;
+    tryAgain: string;
+    congratulations: string;
+    allSongsFinished: string;
+    streak: string;
+    bestStreak: string;
+    continueRun: string;
+    exitToEncore: string;
+    playAgain: string;
+    continue: string;
+    newBest: string;
+    infiniteMode: string;
+    placement: string;
+    era: string;
+    placements: {
+      all: string;
+      winners: string;
+      top3: string;
+      top5: string;
+      top10: string;
+      top15: string;
+      finalists: string;
+    };
+    years: {
+      all: string;
+      "2021": string;
+      "2010": string;
+      "2000": string;
+      "1956": string;
+    };
   };
 }
