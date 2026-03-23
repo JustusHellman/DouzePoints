@@ -477,7 +477,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
             setIsGameOver(true);
             setWon(true);
             if (mode === 'infinite' && infiniteState) {
-              const pointsMap = [12, 12, 10, 8, 6, 4, 2];
+              const pointsMap = [12, 10, 8, 6, 4, 2];
               const pts = pointsMap[newGuesses.length - 1] || 2;
               const nextState = { ...infiniteState, guesses: newGuesses, isGameOver: true, won: true, lastResult: { won: true, points: pts } };
               saveInfiniteGameState(gameId, difficulty, nextState);
