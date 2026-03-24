@@ -282,24 +282,24 @@ const Admin: React.FC = () => {
       : infiniteStats;
 
     if (infiniteMode === 'period') {
-      const grouped: Record<string, { date: string; starts: number; completions: number; losses: number }> = {};
+      const grouped: Record<string, { name: string; starts: number; completions: number; losses: number }> = {};
       source.forEach(s => {
-        if (!grouped[s.date]) grouped[s.date] = { date: s.date, starts: 0, completions: 0, losses: 0 };
+        if (!grouped[s.date]) grouped[s.date] = { name: s.date, starts: 0, completions: 0, losses: 0 };
         grouped[s.date].starts += s.totalStarts || 0;
         grouped[s.date].completions += s.totalCompletions || 0;
         grouped[s.date].losses += s.totalLosses || 0;
       });
-      return Object.values(grouped).sort((a, b) => a.date.localeCompare(b.date));
+      return Object.values(grouped).sort((a, b) => a.name.localeCompare(b.name));
     } else {
-      const grouped: Record<string, { game: string; starts: number; completions: number; losses: number }> = {};
+      const grouped: Record<string, { name: string; starts: number; completions: number; losses: number }> = {};
       source.forEach(s => {
-        const name = s.gameId.replace('euro', '').charAt(0).toUpperCase() + s.gameId.replace('euro', '').slice(1);
-        if (!grouped[name]) grouped[name] = { game: name, starts: 0, completions: 0, losses: 0 };
-        grouped[name].starts += s.totalStarts || 0;
-        grouped[name].completions += s.totalCompletions || 0;
-        grouped[name].losses += s.totalLosses || 0;
+        const label = s.gameId.replace('euro', '').charAt(0).toUpperCase() + s.gameId.replace('euro', '').slice(1);
+        if (!grouped[label]) grouped[label] = { name: label, starts: 0, completions: 0, losses: 0 };
+        grouped[label].starts += s.totalStarts || 0;
+        grouped[label].completions += s.totalCompletions || 0;
+        grouped[label].losses += s.totalLosses || 0;
       });
-      return Object.values(grouped).sort((a, b) => a.game.localeCompare(b.game));
+      return Object.values(grouped).sort((a, b) => a.name.localeCompare(b.name));
     }
   }, [infiniteStats, infiniteMode, infiniteDate]);
 
@@ -694,7 +694,7 @@ const Admin: React.FC = () => {
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={infiniteVolumeChartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
-                        <XAxis dataKey="date" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 11 }} />
+                        <XAxis dataKey="name" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 11 }} />
                         <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
                         <Tooltip
                           content={({ active, payload, label }) => {
@@ -730,7 +730,7 @@ const Admin: React.FC = () => {
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={infiniteVolumeChartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
-                        <XAxis dataKey="game" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
+                        <XAxis dataKey="name" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
                         <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
                         <Tooltip
                           content={({ active, payload, label }) => {
