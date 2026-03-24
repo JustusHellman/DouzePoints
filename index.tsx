@@ -35,10 +35,12 @@ if ('serviceWorker' in navigator) {
       const swUrl = `/sw.js?v=${encodeURIComponent(__BUILD_DATE__)}`;
       navigator.serviceWorker.register(swUrl)
         .then(() => {
-          console.log('SW registered with version:', __BUILD_DATE__);
+          if (import.meta.env.DEV) {
+            console.log('SW registered with version:', __BUILD_DATE__);
+          }
         })
         .catch(err => {
-          console.log('SW registration failed: ', err);
+          console.error('SW registration failed: ', err);
         });
     });
 
@@ -57,7 +59,9 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then(registrations => {
       for (const registration of registrations) {
         registration.unregister();
-        console.log('Unregistered development service worker');
+        if (import.meta.env.DEV) {
+          console.log('Unregistered development service worker');
+        }
       }
     });
   }

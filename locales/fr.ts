@@ -27,7 +27,6 @@ export const fr: TranslationSchema = {
     selectLanguage: "Choisir la Langue",
     languages: "Langues",
     qualified: "Qualifié",
-    playBonusRound: "Jouer le tour bonus",
     semiFinal: "Demi-finale",
     joinCommunity: "Rejoignez la communauté"
   },

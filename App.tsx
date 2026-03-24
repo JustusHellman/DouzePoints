@@ -695,13 +695,6 @@ const App: React.FC = () => {
             <Route path="/contact" element={<Contact />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/patch-notes" element={<PatchNotes />} />
-            {/* 
-            <Route path="/bonus" element={<BonusDashboard />} />
-            <Route path="/bonus/euro-song" element={<BonusGameWrapper gameType="euro-song" onReturn={() => window.location.href = '/bonus'} />} />
-            <Route path="/bonus/euro-artist" element={<BonusGameWrapper gameType="euro-artist" onReturn={() => window.location.href = '/bonus'} />} />
-            <Route path="/bonus/euro-guess" element={<BonusGameWrapper gameType="euro-guess" onReturn={() => window.location.href = '/bonus'} />} />
-            <Route path="/bonus/euro-arena" element={<BonusGameWrapper gameType="euro-arena" onReturn={() => window.location.href = '/bonus'} />} />
-            */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

@@ -26,7 +26,6 @@ import {
 interface EuroArenaProps {
   onReturn: () => void;
   data: MasterSong[];
-  bonusSong?: MasterSong;
   mode?: 'daily' | 'infinite';
   gameId?: string;
 }
@@ -60,7 +59,7 @@ const ComparisonBox = ({ label, value, status, arrow, delay }: { label: string, 
 
 import { SEARCH_WEIGHT_THRESHOLD } from '../../data/activeData.ts';
 
-const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, bonusSong, mode = 'daily', gameId = 'euroarena' }) => {
+const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', gameId = 'euroarena' }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
@@ -77,7 +76,6 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, bonusSong, mode =
   });
 
   const target = useMemo(() => {
-    if (bonusSong) return bonusSong;
     if (mode === 'infinite' && infiniteState) {
       const currentSongId = infiniteState.shuffledIds[infiniteState.currentIndex];
       const pool = getInfiniteDifficultyPool(difficulty);
@@ -87,7 +85,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, bonusSong, mode =
     const poolToUse = validPool.length > 0 ? validPool : data;
     const idx = getDailyIndex(poolToUse, "euroarena");
     return poolToUse[idx];
-  }, [data, bonusSong, mode, infiniteState, difficulty]);
+  }, [data, mode, infiniteState, difficulty]);
 
   const [query, setQuery] = useState("");
   const [guesses, setGuesses] = useState<MasterSong[]>(() => {
@@ -251,7 +249,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, bonusSong, mode =
         if (isExhausted) {
           reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore + pts, infiniteState.currentStreak + 1, true);
         }
-      } else if (!bonusSong) {
+      } else {
         updateGameStats(GameType.ARENA, true, { attempts: newGuesses.length });
       }
       setTimeout(() => setShowModal(true), 1500); 
@@ -265,12 +263,12 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, bonusSong, mode =
         clearInfiniteGameState(gameId, difficulty);
         setInfiniteState(nextState);
         reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore, infiniteState.currentStreak, false);
-      } else if (!bonusSong) {
+      } else {
         updateGameStats(GameType.ARENA, false, { attempts: newGuesses.length });
       }
       setTimeout(() => setShowModal(true), 1500); 
     }
-  }, [isGameOver, guesses, target.id, mode, infiniteState, gameId, difficulty, bonusSong]);
+  }, [isGameOver, guesses, target.id, mode, infiniteState, gameId, difficulty]);
 
   const validPoolIds = useMemo(() => {
     if (mode !== 'infinite') return null;

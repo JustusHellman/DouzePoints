@@ -25,7 +25,6 @@ import {
 interface EuroGuessProps {
   onReturn: () => void;
   data: MasterSong[];
-  bonusSong?: MasterSong;
   mode?: 'daily' | 'infinite';
   gameId?: string;
 }
@@ -97,7 +96,7 @@ const HintBox: React.FC<HintBoxProps> = ({ hint, attempt, idx, isActive, songTit
 
 import { SEARCH_WEIGHT_THRESHOLD } from '../../data/activeData.ts';
 
-const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, bonusSong, mode = 'daily', gameId = 'euroguess' }) => {
+const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', gameId = 'euroguess' }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const isInfinite = mode === 'infinite';
@@ -122,12 +121,11 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, bonusSong, mode =
       const songId = infiniteState.shuffledIds[infiniteState.currentIndex];
       return data.find(s => s.id === songId) || data[0];
     }
-    if (bonusSong) return bonusSong;
     const validPool = data.filter(s => (s.weight || 0) >= SEARCH_WEIGHT_THRESHOLD);
     const poolToUse = validPool.length > 0 ? validPool : data;
     const idx = getDailyIndex(poolToUse, "euroguess");
     return poolToUse[idx];
-  }, [data, bonusSong, isInfinite, infiniteState]);
+  }, [data, isInfinite, infiniteState]);
 
   const [query, setQuery] = useState("");
   const [attempts, setAttempts] = useState<string[]>(() => {
@@ -288,9 +286,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, bonusSong, mode =
       const pts = pointsMap[newAttempts.length - 1] || 2;
 
       if (!isInfinite) {
-        if (!bonusSong) {
-          updateGameStats(GameType.GUESSER, true, { attempts: newAttempts.length });
-        }
+        updateGameStats(GameType.GUESSER, true, { attempts: newAttempts.length });
         localStorage.setItem(`euroguess-${getDayString()}`, JSON.stringify({ attempts: newAttempts, isGameOver: true, revealedHints, won: true }));
       } else if (infiniteState) {
         const nextState = { ...infiniteState, guesses: newAttempts, isGameOver: true, lastResult: { won: true, points: pts } };
@@ -317,9 +313,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, bonusSong, mode =
         setWon(false);
         setRevealedHints(6);
         if (!isInfinite) {
-          if (!bonusSong) {
-            updateGameStats(GameType.GUESSER, false, { attempts: newAttempts.length });
-          }
+          updateGameStats(GameType.GUESSER, false, { attempts: newAttempts.length });
           localStorage.setItem(`euroguess-${getDayString()}`, JSON.stringify({ attempts: newAttempts, isGameOver: true, revealedHints: 6, won: false }));
         } else if (infiniteState) {
           const nextState = { ...infiniteState, guesses: newAttempts, isGameOver: true, lastResult: { won: false, points: 0 } };
@@ -336,7 +330,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, bonusSong, mode =
       }
       setQuery("");
     }
-  }, [song, attempts, isInfinite, bonusSong, infiniteState, difficulty, gameId, revealedHints]);
+  }, [song, attempts, isInfinite, infiniteState, difficulty, gameId, revealedHints]);
 
   const handleSelectSong = (selected: MasterSong) => {
     setQuery(selected.title);

@@ -1,4 +1,4 @@
-import { doc, setDoc, increment, serverTimestamp, collection, addDoc } from 'firebase/firestore';
+import { doc, setDoc, increment, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase.ts';
 import { GameType } from '../data/types.ts';
 
@@ -52,8 +52,9 @@ export const reportInfiniteRun = async (gameId: string, difficulty: string, scor
     }, { merge: true });
 
     // 2. Log Individual Run
-    const runsRef = collection(db, 'infinite_runs');
-    await addDoc(runsRef, {
+    const runId = `${date}_${gameId}_${difficulty}_${Math.random().toString(36).substring(2, 9)}`;
+    const runRef = doc(db, 'infinite_runs', runId);
+    await setDoc(runRef, {
       gameId,
       difficulty,
       score,
@@ -89,7 +90,9 @@ export const reportGameScore = async (gameType: GameType, points: number) => {
       lastUpdated: serverTimestamp()
     }, { merge: true });
     
-    console.log(`Reported ${points} points for ${gameType} on ${date}`);
+    if (import.meta.env.DEV) {
+      console.log(`Reported ${points} points for ${gameType} on ${date}`);
+    }
   } catch (error) {
     // Fail silently for the user, but log for the developer
     console.error('Failed to report score to Firebase:', error instanceof Error ? error.message : String(error));
@@ -116,7 +119,9 @@ export const reportSupportClick = async (source: string = 'unknown') => {
       lastUpdated: serverTimestamp()
     }, { merge: true });
     
-    console.log(`Reported support click on ${date} from ${source}`);
+    if (import.meta.env.DEV) {
+      console.log(`Reported support click on ${date} from ${source}`);
+    }
   } catch (error) {
     console.error('Failed to report support click to Firebase:', error instanceof Error ? error.message : String(error));
   }
@@ -142,7 +147,9 @@ export const reportShareClick = async (source: string = 'unknown') => {
       lastUpdated: serverTimestamp()
     }, { merge: true });
     
-    console.log(`Reported share click on ${date} from ${source}`);
+    if (import.meta.env.DEV) {
+      console.log(`Reported share click on ${date} from ${source}`);
+    }
   } catch (error) {
     console.error('Failed to report share click to Firebase:', error instanceof Error ? error.message : String(error));
   }
@@ -173,7 +180,9 @@ export const reportDailyLanguage = async (language: string) => {
     }, { merge: true });
     
     localStorage.setItem(storageKey, date);
-    console.log(`Reported language ${language} on ${date}`);
+    if (import.meta.env.DEV) {
+      console.log(`Reported language ${language} on ${date}`);
+    }
   } catch (error) {
     console.error('Failed to report language to Firebase:', error instanceof Error ? error.message : String(error));
   }
@@ -204,7 +213,9 @@ export const reportDailyCompletion = async (totalScore: number) => {
     }, { merge: true });
     
     localStorage.setItem(storageKey, date);
-    console.log(`Reported daily completion with score ${totalScore} on ${date}`);
+    if (import.meta.env.DEV) {
+      console.log(`Reported daily completion with score ${totalScore} on ${date}`);
+    }
   } catch (error) {
     console.error('Failed to report completion to Firebase:', error instanceof Error ? error.message : String(error));
   }
@@ -232,7 +243,9 @@ export const reportNewPlayerDiscovery = async () => {
     }, { merge: true });
     
     localStorage.setItem(storageKey, 'true');
-    console.log(`Reported new player discovery on ${date}`);
+    if (import.meta.env.DEV) {
+      console.log(`Reported new player discovery on ${date}`);
+    }
   } catch (error) {
     console.error('Failed to report discovery to Firebase:', error instanceof Error ? error.message : String(error));
   }

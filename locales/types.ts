@@ -25,7 +25,6 @@ export interface TranslationSchema {
     selectLanguage: string;
     languages: string;
     qualified: string;
-    playBonusRound: string;
     semiFinal: string;
     joinCommunity: string;
   };

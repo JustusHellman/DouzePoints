@@ -30,7 +30,6 @@ interface EuroWordGameProps {
   gameType: GameType;
   gameId: string;
   title: string;
-  bonusSong?: MasterSong;
   mode?: 'daily' | 'infinite';
 }
 
@@ -45,7 +44,7 @@ const isLetter = (char: string) => {
 
 import { SEARCH_WEIGHT_THRESHOLD } from '../../data/activeData.ts';
 
-const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameType, gameId, title, bonusSong, mode = 'daily' }) => {
+const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameType, gameId, title, mode = 'daily' }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const [showHowToPlay, setShowHowToPlay] = useState(false);
@@ -83,7 +82,6 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
   });
 
   const song = useMemo(() => {
-    if (bonusSong) return bonusSong;
     if (mode === 'infinite' && infiniteState) {
       const currentSongId = infiniteState.shuffledIds[infiniteState.currentIndex];
       const found = validPool.find(s => s.id === currentSongId);
@@ -92,7 +90,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
     const salt = `DAILY-V3-${gameType}-${gameId}-SALT-VERIFIED`;
     const idx = getDailyIndex(validPool, salt);
     return validPool[idx];
-  }, [validPool, gameId, gameType, bonusSong, mode, infiniteState]);
+  }, [validPool, gameId, gameType, mode, infiniteState]);
 
   const targetText = useMemo(() => {
     return (gameType === GameType.WORD_GAME) ? song.title : song.artist;
@@ -417,12 +415,18 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
   }, [guesses, target, getGuessStatuses]);
 
   const handleContinue = useCallback(() => {
-    console.log("handleContinue called, mode:", mode, "won:", won, "infiniteState:", infiniteState);
+    if (import.meta.env.DEV) {
+      console.log("handleContinue called, mode:", mode, "won:", won, "infiniteState:", infiniteState);
+    }
     if (mode === 'infinite' && won && infiniteState) {
       const pts = getPointsInfo.points;
-      console.log("Advancing game, pts:", pts);
+      if (import.meta.env.DEV) {
+        console.log("Advancing game, pts:", pts);
+      }
       const nextState = advanceInfiniteGame(gameId, difficulty, infiniteState, pts, true);
-      console.log("Next state:", nextState);
+      if (import.meta.env.DEV) {
+        console.log("Next state:", nextState);
+      }
       setInfiniteState(nextState);
       saveInfiniteGameState(gameId, difficulty, nextState);
       saveInfiniteRecord(gameId, difficulty, nextState.currentScore, nextState.currentStreak);
@@ -487,7 +491,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
               if (isExhausted) {
                 reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore + pts, infiniteState.currentStreak + 1, true);
               }
-            } else if (!bonusSong) {
+            } else {
               updateGameStats(gameType, true, { attempts: newGuesses.length });
             }
             setShowModal(true);
@@ -502,7 +506,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
               clearInfiniteGameState(gameId, difficulty);
               setInfiniteState(nextState);
               reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore, infiniteState.currentStreak, false);
-            } else if (!bonusSong) {
+            } else {
               updateGameStats(gameType, false, { attempts: newGuesses.length });
             }
             setShowModal(true);
@@ -519,7 +523,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
         setCurrentGuess(prev => (prev + e.key).toUpperCase());
       }
     }
-  }, [isGameOver, currentGuess, inputLength, guesses, target, animationDelay, mode, infiniteState, gameId, difficulty, bonusSong, gameType, t, won, handleContinue]);
+  }, [isGameOver, currentGuess, inputLength, guesses, target, animationDelay, mode, infiniteState, gameId, difficulty, gameType, t, won, handleContinue]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => onKeyPress(e);

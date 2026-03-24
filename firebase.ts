@@ -17,7 +17,9 @@ async function testConnection() {
   try {
     // Attempt to fetch a non-existent doc just to check connectivity
     await getDocFromServer(doc(db, '_internal', 'connection_test'));
-    console.log("Firebase connection verified.");
+    if (import.meta.env.DEV) {
+      console.log("Firebase connection verified.");
+    }
   } catch (error) {
     if (error instanceof Error && error.message.includes('the client is offline')) {
       console.error("Firebase is offline. Please check your configuration.");
