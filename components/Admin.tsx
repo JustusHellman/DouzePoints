@@ -72,7 +72,6 @@ const Admin: React.FC = () => {
   const [completionStats, setCompletionStats] = useState<CompletionStats[]>([]);
   const [discoveryStats, setDiscoveryStats] = useState<DiscoveryStats[]>([]);
   const [infiniteStats, setInfiniteStats] = useState<InfiniteDailyStats[]>([]);
-  const [infiniteRuns, setInfiniteRuns] = useState<InfiniteRun[]>([]);
   const [daysSpan, setDaysSpan] = useState(30);
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
@@ -82,6 +81,8 @@ const Admin: React.FC = () => {
   const [detailGame, setDetailGame] = useState<string>('ALL');
   const [completionMode, setCompletionMode] = useState<'period' | 'day'>('day');
   const [completionDate, setCompletionDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [infiniteMode, setInfiniteMode] = useState<'period' | 'day'>('day');
+  const [infiniteDate, setInfiniteDate] = useState<string>(new Date().toISOString().split('T')[0]);
 
   const dailyAnswer = useMemo(() => {
     if (detailGame === 'ALL') return null;
@@ -261,34 +262,65 @@ const Admin: React.FC = () => {
     }
   })();
   const infiniteChartData = useMemo(() => {
-    const grouped: Record<string, { date: string; completions: number; losses: number; starts: number; details: any[] }> = {};
-    infiniteStats.forEach(s => {
-      if (!grouped[s.date]) grouped[s.date] = { date: s.date, completions: 0, losses: 0, starts: 0, details: [] };
-      const comp = s.totalCompletions || 0;
-      const loss = s.totalLosses || 0;
-      grouped[s.date].completions += comp;
-      grouped[s.date].losses += loss;
-      grouped[s.date].starts += s.totalStarts;
-      grouped[s.date].details.push(s);
-    });
-    return Object.values(grouped);
-  }, [infiniteStats]);
+    const source = infiniteMode === 'day' 
+      ? infiniteStats.filter(s => s.date === infiniteDate)
+      : infiniteStats;
 
-  const CustomInfiniteTooltip = ({ active, payload, label }: any) => {
+    if (infiniteMode === 'period') {
+      const grouped: Record<string, { name: string; completions: number; losses: number; starts: number; score: number; streak: number; details: InfiniteDailyStats[] }> = {};
+      source.forEach(s => {
+        if (!grouped[s.date]) grouped[s.date] = { name: s.date, completions: 0, losses: 0, starts: 0, score: 0, streak: 0, details: [] };
+        grouped[s.date].completions += s.totalCompletions || 0;
+        grouped[s.date].losses += s.totalLosses || 0;
+        grouped[s.date].starts += s.totalStarts || 0;
+        grouped[s.date].score += s.totalScore || 0;
+        grouped[s.date].streak += s.totalStreak || 0;
+        grouped[s.date].details.push(s);
+      });
+      return Object.values(grouped).sort((a, b) => a.name.localeCompare(b.name)).map(d => ({
+        ...d,
+        avgScore: (d.completions + d.losses) > 0 ? parseFloat((d.score / (d.completions + d.losses)).toFixed(1)) : 0,
+        avgStreak: (d.completions + d.losses) > 0 ? parseFloat((d.streak / (d.completions + d.losses)).toFixed(1)) : 0,
+      }));
+    } else {
+      const grouped: Record<string, { name: string; completions: number; losses: number; starts: number; score: number; streak: number; details: InfiniteDailyStats[] }> = {};
+      source.forEach(s => {
+        const name = s.gameId.replace('euro', '').toUpperCase();
+        if (!grouped[name]) grouped[name] = { name, completions: 0, losses: 0, starts: 0, score: 0, streak: 0, details: [] };
+        grouped[name].completions += s.totalCompletions || 0;
+        grouped[name].losses += s.totalLosses || 0;
+        grouped[name].starts += s.totalStarts || 0;
+        grouped[name].score += s.totalScore || 0;
+        grouped[name].streak += s.totalStreak || 0;
+        grouped[name].details.push(s);
+      });
+      return Object.values(grouped).sort((a, b) => a.name.localeCompare(b.name)).map(d => ({
+        ...d,
+        avgScore: (d.completions + d.losses) > 0 ? parseFloat((d.score / (d.completions + d.losses)).toFixed(1)) : 0,
+        avgStreak: (d.completions + d.losses) > 0 ? parseFloat((d.streak / (d.completions + d.losses)).toFixed(1)) : 0,
+      }));
+    }
+  }, [infiniteStats, infiniteMode, infiniteDate]);
+
+  const CustomInfiniteTooltip = ({ active, payload, label }: { active?: boolean, payload?: { payload: { completions: number, losses: number, starts: number, avgScore: number, avgStreak: number, details: InfiniteDailyStats[] } }[], label?: string }) => {
     if (!active || !payload?.length) return null;
     const data = payload[0].payload;
     return (
       <div className="bg-[#1a1a2e] border border-white/20 p-4 rounded-xl shadow-xl max-w-[300px]">
         <p className="text-white font-bold mb-2">{label}</p>
         <div className="flex justify-between mb-2 text-sm">
-          <span className="text-green-400">Completions: {data.completions}</span>
-          <span className="text-red-400 ml-4">Losses: {data.losses}</span>
+          <span className="text-green-400 font-bold">Completions: {data.completions}</span>
+          <span className="text-red-400 font-bold ml-4">Losses: {data.losses}</span>
         </div>
         <p className="text-blue-400 text-xs font-bold mb-2">Total Starts: {data.starts}</p>
+        <div className="flex justify-between mb-2 text-xs border-t border-white/10 pt-2">
+          <span className="text-yellow-400 font-bold">Avg Score: {data.avgScore}</span>
+          <span className="text-purple-400 font-bold ml-4">Avg Streak: {data.avgStreak}</span>
+        </div>
         <div className="space-y-2 border-t border-white/10 pt-2">
-          {data.details.map((d: any, i: number) => (
+          {data.details.map((d: InfiniteDailyStats, i: number) => (
             <div key={i} className="text-[10px] text-gray-400">
-              <span className="text-white font-bold uppercase">{d.gameId.replace('euro', '')}</span> ({d.difficulty}): 
+              <span className="text-white font-bold uppercase">{infiniteMode === 'period' ? d.gameId.replace('euro', '') : d.difficulty}</span>{infiniteMode === 'period' ? ` (${d.difficulty})` : ''}: 
               <span className="text-green-400 ml-1">W:{d.totalCompletions || 0}</span>
               <span className="text-red-400 ml-1">L:{d.totalLosses || 0}</span>
             </div>
@@ -551,21 +583,65 @@ const Admin: React.FC = () => {
             </div>
           </section>
 
-          {/* 4. Infinite Mode Stats (Stacked Bar Chart) */}
+          {/* 4. Infinite Mode Stats */}
           <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
-            <h2 className="text-xl font-black uppercase tracking-widest text-white mb-2">Infinite Mode Performance</h2>
-            <p className="text-xs text-gray-400 mb-6 uppercase tracking-widest">Completions vs Losses per day (Stacked)</p>
-            <div className="h-[400px] w-full">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+              <h2 className="text-xl font-black uppercase tracking-widest text-white mb-6">Infinite Mode Performance</h2>
+              <div className="flex flex-col sm:flex-row sm:items-center flex-wrap gap-4 mb-2">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-bold uppercase tracking-widest text-gray-500">View:</span>
+                  <select value={infiniteMode} onChange={(e) => setInfiniteMode(e.target.value as 'period' | 'day')} className="bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-white text-sm font-bold outline-none focus:border-pink-500 appearance-none cursor-pointer">
+                    <option value="day" className="bg-[#1a1a2e] text-white">Specific Day</option>
+                    <option value="period" className="bg-[#1a1a2e] text-white">Entire Period</option>
+                  </select>
+                </div>
+                {infiniteMode === 'day' && (
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Date:</span>
+                    <input type="date" value={infiniteDate} onChange={(e) => setInfiniteDate(e.target.value)} className="bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-white text-sm font-bold outline-none focus:border-pink-500" />
+                  </div>
+                )}
+              </div>
+            </div>
+            <p className="text-xs text-gray-400 mb-6 uppercase tracking-widest">
+              {infiniteMode === 'period' 
+                ? `Aggregate over selected time period — Completions vs Losses per day`
+                : `Showing data for ${infiniteDate} — Completions vs Losses per game`}
+            </p>
+            <div className="h-[400px] w-full mb-12">
               {infiniteChartData.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={infiniteChartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
-                    <XAxis dataKey="date" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
+                    <XAxis dataKey="name" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
                     <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
                     <Tooltip content={<CustomInfiniteTooltip />} />
                     <Legend wrapperStyle={{ paddingTop: '20px' }} />
                     <Bar dataKey="completions" name="Completions" stackId="a" fill="#10B981" radius={[0, 0, 0, 0]} />
                     <Bar dataKey="losses" name="Losses" stackId="a" fill="#EF4444" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-500 italic">No infinite mode data available</div>
+              )}
+            </div>
+
+            <p className="text-xs text-gray-400 mb-6 uppercase tracking-widest">
+              {infiniteMode === 'period' 
+                ? `Average Score and Streak per day`
+                : `Average Score and Streak per game`}
+            </p>
+            <div className="h-[400px] w-full">
+              {infiniteChartData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={infiniteChartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
+                    <XAxis dataKey="name" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
+                    <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
+                    <Tooltip content={<CustomInfiniteTooltip />} />
+                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                    <Bar dataKey="avgScore" name="Avg Score" fill="#FBBF24" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="avgStreak" name="Avg Streak" fill="#A855F7" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
@@ -602,7 +678,7 @@ const Admin: React.FC = () => {
             </div>
           </section>
 
-          {/* 5. Active Users by Language (Line Chart) */}
+          {/* 6. Active Users by Language (Line Chart) */}
           <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
             <h2 className="text-xl font-black uppercase tracking-widest text-white mb-2">Active Users by Language</h2>
             <p className="text-xs text-gray-400 mb-6 uppercase tracking-widest">One line per language over the selected period</p>
@@ -650,7 +726,7 @@ const Admin: React.FC = () => {
             </div>
           </section>
 
-          {/* 6. Share Clicks */}
+          {/* 7. Share Clicks */}
           <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
             <h2 className="text-xl font-black uppercase tracking-widest text-white mb-6">Share Clicks</h2>
             <div className="h-[400px] w-full">
@@ -667,7 +743,7 @@ const Admin: React.FC = () => {
             </div>
           </section>
 
-          {/* 7. Support Clicks */}
+          {/* 8. Support Clicks */}
           <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
             <h2 className="text-xl font-black uppercase tracking-widest text-white mb-6">Support Clicks</h2>
             <div className="h-[400px] w-full">
@@ -682,47 +758,6 @@ const Admin: React.FC = () => {
                 </LineChart>
               </ResponsiveContainer>
             </div>
-          </section>
-
-          {/* 8. Recent Infinite Runs */}
-          <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 overflow-x-auto">
-            <h2 className="text-xl font-black uppercase tracking-widest text-white mb-6">Recent Infinite Runs (Last 100)</h2>
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-white/10">
-                  <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-500">Time</th>
-                  <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-500">Game</th>
-                  <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-500">Diff</th>
-                  <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-500 text-center">Score</th>
-                  <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-500 text-center">Streak</th>
-                  <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-500 text-center">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {infiniteRuns.length > 0 ? (
-                  infiniteRuns.map((run) => (
-                    <tr key={run.id} className="hover:bg-white/5 transition-colors">
-                      <td className="py-3 px-4 text-[10px] font-medium text-gray-400">
-                        {run.timestamp?.toDate ? run.timestamp.toDate().toLocaleString() : 'N/A'}
-                      </td>
-                      <td className="py-3 px-4 text-xs font-bold text-white uppercase">{run.gameId.replace('euro', '')}</td>
-                      <td className="py-3 px-4 text-xs font-medium text-gray-400 capitalize">{run.difficulty}</td>
-                      <td className="py-3 px-4 text-xs font-black text-white text-center">{run.score}</td>
-                      <td className="py-3 px-4 text-xs font-black text-white text-center">{run.streak}</td>
-                      <td className="py-3 px-4 text-center">
-                        <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-full ${run.wasCompleted ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}>
-                          {run.wasCompleted ? 'Completed' : 'Loss'}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={6} className="py-8 text-center text-gray-500 italic text-sm">No recent runs found</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
           </section>
 
         </div>

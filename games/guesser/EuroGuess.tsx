@@ -10,7 +10,7 @@ import { useTranslation } from '../../context/LanguageContext.tsx';
 import { useLocation } from 'react-router-dom';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
 import { CategoryMasteredScreen } from '../../components/CategoryMasteredScreen.tsx';
-import { reportSupportClick, reportInfiniteRun } from '../../utils/firebaseService.ts';
+import { reportInfiniteRun } from '../../utils/firebaseService.ts';
 import { 
   getInfiniteGameState, 
   saveInfiniteGameState, 
@@ -297,7 +297,10 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, bonusSong, mode =
         setInfiniteState(nextState);
         saveInfiniteGameState(gameId, difficulty, nextState);
         saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore + pts, infiniteState.currentStreak + 1);
-        reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore + pts, infiniteState.currentStreak + 1, true);
+        const isExhausted = infiniteState.currentIndex + 1 >= infiniteState.shuffledIds.length;
+        if (isExhausted) {
+          reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore + pts, infiniteState.currentStreak + 1, true);
+        }
       }
       
       confetti({

@@ -20,6 +20,9 @@ export const reportInfiniteStart = async (gameId: string, difficulty: string) =>
       totalStarts: increment(1),
       lastUpdated: serverTimestamp()
     }, { merge: true });
+    
+    // Also report discovery if this is their first game ever
+    reportNewPlayerDiscovery();
   } catch (error) {
     console.error('Failed to report infinite start:', error);
   }

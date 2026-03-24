@@ -58,6 +58,12 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Only cache GET requests. Bypass cache for POST, PUT, DELETE, etc.
+  if (event.request.method !== 'GET') {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
   const url = new URL(event.request.url);
   
   // For the main page and navigation, use Network First
@@ -66,10 +72,12 @@ self.addEventListener('fetch', (event) => {
       fetch(event.request)
         .then((response) => {
           // Update the cache with the new version
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
-          });
+          if (response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone);
+            });
+          }
           return response;
         })
         .catch(() => {

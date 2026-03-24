@@ -7,7 +7,6 @@ import { PUZZLES } from '../../data/linksgameData.ts';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
-import { reportSupportClick } from '../../utils/firebaseService.ts';
 
 interface Tile {
   id: string;
