@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, query, getDocs, orderBy, where, limit } from 'firebase/firestore';
 import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, User } from 'firebase/auth';
 import { db, auth } from '../firebase.ts';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, ScatterChart, Scatter, ZAxis, ReferenceLine, Cell } from 'recharts';
 import WeightSimulator from './WeightSimulator.tsx';
 import { getActiveMasterData, SEARCH_WEIGHT_THRESHOLD } from '../data/activeData.ts';
 import { PUZZLES } from '../data/linksgameData.ts';
@@ -72,6 +72,7 @@ const Admin: React.FC = () => {
   const [completionStats, setCompletionStats] = useState<CompletionStats[]>([]);
   const [discoveryStats, setDiscoveryStats] = useState<DiscoveryStats[]>([]);
   const [infiniteStats, setInfiniteStats] = useState<InfiniteDailyStats[]>([]);
+  const [infiniteRuns, setInfiniteRuns] = useState<InfiniteRun[]>([]);
   const [daysSpan, setDaysSpan] = useState(30);
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
@@ -111,14 +112,15 @@ const Admin: React.FC = () => {
         }
       };
 
-      const [gs, sc, sh, ls, cs, ds, is] = await Promise.all([
+      const [gs, sc, sh, ls, cs, ds, is, irSnap] = await Promise.all([
         safeFetch<DailyStats>('game_stats'),
         safeFetch<SupportClick>('support_clicks'),
         safeFetch<ShareClick>('share_clicks'),
         safeFetch<LanguageStats>('language_stats'),
         safeFetch<CompletionStats>('completion_stats'),
         safeFetch<DiscoveryStats>('discoveries'),
-        safeFetch<InfiniteDailyStats>('infinite_daily_stats')
+        safeFetch<InfiniteDailyStats>('infinite_daily_stats'),
+        getDocs(query(collection(db, 'infinite_runs'), where('timestamp', '>=', startDate), orderBy('timestamp', 'desc'))).catch(e => { console.warn('Failed to fetch infinite_runs:', e); return { docs: [] }; })
       ]);
 
       setStats(gs);
@@ -128,6 +130,10 @@ const Admin: React.FC = () => {
       setCompletionStats(cs);
       setDiscoveryStats(ds);
       setInfiniteStats(is);
+      
+      const ir: InfiniteRun[] = [];
+      irSnap.docs.forEach((doc: any) => ir.push(doc.data() as InfiniteRun));
+      setInfiniteRuns(ir);
       
       setLastRefreshed(new Date());
     } catch (err) { 
@@ -298,19 +304,16 @@ const Admin: React.FC = () => {
     return (
       <div className="bg-[#1a1a2e] border border-white/20 p-4 rounded-xl shadow-xl max-w-[300px]">
         <p className="text-white font-bold mb-2">{label}</p>
-        <div className="flex justify-between mb-2 text-sm">
+        <p className="text-blue-400 text-sm font-bold mb-2">Total Starts: {data.starts}</p>
+        <div className="flex justify-between mb-2 text-sm border-b border-white/10 pb-2">
           <span className="text-green-400 font-bold">Completions: {data.completions}</span>
           <span className="text-red-400 font-bold ml-4">Losses: {data.losses}</span>
         </div>
-        <p className="text-blue-400 text-xs font-bold mb-2">Total Starts: {data.starts}</p>
-        <div className="flex justify-between mb-2 text-xs border-t border-white/10 pt-2">
-          <span className="text-yellow-400 font-bold">Avg Score: {data.avgScore}</span>
-          <span className="text-purple-400 font-bold ml-4">Avg Streak: {data.avgStreak}</span>
-        </div>
-        <div className="space-y-2 border-t border-white/10 pt-2">
+        <div className="space-y-2 pt-2">
           {data.details.map((d: InfiniteDailyStats, i: number) => (
             <div key={i} className="text-[10px] text-gray-400">
               <span className="text-white font-bold uppercase">{infiniteMode === 'period' ? d.gameId.replace('euro', '') : d.difficulty}</span>{infiniteMode === 'period' ? ` (${d.difficulty})` : ''}: 
+              <span className="text-blue-400 ml-1">S:{d.totalStarts || 0}</span>
               <span className="text-green-400 ml-1">W:{d.totalCompletions || 0}</span>
               <span className="text-red-400 ml-1">L:{d.totalLosses || 0}</span>
             </div>
@@ -319,6 +322,42 @@ const Admin: React.FC = () => {
       </div>
     );
   };
+
+  const CustomScatterTooltip = ({ active, payload }: any) => {
+    if (!active || !payload?.length) return null;
+    const data = payload[0].payload;
+    const dateStr = data.timestamp?.toDate ? data.timestamp.toDate().toLocaleString() : 'Unknown Date';
+    return (
+      <div className="bg-[#1a1a2e] border border-white/20 p-4 rounded-xl shadow-xl max-w-[250px]">
+        <p className="text-white font-bold mb-1">{data.gameId.replace('euro', '').toUpperCase()} - {data.difficulty}</p>
+        <p className="text-gray-400 text-xs mb-3">{dateStr}</p>
+        <div className="flex justify-between text-sm">
+          <span className="text-yellow-400 font-bold">Score: {data.score}</span>
+          <span className="text-purple-400 font-bold">Streak: {data.streak}</span>
+        </div>
+        <p className="text-xs mt-2 font-bold text-right">
+          {data.wasCompleted ? <span className="text-green-400">COMPLETED</span> : <span className="text-red-400">LOST</span>}
+        </p>
+      </div>
+    );
+  };
+
+  const scatterData = useMemo(() => {
+    return infiniteRuns.map(run => ({
+      ...run,
+      fill: run.wasCompleted ? '#10B981' : '#EF4444' // Green for win, Red for loss
+    }));
+  }, [infiniteRuns]);
+
+  const avgScatterScore = useMemo(() => {
+    if (scatterData.length === 0) return 0;
+    return parseFloat((scatterData.reduce((acc, r) => acc + r.score, 0) / scatterData.length).toFixed(1));
+  }, [scatterData]);
+
+  const avgScatterStreak = useMemo(() => {
+    if (scatterData.length === 0) return 0;
+    return parseFloat((scatterData.reduce((acc, r) => acc + r.streak, 0) / scatterData.length).toFixed(1));
+  }, [scatterData]);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center text-white bg-[#050510]">Loading...</div>;
 
@@ -595,21 +634,22 @@ const Admin: React.FC = () => {
             </div>
             <p className="text-xs text-gray-400 mb-6 uppercase tracking-widest">
               {infiniteMode === 'period' 
-                ? `Aggregate over selected time period — Completions vs Losses per day`
-                : `Showing data for ${infiniteDate} — Completions vs Losses per game`}
+                ? `Aggregate over selected time period — Starts, Completions, and Losses per day`
+                : `Showing data for ${infiniteDate} — Starts, Completions, and Losses per game`}
             </p>
             <div className="h-[400px] w-full mb-12">
               {infiniteChartData.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={infiniteChartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                  <LineChart data={infiniteChartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
                     <XAxis dataKey="name" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
                     <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
                     <Tooltip content={<CustomInfiniteTooltip />} />
                     <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                    <Bar dataKey="completions" name="Completions" stackId="a" fill="#10B981" radius={[0, 0, 0, 0]} />
-                    <Bar dataKey="losses" name="Losses" stackId="a" fill="#EF4444" radius={[4, 4, 0, 0]} />
-                  </BarChart>
+                    <Line type="monotone" dataKey="starts" name="Starts" stroke="#60A5FA" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                    <Line type="monotone" dataKey="completions" name="Completions" stroke="#10B981" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                    <Line type="monotone" dataKey="losses" name="Losses" stroke="#EF4444" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                  </LineChart>
                 </ResponsiveContainer>
               ) : (
                 <div className="flex items-center justify-center h-full text-gray-500 italic">No infinite mode data available</div>
@@ -617,25 +657,28 @@ const Admin: React.FC = () => {
             </div>
 
             <p className="text-xs text-gray-400 mb-6 uppercase tracking-widest">
-              {infiniteMode === 'period' 
-                ? `Average Score and Streak per day`
-                : `Average Score and Streak per game`}
+              Individual Runs: Score vs Streak (Green = Completed, Red = Lost)
             </p>
             <div className="h-[400px] w-full">
-              {infiniteChartData.length > 0 ? (
+              {scatterData.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={infiniteChartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
-                    <XAxis dataKey="name" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
-                    <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
-                    <Tooltip content={<CustomInfiniteTooltip />} />
-                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                    <Bar dataKey="avgScore" name="Avg Score" fill="#FBBF24" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="avgStreak" name="Avg Streak" fill="#A855F7" radius={[4, 4, 0, 0]} />
-                  </BarChart>
+                  <ScatterChart margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" />
+                    <XAxis type="number" dataKey="streak" name="Streak" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} label={{ value: 'Streak', position: 'insideBottom', offset: -10, fill: '#ffffff60' }} />
+                    <YAxis type="number" dataKey="score" name="Score" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} label={{ value: 'Score', angle: -90, position: 'insideLeft', fill: '#ffffff60' }} />
+                    <ZAxis type="number" range={[60, 60]} />
+                    <Tooltip content={<CustomScatterTooltip />} cursor={{ strokeDasharray: '3 3' }} />
+                    <ReferenceLine x={avgScatterStreak} stroke="#A855F7" strokeDasharray="3 3" label={{ value: `Avg Streak: ${avgScatterStreak}`, position: 'top', fill: '#A855F7', fontSize: 10 }} />
+                    <ReferenceLine y={avgScatterScore} stroke="#FBBF24" strokeDasharray="3 3" label={{ value: `Avg Score: ${avgScatterScore}`, position: 'right', fill: '#FBBF24', fontSize: 10 }} />
+                    <Scatter name="Runs" data={scatterData}>
+                      {scatterData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                      ))}
+                    </Scatter>
+                  </ScatterChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="flex items-center justify-center h-full text-gray-500 italic">No infinite mode data available</div>
+                <div className="flex items-center justify-center h-full text-gray-500 italic">No individual run data available</div>
               )}
             </div>
           </section>
