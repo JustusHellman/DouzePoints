@@ -129,16 +129,6 @@ const Admin: React.FC = () => {
       setDiscoveryStats(ds);
       setInfiniteStats(is);
       
-      // Fetch infinite runs (limited to last 100 for performance)
-      try {
-        const runsSnap = await getDocs(query(collection(db, 'infinite_runs'), orderBy('timestamp', 'desc'), limit(100)));
-        const runs: InfiniteRun[] = [];
-        runsSnap.forEach(doc => runs.push({ id: doc.id, ...doc.data() } as InfiniteRun));
-        setInfiniteRuns(runs);
-      } catch (e) {
-        console.warn('Failed to fetch infinite_runs:', e);
-      }
-      
       setLastRefreshed(new Date());
     } catch (err) { 
       console.error('Error in fetchData:', err); 
