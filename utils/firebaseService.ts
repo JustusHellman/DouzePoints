@@ -1,8 +1,19 @@
 import { doc, setDoc, increment, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase.ts';
 import { GameType } from '../data/types.ts';
+import { logAnalyticsEvent } from './analytics';
 
 export const reportInfiniteStart = async (gameId: string, difficulty: string) => {
+  const [placement, era] = difficulty.split('_');
+
+  // Log to GA4 (always log, even in dev if we want to see it in console)
+  logAnalyticsEvent('level_start', {
+    level_name: `${gameId}_infinite`,
+    game_id: gameId,
+    placement: placement,
+    era: era
+  });
+
   if (import.meta.env.DEV) {
     console.log(`[DEV MODE] Would have reported infinite start for ${gameId} (${difficulty})`);
     return;
@@ -29,6 +40,18 @@ export const reportInfiniteStart = async (gameId: string, difficulty: string) =>
 };
 
 export const reportInfiniteRun = async (gameId: string, difficulty: string, score: number, streak: number, wasCompleted: boolean) => {
+  const [placement, era] = difficulty.split('_');
+
+  // Log to GA4
+  logAnalyticsEvent('level_end', {
+    level_name: `${gameId}_infinite`,
+    success: wasCompleted,
+    score: score,
+    streak: streak,
+    placement: placement,
+    era: era
+  });
+
   if (import.meta.env.DEV) {
     console.log(`[DEV MODE] Would have reported infinite run for ${gameId} (${difficulty}): score=${score}, streak=${streak}, completed=${wasCompleted}`);
     return;
@@ -68,6 +91,12 @@ export const reportInfiniteRun = async (gameId: string, difficulty: string, scor
 };
 
 export const reportGameScore = async (gameType: GameType, points: number) => {
+  // Log to GA4
+  logAnalyticsEvent('post_score', {
+    score: points,
+    level_name: gameType
+  });
+
   if (import.meta.env.DEV) {
     console.log(`[DEV MODE] Would have reported ${points} points for ${gameType}`);
     return;
@@ -100,6 +129,12 @@ export const reportGameScore = async (gameType: GameType, points: number) => {
 };
 
 export const reportSupportClick = async (source: string = 'unknown') => {
+  // Log to GA4
+  logAnalyticsEvent('select_content', {
+    content_type: 'support_link',
+    item_id: source
+  });
+
   if (import.meta.env.DEV) {
     console.log(`[DEV MODE] Would have reported support click from ${source}`);
     return;
@@ -128,6 +163,13 @@ export const reportSupportClick = async (source: string = 'unknown') => {
 };
 
 export const reportShareClick = async (source: string = 'unknown') => {
+  // Log to GA4
+  logAnalyticsEvent('share', {
+    method: 'web_share',
+    content_type: 'game_result',
+    item_id: source
+  });
+
   if (import.meta.env.DEV) {
     console.log(`[DEV MODE] Would have reported share click from ${source}`);
     return;
@@ -189,6 +231,13 @@ export const reportDailyLanguage = async (language: string) => {
 };
 
 export const reportDailyCompletion = async (totalScore: number) => {
+  // Log to GA4
+  logAnalyticsEvent('level_end', {
+    level_name: 'daily_challenges',
+    success: true,
+    score: totalScore
+  });
+
   if (import.meta.env.DEV) {
     console.log(`[DEV MODE] Would have reported daily completion with score: ${totalScore}`);
     return;

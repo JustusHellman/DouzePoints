@@ -180,6 +180,17 @@ export const PrivacyPolicy: React.FC = () => {
           </div>
         </section>
 
+        <section className="space-y-6">
+          <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
+            <span className="text-pink-500 italic">13</span> {t('privacy.googleAnalytics.title')}
+          </h2>
+          <div className="pl-12 space-y-4">
+            <p>{t('privacy.googleAnalytics.p1')}</p>
+            <p>{t('privacy.googleAnalytics.p2')}</p>
+            <p>{t('privacy.googleAnalytics.p3')}</p>
+          </div>
+        </section>
+
       </main>
     </div>
   );

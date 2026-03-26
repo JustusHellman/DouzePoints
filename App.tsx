@@ -9,6 +9,7 @@ import { GameType, GlobalStats } from './data/types.ts';
 import { getActiveMasterData } from './data/activeData.ts';
 import { getStoredStats, getCurrentRank, getDailyGameState } from './utils/stats.ts';
 import { reportSupportClick } from './utils/firebaseService.ts';
+import { logAnalyticsEvent, setAnalyticsUserProperty } from './utils/analytics.ts';
 import { StatsModal } from './components/StatsModal.tsx';
 import { DailyShareModal } from './components/DailyShareModal.tsx';
 import { RankUpCelebration } from './components/RankUpCelebration.tsx';
@@ -438,6 +439,7 @@ const App: React.FC = () => {
   
   useEffect(() => {
     import('./utils/firebaseService.ts').then(m => m.reportDailyLanguage(language));
+    setAnalyticsUserProperty({ preferred_language: language });
   }, [language]);
 
   const [showStats, setShowStats] = useState(false);
@@ -563,6 +565,13 @@ const App: React.FC = () => {
     // Update HTML lang attribute
     document.documentElement.lang = language;
 
+    // Manual Page View Tracking for GA4 (important for HashRouter)
+    logAnalyticsEvent('page_view', {
+      page_path: location.pathname,
+      page_title: document.title,
+      page_location: window.location.href
+    });
+
     // Dynamic JSON-LD for Structured Data
     const existingScript = document.getElementById('dynamic-json-ld');
     if (existingScript) existingScript.remove();
@@ -633,6 +642,10 @@ const App: React.FC = () => {
       const newRank = getCurrentRank(newPoints);
       
       if (newRank.threshold > oldRank.threshold) {
+        logAnalyticsEvent('level_up', {
+          level: newRank.threshold,
+          character: newRank.title
+        });
         setTimeout(() => setRankUpData(newRank), 0);
       }
       
