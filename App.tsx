@@ -427,8 +427,10 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
 };
 
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
+import { usePlaytimeTracker } from './hooks/usePlaytimeTracker.ts';
 
 const App: React.FC = () => {
+  usePlaytimeTracker();
   const navigate = useNavigate();
   const location = useLocation();
   const prevPathRef = useRef(location.pathname);
@@ -455,7 +457,16 @@ const App: React.FC = () => {
       '/euro-links': 'EuroLinks - ESC Connections-style Puzzle',
       '/euro-guess': 'EuroGuess - Mystery Eurovision Song Quiz',
       '/euro-arena': 'EuroArena - ESC Stats Battle',
-      '/privacy': 'Privacy Policy | Douze Points'
+      '/infinite': 'Infinite Mode | Douze Points Eurovision Games',
+      '/infinite/euro-song': 'Infinite EuroSong | Eurovision Word Game',
+      '/infinite/euro-artist': 'Infinite EuroArtist | ESC Artist Guessing',
+      '/infinite/euro-guess': 'Infinite EuroGuess | Eurovision Song Quiz',
+      '/infinite/euro-arena': 'Infinite EuroArena | ESC Stats Battle',
+      '/patch-notes': 'Patch Notes | Douze Points Updates',
+      '/privacy': 'Privacy Policy | Douze Points',
+      '/terms': 'Terms of Service | Douze Points',
+      '/about': 'About Douze Points | Eurovision Fan Project',
+      '/contact': 'Contact Us | Douze Points'
     };
 
     const keywords: Record<string, string> = {
@@ -465,7 +476,9 @@ const App: React.FC = () => {
       '/euro-refrain': 'EuroRefrain, Eurovision lyrics, ESC hook puzzle, daily lyric challenge',
       '/euro-links': 'EuroLinks, Eurovision connections, ESC categories, daily link puzzle',
       '/euro-guess': 'EuroGuess, Eurovision trivia, ESC mystery song, music quiz',
-      '/euro-arena': 'EuroArena, Eurovision stats, ESC history battle, competitive trivia'
+      '/euro-arena': 'EuroArena, Eurovision stats, ESC history battle, competitive trivia',
+      '/infinite': 'Eurovision infinite mode, ESC endless games, Eurovision practice',
+      '/patch-notes': 'Douze Points updates, Eurovision game changes, ESC game news'
     };
 
     // Generate a rich description using getActiveMasterData() for the home page
@@ -485,7 +498,12 @@ const App: React.FC = () => {
       '/euro-links': 'Find the connections between 16 Eurovision artists or songs. A daily category puzzle inspired by the NYT Connections.',
       '/euro-guess': 'Listen to the mystery and guess the Eurovision entry. Multiple choice trivia for the most dedicated fans.',
       '/euro-arena': 'Battle it out in the EuroArena. Compare Eurovision stats, placings, and history in this competitive trivia mode.',
-      '/privacy': 'Read the Douze Points privacy policy and how we handle your data.'
+      '/infinite': 'Play Eurovision games without limits. Practice your skills in EuroSong, EuroArtist, EuroGuess, and EuroArena in our endless mode.',
+      '/patch-notes': 'Stay up to date with the latest changes, new features, and bug fixes in Douze Points.',
+      '/privacy': 'Read the Douze Points privacy policy and how we handle your data.',
+      '/terms': 'Read our terms of service for using the Douze Points platform.',
+      '/about': 'Learn more about Douze Points, a fan-made Eurovision song contest game project.',
+      '/contact': 'Get in touch with the Douze Points team for feedback or inquiries.'
     };
 
     const currentTitle = titles[location.pathname] || 'Douze Points | Daily ESC Challenges';
@@ -553,7 +571,7 @@ const App: React.FC = () => {
     script.id = 'dynamic-json-ld';
     script.type = 'application/ld+json';
     
-    const structuredData = {
+    const structuredData: Record<string, unknown> = {
       "@context": "https://schema.org",
       "@type": "VideoGame",
       "name": currentTitle,
@@ -562,6 +580,28 @@ const App: React.FC = () => {
       "genre": ["Puzzle Game", "Music Game"],
       "author": { "@type": "Person", "name": "Justus Hellman" }
     };
+
+    // Add Breadcrumbs
+    const pathParts = location.pathname.split('/').filter(Boolean);
+    if (pathParts.length > 0) {
+      structuredData.breadcrumb = {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": window.location.origin
+          },
+          ...pathParts.map((part, index) => ({
+            "@type": "ListItem",
+            "position": index + 2,
+            "name": part.charAt(0).toUpperCase() + part.slice(1).replace(/-/g, ' '),
+            "item": `${window.location.origin}/${pathParts.slice(0, index + 1).join('/')}`
+          }))
+        ]
+      };
+    }
 
     script.text = JSON.stringify(structuredData);
     document.head.appendChild(script);

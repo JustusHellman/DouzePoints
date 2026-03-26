@@ -18,9 +18,10 @@ interface SupportClick { date: string; count: number; sources?: Record<string, n
 interface ShareClick { date: string; count: number; sources?: Record<string, number>; }
 interface LanguageStats { date: string; total: number; languages: Record<string, number>; }
 interface CompletionStats { date: string; totalCompleted: number; distribution: Record<string, number>; }
-interface DiscoveryStats { date: string; count: number; }
+interface DiscoveryStats { date: string; count: number; sources?: Record<string, number>; }
 interface InfiniteDailyStats { date: string; gameId: string; difficulty: string; totalStarts: number; totalCompletions?: number; totalLosses?: number; totalScore?: number; totalStreak?: number; }
 interface InfiniteRun { id: string; timestamp: { toDate: () => Date } | null; gameId: string; difficulty: string; score: number; streak: number; wasCompleted: boolean; }
+interface PlaytimeStats { date: string; totalSeconds?: number; dailySeconds?: number; infiniteSeconds?: number; navigationSeconds?: number; [key: string]: any; }
 
 const getDailyAnswer = (gameType: string, dateStr: string) => {
   try {
@@ -82,6 +83,24 @@ const CustomShareTooltip = ({ active, payload, label }: { active?: boolean, payl
   );
 };
 
+const CustomDiscoveryTooltip = ({ active, payload, label }: { active?: boolean, payload?: { payload: { discoverySources?: Record<string, number>, discoveries?: number } }[], label?: string }) => {
+  if (!active || !payload?.length) return null;
+  const data = payload[0].payload; const sources = data.discoverySources || {};
+  return (
+    <div className="bg-[#1a1a2e] border border-white/20 p-4 rounded-xl shadow-xl">
+      <p className="text-white font-bold mb-2">{label}</p>
+      <p className="text-[#06B6D4] font-black text-lg mb-2">New Players: {data.discoveries}</p>
+      {Object.keys(sources).length > 0 && (
+        <div className="space-y-1 border-t border-white/10 pt-2">
+          {Object.entries(sources).map(([s, c]) => (
+            <div key={s} className="flex justify-between text-xs"><span className="text-gray-400 mr-4">{s}</span><span className="text-white font-bold">{c as number}</span></div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const LANG_COLORS = ['#EC4899','#8B5CF6','#3B82F6','#10B981','#F59E0B','#EF4444','#06B6D4','#F97316','#84CC16','#A855F7','#14B8A6','#E11D48','#6366F1','#D946EF','#0EA5E9','#22C55E','#FBBF24','#FB7185','#2DD4BF','#C084FC','#38BDF8','#4ADE80','#FACC15','#F87171','#818CF8','#E879F9','#7DD3FC','#86EFAC','#FDE047','#FCA5A5'];
 const COLORS = ['#EC4899', '#8B5CF6', '#3B82F6', '#10B981', '#F59E0B', '#EF4444'];
 
@@ -98,6 +117,9 @@ const Admin: React.FC = () => {
   const [discoveryStats, setDiscoveryStats] = useState<DiscoveryStats[]>([]);
   const [infiniteStats, setInfiniteStats] = useState<InfiniteDailyStats[]>([]);
   const [infiniteRuns, setInfiniteRuns] = useState<InfiniteRun[]>([]);
+  const [playtimeStats, setPlaytimeStats] = useState<PlaytimeStats[]>([]);
+  const [playtimeMode, setPlaytimeMode] = useState<'summed' | 'individual'>('summed');
+  const [playtimeUnit, setPlaytimeUnit] = useState<'minutes' | 'hours'>('minutes');
   const [daysSpan, setDaysSpan] = useState(30);
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
@@ -136,7 +158,7 @@ const Admin: React.FC = () => {
           return [];
         }
       };
-      const [gs, sc, sh, ls, cs, ds, is, irSnap] = await Promise.all([
+      const [gs, sc, sh, ls, cs, ds, is, irSnap, ps] = await Promise.all([
         safeFetch<DailyStats>('game_stats'),
         safeFetch<SupportClick>('support_clicks'),
         safeFetch<ShareClick>('share_clicks'),
@@ -144,7 +166,8 @@ const Admin: React.FC = () => {
         safeFetch<CompletionStats>('completion_stats'),
         safeFetch<DiscoveryStats>('discoveries'),
         safeFetch<InfiniteDailyStats>('infinite_daily_stats'),
-        getDocs(query(collection(db, 'infinite_runs'), where('timestamp', '>=', startDate), orderBy('timestamp', 'desc'))).catch(e => { console.warn('Failed to fetch infinite_runs:', e); return { docs: [] }; })
+        getDocs(query(collection(db, 'infinite_runs'), where('timestamp', '>=', startDate), orderBy('timestamp', 'desc'))).catch(e => { console.warn('Failed to fetch infinite_runs:', e); return { docs: [] }; }),
+        safeFetch<PlaytimeStats>('playtime_stats')
       ]);
       setStats(gs);
       setSupportClicks(sc);
@@ -153,6 +176,7 @@ const Admin: React.FC = () => {
       setCompletionStats(cs);
       setDiscoveryStats(ds);
       setInfiniteStats(is);
+      setPlaytimeStats(ps);
 
       const ir: InfiniteRun[] = [];
       irSnap.docs.forEach((doc) => ir.push(doc.data() as InfiniteRun));
@@ -188,7 +212,8 @@ const Admin: React.FC = () => {
       supportSources: sup?.sources || {},
       shareClicks: sh?.count || 0,
       shareSources: sh?.sources || {},
-      newPlayers: disc?.count || 0
+      discoveries: disc?.count || 0,
+      discoverySources: disc?.sources || {}
     };
   });
 
@@ -380,6 +405,38 @@ const Admin: React.FC = () => {
     const mid = Math.floor(streaks.length / 2);
     return streaks.length % 2 !== 0 ? streaks[mid] : (streaks[mid - 1] + streaks[mid]) / 2;
   }, [infiniteRuns]);
+
+  const playtimeChartData = useMemo(() => {
+    return playtimeStats.map(stat => {
+      const divisor = playtimeUnit === 'hours' ? 3600 : 60;
+      const data: Record<string, any> = { date: stat.date };
+      
+      if (playtimeMode === 'summed') {
+        data.Total = Math.round(((stat.totalSeconds || 0) / divisor) * 10) / 10;
+        data.Daily = Math.round(((stat.dailySeconds || 0) / divisor) * 10) / 10;
+        data.Infinite = Math.round(((stat.infiniteSeconds || 0) / divisor) * 10) / 10;
+        data.Navigation = Math.round(((stat.navigationSeconds || 0) / divisor) * 10) / 10;
+      } else {
+        Object.entries(stat).forEach(([key, value]) => {
+          if (key !== 'date' && key !== 'lastUpdated' && !key.endsWith('Seconds')) {
+            data[key] = Math.round(((value as number) / divisor) * 10) / 10;
+          }
+        });
+      }
+      return data;
+    });
+  }, [playtimeStats, playtimeMode, playtimeUnit]);
+
+  const playtimeKeys = useMemo(() => {
+    if (playtimeChartData.length === 0) return [];
+    const keys = new Set<string>();
+    playtimeChartData.forEach(d => {
+      Object.keys(d).forEach(k => {
+        if (k !== 'date') keys.add(k);
+      });
+    });
+    return Array.from(keys);
+  }, [playtimeChartData]);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center text-white bg-[#050510]">Loading...</div>;
 
@@ -895,20 +952,9 @@ const Admin: React.FC = () => {
                   <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
                   <XAxis dataKey="date" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
                   <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
-                  <Tooltip
-                    content={({ active, payload, label }) => {
-                      if (!active || !payload?.length) return null;
-                      const data = payload[0].payload;
-                      return (
-                        <div className="bg-[#1a1a2e] border border-white/20 p-4 rounded-xl shadow-xl">
-                          <p className="text-white font-bold mb-1">{label}</p>
-                          <p className="text-pink-500 font-black text-lg">{data.newPlayers} New Players</p>
-                        </div>
-                      );
-                    }}
-                  />
+                  <Tooltip content={<CustomDiscoveryTooltip />} />
                   <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                  <Line type="monotone" dataKey="newPlayers" name="New Players" stroke="#EC4899" strokeWidth={3} dot={{ r: 6, fill: '#EC4899', strokeWidth: 2, stroke: '#000' }} activeDot={{ r: 8 }} />
+                  <Line type="monotone" dataKey="discoveries" name="New Players" stroke="#06B6D4" strokeWidth={3} dot={{ r: 6, fill: '#06B6D4', strokeWidth: 2, stroke: '#000' }} activeDot={{ r: 8 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -993,6 +1039,59 @@ const Admin: React.FC = () => {
                   <Line type="monotone" dataKey="supportClicks" name="Support Clicks" stroke="#FFDD00" strokeWidth={3} dot={{ r: 6, fill: '#FFDD00', strokeWidth: 2, stroke: '#000' }} activeDot={{ r: 8 }} />
                 </LineChart>
               </ResponsiveContainer>
+            </div>
+          </section>
+
+          {/* 9. Playtime Tracking */}
+          <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <h2 className="text-xl font-black uppercase tracking-widest text-white">Playtime Tracking</h2>
+              <div className="flex flex-col sm:flex-row sm:items-center flex-wrap gap-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-bold uppercase tracking-widest text-gray-500">View:</span>
+                  <select value={playtimeMode} onChange={(e) => setPlaytimeMode(e.target.value as 'summed' | 'individual')} className="bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-white text-sm font-bold outline-none focus:border-pink-500 appearance-none cursor-pointer">
+                    <option value="summed" className="bg-[#1a1a2e] text-white">Summed</option>
+                    <option value="individual" className="bg-[#1a1a2e] text-white">Individual Pages</option>
+                  </select>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Unit:</span>
+                  <select value={playtimeUnit} onChange={(e) => setPlaytimeUnit(e.target.value as 'minutes' | 'hours')} className="bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-white text-sm font-bold outline-none focus:border-pink-500 appearance-none cursor-pointer">
+                    <option value="minutes" className="bg-[#1a1a2e] text-white">Minutes</option>
+                    <option value="hours" className="bg-[#1a1a2e] text-white">Hours</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="h-[400px] w-full">
+              {playtimeChartData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={playtimeChartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
+                    <XAxis dataKey="date" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
+                    <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: '#1a1a2e', border: '1px solid #ffffff20', borderRadius: '8px' }}
+                      itemStyle={{ color: '#fff', fontWeight: 'bold' }}
+                    />
+                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                    {playtimeKeys.map((key, index) => (
+                      <Line
+                        key={key}
+                        type="monotone"
+                        dataKey={key}
+                        name={key}
+                        stroke={LANG_COLORS[index % LANG_COLORS.length]}
+                        strokeWidth={key === 'Total' ? 4 : 2}
+                        dot={{ r: key === 'Total' ? 4 : 2 }}
+                        activeDot={{ r: key === 'Total' ? 6 : 4 }}
+                      />
+                    ))}
+                  </LineChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-500 italic">No playtime data available</div>
+              )}
             </div>
           </section>
         </div>

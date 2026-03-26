@@ -157,6 +157,10 @@
           "type": "integer",
           "description": "Total number of new players discovered on this day."
         },
+        "sources": {
+          "type": "object",
+          "description": "Breakdown of new players by the game they first played."
+        },
         "lastUpdated": {
           "type": "string",
           "format": "date-time",
@@ -164,6 +168,40 @@
         }
       },
       "required": ["date", "count", "lastUpdated"]
+    },
+    "PlaytimeStats": {
+      "title": "Playtime Stats",
+      "description": "Daily aggregated playtime statistics.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date in YYYY-MM-DD format."
+        },
+        "totalSeconds": {
+          "type": "integer",
+          "description": "Total seconds spent across the app."
+        },
+        "dailySeconds": {
+          "type": "integer",
+          "description": "Total seconds spent in daily games."
+        },
+        "infiniteSeconds": {
+          "type": "integer",
+          "description": "Total seconds spent in infinite games."
+        },
+        "navigationSeconds": {
+          "type": "integer",
+          "description": "Total seconds spent in navigation pages."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time this record was updated."
+        }
+      },
+      "required": ["date", "lastUpdated"]
     }
   },
   "firestore": {
@@ -190,6 +228,10 @@
     "/discoveries/{dateId}": {
       "schema": "DailyDiscoveryStats",
       "description": "Collection of daily new player discovery counts."
+    },
+    "/playtime_stats/{dateId}": {
+      "schema": "PlaytimeStats",
+      "description": "Collection of daily playtime tracking."
     }
   }
 }

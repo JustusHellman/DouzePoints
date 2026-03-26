@@ -323,11 +323,28 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
   };
 
   const handleShare = useCallback(() => {
-    const placementStr = t(`infinite.placements.${difficulty.placement}`);
-    const yearStr = t(`infinite.years.${difficulty.year}`);
-    const modeStr = mode === 'infinite' ? `[${placementStr} • ${yearStr}] ` : '';
-    const dateStr = mode === 'infinite' ? `${t('infinite.streak')}: ${infiniteState?.currentStreak || 0}` : getDayString();
-    const shareText = `${won ? '🏆' : '❌'} ${modeStr}EuroArena • ${dateStr}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')} • ${guesses.length}/${MAX_GUESSES} ${t('common.attempts')}\n\n${historyEmoji}\n\n${window.location.origin}/euro-arena`;
+    if (mode === 'infinite' && infiniteState) {
+      const placementStr = t(`infinite.placements.${difficulty.placement}`);
+      const yearStr = t(`infinite.years.${difficulty.year}`);
+      
+      const isExhausted = infiniteState.currentIndex + 1 >= infiniteState.shuffledIds.length;
+      const isSuccess = won && isExhausted;
+      
+      const score = infiniteState.currentScore + (won ? getPointsInfo.points : 0);
+      const streak = infiniteState.currentStreak + (won ? 1 : 0);
+      
+      let shareText = '';
+      if (isSuccess) {
+        shareText = `I just finished all entries in Encore for ${yearStr} and ${placementStr} with a score of ${score} and streak of ${streak}\n\n${window.location.origin}/euro-arena`;
+      } else {
+        shareText = `I just reached a streak of ${streak} and scored ${score} points in Encore at ${yearStr} and ${placementStr}\n\n${window.location.origin}/euro-arena`;
+      }
+      navigator.clipboard.writeText(shareText);
+      return;
+    }
+
+    const dateStr = getDayString();
+    const shareText = `${won ? '🏆' : '❌'} EuroArena • ${dateStr}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')} • ${guesses.length}/${MAX_GUESSES} ${t('common.attempts')}\n\n${historyEmoji}\n\n${window.location.origin}/euro-arena`;
     navigator.clipboard.writeText(shareText);
   }, [mode, t, difficulty, infiniteState, won, getPointsInfo.points, guesses.length, historyEmoji]);
 
@@ -407,6 +424,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
         }}
         onPlayAgain={handleTryAgain}
         onReturn={onReturn}
+        onShare={handleShare}
       />
     );
   }
@@ -425,6 +443,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
           runStreak={infiniteState ? (infiniteState.currentStreak + (won ? 1 : 0)) : undefined}
           onContinue={handleContinue}
           onTryAgain={handleTryAgain}
+          hideShare={mode === 'infinite' && won && !!infiniteState && infiniteState.currentIndex + 1 < infiniteState.shuffledIds.length}
         />
       ) : (
         <>

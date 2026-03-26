@@ -22,7 +22,7 @@ export const reportInfiniteStart = async (gameId: string, difficulty: string) =>
     }, { merge: true });
     
     // Also report discovery if this is their first game ever
-    reportNewPlayerDiscovery();
+    reportNewPlayerDiscovery(`infinite_${gameId}_${difficulty}`);
   } catch (error) {
     console.error('Failed to report infinite start:', error);
   }
@@ -221,9 +221,58 @@ export const reportDailyCompletion = async (totalScore: number) => {
   }
 };
 
-export const reportNewPlayerDiscovery = async () => {
+export const reportPlaytime = async (counters: Record<string, number>) => {
   if (import.meta.env.DEV) {
-    console.log(`[DEV MODE] Would have reported new player discovery`);
+    console.log(`[DEV MODE] Would have reported playtime:`, counters);
+    return;
+  }
+
+  const date = new Date().toISOString().split('T')[0];
+
+  try {
+    const docRef = doc(db, 'playtime_stats', date);
+    
+    const updates: Record<string, any> = {
+      date,
+      lastUpdated: serverTimestamp()
+    };
+    
+    let totalSeconds = 0;
+    let dailySeconds = 0;
+    let infiniteSeconds = 0;
+    let navigationSeconds = 0;
+
+    for (const [key, seconds] of Object.entries(counters)) {
+      if (seconds <= 0) continue;
+      updates[key] = increment(seconds);
+      totalSeconds += seconds;
+      
+      if (key.endsWith('_daily')) {
+        dailySeconds += seconds;
+      } else if (key.endsWith('_infinite')) {
+        infiniteSeconds += seconds;
+      } else {
+        navigationSeconds += seconds;
+      }
+    }
+
+    if (totalSeconds === 0) return;
+
+    updates['totalSeconds'] = increment(totalSeconds);
+    updates['dailySeconds'] = increment(dailySeconds);
+    updates['infiniteSeconds'] = increment(infiniteSeconds);
+    updates['navigationSeconds'] = increment(navigationSeconds);
+
+    await setDoc(docRef, updates, { merge: true });
+  } catch (error) {
+    console.error('Failed to report playtime:', error);
+  }
+};
+
+export const reportNewPlayerDiscovery = async (source: string = 'unknown') => {
+
+  if (import.meta.env.DEV) {
+    console.log(`[DEV MODE] Would have reported new player discovery from ${source}`);
     return;
   }
 
@@ -239,12 +288,13 @@ export const reportNewPlayerDiscovery = async () => {
     await setDoc(docRef, {
       date,
       count: increment(1),
+      [`sources.${source}`]: increment(1),
       lastUpdated: serverTimestamp()
     }, { merge: true });
     
     localStorage.setItem(storageKey, 'true');
     if (import.meta.env.DEV) {
-      console.log(`Reported new player discovery on ${date}`);
+      console.log(`Reported new player discovery on ${date} from ${source}`);
     }
   } catch (error) {
     console.error('Failed to report discovery to Firebase:', error instanceof Error ? error.message : String(error));

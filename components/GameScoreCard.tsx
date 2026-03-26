@@ -29,6 +29,7 @@ interface GameScoreCardProps {
   runStreak?: number;
   onContinue?: () => void;
   onTryAgain?: () => void;
+  hideShare?: boolean;
 }
 
 const PerformanceLogRenderer: React.FC<{ 
@@ -131,7 +132,8 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
   runScore,
   runStreak,
   onContinue,
-  onTryAgain
+  onTryAgain,
+  hideShare = false
 }) => {
   const { t } = useTranslation();
   const [showCopied, setShowCopied] = useState(false);
@@ -157,7 +159,7 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
   )).join(' ');
 
   const handleShare = () => {
-    reportShareClick(`GameScoreCard_${gameTitle.replace(/\s+/g, '')}`);
+    reportShareClick(mode === 'infinite' ? `GameScoreCard_Infinite_${gameTitle.replace(/\s+/g, '')}` : `GameScoreCard_${gameTitle.replace(/\s+/g, '')}`);
     if (onShare) {
       onShare();
       setShowCopied(true);
@@ -260,6 +262,18 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
               </div>
             </div>
           )}
+
+          {!hideShare && mode === 'infinite' && (
+            <div className="mt-5">
+              <button 
+                onClick={handleShare} 
+                className="w-full bg-white text-black hover:bg-gray-200 py-4 rounded-xl font-black uppercase text-[11px] sm:text-[12px] tracking-[0.15em] transition-all flex items-center justify-center gap-2 active:scale-95 shadow-xl shadow-white/10"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                {showCopied ? t('scorecard.resultsCopied') : t('scorecard.shareResult')}
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="px-5 sm:px-8 py-5 space-y-5">
@@ -307,6 +321,12 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
             </div>
           )}
 
+          {distribution && mode !== 'infinite' && (
+            <div className="animate-in fade-in duration-1000 delay-300">
+              <PointsDistribution distribution={distribution} />
+            </div>
+          )}
+
           <div className="text-center">
             <p className="text-[8px] sm:text-[10px] text-gray-600 font-black uppercase tracking-[0.4em] mb-3">{t('scorecard.performanceLog')}</p>
             <div className="bg-black/40 p-4 rounded-2xl border border-white/10 inline-block mx-auto min-w-[180px] shadow-inner text-white mb-4">
@@ -318,12 +338,12 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
               />
             </div>
             
-            {mode !== 'infinite' && (
+            {!hideShare && mode !== 'infinite' && (
               <button 
                 onClick={handleShare} 
-                className="w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white/90 py-4 rounded-xl font-black uppercase text-[10px] sm:text-[11px] tracking-[0.15em] transition-all flex items-center justify-center gap-2 active:scale-95"
+                className="w-full bg-white text-black hover:bg-gray-200 py-4 rounded-xl font-black uppercase text-[11px] sm:text-[12px] tracking-[0.15em] transition-all flex items-center justify-center gap-2 active:scale-95 shadow-xl shadow-white/10"
               >
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
                 {showCopied ? t('scorecard.resultsCopied') : t('scorecard.shareResult')}
               </button>
             )}
@@ -333,12 +353,6 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
              <div className="animate-in fade-in duration-700 pt-1">
                 {extraInfo}
              </div>
-          )}
-
-          {distribution && mode !== 'infinite' && (
-            <div className="animate-in fade-in duration-1000 delay-300">
-              <PointsDistribution distribution={distribution} />
-            </div>
           )}
 
           {mode !== 'infinite' && (

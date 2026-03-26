@@ -220,7 +220,7 @@ export const updateGameStats = (gameType: GameType, won: boolean, performanceMet
   // If total played was 0 before this update, it's their first game
   // (Note: we already incremented stats[gameKey].played above, so we check if it was 1 after increment)
   if (totalPlayedBefore === 1) {
-    reportNewPlayerDiscovery();
+    reportNewPlayerDiscovery(`daily_${gameKey}`);
   }
 
   try {

@@ -407,13 +407,23 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
     if (isInfinite && infiniteState) {
       const placementLabel = t(`infinite.placements.${difficulty.placement}`);
       const yearLabel = t(`infinite.years.${difficulty.year}`);
-      const diffLabel = `${placementLabel} • ${yearLabel}`;
-      shareText = `🏆 EuroGuess Infinite • ${diffLabel}\n${t('scorecard.streak')}: ${infiniteState.currentStreak}\n${t('scorecard.score')}: ${infiniteState.currentScore}\n\n${window.location.origin}/euro-guess`;
+      
+      const isExhausted = infiniteState.currentIndex + 1 >= infiniteState.shuffledIds.length;
+      const isSuccess = won && isExhausted;
+      
+      const score = infiniteState.currentScore + (won ? getPointsInfo.points : 0);
+      const streak = infiniteState.currentStreak + (won ? 1 : 0);
+      
+      if (isSuccess) {
+        shareText = `I just finished all entries in Encore for ${yearLabel} and ${placementLabel} with a score of ${score} and streak of ${streak}\n\n${window.location.origin}/euro-guess`;
+      } else {
+        shareText = `I just reached a streak of ${streak} and scored ${score} points in Encore at ${yearLabel} and ${placementLabel}\n\n${window.location.origin}/euro-guess`;
+      }
     } else {
       shareText = `${won ? '🏆' : '❌'} EuroGuess • ${getDayString()}\n${t('scorecard.attempts')}: ${won ? attempts.length : 'X'}/${MAX_ATTEMPTS}\n\n${window.location.origin}/euro-guess`;
     }
     navigator.clipboard.writeText(shareText);
-  }, [isInfinite, infiniteState, t, difficulty, won, attempts.length]);
+  }, [isInfinite, infiniteState, t, difficulty, won, attempts.length, getPointsInfo.points]);
 
   const hints = useMemo(() => [
     { label: t('guesser.hintLabels.year'), value: song.year },
@@ -444,6 +454,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
         }}
         onPlayAgain={handleTryAgain}
         onReturn={onReturn}
+        onShare={handleShare}
       />
     );
   }
@@ -459,6 +470,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
           onShare={handleShare}
           runScore={infiniteState ? (infiniteState.currentScore + (won ? getPointsInfo.points : 0)) : undefined}
           runStreak={infiniteState ? (infiniteState.currentStreak + (won ? 1 : 0)) : undefined}
+          hideShare={mode === 'infinite' && won && !!infiniteState && infiniteState.currentIndex + 1 < infiniteState.shuffledIds.length}
         />
       ) : (
         <>

@@ -87,6 +87,7 @@ service cloud.firestore {
       return data.date is string &&
              data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
              (!('count' in data) || data.count is number) &&
+             (!('sources' in data) || data.sources is map) &&
              data.lastUpdated is timestamp;
     }
 
@@ -110,6 +111,16 @@ service cloud.firestore {
              data.streak is number &&
              data.wasCompleted is bool &&
              data.timestamp is timestamp;
+    }
+
+    function isValidPlaytimeStatsDoc(data) {
+      return data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             (!('totalSeconds' in data) || data.totalSeconds is number) &&
+             (!('dailySeconds' in data) || data.dailySeconds is number) &&
+             (!('infiniteSeconds' in data) || data.infiniteSeconds is number) &&
+             (!('navigationSeconds' in data) || data.navigationSeconds is number) &&
+             data.lastUpdated is timestamp;
     }
 
     match /game_stats/{statsId} {
@@ -189,6 +200,15 @@ service cloud.firestore {
       
       // Runs are immutable
       allow update, delete: if false;
+    }
+
+    match /playtime_stats/{dateId} {
+      allow read: if isAdmin();
+      
+      allow create: if isValidPlaytimeStatsDoc(request.resource.data);
+      
+      allow update: if isValidPlaytimeStatsDoc(request.resource.data) &&
+                      (!('date' in resource.data) || request.resource.data.date == resource.data.date);
     }
 
     // Default deny

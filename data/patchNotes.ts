@@ -42,5 +42,11 @@ export const PATCH_NOTES: PatchNote[] = [
     date: "2026-03-23",
     title: "ENCORE - Infinite mode",
     description: "It's time to release the game mode I've been longing for and that has been requested several times...\n\nENCORE\nThe new infinite game mode where you can set your own settings on which placements and era you'd like to play with and select the game you'd like to play out of EuroSong, EuroArtist, EuroGuess and EuroArena! If you actually manage to get through all entries in any game mode, I'll be in shock and you'll be a true Eurovision legend!",
+  },
+  {
+    id: "7",
+    date: "2026-03-26",
+    title: "General update",
+    description: "Thank you all so much for playing the new infinite mode 'Encore' and enjoying it! It really makes me happy to see! I've made some smaller tweeks and fixes, hopefully nothing you'll really notice!",
   }
 ];

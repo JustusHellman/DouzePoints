@@ -545,11 +545,28 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
 
   const handleShare = useCallback(() => {
     const gamePath = gameId === 'eurosong' ? '/euro-song' : '/euro-artist';
-    const placementStr = t(`infinite.placements.${difficulty.placement}`);
-    const yearStr = t(`infinite.years.${difficulty.year}`);
-    const modeStr = mode === 'infinite' ? `[${placementStr} • ${yearStr}] ` : '';
-    const dateStr = mode === 'infinite' ? `${t('infinite.streak')}: ${infiniteState?.currentStreak || 0}` : getDayString();
-    const shareText = `${won ? '🏆' : '❌'} ${modeStr}${title} • ${dateStr}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')} • ${guesses.length}/${MAX_ATTEMPTS} ${t('common.attempts')}\n\n${historyEmoji}\n\n${window.location.origin}${gamePath}`;
+    if (mode === 'infinite' && infiniteState) {
+      const placementStr = t(`infinite.placements.${difficulty.placement}`);
+      const yearStr = t(`infinite.years.${difficulty.year}`);
+      
+      const isExhausted = infiniteState.currentIndex + 1 >= infiniteState.shuffledIds.length;
+      const isSuccess = won && isExhausted;
+      
+      const score = infiniteState.currentScore + (won ? getPointsInfo.points : 0);
+      const streak = infiniteState.currentStreak + (won ? 1 : 0);
+      
+      let shareText = '';
+      if (isSuccess) {
+        shareText = `I just finished all entries in Encore for ${yearStr} and ${placementStr} with a score of ${score} and streak of ${streak}\n\n${window.location.origin}${gamePath}`;
+      } else {
+        shareText = `I just reached a streak of ${streak} and scored ${score} points in Encore at ${yearStr} and ${placementStr}\n\n${window.location.origin}${gamePath}`;
+      }
+      navigator.clipboard.writeText(shareText);
+      return;
+    }
+
+    const dateStr = getDayString();
+    const shareText = `${won ? '🏆' : '❌'} ${title} • ${dateStr}\n${t('scorecard.score')}: ${getPointsInfo.points} ${t('common.pointsShort')} • ${guesses.length}/${MAX_ATTEMPTS} ${t('common.attempts')}\n\n${historyEmoji}\n\n${window.location.origin}${gamePath}`;
     navigator.clipboard.writeText(shareText);
   }, [won, getPointsInfo, guesses, historyEmoji, t, mode, difficulty, infiniteState, gameId, title]);
 
@@ -592,6 +609,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
         }}
         onPlayAgain={handleTryAgain}
         onReturn={onReturn}
+        onShare={handleShare}
       />
     );
   }
@@ -617,6 +635,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
           runStreak={infiniteState ? (infiniteState.currentStreak + (won ? 1 : 0)) : undefined}
           onContinue={handleContinue}
           onTryAgain={handleTryAgain}
+          hideShare={mode === 'infinite' && won && !!infiniteState && infiniteState.currentIndex + 1 < infiniteState.shuffledIds.length}
         />
       ) : (
         <>
