@@ -167,7 +167,7 @@ export const fr: TranslationSchema = {
   },
   privacy: {
     title: "Politique de Confidentialité",
-    lastUpdated: "Février 2026",
+    lastUpdated: "Mars 2026",
     introduction: {
       title: "Introduction",
       p1: "Bienvenue sur Douze Points (www.douzepoints.net).",
@@ -183,7 +183,7 @@ export const fr: TranslationSchema = {
       cookiesTitle: "b) Stockage local",
       cookiesDesc1: "Nous utilisons le stockage local de votre navigateur exclusivement pour enregistrer votre progression dans le jeu, vos scores et vos statistiques.",
       cookiesDesc2: "Ces données sont stockées uniquement sur votre appareil, ne sont pas transmises à nos serveurs et peuvent être supprimées en effaçant les données de votre navigateur.",
-      cookiesDesc3: "Nous n'utilisons pas de cookies de suivi ni de cookies publicitaires tiers."
+      cookiesDesc3: "Nous utilisons Google Analytics pour nous aider à comprendre comment les utilisateurs interagissent avec notre site Web. Cela nous aide à améliorer l'expérience utilisateur et à comprendre quelles fonctionnalités sont les plus populaires."
     },
     legalBasis: {
       title: "Base juridique (RGPD)",
@@ -240,6 +240,12 @@ export const fr: TranslationSchema = {
       p1: "Pour nous aider à comprendre comment la communauté se comporte et pour améliorer l'équilibre du jeu, Douze Points collecte des statistiques de jeu anonymes.",
       p2: "Lorsque vous terminez un jeu, nous enregistrons le type de jeu, le score obtenu et la date. Ces informations sont agrégées et ne contiennent aucune information personnellement identifiable (telle que votre nom, votre adresse IP ou votre e-mail).",
       p3: "Nous utilisons Google Firebase (un service fourni par Google) pour stocker et traiter ces statistiques agrégées. Ces données sont utilisées uniquement dans le but d'analyser la popularité du jeu et les niveaux de difficulté."
+    },
+    googleAnalytics: {
+      title: "Google Analytics",
+      p1: "Nous utilisons Google Analytics pour recueillir des informations sur la façon dont les utilisateurs interagissent avec notre site Web. Cela nous aide à améliorer l'expérience utilisateur et à comprendre quelles fonctionnalités sont les plus populaires.",
+      p2: "Google Analytics utilise des cookies et des technologies similaires pour collecter des données telles que votre adresse IP, votre type de navigateur, les informations sur votre appareil et les pages consultées. Ces données sont traitées par Google conformément à sa politique de confidentialité.",
+      p3: "Vous pouvez désactiver Google Analytics en utilisant le module complémentaire de navigateur pour la désactivation de Google Analytics ou en ajustant les paramètres de votre navigateur."
     }
   },
   about: {
@@ -282,74 +288,74 @@ export const fr: TranslationSchema = {
     }
   },
   contact: {
-    title: "Contact Us",
+    title: "Contactez-nous",
     methods: {
-      title: "Get in Touch",
-      p1: "Have a question, feedback, or found a bug? I'd love to hear from you! You can reach me via email or find me in the Eurovision community."
+      title: "Entrer en contact",
+      p1: "Vous avez une question, un commentaire ou vous avez trouvé un bug ? J'aimerais avoir de vos nouvelles ! Vous pouvez me contacter par e-mail ou me trouver dans la communauté Eurovision."
     },
     faq: {
-      title: "Frequently Asked Questions",
-      q1: "When do the games reset?",
-      a1: "The daily challenges reset every day at midnight (UTC).",
-      q2: "How is my rank calculated?",
-      a2: "Your rank is based on your total career points accumulated across all games. The more you play and the better you perform, the higher you climb!",
-      q3: "Can I suggest a song or artist?",
-      a3: "Absolutely! I am always looking to improve our database. Send me an email with your suggestions.",
-      q4: "Is Douze Points free to play?",
-      a4: "Yes, Douze Points is completely free for everyone.",
-      q5: "How do I share my results?",
-      a5: "After completing a game, you'll see a 'Share' button."
+      title: "Questions fréquemment posées",
+      q1: "Quand les jeux sont-ils réinitialisés ?",
+      a1: "Les défis quotidiens sont réinitialisés chaque jour à minuit (UTC).",
+      q2: "Comment mon rang est-il calculé ?",
+      a2: "Votre rang est basé sur le total de vos points de carrière accumulés dans tous les jeux. Plus vous jouez et mieux vous performez, plus vous montez haut !",
+      q3: "Puis-je suggérer une chanson ou un artiste ?",
+      a3: "Absolument ! Je cherche toujours à améliorer notre base de données. Envoyez-moi un e-mail avec vos suggestions.",
+      q4: "Douze Points est-il gratuit ?",
+      a4: "Oui, Douze Points est entièrement gratuit pour tout le monde.",
+      q5: "Comment partager mes résultats ?",
+      a5: "Après avoir terminé un jeu, vous verrez un bouton 'Partager'."
     },
     feedback: {
-      title: "Feedback",
-      p1: "Your feedback helps me make Douze Points better for everyone. Don't hesitate to share your thoughts on how I can improve the experience."
+      title: "Commentaires",
+      p1: "Vos commentaires m'aident à rendre Douze Points meilleur pour tout le monde. N'hésitez pas à partager vos réflexions sur la façon dont je peux améliorer l'expérience."
     }
   },
   terms: {
-    lastUpdated: "February 2026",
-    title: "Terms of Service",
+    lastUpdated: "Mars 2026",
+    title: "Conditions d'utilisation",
     acceptance: {
-      title: "Acceptance of Terms",
-      p1: "By accessing or using Douze Points (www.douzepoints.net), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the website."
+      title: "Acceptation des conditions",
+      p1: "En accédant ou en utilisant Douze Points (www.douzepoints.net), vous acceptez d'être lié par ces Conditions d'utilisation. Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser le site web."
     },
     description: {
-      title: "Description of Service",
-      p1: "Douze Points is a fan-made website providing Eurovision-themed games and trivia for entertainment purposes. The service is provided 'as is' and may be modified or discontinued at any time."
+      title: "Description du service",
+      p1: "Douze Points est un site web créé par des fans proposant des jeux et des anecdotes sur le thème de l'Eurovision à des fins de divertissement. Le service est fourni 'tel quel' et peut être modifié ou interrompu à tout moment."
     },
     ip: {
-      title: "Intellectual Property",
-      p1: "The Eurovision Song Contest and related trademarks are the property of the European Broadcasting Union (EBU). This website is not affiliated with, endorsed by, or sponsored by the EBU.",
-      p2: "All original content, code, and design on this website are the property of the website owner. You may not reproduce or distribute any part of this website without permission."
+      title: "Propriété intellectuelle",
+      p1: "L'Eurovision Song Contest et les marques associées sont la propriété de l'Union Européenne de Radio-Télévision (UER). Ce site web n'est pas affilié, approuvé ou parrainé par l'UER.",
+      p2: "Tout le contenu original, le code et la conception de ce site web sont la propriété du propriétaire du site web. Vous ne pouvez reproduire ou distribuer aucune partie de ce site web sans autorisation."
     },
     conduct: {
-      title: "User Conduct",
-      p1: "You agree to use the website only for lawful purposes and in a way that does not infringe the rights of others. Prohibited behavior includes:",
+      title: "Conduite de l'utilisateur",
+      p1: "Vous acceptez d'utiliser le site web uniquement à des fins licites et d'une manière qui ne porte pas atteinte aux droits d'autrui. Les comportements interdits incluent :",
       items: [
-        "Attempting to interfere with the website's operation",
-        "Using automated scripts to collect data or play games",
-        "Impersonating others or providing false information",
-        "Engaging in any activity that could damage the website's reputation"
+        "Tenter d'interférer avec le fonctionnement du site web",
+        "Utilisation de scripts automatisés pour collecter des données ou jouer à des jeux",
+        "Usurper l'identité d'autrui ou fournir de fausses informations",
+        "S'engager dans toute activité susceptible de nuire à la réputation du site web"
       ]
     },
     disclaimer: {
-      title: "Disclaimer of Warranties",
-      p1: "The website is provided on an 'as is' and 'as available' basis. We make no warranties, express or implied, regarding the accuracy, reliability, or availability of the service."
+      title: "Exclusion de garanties",
+      p1: "Le site web est fourni 'tel quel' et 'selon disponibilité'. Nous ne donnons aucune garantie, expresse ou implicite, concernant l'exactitude, la fiabilité ou la disponibilité du service."
     },
     limitation: {
-      title: "Limitation of Liability",
-      p1: "To the maximum extent permitted by law, the website owner shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of the website."
+      title: "Limitation de responsabilité",
+      p1: "Dans toute la mesure permise par la loi, le propriétaire du site web ne sera pas responsable des dommages directs, indirects, accessoires ou consécutifs découlant de votre utilisation du site web."
     },
     governingLaw: {
-      title: "Governing Law",
-      p1: "These Terms of Service shall be governed by and construed in accordance with the laws of Sweden."
+      title: "Loi applicable",
+      p1: "Ces Conditions d'utilisation seront régies et interprétées conformément aux lois de la Suède."
     },
     changes: {
-      title: "Changes to Terms",
-      p1: "We reserve the right to modify these Terms of Service at any time. Your continued use of the website after any changes constitutes acceptance of the new terms."
+      title: "Modifications des conditions",
+      p1: "Nous nous réservons le droit de modifier ces Conditions d'utilisation à tout moment. Toute mise à jour sera publiée sur cette page avec une date de 'Dernière mise à jour' révisée."
     },
     contact: {
-      title: "Contact Information",
-      p1: "If you have any questions about these Terms of Service, please contact us at: douzepointsgame@gmail.com"
+      title: "Informations de contact",
+      p1: "Si vous avez des questions sur ces Conditions d'utilisation, veuillez nous contacter à l'adresse : douzepointsgame@gmail.com"
     }
   },
   ranks: {

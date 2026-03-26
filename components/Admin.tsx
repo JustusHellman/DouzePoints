@@ -21,7 +21,7 @@ interface CompletionStats { date: string; totalCompleted: number; distribution: 
 interface DiscoveryStats { date: string; count: number; sources?: Record<string, number>; }
 interface InfiniteDailyStats { date: string; gameId: string; difficulty: string; totalStarts: number; totalCompletions?: number; totalLosses?: number; totalScore?: number; totalStreak?: number; }
 interface InfiniteRun { id: string; timestamp: { toDate: () => Date } | null; gameId: string; difficulty: string; score: number; streak: number; wasCompleted: boolean; }
-interface PlaytimeStats { date: string; totalSeconds?: number; dailySeconds?: number; infiniteSeconds?: number; navigationSeconds?: number; [key: string]: any; }
+interface PlaytimeStats { date: string; totalSeconds?: number; dailySeconds?: number; infiniteSeconds?: number; navigationSeconds?: number; [key: string]: string | number | boolean | undefined | null | object; }
 
 const getDailyAnswer = (gameType: string, dateStr: string) => {
   try {
@@ -409,7 +409,7 @@ const Admin: React.FC = () => {
   const playtimeChartData = useMemo(() => {
     return playtimeStats.map(stat => {
       const divisor = playtimeUnit === 'hours' ? 3600 : 60;
-      const data: Record<string, any> = { date: stat.date };
+      const data: Record<string, number | string> = { date: stat.date };
       
       if (playtimeMode === 'summed') {
         data.Total = Math.round(((stat.totalSeconds || 0) / divisor) * 10) / 10;

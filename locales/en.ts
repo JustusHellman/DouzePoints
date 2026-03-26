@@ -167,7 +167,7 @@ export const en: TranslationSchema = {
   },
   privacy: {
     title: "Privacy Policy",
-    lastUpdated: "February 2026",
+    lastUpdated: "March 2026",
     introduction: {
       title: "Introduction",
       p1: "Welcome to Douze Points (www.douzepoints.net).",
@@ -183,7 +183,7 @@ export const en: TranslationSchema = {
       cookiesTitle: "b) Local Storage",
       cookiesDesc1: "We use your browser's local storage exclusively to save your game progress, scores, and statistics.",
       cookiesDesc2: "This data is stored only on your device, is not transmitted to our servers, and can be deleted by clearing your browser data.",
-      cookiesDesc3: "We do not use tracking cookies or third-party advertising cookies."
+      cookiesDesc3: "We use Google Analytics to help us understand how users interact with our website. This helps us improve the user experience and understand which features are most popular."
     },
     legalBasis: {
       title: "Legal Basis (GDPR)",
@@ -240,6 +240,12 @@ export const en: TranslationSchema = {
       p1: "To help us understand how the community is performing and to improve the game balance, Douze Points collects anonymous game statistics.",
       p2: "When you complete a game, we record the game type, the score achieved, and the date. This information is aggregated and does not contain any personally identifiable information (such as your name, IP address, or email).",
       p3: "We use Google Firebase (a service provided by Google) to store and process these aggregated statistics. This data is used solely for the purpose of analyzing game popularity and difficulty levels."
+    },
+    googleAnalytics: {
+      title: "Google Analytics",
+      p1: "We use Google Analytics to collect information about how users interact with our website. This helps us improve the user experience and understand which features are most popular.",
+      p2: "Google Analytics uses cookies and similar technologies to collect data such as your IP address, browser type, device information, and pages visited. This data is processed by Google in accordance with their privacy policy.",
+      p3: "You can opt-out of Google Analytics by using the Google Analytics Opt-out Browser Add-on or by adjusting your browser settings."
     }
   },
   about: {
@@ -306,7 +312,7 @@ export const en: TranslationSchema = {
     }
   },
   terms: {
-    lastUpdated: "February 2026",
+    lastUpdated: "March 2026",
     title: "Terms of Service",
     acceptance: {
       title: "Acceptance of Terms",

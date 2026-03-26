@@ -30,16 +30,18 @@ const getCounterKey = (pathname: string): string | null => {
 export const usePlaytimeTracker = () => {
   const location = useLocation();
   const countersRef = useRef<Record<string, number>>({});
-  const lastTickRef = useRef<number>(Date.now());
+  const lastTickRef = useRef<number>(0);
   const currentKeyRef = useRef<string | null>(getCounterKey(location.pathname));
+
+  useEffect(() => {
+    lastTickRef.current = Date.now();
+  }, []);
 
   useEffect(() => {
     currentKeyRef.current = getCounterKey(location.pathname);
   }, [location.pathname]);
 
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
-
     const flush = () => {
       const counters = { ...countersRef.current };
       const hasData = Object.values(counters).some(v => v > 0);
@@ -83,7 +85,7 @@ export const usePlaytimeTracker = () => {
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    interval = setInterval(tick, 1000);
+    const interval = setInterval(tick, 1000);
 
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);

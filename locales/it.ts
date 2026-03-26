@@ -167,7 +167,7 @@ export const it: TranslationSchema = {
   },
   privacy: {
     title: "Informativa sulla Privacy",
-    lastUpdated: "Febbraio 2026",
+    lastUpdated: "Marzo 2026",
     introduction: {
       title: "Introduzione",
       p1: "Benvenuti su Douze Points (www.douzepoints.net).",
@@ -183,7 +183,7 @@ export const it: TranslationSchema = {
       cookiesTitle: "b) Memoria locale",
       cookiesDesc1: "Utilizziamo la memoria locale del tuo browser esclusivamente per salvare i tuoi progressi di gioco, i punteggi e le statistiche.",
       cookiesDesc2: "Questi dati sono memorizzati solo sul tuo dispositivo, non vengono trasmessi ai nostri server e possono essere eliminati cancellando i dati del browser.",
-      cookiesDesc3: "Non utilizziamo cookie di tracciamento o cookie pubblicitari di terze parti."
+      cookiesDesc3: "Utilizziamo Google Analytics per aiutarci a capire come gli utenti interagiscono con il nostro sito web. Questo ci aiuta a migliorare l'esperienza dell'utente e a capire quali funzionalità sono più popolari."
     },
     legalBasis: {
       title: "Base giuridica (GDPR)",
@@ -240,6 +240,12 @@ export const it: TranslationSchema = {
       p1: "Per aiutarci a capire come si comporta la comunità e per migliorare l'equilibrio del gioco, Douze Points raccoglie statistiche di gioco anonime.",
       p2: "Quando completi un gioco, registriamo il tipo di gioco, il punteggio ottenuto e la data. Queste informazioni sono aggregate e non contengono informazioni di identificazione personale (come il nome, l'indirizzo IP o l'e-mail).",
       p3: "Utilizziamo Google Firebase (a servizio fornito da Google) per memorizzare ed elaborare queste statistiche aggregate. Questi dati vengono utilizzati esclusivamente allo scopo di analizzare la popolarità del gioco e i livelli di difficoltà."
+    },
+    googleAnalytics: {
+      title: "Google Analytics",
+      p1: "Utilizziamo Google Analytics per raccogliere informazioni su come gli utenti interagiscono con il nostro sito web. Questo ci aiuta a migliorare l'esperienza dell'utente e a capire quali funzionalità sono più popolari.",
+      p2: "Google Analytics utilizza cookie e tecnologie simili per raccogliere dati come l'indirizzo IP, il tipo di browser, le informazioni sul dispositivo e le pagine visitate. Questi dati vengono elaborati da Google in conformità con la loro politica sulla privacy.",
+      p3: "Puoi disattivare Google Analytics utilizzando il Componente aggiuntivo del browser per la disattivazione di Google Analytics o regolando le impostazioni del tuo browser."
     }
   },
   about: {
@@ -282,74 +288,74 @@ export const it: TranslationSchema = {
     }
   },
   contact: {
-    title: "Contact Us",
+    title: "Contattaci",
     methods: {
-      title: "Get in Touch",
-      p1: "Have a question, feedback, or found a bug? I'd love to hear from you! You can reach me via email or find me in the Eurovision community."
+      title: "Mettiti in contatto",
+      p1: "Hai una domanda, un feedback o hai trovato un bug? Mi piacerebbe sentirti! Puoi contattarmi via email o trovarmi nella comunità dell'Eurovision."
     },
     faq: {
-      title: "Frequently Asked Questions",
-      q1: "When do the games reset?",
-      a1: "The daily challenges reset every day at midnight (UTC).",
-      q2: "How is my rank calculated?",
-      a2: "Your rank is based on your total career points accumulated across all games. The more you play and the better you perform, the higher you climb!",
-      q3: "Can I suggest a song or artist?",
-      a3: "Absolutely! I am always looking to improve our database. Send me an email with your suggestions.",
-      q4: "Is Douze Points free to play?",
-      a4: "Yes, Douze Points is completely free for everyone.",
-      q5: "How do I share my results?",
-      a5: "After completing a game, you'll see a 'Share' button."
+      title: "Domande Frequenti",
+      q1: "Quando si resettano i giochi?",
+      a1: "Le sfide quotidiane si resettano ogni giorno a mezzanotte (UTC).",
+      q2: "Come viene calcolato il mio grado?",
+      a2: "Il tuo grado si basa sui punti totali della carriera accumulati in tutti i giochi. Più giochi e meglio ti comporti, più in alto salirai!",
+      q3: "Posso suggerire una canzone o un artista?",
+      a3: "Assolutamente! Cerco sempre di migliorare il nostro database. Inviami un'e-mail con i tuoi suggerimenti.",
+      q4: "Douze Points è gratuito?",
+      a4: "Sì, Douze Points è completamente gratuito per tutti.",
+      q5: "Come condivido i miei risultati?",
+      a5: "Dopo aver completato un gioco, vedrai un pulsante 'Condividi'."
     },
     feedback: {
       title: "Feedback",
-      p1: "Your feedback helps me make Douze Points better for everyone. Don't hesitate to share your thoughts on how I can improve the experience."
+      p1: "Il tuo feedback mi aiuta a rendere Douze Points migliore per tutti. Non esitare a condividere i tuoi pensieri su come posso migliorare l'esperienza."
     }
   },
   terms: {
-    lastUpdated: "February 2026",
-    title: "Terms of Service",
+    lastUpdated: "Marzo 2026",
+    title: "Termini di Servizio",
     acceptance: {
-      title: "Acceptance of Terms",
-      p1: "By accessing or using Douze Points (www.douzepoints.net), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the website."
+      title: "Accettazione dei Termini",
+      p1: "Accedendo o utilizzando Douze Points (www.douzepoints.net), accetti di essere vincolato da questi Termini di Servizio. Se non accetti questi termini, ti preghiamo di non utilizzare il sito web."
     },
     description: {
-      title: "Description of Service",
-      p1: "Douze Points is a fan-made website providing Eurovision-themed games and trivia for entertainment purposes. The service is provided 'as is' and may be modified or discontinued at any time."
+      title: "Descrizione del Servizio",
+      p1: "Douze Points è un sito web creato dai fan che fornisce giochi e curiosità a tema Eurovision a scopo di intrattenimento. Il servizio è fornito 'così com'è' e può essere modificato o interrotto in qualsiasi momento."
     },
     ip: {
-      title: "Intellectual Property",
-      p1: "The Eurovision Song Contest and related trademarks are the property of the European Broadcasting Union (EBU). This website is not affiliated with, endorsed by, or sponsored by the EBU.",
-      p2: "All original content, code, and design on this website are the property of the website owner. You may not reproduce or distribute any part of this website without permission."
+      title: "Proprietà Intellettuale",
+      p1: "L'Eurovision Song Contest e i relativi marchi sono di proprietà dell'Unione Europea di Radiodiffusione (EBU). Questo sito web non è affiliato, approvato o sponsorizzato dall'EBU.",
+      p2: "Tutti i contenuti originali, il codice e il design di questo sito web sono di proprietà del proprietario del sito web. Non è consentito riprodurre o distribuire alcuna parte di questo sito web senza autorizzazione."
     },
     conduct: {
-      title: "User Conduct",
-      p1: "You agree to use the website only for lawful purposes and in a way that does not infringe the rights of others. Prohibited behavior includes:",
+      title: "Condotta dell'Utente",
+      p1: "Accetti di utilizzare il sito web solo per scopi leciti e in modo da non violare i diritti altrui. I comportamenti vietati includono:",
       items: [
-        "Attempting to interfere with the website's operation",
-        "Using automated scripts to collect data or play games",
-        "Impersonating others or providing false information",
-        "Engaging in any activity that could damage the website's reputation"
+        "Tentare di interferire con il funzionamento del sito web",
+        "Utilizzare script automatizzati per raccogliere dati o giocare",
+        "Impersonare altri o fornire informazioni false",
+        "Intraprendere qualsiasi attività che possa danneggiare la reputazione del sito web"
       ]
     },
     disclaimer: {
-      title: "Disclaimer of Warranties",
-      p1: "The website is provided on an 'as is' and 'as available' basis. We make no warranties, express or implied, regarding the accuracy, reliability, or availability of the service."
+      title: "Esclusione di Garanzie",
+      p1: "Il sito web è fornito 'così com'è' e 'come disponibile'. Non forniamo alcuna garanzia, espressa o implicita, riguardo all'accuratezza, all'affidabilità o alla disponibilità del servizio."
     },
     limitation: {
-      title: "Limitation of Liability",
-      p1: "To the maximum extent permitted by law, the website owner shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of the website."
+      title: "Limitazione di Responsabilità",
+      p1: "Nella misura massima consentita dalla legge, il proprietario del sito web non sarà responsabile per eventuali danni diretti, indiretti, incidentali o consequenziali derivanti dall'uso del sito web."
     },
     governingLaw: {
-      title: "Governing Law",
-      p1: "These Terms of Service shall be governed by and construed in accordance with the laws of Sweden."
+      title: "Legge Applicabile",
+      p1: "Questi Termini di Servizio saranno regolati e interpretati in conformità con le leggi della Svezia."
     },
     changes: {
-      title: "Changes to Terms",
-      p1: "We reserve the right to modify these Terms of Service at any time. Your continued use of the website after any changes constitutes acceptance of the new terms."
+      title: "Modifiche ai Termini",
+      p1: "Ci riserviamo il diritto di modificare questi Termini di Servizio in qualsiasi momento. Qualsiasi modifica sarà pubblicata su questa pagina con una data di 'Ultimo aggiornamento' revisionata."
     },
     contact: {
-      title: "Contact Information",
-      p1: "If you have any questions about these Terms of Service, please contact us at: douzepointsgame@gmail.com"
+      title: "Contatti",
+      p1: "In caso di domande su questi Termini di Servizio, è possibile contattarci all'indirizzo: douzepointsgame@gmail.com"
     }
   },
   ranks: {

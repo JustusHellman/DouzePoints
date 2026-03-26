@@ -232,7 +232,7 @@ export const reportPlaytime = async (counters: Record<string, number>) => {
   try {
     const docRef = doc(db, 'playtime_stats', date);
     
-    const updates: Record<string, any> = {
+    const updates: Record<string, string | number | boolean | undefined | null | object> = {
       date,
       lastUpdated: serverTimestamp()
     };
@@ -284,6 +284,7 @@ export const reportNewPlayerDiscovery = async (source: string = 'unknown') => {
   }
 
   try {
+    localStorage.setItem(storageKey, 'true');
     const docRef = doc(db, 'discoveries', date);
     await setDoc(docRef, {
       date,
@@ -292,11 +293,13 @@ export const reportNewPlayerDiscovery = async (source: string = 'unknown') => {
       lastUpdated: serverTimestamp()
     }, { merge: true });
     
-    localStorage.setItem(storageKey, 'true');
     if (import.meta.env.DEV) {
       console.log(`Reported new player discovery on ${date} from ${source}`);
     }
   } catch (error) {
+    // If it fails, we might want to allow a retry, so we could remove the item
+    // but the user wants to be sure it doesn't fire twice, so keeping it set is safer
+    // even if we miss a report due to a network error.
     console.error('Failed to report discovery to Firebase:', error instanceof Error ? error.message : String(error));
   }
 };

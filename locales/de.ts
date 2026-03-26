@@ -167,7 +167,7 @@ export const de: TranslationSchema = {
   },
   privacy: {
     title: "Datenschutz",
-    lastUpdated: "Februar 2026",
+    lastUpdated: "März 2026",
     introduction: {
       title: "Einleitung",
       p1: "Willkommen bei Douze Points (www.douzepoints.net).",
@@ -183,7 +183,7 @@ export const de: TranslationSchema = {
       cookiesTitle: "b) Lokaler Speicher",
       cookiesDesc1: "Wir verwenden den lokalen Speicher Ihres Browsers ausschließlich, um Ihren Spielfortschritt, Ihre Spielstände und Statistiken zu speichern.",
       cookiesDesc2: "Diese Daten werden nur auf Ihrem Gerät gespeichert, nicht an unsere Server übertragen und können durch Löschen Ihrer Browserdaten gelöscht werden.",
-      cookiesDesc3: "Wir verwenden keine Tracking-Cookies oder Werbe-Cookies von Drittanbietern."
+      cookiesDesc3: "Wir verwenden Google Analytics, um uns zu helfen zu verstehen, wie Nutzer mit unserer Website interagieren. Dies hilft uns, die Nutzererfahrung zu verbessern und zu verstehen, welche Funktionen am beliebtesten sind."
     },
     legalBasis: {
       title: "Rechtsgrundlage (DSGVO)",
@@ -240,6 +240,12 @@ export const de: TranslationSchema = {
       p1: "Um uns zu helfen zu verstehen, wie die Community abschneidet und um die Spielbalance zu verbessern, sammelt Douze Points anonyme Spielstatistiken.",
       p2: "Wenn Sie ein Spiel abschließen, zeichnen wir den Spieltyp, die erreichte Punktzahl und das Datum auf. Diese Informationen werden aggregiert und enthalten keine personenbezogenen Daten (wie Ihren Namen, Ihre IP-Adresse oder Ihre E-Mail-Adresse).",
       p3: "Wir verwenden Google Firebase (ein von Google bereitgestellter Dienst), um diese aggregierten Statistiken zu speichern und zu verarbeiten. Diese Daten werden ausschließlich zum Zweck der Analyse der Spielbeliebtheit und der Schwierigkeitsgrade verwendet."
+    },
+    googleAnalytics: {
+      title: "Google Analytics",
+      p1: "Wir verwenden Google Analytics, um Informationen darüber zu sammeln, wie Nutzer mit unserer Website interagieren. Dies hilft uns, die Nutzererfahrung zu verbessern und zu verstehen, welche Funktionen am beliebtesten sind.",
+      p2: "Google Analytics verwendet Cookies und ähnliche Technologien, um Daten wie Ihre IP-Adresse, den Browsertyp, Geräteinformationen und besuchte Seiten zu sammeln. Diese Daten werden von Google gemäß deren Datenschutzbestimmungen verarbeitet.",
+      p3: "Sie können Google Analytics deaktivieren, indem Sie das Browser-Add-on zur Deaktivierung von Google Analytics verwenden oder Ihre Browsereinstellungen anpassen."
     }
   },
   about: {
@@ -282,31 +288,31 @@ export const de: TranslationSchema = {
     }
   },
   contact: {
-    title: "Contact Us",
+    title: "Kontaktiere uns",
     methods: {
-      title: "Get in Touch",
-      p1: "Have a question, feedback, or found a bug? I'd love to hear from you! You can reach me via email or find me in the Eurovision community."
+      title: "In Kontakt treten",
+      p1: "Haben Sie eine Frage, Feedback oder haben Sie einen Fehler gefunden? Ich würde mich freuen, von Ihnen zu hören! Sie können mich per E-Mail erreichen oder mich in der Eurovision-Community finden."
     },
     faq: {
-      title: "Frequently Asked Questions",
-      q1: "When do the games reset?",
-      a1: "The daily challenges reset every day at midnight (UTC).",
-      q2: "How is my rank calculated?",
-      a2: "Your rank is based on your total career points accumulated across all games. The more you play and the better you perform, the higher you climb!",
-      q3: "Can I suggest a song or artist?",
-      a3: "Absolutely! I am always looking to improve our database. Send me an email with your suggestions.",
-      q4: "Is Douze Points free to play?",
-      a4: "Yes, Douze Points is completely free for everyone.",
-      q5: "How do I share my results?",
-      a5: "After completing a game, you'll see a 'Share' button."
+      title: "Häufig gestellte Fragen",
+      q1: "Wann werden die Spiele zurückgesetzt?",
+      a1: "Die täglichen Herausforderungen werden jeden Tag um Mitternacht (UTC) zurückgesetzt.",
+      q2: "Wie wird mein Rang berechnet?",
+      a2: "Ihr Rang basiert auf Ihren gesamten Karrierepunkten, die in allen Spielen gesammelt wurden. Je mehr Sie spielen und je besser Sie abschneiden, desto höher steigen Sie!",
+      q3: "Kann ich einen Song oder Künstler vorschlagen?",
+      a3: "Absolut! Ich bin immer bestrebt, unsere Datenbank zu verbessern. Senden Sie mir eine E-Mail mit Ihren Vorschlägen.",
+      q4: "Ist Douze Points kostenlos?",
+      a4: "Ja, Douze Points ist für alle völlig kostenlos.",
+      q5: "Wie teile ich meine Ergebnisse?",
+      a5: "Nach Abschluss eines Spiels sehen Sie eine Schaltfläche 'Teilen'."
     },
     feedback: {
       title: "Feedback",
-      p1: "Your feedback helps me make Douze Points better for everyone. Don't hesitate to share your thoughts on how I can improve the experience."
+      p1: "Ihr Feedback hilft mir, Douze Points für alle besser zu machen. Zögern Sie nicht, Ihre Gedanken darüber mitzuteilen, wie ich die Erfahrung verbessern kann."
     }
   },
   terms: {
-    lastUpdated: "Februar 2026",
+    lastUpdated: "März 2026",
     title: "Nutzungsbedingungen",
     acceptance: {
       title: "Annahme der Bedingungen",
@@ -345,7 +351,7 @@ export const de: TranslationSchema = {
     },
     changes: {
       title: "Änderungen der Bedingungen",
-      p1: "Wir behalten uns das Recht vor, diese Nutzungsbedingungen jederzeit zu ändern. Ihre fortgesetzte Nutzung der Website nach Änderungen stellt die Annahme der neuen Bedingungen dar."
+      p1: "Wir behalten uns das Recht vor, diese Nutzungsbedingungen jederzeit zu ändern. Jede Aktualisierung wird auf dieser Seite mit einem überarbeiteten Datum der 'Letzten Aktualisierung' veröffentlicht."
     },
     contact: {
       title: "Kontaktinformationen",
