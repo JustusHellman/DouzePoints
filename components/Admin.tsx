@@ -7,7 +7,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import WeightSimulator from './WeightSimulator.tsx';
 import { getActiveMasterData, SEARCH_WEIGHT_THRESHOLD } from '../data/activeData.ts';
 import { PUZZLES } from '../data/linksgameData.ts';
-import { REFRAIN_POOL } from '../data/refrainData.ts';
+import { getActiveRefrainData } from '../data/activeData.ts';
 import { getDailyIndex, normalize, isLetter } from '../utils/daily.ts';
 import { MasterSong } from '../data/types.ts';
 
@@ -38,7 +38,8 @@ const getDailyAnswer = (gameType: string, dateStr: string) => {
       const seedStr = dateStr + "eurorefrain-salt-v1"; let hash = 0;
       for (let i = 0; i < seedStr.length; i++) { hash = (hash << 5) - hash + seedStr.charCodeAt(i); hash |= 0; }
       const seed = Math.abs(hash);
-      const pools = { easy: REFRAIN_POOL.filter(s => s.tier === 'easy'), medium: REFRAIN_POOL.filter(s => s.tier === 'medium'), hard: REFRAIN_POOL.filter(s => s.tier === 'hard'), expert: REFRAIN_POOL.filter(s => s.tier === 'expert') };
+      const refrainPool = getActiveRefrainData();
+      const pools = { easy: refrainPool.filter(s => s.tier === 'easy'), medium: refrainPool.filter(s => s.tier === 'medium'), hard: refrainPool.filter(s => s.tier === 'hard'), expert: refrainPool.filter(s => s.tier === 'expert') };
       const usedWords = new Set<string>(); const usedTitles = new Set<string>();
       const pick = (pool: { words: string[], title: string }[], salt: number) => { let a = 0; while (a < pool.length) { const idx = (seed + salt + a) % pool.length; const c = pool[idx]; if (!c.words.some((w: string) => usedWords.has(w.toUpperCase())) && !usedTitles.has(c.title)) { c.words.forEach((w: string) => usedWords.add(w.toUpperCase())); usedTitles.add(c.title); return c; } a++; } return pool[0]; };
       return { easy: pick(pools.easy, 1), medium: pick(pools.medium, 2), hard: pick(pools.hard, 3), expert: pick(pools.expert, 4) };

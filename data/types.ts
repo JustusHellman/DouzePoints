@@ -40,6 +40,9 @@ export interface LyricSnippet {
   artist: string;
   words: string[]; // Exactly 4 words
   tier: 'easy' | 'medium' | 'hard' | 'expert';
+  language?: string;
+  year?: number;
+  placing?: number;
 }
 
 export interface MasterSong {

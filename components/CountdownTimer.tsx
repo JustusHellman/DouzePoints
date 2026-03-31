@@ -3,8 +3,7 @@ import React, { useState, useEffect } from 'react';
 export const CountdownTimer: React.FC<{ label?: string }> = ({ label }) => {
   const calculateTimeLeft = () => {
     const now = new Date();
-    const tomorrow = new Date(now);
-    tomorrow.setHours(24, 0, 0, 0);
+    const tomorrow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
     const diff = tomorrow.getTime() - now.getTime();
 
     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);

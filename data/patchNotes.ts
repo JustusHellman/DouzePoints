@@ -48,5 +48,11 @@ export const PATCH_NOTES: PatchNote[] = [
     date: "2026-03-26",
     title: "General update",
     description: "Thank you all so much for playing the new infinite mode 'Encore' and enjoying it! It really makes me happy to see! I've made some smaller tweeks and fixes, hopefully nothing you'll really notice!",
+  },
+  {
+    id: "8",
+    date: "2026-03-30",
+    title: "EuroRefrain updates tomorrow!",
+    description: "I've gotten a lot of feedback that EuroRefrain has too many repetitative items and words, or that it sometimes seems incorrect or illogical. I've hence taken some time and updated the whole database that's used and hopefully you'll notice a good difference! It might feel harder, but it should feel more fair!\n\nThanks for playing!",
   }
 ];

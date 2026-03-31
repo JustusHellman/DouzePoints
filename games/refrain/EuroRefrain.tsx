@@ -3,7 +3,7 @@ import confetti from 'canvas-confetti';
 import { getDayString } from '../../utils/daily.ts';
 import { updateGameStats } from '../../utils/stats.ts';
 import { GameType, LyricSnippet } from '../../data/types.ts';
-import { REFRAIN_POOL } from '../../data/refrainData.ts';
+import { getActiveRefrainData } from '../../data/activeData.ts';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
@@ -74,10 +74,11 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     }
     seed = Math.abs(hash);
 
-    const easyPool = REFRAIN_POOL.filter(s => s.tier === 'easy');
-    const mediumPool = REFRAIN_POOL.filter(s => s.tier === 'medium');
-    const hardPool = REFRAIN_POOL.filter(s => s.tier === 'hard');
-    const expertPool = REFRAIN_POOL.filter(s => s.tier === 'expert');
+    const refrainPool = getActiveRefrainData();
+    const easyPool = refrainPool.filter(s => s.tier === 'easy');
+    const mediumPool = refrainPool.filter(s => s.tier === 'medium');
+    const hardPool = refrainPool.filter(s => s.tier === 'hard');
+    const expertPool = refrainPool.filter(s => s.tier === 'expert');
 
     const selection: LyricSnippet[] = [];
     const usedWords = new Set<string>();

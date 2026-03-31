@@ -276,7 +276,35 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
         </div>
       </div>
 
-      {completedCount > 0 && (
+      {isQualified && (
+        <div className="px-2 md:px-6 mb-6 animate-in fade-in slide-in-from-top-4 duration-1000 delay-500">
+          <button 
+            onClick={() => {
+              const el = document.getElementById('encore-section');
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => {
+                  el.classList.add('ring-4', 'ring-amber-500', 'ring-offset-4', 'ring-offset-[#0b0b18]', 'scale-[1.02]', 'transition-all', 'duration-500');
+                  setTimeout(() => {
+                    el.classList.remove('ring-4', 'ring-amber-500', 'ring-offset-4', 'ring-offset-[#0b0b18]', 'scale-[1.02]');
+                  }, 2000);
+                }, 600);
+              }
+            }}
+            className="w-full bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 text-amber-200 p-4 rounded-2xl flex items-center justify-between transition-all group"
+          >
+            <div className="flex flex-col text-left">
+              <span className="text-[10px] font-black uppercase tracking-widest text-amber-500 mb-1">Can't wait for tomorrow?</span>
+              <span className="text-sm font-bold">Play unlimited games in Encore mode!</span>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center group-hover:bg-amber-500/40 transition-colors">
+              <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+            </div>
+          </button>
+        </div>
+      )}
+
+      {completedCount > 0 && !isQualified && (
         <div className="px-2 md:px-6 mb-6">
           <div className="flex justify-center">
           </div>
@@ -331,6 +359,7 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
       <div className="mt-8 px-2 md:px-6">
         <Link
           to="/infinite"
+          id="encore-section"
           className="group relative flex items-center justify-between p-4 sm:p-6 rounded-[1rem] md:rounded-[1.5rem] bg-gradient-to-br from-amber-600/20 to-amber-900/40 border-2 border-amber-500/30 hover:scale-[1.01] active:scale-95 transition-all duration-300 shadow-lg overflow-hidden text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-500/20 w-full"
         >
           <div className="absolute inset-0 bg-amber-500/5 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
@@ -448,6 +477,27 @@ const App: React.FC = () => {
   const [dailyShareGames, setDailyShareGames] = useState<GameInstance[]>([]);
   const [stats, setStats] = useState<GlobalStats>(() => getStoredStats());
   const [rankUpData, setRankUpData] = useState<{ title: string; threshold: number } | null>(null);
+
+  // Handle cross-page scrolling to Encore
+  useEffect(() => {
+    if (location.pathname === '/' && location.state?.scrollTo === 'encore') {
+      setTimeout(() => {
+        const el = document.getElementById('encore-section');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(() => {
+            el.classList.add('ring-4', 'ring-amber-500', 'ring-offset-4', 'ring-offset-[#0b0b18]', 'scale-[1.02]', 'transition-all', 'duration-500');
+            setTimeout(() => {
+              el.classList.remove('ring-4', 'ring-amber-500', 'ring-offset-4', 'ring-offset-[#0b0b18]', 'scale-[1.02]');
+            }, 2000);
+          }, 600); // Wait for smooth scroll to finish before highlighting
+        }
+      }, 300); // Wait for page transition to finish before scrolling
+      
+      // Clear the state so it doesn't re-trigger on subsequent renders
+      navigate('/', { replace: true, state: {} });
+    }
+  }, [location, navigate]);
 
   // SEO: Dynamic Page Titles and Descriptions based on Route
   useEffect(() => {
