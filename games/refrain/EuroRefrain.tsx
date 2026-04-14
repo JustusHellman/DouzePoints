@@ -126,33 +126,103 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     return { boardGroups: groups, allTiles: tiles };
   }, []);
 
-  const [displayTiles, setDisplayTiles] = useState<Tile[]>([]);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [completedGroups, setCompletedGroups] = useState<CompletedGroup[]>([]);
-  const [guessHistory, setGuessHistory] = useState<string[][]>([]);
-  const [mistakes, setMistakes] = useState(0);
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [won, setWon] = useState(false);
+  const [completedGroups, setCompletedGroups] = useState<CompletedGroup[]>(() => {
+    const saved = localStorage.getItem(`eurorefrain-${getDayString()}`);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        return data.completedGroups || [];
+      } catch { return []; }
+    }
+    return [];
+  });
+
+  const [displayTiles, setDisplayTiles] = useState<Tile[]>(() => {
+    const saved = localStorage.getItem(`eurorefrain-${getDayString()}`);
+    const baseTiles = [...allTiles].sort(() => Math.random() - 0.5);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        if (data.completedGroups) {
+          const completedGroupIndices = new Set(data.completedGroups.map((g: { groupIdx: number }) => g.groupIdx));
+          return baseTiles.filter(tile => !completedGroupIndices.has(tile.groupIdx));
+        }
+      } catch { /* ignore */ }
+    }
+    return baseTiles;
+  });
+
+  const [selectedIds, setSelectedIds] = useState<string[]>(() => {
+    const saved = localStorage.getItem(`eurorefrain-${getDayString()}`);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        return data.selectedIds || [];
+      } catch { return []; }
+    }
+    return [];
+  });
+
+  const [guessHistory, setGuessHistory] = useState<string[][]>(() => {
+    const saved = localStorage.getItem(`eurorefrain-${getDayString()}`);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        return data.guessHistory || [];
+      } catch { return []; }
+    }
+    return [];
+  });
+
+  const [mistakes, setMistakes] = useState(() => {
+    const saved = localStorage.getItem(`eurorefrain-${getDayString()}`);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        return data.mistakes || 0;
+      } catch { return 0; }
+    }
+    return 0;
+  });
+
+  const [isGameOver, setIsGameOver] = useState(() => {
+    const saved = localStorage.getItem(`eurorefrain-${getDayString()}`);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        return data.isGameOver || false;
+      } catch { return false; }
+    }
+    return false;
+  });
+
+  const [won, setWon] = useState(() => {
+    const saved = localStorage.getItem(`eurorefrain-${getDayString()}`);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        return data.won || false;
+      } catch { return false; }
+    }
+    return false;
+  });
+
   const [message, setMessage] = useState<string | null>(null);
   const [shaking, setShaking] = useState(false);
   const [showWrongFlash, setShowWrongFlash] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(() => {
+    const saved = localStorage.getItem(`eurorefrain-${getDayString()}`);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        return data.isGameOver || false;
+      } catch { return false; }
+    }
+    return false;
+  });
 
   // Initialize display tiles when allTiles changes
-  useEffect(() => {
-    if (allTiles.length > 0 && !isGameOver) {
-      setTimeout(() => {
-        setDisplayTiles([...allTiles].sort(() => Math.random() - 0.5));
-        setCompletedGroups([]);
-        setSelectedIds([]);
-        setGuessHistory([]);
-        setMistakes(0);
-        setIsGameOver(false);
-        setWon(false);
-        setShowModal(false);
-      }, 0);
-    }
-  }, [allTiles, isGameOver]);
+  // (Now handled by lazy initializers in useState)
 
   useEffect(() => {
     const seenKey = 'hasSeenRules-refrain';
@@ -175,42 +245,16 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
   }, [won, mistakes, t]);
 
   // Daily state loading
-  useEffect(() => {
-    const saved = localStorage.getItem(`eurorefrain-${getDayString()}`);
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        setTimeout(() => {
-          if (data.completedGroups) setCompletedGroups(data.completedGroups);
-          if (data.guessHistory) setGuessHistory(data.guessHistory);
-          if (data.mistakes !== undefined) setMistakes(data.mistakes);
-          if (data.isGameOver !== undefined) setIsGameOver(Boolean(data.isGameOver));
-          if (data.won !== undefined) setWon(Boolean(data.won));
-          if (data.isGameOver) setShowModal(true);
-          if (data.completedGroups) {
-            const completedTileIds = new Set(data.completedGroups.flatMap((g: { category: string }) => {
-                const source = boardGroups.find(bg => bg.category === g.category);
-                if (!source) return [];
-                const groupIdx = boardGroups.indexOf(source);
-                return source.items.map((_, i) => `tile-${groupIdx}-${i}`);
-            }));
-            setDisplayTiles(prev => prev.filter(tile => !completedTileIds.has(tile.id)));
-          }
-        }, 0);
-      } catch (err) {
-        console.error("Failed to load saved refrain state", err);
-      }
-    }
-  }, [boardGroups]);
+  // (Now handled by lazy initializers in useState)
 
   // Daily state saving
   useEffect(() => {
-    if (completedGroups.length === 0 && mistakes === 0 && !isGameOver) return;
-    localStorage.setItem(`eurorefrain-${getDayString()}`, JSON.stringify({ completedGroups, guessHistory, mistakes, isGameOver, won }));
+    if (completedGroups.length === 0 && mistakes === 0 && selectedIds.length === 0 && !isGameOver) return;
+    localStorage.setItem(`eurorefrain-${getDayString()}`, JSON.stringify({ completedGroups, guessHistory, mistakes, isGameOver, won, selectedIds }));
     if (isGameOver) {
       if (won) confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
     }
-  }, [completedGroups, guessHistory, mistakes, isGameOver, won]);
+  }, [completedGroups, guessHistory, mistakes, isGameOver, won, selectedIds]);
 
   const handleSelect = (id: string) => {
     if (isGameOver || showWrongFlash) return;
@@ -310,9 +354,19 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     switch(diff) {
       case 'easy': return 'bg-yellow-500';
       case 'medium': return 'bg-blue-600';
-      case 'hard': return 'bg-pink-600';
+      case 'hard': return 'bg-pink-500';
       case 'expert': return 'bg-purple-700';
       default: return 'bg-gray-700';
+    }
+  };
+
+  const getDiffBg = (diff: string) => {
+    switch(diff) {
+      case 'easy': return 'bg-yellow-500/20';
+      case 'medium': return 'bg-blue-600/20';
+      case 'hard': return 'bg-pink-500/20';
+      case 'expert': return 'bg-purple-700/20';
+      default: return 'bg-gray-700/20';
     }
   };
 
@@ -338,7 +392,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
             <div className="space-y-4">
               <p className="text-[10px] text-gray-600 font-black uppercase tracking-[0.4em] text-center mb-1">{t('links.lyricsDiscovered')}</p>
               {completedGroups.map((g, i) => (
-                <div key={i} className={`flex flex-col gap-1 p-5 rounded-3xl border border-white/5 ${getDiffColor(g.difficulty)}/20 backdrop-blur-sm animate-in zoom-in-95 duration-500`}>
+                <div key={i} className={`flex flex-col gap-1 p-5 rounded-3xl border border-white/5 ${getDiffBg(g.difficulty)} backdrop-blur-sm animate-in zoom-in-95 duration-500`}>
                    <div className="flex items-center gap-3">
                      <div className={`w-3 h-3 rounded-full ${getDiffColor(g.difficulty)} shadow-[0_0_10px_rgba(255,255,255,0.2)]`}></div>
                      <span className="text-xs font-black uppercase tracking-tight text-white/90">{g.category}</span>

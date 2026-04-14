@@ -10,7 +10,7 @@ if (!apiKey) {
 }
 
 const ai = new GoogleGenAI({ apiKey });
-const MODEL = "gemini-2.5-flash";
+const MODEL = "gemini-3-flash-preview";
 
 // ─── Precompute useful context strings ───────────────────────────────────────
 
@@ -218,6 +218,39 @@ interface PopulatedSub {
   items: string[];
 }
 
+async function sleep(ms: number) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+async function pass2_populateSubCategoryWithRetry(
+  mainCategory: string,
+  itemType: string,
+  sub: SubCategoryDraft,
+  contextData: string,
+  maxRetries: number = 4
+): Promise<PopulatedSub> {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await pass2_populateSubCategory(
+        mainCategory, itemType, sub, contextData
+      );
+    } catch (err: any) {
+      const isRateLimit = err?.message?.includes("429") 
+        || err?.message?.includes("RESOURCE_EXHAUSTED")
+        || err?.toString()?.includes("429");
+
+      if (isRateLimit && attempt < maxRetries) {
+        const waitSeconds = Math.pow(2, attempt) * 10;
+        console.log(`    ⏳ Rate limited on "${sub.name}", waiting ${waitSeconds}s (attempt ${attempt + 1}/${maxRetries})...`);
+        await sleep(waitSeconds * 1000);
+      } else {
+        throw err;
+      }
+    }
+  }
+  return { name: sub.name, items: [] };
+}
+
 async function pass2_populateSubCategory(
   mainCategory: string,
   itemType: string,
@@ -255,6 +288,9 @@ Return items as a JSON array of strings. Be exhaustive.`;
     contents: prompt,
     config: {
       responseMimeType: "application/json",
+      thinkingConfig: {
+        thinkingBudget: 0
+      },
       responseSchema: {
         type: Type.OBJECT,
         properties: {
@@ -318,6 +354,56 @@ async function pass2_populateAll(
     });
   }
 
+  return populated;
+}
+
+async function pass2_retryEmpty(
+  populated: { main: string; itemType: string; subs: PopulatedSub[] }[],
+  structure: MainCategoryDraft[]
+) {
+  console.log("\n═══ PASS 2B: Retrying empty sub-categories ═══");
+  let retried = 0;
+  let stillEmpty = 0;
+
+  for (let catIdx = 0; catIdx < populated.length; catIdx++) {
+    const mainCat = populated[catIdx];
+    const structCat = structure[catIdx];
+
+    for (let i = 0; i < mainCat.subs.length; i++) {
+      const sub = mainCat.subs[i];
+      if (sub.items.length > 0) continue;
+
+      // Find the original draft with the description
+      const draft = structCat?.subs?.find(s => s.name === sub.name) || {
+        name: sub.name,
+        description: sub.name,
+        itemType: mainCat.itemType
+      };
+
+      console.log(`  Retrying "${mainCat.main}" → "${sub.name}"...`);
+      try {
+        const result = await pass2_populateSubCategoryWithRetry(
+          mainCat.main, mainCat.itemType, draft, compactData
+        );
+        const icon = result.items.length >= 6 ? '✓' : result.items.length >= 4 ? '~' : '✗';
+        console.log(`    ${icon} "${result.name}": ${result.items.length} items`);
+        mainCat.subs[i] = result;
+        retried++;
+        await sleep(8000);
+      } catch (err: any) {
+        console.log(`    ✗ Still failing: "${sub.name}"`);
+        stillEmpty++;
+      }
+    }
+
+    // Update the checkpoint for this main category
+    if (retried > 0) {
+      const checkpointName = `pass2_main_${catIdx}_${mainCat.main.replace(/[^a-zA-Z0-9]/g, '_')}`;
+      saveCheckpoint(checkpointName, mainCat);
+    }
+  }
+
+  console.log(`  Retried: ${retried}, Still empty: ${stillEmpty}`);
   return populated;
 }
 
@@ -527,29 +613,20 @@ async function main() {
       console.log(`\n  Main [${catIdx + 1}/${structure.length}]: ${mainCat.main}`);
       const populatedSubs: PopulatedSub[] = [];
 
-      const BATCH_SIZE = 5;
-      for (let i = 0; i < mainCat.subs.length; i += BATCH_SIZE) {
-        const batch = mainCat.subs.slice(i, i + BATCH_SIZE);
-        const results = await Promise.all(
-          batch.map(sub =>
-            pass2_populateSubCategory(mainCat.main, mainCat.itemType, sub, compactData)
-              .catch(err => {
-                console.error(`    ✗ Failed: "${sub.name}" — ${err.message}`);
-                return { name: sub.name, items: [] as string[] };
-              })
-          )
-        );
-
-        for (const result of results) {
+      for (const sub of mainCat.subs) {
+        try {
+          const result = await pass2_populateSubCategoryWithRetry(
+            mainCat.main, mainCat.itemType, sub, compactData
+          );
           const icon = result.items.length >= 6 ? '✓' : result.items.length >= 4 ? '~' : '✗';
           console.log(`    ${icon} "${result.name}": ${result.items.length} items`);
           populatedSubs.push(result);
+        } catch (err: any) {
+          console.error(`    ✗ Failed after retries: "${sub.name}" — ${err.message}`);
+          populatedSubs.push({ name: sub.name, items: [] });
         }
-
-        // Rate limit courtesy delay
-        if (i + BATCH_SIZE < mainCat.subs.length) {
-          await new Promise(r => setTimeout(r, 1500));
-        }
+        // 8 second delay to stay under 5 requests/minute
+        await sleep(8000);
       }
 
       const mainResult = {
@@ -567,6 +644,10 @@ async function main() {
     // Save the full pass2 result
     saveCheckpoint("pass2_populated_all", populated);
   }
+
+  // ── Step 2B: Retry any empty sub-categories ──
+  populated = await pass2_retryEmpty(populated, structure);
+  saveCheckpoint("pass2_populated_all", populated);
 
   // ── Step 3: Validate ──
   const validated = pass3_validate(populated);

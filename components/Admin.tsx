@@ -5,11 +5,14 @@ import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, User } from 'f
 import { db, auth } from '../firebase.ts';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import WeightSimulator from './WeightSimulator.tsx';
+import EuroLinksPreview from './EuroLinksPreview.tsx';
 import { getActiveMasterData, SEARCH_WEIGHT_THRESHOLD } from '../data/activeData.ts';
 import { PUZZLES } from '../data/linksgameData.ts';
 import { getActiveRefrainData } from '../data/activeData.ts';
 import { getDailyIndex, normalize, isLetter } from '../utils/daily.ts';
-import { MasterSong } from '../data/types.ts';
+import { MasterSong, ConnectionsGroup } from '../data/types.ts';
+import { generateRandomEuroLinksPuzzle } from '../utils/linksGenerator.ts';
+import { BingoAdminPanel } from './BingoAdminPanel.tsx';
 
 const ADMIN_EMAILS = ['justusmhellman@gmail.com', 'justus.jo.li@gmail.com', 'douzepointsgame@gmail.com'];
 
@@ -124,7 +127,8 @@ const Admin: React.FC = () => {
   const [daysSpan, setDaysSpan] = useState(30);
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
-  const [activeTab, setActiveTab] = useState<'stats' | 'weights'>('stats');
+  const [activeTab, setActiveTab] = useState<'stats' | 'weights' | 'links-preview' | 'bingo-admin'>('stats');
+  const [linksPuzzle, setLinksPuzzle] = useState<ConnectionsGroup[]>([]);
   const [detailDate, setDetailDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [detailMode, setDetailMode] = useState<'day' | 'period'>('day');
   const [detailGame, setDetailGame] = useState<string>('ALL');
@@ -194,6 +198,15 @@ const Admin: React.FC = () => {
   useEffect(() => { const u = onAuthStateChanged(auth, (cu) => { setUser(cu); setLoading(false); }); return () => u(); }, []);
   useEffect(() => { if (user && ADMIN_EMAILS.includes(user.email || '')) fetchData(); }, [user, fetchData]);
 
+  const handleGenerateLinks = () => {
+    setLinksPuzzle(generateRandomEuroLinksPuzzle());
+  };
+
+  useEffect(() => {
+    if (activeTab === 'links-preview' && linksPuzzle.length === 0) {
+      handleGenerateLinks();
+    }
+  }, [activeTab, linksPuzzle.length]);
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider(); provider.setCustomParameters({ prompt: 'select_account' });
     try { await signInWithPopup(auth, provider); } catch (e) { console.error("Error signing in", e); alert("If the login window didn't open, please check if your browser is blocking popups."); }
@@ -477,6 +490,8 @@ const Admin: React.FC = () => {
           <div className="flex gap-4 mt-6">
             <button onClick={() => setActiveTab('stats')} className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'stats' ? 'bg-white text-black' : 'bg-white/5 text-gray-500 hover:text-white'}`}>Stats</button>
             <button onClick={() => setActiveTab('weights')} className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'weights' ? 'bg-white text-black' : 'bg-white/5 text-gray-500 hover:text-white'}`}>Weight Simulator</button>
+            <button onClick={() => setActiveTab('links-preview')} className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'links-preview' ? 'bg-white text-black' : 'bg-white/5 text-gray-500 hover:text-white'}`}>Links Preview</button>
+            <button onClick={() => setActiveTab('bingo-admin')} className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'bingo-admin' ? 'bg-white text-black' : 'bg-white/5 text-gray-500 hover:text-white'}`}>Bingo Admin</button>
           </div>
         </div>
         {activeTab === 'stats' && (
@@ -1096,8 +1111,36 @@ const Admin: React.FC = () => {
             </div>
           </section>
         </div>
-      ) : (
+      ) : activeTab === 'weights' ? (
         <WeightSimulator />
+      ) : activeTab === 'bingo-admin' ? (
+        <BingoAdminPanel />
+      ) : (
+        <div className="space-y-8">
+          <div className="flex justify-between items-center bg-white/5 border border-white/10 rounded-2xl p-6">
+            <div>
+              <h2 className="text-xl font-black uppercase tracking-widest text-white">EuroLinks Random Generator</h2>
+              <p className="text-gray-400 text-xs mt-1">Test the new AI-generated data structure. This generator is not seed-dependent.</p>
+            </div>
+            <button 
+              onClick={handleGenerateLinks}
+              className="px-8 py-4 bg-gradient-to-r from-orange-500 to-red-600 rounded-xl font-black uppercase tracking-widest hover:scale-105 transition-transform shadow-lg shadow-orange-500/20"
+            >
+              Generate New Game
+            </button>
+          </div>
+          
+          <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
+            {linksPuzzle.length > 0 ? (
+              <EuroLinksPreview 
+                key={linksPuzzle.map(g => g.category).join('-')} 
+                puzzleData={linksPuzzle} 
+              />
+            ) : (
+              <div className="py-20 text-center text-gray-500 italic">Click generate to start</div>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );

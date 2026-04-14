@@ -103,11 +103,80 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
     return normalizedTarget.split('').filter(char => isLetter(char)).length;
   }, [normalizedTarget]);
   
-  const [guesses, setGuesses] = useState<string[]>([]);
-  const [currentGuess, setCurrentGuess] = useState("");
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [won, setWon] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [guesses, setGuesses] = useState<string[]>(() => {
+    if (mode === 'infinite') {
+      const saved = getInfiniteGameState(gameId, difficulty);
+      return saved?.guesses || [];
+    }
+    const saved = localStorage.getItem(`${gameId}-${getDayString()}`);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        return data.guesses || [];
+      } catch { return []; }
+    }
+    return [];
+  });
+
+  const [currentGuess, setCurrentGuess] = useState(() => {
+    if (mode === 'infinite') {
+      const saved = getInfiniteGameState(gameId, difficulty);
+      return saved?.currentGuess || "";
+    }
+    const saved = localStorage.getItem(`${gameId}-${getDayString()}`);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        return data.currentGuess || "";
+      } catch { return ""; }
+    }
+    return "";
+  });
+
+  const [isGameOver, setIsGameOver] = useState(() => {
+    if (mode === 'infinite') {
+      const saved = getInfiniteGameState(gameId, difficulty);
+      return saved?.isGameOver || false;
+    }
+    const saved = localStorage.getItem(`${gameId}-${getDayString()}`);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        return data.isGameOver || false;
+      } catch { return false; }
+    }
+    return false;
+  });
+
+  const [won, setWon] = useState(() => {
+    if (mode === 'infinite') {
+      const saved = getInfiniteGameState(gameId, difficulty);
+      return saved?.lastResult?.won || false;
+    }
+    const saved = localStorage.getItem(`${gameId}-${getDayString()}`);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        return data.won || false;
+      } catch { return false; }
+    }
+    return false;
+  });
+
+  const [showModal, setShowModal] = useState(() => {
+    if (mode === 'infinite') {
+      const saved = getInfiniteGameState(gameId, difficulty);
+      return saved?.isGameOver || false;
+    }
+    const saved = localStorage.getItem(`${gameId}-${getDayString()}`);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        return data.isGameOver || false;
+      } catch { return false; }
+    }
+    return false;
+  });
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -231,16 +300,6 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
     };
   }, [containerWidth, viewportHeight, target]);
 
-  /* 
-  useLayoutEffect(() => {
-    if (isGameOver) return;
-    const timer = requestAnimationFrame(() => {
-      window.scrollTo(0, 60);
-    });
-    return () => cancelAnimationFrame(timer);
-  }, [isGameOver]);
-  */
-
   const animationDelay = useMemo(() => {
     const totalRevealTargetTime = 1200; 
     return Math.min(250, totalRevealTargetTime / target.length);
@@ -255,39 +314,8 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
     }
   }, [gameId, setShowHowToPlay]);
 
-  useEffect(() => {
-    if (mode === 'infinite') {
-      if (infiniteState) {
-        setTimeout(() => {
-          if (infiniteState.guesses) setGuesses(infiniteState.guesses);
-          if (infiniteState.isGameOver) {
-            setIsGameOver(true);
-            setWon(infiniteState.lastResult?.won || false);
-            setShowModal(true);
-          } else {
-            setIsGameOver(false);
-            setWon(false);
-            setShowModal(false);
-          }
-        }, 0);
-      }
-      return;
-    }
-    const saved = localStorage.getItem(`${gameId}-${getDayString()}`);
-    if (saved) {
-      try {
-        const { guesses: sG, isGameOver: sGO, won: sW } = JSON.parse(saved);
-        setTimeout(() => {
-          if (sG) setGuesses(sG);
-          if (sGO !== undefined) setIsGameOver(Boolean(sGO));
-          if (sW !== undefined) setWon(Boolean(sW));
-          if (sGO) setShowModal(true);
-        }, 0);
-      } catch (e) {
-        console.error("Load failed", e);
-      }
-    }
-  }, [gameId, mode, infiniteState, setIsGameOver, setWon, setGuesses, setShowModal]);
+  // Load initial state from localStorage/infiniteState on mount
+  // (Now handled by lazy initializers in useState)
 
   const getPointsInfo = useMemo(() => {
     if (!won) return { points: 0, label: t('common.nulPoints'), color: "text-red-500" };
@@ -312,13 +340,14 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
   }, [won, guesses, t]);
 
   useEffect(() => {
-    if (guesses.length === 0 && !isGameOver) return;
+    if (guesses.length === 0 && currentGuess === "" && !isGameOver) return;
     
     if (mode === 'infinite') {
       if (infiniteState) {
         const newState = {
           ...infiniteState,
           guesses,
+          currentGuess,
           isGameOver,
           ...(isGameOver ? { lastResult: { won, points: won ? getPointsInfo.points : 0 } } : {})
         };
@@ -329,7 +358,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
         }
       }
     } else {
-      localStorage.setItem(`${gameId}-${getDayString()}`, JSON.stringify({ guesses, isGameOver, won }));
+      localStorage.setItem(`${gameId}-${getDayString()}`, JSON.stringify({ guesses, currentGuess, isGameOver, won }));
     }
 
     if (isGameOver) {
@@ -343,7 +372,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
         });
       }
     }
-  }, [guesses, isGameOver, won, gameId, getPointsInfo, mode, infiniteState, difficulty]);
+  }, [guesses, currentGuess, isGameOver, won, gameId, getPointsInfo, mode, infiniteState, difficulty]);
 
   const getGuessStatuses = useCallback((guess: string, targetWord: string): LetterStatus[] => {
     const targetArr = targetWord.split('');
@@ -517,10 +546,10 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
         setTimeout(() => setMessage(null), 1500);
       }
     } else if (e.key === 'Backspace') {
-      setCurrentGuess(prev => prev.slice(0, -1));
+      setCurrentGuess((prev: string) => prev.slice(0, -1));
     } else if (e.key.length === 1 && /^[a-zA-Z]$/.test(e.key)) {
       if (currentGuess.length < inputLength) {
-        setCurrentGuess(prev => (prev + e.key).toUpperCase());
+        setCurrentGuess((prev: string) => (prev + e.key).toUpperCase());
       }
     }
   }, [isGameOver, currentGuess, inputLength, guesses, target, animationDelay, mode, infiniteState, gameId, difficulty, gameType, t, won, handleContinue]);

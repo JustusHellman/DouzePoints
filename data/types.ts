@@ -4,7 +4,8 @@ export enum GameType {
   LINKS_GAME = 'LINKS_GAME',
   GUESSER = 'GUESSER',
   ARENA = 'ARENA',
-  REFRAIN_GAME = 'REFRAIN_GAME'
+  REFRAIN_GAME = 'REFRAIN_GAME',
+  BINGO_GAME = 'BINGO_GAME'
 }
 
 export interface DetailedStats {
@@ -96,6 +97,7 @@ export interface InfiniteGameState {
   currentIndex: number;
   isGameOver: boolean;
   guesses?: string[];
+  currentGuess?: string;
   lastResult?: {
     points: number;
     won: boolean;
@@ -109,3 +111,8 @@ export interface InfiniteRecord {
 }
 
 export type InfiniteRecords = Record<string, InfiniteRecord>; // key: `${gameId}_${difficulty}`
+
+export interface BingoEvent {
+  id: string;
+  category: 'performance' | 'production' | 'voting' | 'audience';
+}

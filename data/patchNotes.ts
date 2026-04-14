@@ -54,5 +54,11 @@ export const PATCH_NOTES: PatchNote[] = [
     date: "2026-03-30",
     title: "EuroRefrain updates tomorrow!",
     description: "I've gotten a lot of feedback that EuroRefrain has too many repetitative items and words, or that it sometimes seems incorrect or illogical. I've hence taken some time and updated the whole database that's used and hopefully you'll notice a good difference! It might feel harder, but it should feel more fair!\n\nThanks for playing!",
+  },
+  {
+    id: "9",
+    date: "2026-04-14",
+    title: "Languages and Bingo",
+    description: "Hey! Sorry for the long break, I've been having a cold and I'm still quite knocked out, but I couldn't resist pushing this one out!\nWe've now got language support for 12 languages as well as Bingo for the live shows added to the game! The Bingo has some smaller tweeks to fix, but it has support for printing physical cards, playing locally or live with your friends! I hope you'll all enjoy it!",
   }
 ];

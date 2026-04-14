@@ -1,3 +1,8 @@
+// Social URLs
+export const REDDIT_URL = "https://www.reddit.com/r/douzepoints/";
+export const DISCORD_URL = "https://discord.gg/XQWuCThQkt";
+export const BUY_ME_A_COFFEE_URL = "https://buymeacoffee.com/douzepointsgame";
+
 // Region arrays
 export const REGIONS = {
   "Nordics": [

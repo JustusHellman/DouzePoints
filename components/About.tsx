@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from '../context/LanguageContext.tsx';
 import { reportSupportClick } from '../utils/firebaseService.ts';
+import { BUY_ME_A_COFFEE_URL } from '../data/constants.tsx';
 
 const About: React.FC = () => {
   const { t } = useTranslation();
@@ -83,7 +84,7 @@ const About: React.FC = () => {
         <section className="space-y-6 mt-12">
           <div className="pl-12">
             <a
-              href="https://buymeacoffee.com/DouzePointsGame"
+              href={BUY_ME_A_COFFEE_URL}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => reportSupportClick('About_Page')}

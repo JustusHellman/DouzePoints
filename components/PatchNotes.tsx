@@ -1,15 +1,18 @@
 import React from 'react';
+import { useTranslation } from '../context/LanguageContext.tsx';
 import { PATCH_NOTES } from '../data/patchNotes.ts';
 
 const PatchNotes: React.FC = () => {
+  const { t, language } = useTranslation();
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="mb-12 text-center">
         <h1 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter text-white mb-4 pr-[0.1em]">
-          Patch Notes
+          {t('common.patchNotes')}
         </h1>
         <p className="text-gray-400 text-sm md:text-base font-medium max-w-xl mx-auto">
-          Stay up to date with the latest additions, fixes, and improvements to Douze Points.
+          {t('common.patchNotesDesc')}
         </p>
       </div>
 
@@ -34,7 +37,7 @@ const PatchNotes: React.FC = () => {
                     </span>
                   )}
                   <time className="text-xs font-bold text-gray-500 uppercase tracking-widest">
-                    {new Date(note.date).toLocaleDateString('en-US', {
+                    {new Date(note.date).toLocaleDateString(language === 'en' ? 'en-US' : language, {
                       year: 'numeric',
                       month: 'short',
                       day: 'numeric'

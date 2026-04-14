@@ -114,7 +114,15 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
     return startNewInfiniteGame(gameId, difficulty, pool);
   });
 
-  const [showHowToPlay, setShowHowToPlay] = useState(false);
+  const [showHowToPlay, setShowHowToPlay] = useState(() => {
+    const seenKey = 'hasSeenRules-euroguess';
+    const hasSeen = localStorage.getItem(seenKey);
+    if (!hasSeen) {
+      localStorage.setItem(seenKey, 'true');
+      return true;
+    }
+    return false;
+  });
 
   const song = useMemo(() => {
     if (isInfinite && infiniteState) {
@@ -130,22 +138,57 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
   const [query, setQuery] = useState("");
   const [attempts, setAttempts] = useState<string[]>(() => {
     if (isInfinite && infiniteState) return infiniteState.guesses || [];
+    const saved = localStorage.getItem(`euroguess-${getDayString()}`);
+    if (saved) {
+      try {
+        const d = JSON.parse(saved);
+        return d.attempts || [];
+      } catch { return []; }
+    }
     return [];
   });
   const [isGameOver, setIsGameOver] = useState(() => {
     if (isInfinite && infiniteState) return infiniteState.isGameOver;
+    const saved = localStorage.getItem(`euroguess-${getDayString()}`);
+    if (saved) {
+      try {
+        const d = JSON.parse(saved);
+        return Boolean(d.isGameOver);
+      } catch { return false; }
+    }
     return false;
   });
   const [revealedHints, setRevealedHints] = useState(() => {
-    if (isInfinite && infiniteState) return (infiniteState.guesses?.length || 0) + 1;
+    if (isInfinite && infiniteState) return Math.min((infiniteState.guesses?.length || 0) + 1, 6);
+    const saved = localStorage.getItem(`euroguess-${getDayString()}`);
+    if (saved) {
+      try {
+        const d = JSON.parse(saved);
+        return d.revealedHints || 1;
+      } catch { return 1; }
+    }
     return 1;
   });
   const [won, setWon] = useState(() => {
     if (isInfinite && infiniteState) return infiniteState.lastResult?.won || false;
+    const saved = localStorage.getItem(`euroguess-${getDayString()}`);
+    if (saved) {
+      try {
+        const d = JSON.parse(saved);
+        return Boolean(d.won);
+      } catch { return false; }
+    }
     return false;
   });
   const [showModal, setShowModal] = useState(() => {
     if (isInfinite && infiniteState) return infiniteState.isGameOver;
+    const saved = localStorage.getItem(`euroguess-${getDayString()}`);
+    if (saved) {
+      try {
+        const d = JSON.parse(saved);
+        return Boolean(d.isGameOver);
+      } catch { return false; }
+    }
     return false;
   });
   const [showResults, setShowResults] = useState(false);
@@ -154,18 +197,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Sync local state with infiniteState
-  useEffect(() => {
-    if (isInfinite && infiniteState) {
-      setTimeout(() => {
-        if (infiniteState.isGameOver) {
-          setWon(infiniteState.lastResult?.won || false);
-        }
-        setAttempts(infiniteState.guesses || []);
-        setIsGameOver(infiniteState.isGameOver);
-        setRevealedHints(Math.min((infiniteState.guesses?.length || 0) + 1, 6));
-      }, 0);
-    }
-  }, [isInfinite, infiniteState]);
+  // (Now handled by lazy initializers in useState)
 
   useEffect(() => {
     if (isGameOver && !showModal) {
@@ -181,33 +213,11 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
   }, [isGameOver, attempts.length]);
 
 
-  useEffect(() => {
-    const seenKey = 'hasSeenRules-euroguess';
-    const hasSeen = localStorage.getItem(seenKey);
-    if (!hasSeen) {
-      setTimeout(() => setShowHowToPlay(true), 0);
-      localStorage.setItem(seenKey, 'true');
-    }
-  }, [setShowHowToPlay]);
+  // Rules display
+  // (Now handled by lazy initializer in useState)
 
-  useEffect(() => {
-    if (isInfinite) return;
-    const saved = localStorage.getItem(`euroguess-${getDayString()}`);
-    if (saved) {
-      try {
-        const d = JSON.parse(saved);
-        setTimeout(() => {
-          setAttempts(d.attempts || []);
-          setIsGameOver(Boolean(d.isGameOver));
-          setRevealedHints(d.revealedHints || 1);
-          setWon(Boolean(d.won));
-          if (d.isGameOver) setShowModal(true);
-        }, 0);
-      } catch (e) {
-        console.error("Failed to load saved guesser state", e);
-      }
-    }
-  }, [isInfinite, setAttempts, setIsGameOver, setRevealedHints, setWon, setShowModal]);
+  // Daily state loading
+  // (Now handled by lazy initializers in useState)
 
   const getPointsInfo = useMemo(() => {
     if (!won) return { points: 0, label: t('common.nulPoints'), color: "text-red-500" };

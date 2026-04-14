@@ -62,7 +62,15 @@ import { SEARCH_WEIGHT_THRESHOLD } from '../../data/activeData.ts';
 const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', gameId = 'euroarena' }) => {
   const { t } = useTranslation();
   const location = useLocation();
-  const [showHowToPlay, setShowHowToPlay] = useState(false);
+  const [showHowToPlay, setShowHowToPlay] = useState(() => {
+    const seenKey = 'hasSeenRules-euroarena';
+    const hasSeen = localStorage.getItem(seenKey);
+    if (!hasSeen) {
+      localStorage.setItem(seenKey, 'true');
+      return true;
+    }
+    return false;
+  });
 
   const difficulty = useMemo(() => {
     return (location.state?.difficulty as InfiniteDifficulty) || { placement: InfinitePlacement.TOP10, year: InfiniteYear.Y2000 };
@@ -92,11 +100,25 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
     if (mode === 'infinite' && infiniteState) {
       return (infiniteState.guesses || []).map(id => data.find(s => String(s.id) === String(id))).filter(Boolean) as MasterSong[];
     }
+    const saved = localStorage.getItem(`euroarena-${getDayString()}`);
+    if (saved) {
+      try {
+        const d = JSON.parse(saved);
+        return (d.guesses || []).map((id: string) => data.find(s => String(s.id) === String(id))).filter(Boolean) as MasterSong[];
+      } catch { return []; }
+    }
     return [];
   });
   const [isGameOver, setIsGameOver] = useState(() => {
     if (mode === 'infinite' && infiniteState && infiniteState.isGameOver) {
       return true;
+    }
+    const saved = localStorage.getItem(`euroarena-${getDayString()}`);
+    if (saved) {
+      try {
+        const d = JSON.parse(saved);
+        return Boolean(d.isGameOver);
+      } catch { return false; }
     }
     return false;
   });
@@ -104,11 +126,25 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
     if (mode === 'infinite' && infiniteState && infiniteState.isGameOver) {
       return infiniteState.lastResult?.won || false;
     }
+    const saved = localStorage.getItem(`euroarena-${getDayString()}`);
+    if (saved) {
+      try {
+        const d = JSON.parse(saved);
+        return Boolean(d.won);
+      } catch { return false; }
+    }
     return false;
   });
   const [showModal, setShowModal] = useState(() => {
     if (mode === 'infinite' && infiniteState && infiniteState.isGameOver) {
       return true;
+    }
+    const saved = localStorage.getItem(`euroarena-${getDayString()}`);
+    if (saved) {
+      try {
+        const d = JSON.parse(saved);
+        return Boolean(d.isGameOver);
+      } catch { return false; }
     }
     return false;
   });
@@ -148,14 +184,8 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
     }
   }, [isGameOver, guesses.length]);
 
-  useEffect(() => {
-    const seenKey = 'hasSeenRules-euroarena';
-    const hasSeen = localStorage.getItem(seenKey);
-    if (!hasSeen) {
-      setTimeout(() => setShowHowToPlay(true), 0);
-      localStorage.setItem(seenKey, 'true');
-    }
-  }, [setShowHowToPlay]);
+  // Rules display
+  // (Now handled by lazy initializer in useState)
 
   const getPointsInfo = useMemo(() => {
     if (!won) return { points: 0, label: t('common.nulPoints'), color: "text-red-500" };
@@ -181,22 +211,8 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
     };
   }, [won, guesses, t]);
 
-  useEffect(() => {
-    if (mode === 'infinite') return;
-    const saved = localStorage.getItem(`euroarena-${getDayString()}`);
-    if (saved) {
-      try {
-        const d = JSON.parse(saved);
-        const savedGuesses = (d.guesses || []).map((id: string) => data.find(s => String(s.id) === String(id))).filter(Boolean) as MasterSong[];
-        setTimeout(() => {
-          setGuesses(savedGuesses);
-          setIsGameOver(Boolean(d.isGameOver));
-          setWon(Boolean(d.won));
-          if (d.isGameOver) setShowModal(true);
-        }, 0);
-      } catch (e) { console.error("Arena load failed", e); }
-    }
-  }, [mode, data, setGuesses, setIsGameOver, setWon, setShowModal]);
+  // Daily state loading
+  // (Now handled by lazy initializers in useState)
 
   useEffect(() => {
     if (guesses.length === 0 && !isGameOver) return;

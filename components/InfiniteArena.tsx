@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../context/LanguageContext.tsx';
+import { REDDIT_URL, DISCORD_URL, BUY_ME_A_COFFEE_URL } from '../data/constants.tsx';
 import { InfiniteDifficulty, InfinitePlacement, InfiniteYear, GameType } from '../data/types.ts';
 import { getInfiniteRecords, getInfiniteGameState, serializeDifficulty, clearAllInfiniteData } from '../utils/infinite.ts';
 
@@ -246,7 +247,7 @@ export const InfiniteArena: React.FC = () => {
       {/* Support Section */}
       <div className="mt-8">
         <a
-          href="https://buymeacoffee.com/DouzePointsGame"
+          href={BUY_ME_A_COFFEE_URL}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => reportSupportClick('Infinite_Arena')}
@@ -257,7 +258,7 @@ export const InfiniteArena: React.FC = () => {
               <path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/>
             </svg>
             <span className="text-xs md:text-sm font-medium text-gray-300">
-              {t('support.title')} <span className="opacity-70 hidden sm:inline">— Support the project</span>
+              {t('support.title')} <span className="opacity-70 hidden sm:inline">— {t('support.subtitle')}</span>
             </span>
           </div>
           <div className="text-[10px] font-bold uppercase tracking-widest transition-colors px-4 py-1.5 rounded-full sm:ml-4 whitespace-nowrap bg-[#FFDD00]/10 text-white group-hover:bg-[#FFDD00]/20">
@@ -272,7 +273,7 @@ export const InfiniteArena: React.FC = () => {
           <span className="text-[10px] font-black text-amber-500 uppercase tracking-[0.3em]">{t('common.joinCommunity')}</span>
           <div className="flex gap-4">
             <a
-              href="https://www.reddit.com/r/DouzePointsGame"
+              href={REDDIT_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="group flex items-center gap-3 px-6 py-3 rounded-2xl bg-[#FF4500]/10 border border-[#FF4500]/20 hover:bg-[#FF4500]/20 transition-all duration-300"
@@ -283,7 +284,7 @@ export const InfiniteArena: React.FC = () => {
               <span className="text-[10px] font-black uppercase tracking-widest text-amber-100/70 group-hover:text-white transition-colors">Reddit</span>
             </a>
             <a
-              href="https://discord.gg/douzepoints"
+              href={DISCORD_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="group flex items-center gap-3 px-6 py-3 rounded-2xl bg-[#5865F2]/10 border border-[#5865F2]/20 hover:bg-[#5865F2]/20 transition-all duration-300"
