@@ -1,0 +1,62 @@
+export default {
+  "common": {
+    "back": "Voltar",
+    "play": "Jogar",
+    "submit": "Enviar",
+    "loading": "A carregar...",
+    "share": "Partilhar cartão",
+    "shareDaily": "Partilhar resultado diário",
+    "shareCareer": "Partilhar estatísticas",
+    "shareHallOfFame": "Partilhar Hall of Fame",
+    "copied": "Copiado para a área de transferência!",
+    "returnToGreenroom": "Voltar ao Greenroom",
+    "perfect": "Perfeito",
+    "finished": "Concluído",
+    "douzePoints": "DOUZE POINTS!",
+    "nulPoints": "NUL POINTS",
+    "points": "Pontos",
+    "pointsShort": "pts",
+    "attempts": "tentativas",
+    "songs": "canções",
+    "steps": "passos",
+    "mistakesLeft": "Erros restantes",
+    "howToPlay": "Como jogar",
+    "close": "Fechar",
+    "selectLanguage": "Selecionar idioma",
+    "languages": "Idiomas",
+    "qualified": "Qualificado",
+    "semiFinal": "Semifinal",
+    "joinCommunity": "Juntar-se à comunidade",
+    "liveCompanion": "Companheiro ao vivo",
+    "fanProject": "Projeto de Fãs",
+    "fanProjectDesc": "Este é um projeto criado por fãs, inspirado na Eurovisão. Não é afiliado nem endossado pela EBU ou pelo Festival Eurovisão da Canção oficial.",
+    "patchNotes": "Notas de atualização",
+    "patchNotesDesc": "Mantenha-se atualizado com as mais recentes adições, correções e melhorias no Douze Points."
+  },
+  "seo": {
+    "home": "Douze Points | Jogos Diários da Eurovisão",
+    "eurosong": "EuroSong - Jogo Diário da Eurovisão estilo Wordle",
+    "euroartist": "EuroArtist - Adivinha o Artista da Eurovisão Diário",
+    "eurorefrain": "EuroRefrain - Puzzle Diário de Letras de Canções",
+    "eurolinks": "EuroLinks - Puzzle de Ligações da Eurovisão",
+    "euroguess": "EuroGuess - Quiz de Canções Mistério da Eurovisão",
+    "euroarena": "EuroArena - Batalha de Estatísticas da Eurovisão",
+    "eurobingo": "EuroBingo - Companheiro do Show da Eurovisão ao Vivo",
+    "infinite": "Modo Infinito | Jogos da Eurovisão Douze Points",
+    "patchNotes": "Notas de Atualização | Novidades Douze Points",
+    "privacy": "Política de Privacidade | Douze Points",
+    "terms": "Termos de Serviço | Douze Points",
+    "about": "Sobre o Douze Points | Projeto de Fãs da Eurovisão",
+    "contact": "Contacta-nos | Douze Points"
+  },
+  "scorecard": {
+    "signalLost": "Sinal Perdido",
+    "signalLostDesc": "A página que procuras foi desqualificada ou nunca existiu."
+  },
+  "support": {
+    "title": "Gostas do Douze Points?",
+    "subtitle": "Apoia o projeto",
+    "completed": "Completaste os desafios de hoje!",
+    "button": "Paga-me um café"
+  }
+};

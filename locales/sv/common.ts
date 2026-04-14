@@ -1,0 +1,62 @@
+export default {
+  "common": {
+    "back": "Tillbaka",
+    "play": "Spela",
+    "submit": "Skicka",
+    "loading": "Laddar...",
+    "share": "Dela resultatkort",
+    "shareDaily": "Dela dagens resultat",
+    "shareCareer": "Dela statistik",
+    "shareHallOfFame": "Dela Hall of Fame",
+    "copied": "Kopierat till urklipp!",
+    "returnToGreenroom": "Återvänd till Greenroom",
+    "perfect": "Perfekt",
+    "finished": "Slutförd",
+    "douzePoints": "DOUZE POINTS!",
+    "nulPoints": "NUL POINTS",
+    "points": "Poäng",
+    "pointsShort": "p",
+    "attempts": "försök",
+    "songs": "låtar",
+    "steps": "steg",
+    "mistakesLeft": "Fel kvar",
+    "howToPlay": "Hur man spelar",
+    "close": "Stäng",
+    "selectLanguage": "Välj språk",
+    "languages": "Språk",
+    "qualified": "Kvalificerad",
+    "semiFinal": "Semifinal",
+    "joinCommunity": "Gå med i communityn",
+    "liveCompanion": "Live-följeslagare",
+    "fanProject": "Fanprojekt",
+    "fanProjectDesc": "Detta är ett fan-skapat projekt inspirerat av Eurovision. Det är inte anslutet till eller godkänt av EBU eller den officiella Eurovision Song Contest.",
+    "patchNotes": "Uppdateringsanteckningar",
+    "patchNotesDesc": "Håll dig uppdaterad med de senaste tilläggen, fixarna och förbättringarna i Douze Points."
+  },
+  "seo": {
+    "home": "Douze Points | Dagliga Eurovision-spel",
+    "eurosong": "EuroSong - Dagligt Eurovision-spel i Wordle-stil",
+    "euroartist": "EuroArtist - Gissa dagens Eurovision-artist",
+    "eurorefrain": "EuroRefrain - Dagligt pussel med sångtexter",
+    "eurolinks": "EuroLinks - Eurovision-pussel med kopplingar",
+    "euroguess": "EuroGuess - Quiz om mystiska Eurovision-låtar",
+    "euroarena": "EuroArena - ESC statistik-battle",
+    "eurobingo": "EuroBingo - Live-följeslagare till Eurovision",
+    "infinite": "Oändligt läge | Douze Points Eurovision-spel",
+    "patchNotes": "Uppdateringsanteckningar | Douze Points-nyheter",
+    "privacy": "Integritetspolicy | Douze Points",
+    "terms": "Användarvillkor | Douze Points",
+    "about": "Om Douze Points | Eurovision fanprojekt",
+    "contact": "Kontakta oss | Douze Points"
+  },
+  "scorecard": {
+    "signalLost": "Signalen förlorad",
+    "signalLostDesc": "Sidan du letar efter har diskvalificerats eller har aldrig funnits."
+  },
+  "support": {
+    "title": "Gillar du Douze Points?",
+    "subtitle": "Stöd projektet",
+    "completed": "Du har klarat dagens utmaningar!",
+    "button": "Köp mig en kaffe"
+  }
+};

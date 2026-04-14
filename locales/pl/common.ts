@@ -1,0 +1,62 @@
+export default {
+  "common": {
+    "back": "Wstecz",
+    "play": "Graj",
+    "submit": "Zatwierdź",
+    "loading": "Ładowanie...",
+    "share": "Udostępnij kartę",
+    "shareDaily": "Udostępnij wynik dzienny",
+    "shareCareer": "Udostępnij statystyki",
+    "shareHallOfFame": "Udostępnij Galerię Sław",
+    "copied": "Skopiowano do schowka!",
+    "returnToGreenroom": "Wróć do Greenroomu",
+    "perfect": "Idealnie",
+    "finished": "Ukończono",
+    "douzePoints": "DOUZE POINTS!",
+    "nulPoints": "NUL POINTS",
+    "points": "Punkty",
+    "pointsShort": "pkt",
+    "attempts": "próby",
+    "songs": "piosenki",
+    "steps": "kroki",
+    "mistakesLeft": "Pozostałe błędy",
+    "howToPlay": "Jak grać",
+    "close": "Zamknij",
+    "selectLanguage": "Wybierz język",
+    "languages": "Języki",
+    "qualified": "Zakwalifikowano",
+    "semiFinal": "Półfinał",
+    "joinCommunity": "Dołącz do społeczności",
+    "liveCompanion": "Towarzysz na żywo",
+    "fanProject": "Projekt Fanów",
+    "fanProjectDesc": "To jest projekt stworzony przez fanów, zainspirowany Eurowizją. Nie jest powiązany ani wspierany przez EBU ani oficjalny Konkurs Piosenki Eurowizji.",
+    "patchNotes": "Informacje o aktualizacji",
+    "patchNotesDesc": "Bądź na bieżąco z najnowszymi dodatkami, poprawkami i ulepszeniami w Douze Points."
+  },
+  "seo": {
+    "home": "Douze Points | Codzienne Gry Eurowizyjne",
+    "eurosong": "EuroSong - Codzienna Gra Eurowizyjna w Stylu Wordle",
+    "euroartist": "EuroArtist - Codzienne Zgadywanie Artystów Eurowizji",
+    "eurorefrain": "EuroRefrain - Codzienna Zagadka z Tekstami Piosenek",
+    "eurolinks": "EuroLinks - Eurowizyjna Zagadka Powiązań",
+    "euroguess": "EuroGuess - Quiz o Tajemniczych Piosenkach Eurowizji",
+    "euroarena": "EuroArena - Bitwa na Statystyki Eurowizyjne",
+    "eurobingo": "EuroBingo - Towarzysz Show Eurowizji na Żywo",
+    "infinite": "Tryb Nieskończony | Gry Eurowizyjne Douze Points",
+    "patchNotes": "Informacje o Aktualizacji | Nowości w Douze Points",
+    "privacy": "Polityka Prywatności | Douze Points",
+    "terms": "Regulamin | Douze Points",
+    "about": "O Douze Points | Projekt Fanów Eurowizji",
+    "contact": "Kontakt | Douze Points"
+  },
+  "scorecard": {
+    "signalLost": "Sygnał Utracony",
+    "signalLostDesc": "Strona, której szukasz, została zdyskwalifikowana lub nigdy nie istniała."
+  },
+  "support": {
+    "title": "Podoba Ci się Douze Points?",
+    "subtitle": "Wesprzyj projekt",
+    "completed": "Ukończyłeś dzisiejsze wyzwania!",
+    "button": "Postaw mi kawę"
+  }
+};

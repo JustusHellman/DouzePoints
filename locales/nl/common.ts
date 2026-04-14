@@ -1,0 +1,62 @@
+export default {
+  "common": {
+    "back": "Terug",
+    "play": "Spelen",
+    "submit": "Versturen",
+    "loading": "Laden...",
+    "share": "Deelnamekaart delen",
+    "shareDaily": "Dagelijkse score delen",
+    "shareCareer": "Statistieken delen",
+    "shareHallOfFame": "Hall of Fame delen",
+    "copied": "Gekopieerd naar klembord!",
+    "returnToGreenroom": "Terug naar de Greenroom",
+    "perfect": "Perfect",
+    "finished": "Klaar",
+    "douzePoints": "DOUZE POINTS!",
+    "nulPoints": "NUL POINTS",
+    "points": "Punten",
+    "pointsShort": "ptn",
+    "attempts": "pogingen",
+    "songs": "liedjes",
+    "steps": "stappen",
+    "mistakesLeft": "Fouten over",
+    "howToPlay": "Hoe te spelen",
+    "close": "Sluiten",
+    "selectLanguage": "Selecteer taal",
+    "languages": "Talen",
+    "qualified": "Gekwalificeerd",
+    "semiFinal": "Halve finale",
+    "joinCommunity": "Word lid van de community",
+    "liveCompanion": "Live metgezel",
+    "fanProject": "Fanproject",
+    "fanProjectDesc": "Dit is een door fans gemaakt project geïnspireerd door Eurovisie. Het is niet gelieerd aan of onderschreven door de EBU of het officiële Eurovisie Songfestival.",
+    "patchNotes": "Patch-opmerkingen",
+    "patchNotesDesc": "Blijf op de hoogte van de nieuwste toevoegingen, oplossingen en verbeteringen aan Douze Points."
+  },
+  "seo": {
+    "home": "Douze Points | Dagelijkse Eurovisie Spellen",
+    "eurosong": "EuroSong - Dagelijks Eurovisie-spel in Wordle-stijl",
+    "euroartist": "EuroArtist - Dagelijks ESC-artiesten raden",
+    "eurorefrain": "EuroRefrain - Dagelijkse songtekst-puzzel",
+    "eurolinks": "EuroLinks - ESC-connectiepuzzel",
+    "euroguess": "EuroGuess - Mysterieuze Eurovisie Song Quiz",
+    "euroarena": "EuroArena - ESC Statistieken Strijd",
+    "eurobingo": "EuroBingo - Live Eurovisie Show Metgezel",
+    "infinite": "Oneindige Modus | Douze Points Eurovisie Spellen",
+    "patchNotes": "Patch-opmerkingen | Douze Points Updates",
+    "privacy": "Privacybeleid | Douze Points",
+    "terms": "Servicevoorwaarden | Douze Points",
+    "about": "Over Douze Points | Eurovisie Fanproject",
+    "contact": "Contact | Douze Points"
+  },
+  "scorecard": {
+    "signalLost": "Signaal verloren",
+    "signalLostDesc": "De pagina die je zoekt is gediskwalificeerd of heeft nooit bestaan."
+  },
+  "support": {
+    "title": "Geniet je van Douze Points?",
+    "subtitle": "Steun het project",
+    "completed": "Je hebt de uitdagingen van vandaag voltooid!",
+    "button": "Koop een kopje koffie voor me"
+  }
+};

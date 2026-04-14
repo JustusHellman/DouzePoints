@@ -1,0 +1,62 @@
+export default {
+  "common": {
+    "back": "Назад",
+    "play": "Грати",
+    "submit": "Надіслати",
+    "loading": "Завантаження...",
+    "share": "Поділитися карткою",
+    "shareDaily": "Поділитися результатом",
+    "shareCareer": "Поділитися статистикою",
+    "shareHallOfFame": "Поділитися Залом слави",
+    "copied": "Скопійовано в буфер обміну!",
+    "returnToGreenroom": "Повернутися до Грінруму",
+    "perfect": "Ідеально",
+    "finished": "Завершено",
+    "douzePoints": "DOUZE POINTS!",
+    "nulPoints": "NUL POINTS",
+    "points": "Бали",
+    "pointsShort": "б",
+    "attempts": "спроб",
+    "songs": "пісень",
+    "steps": "кроків",
+    "mistakesLeft": "Помилок залишилося",
+    "howToPlay": "Як грати",
+    "close": "Закрити",
+    "selectLanguage": "Вибрати мову",
+    "languages": "Мови",
+    "qualified": "Кваліфіковано",
+    "semiFinal": "Півфінал",
+    "joinCommunity": "Приєднатися до спільноти",
+    "liveCompanion": "Живий компаньйон",
+    "fanProject": "Фан-проект",
+    "fanProjectDesc": "Це фан-проект, натхненний Євробаченням. Він не пов'язаний з ЄМС або офіційним Пісенним конкурсом Євробачення та не схвалений ними.",
+    "patchNotes": "Список змін",
+    "patchNotesDesc": "Будьте в курсі останніх доповнень, виправлень та покращень у Douze Points."
+  },
+  "seo": {
+    "home": "Douze Points | Щоденні ігри Євробачення",
+    "eurosong": "EuroSong - Щоденна гра Євробачення в стилі Wordle",
+    "euroartist": "EuroArtist - Вгадай артиста Євробачення щодня",
+    "eurorefrain": "EuroRefrain - Щоденна головоломка з текстами пісень",
+    "eurolinks": "EuroLinks - Головоломка зв'язків Євробачення",
+    "euroguess": "EuroGuess - Вікторина таємничих пісень Євробачення",
+    "euroarena": "EuroArena - Битва статистик Євробачення",
+    "eurobingo": "EuroBingo - Компаньйон шоу Євробачення наживо",
+    "infinite": "Нескінченний режим | Ігри Євробачення Douze Points",
+    "patchNotes": "Список змін | Оновлення Douze Points",
+    "privacy": "Політика конфіденційності | Douze Points",
+    "terms": "Умови використання | Douze Points",
+    "about": "Про Douze Points | Фан-проект Євробачення",
+    "contact": "Контакти | Douze Points"
+  },
+  "scorecard": {
+    "signalLost": "Сигнал втрачено",
+    "signalLostDesc": "Сторінка, яку ви шукаєте, була дискваліфікована або ніколи не існувала."
+  },
+  "support": {
+    "title": "Подобається Douze Points?",
+    "subtitle": "Підтримайте проект",
+    "completed": "Ви пройшли сьогоднішні випробування!",
+    "button": "Пригостити мене кавою"
+  }
+};

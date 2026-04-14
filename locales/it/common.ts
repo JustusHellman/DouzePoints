@@ -1,0 +1,62 @@
+export default {
+  "common": {
+    "back": "Indietro",
+    "play": "Gioca",
+    "submit": "Invia",
+    "loading": "Caricamento...",
+    "share": "Condividi Scheda",
+    "shareDaily": "Condividi Punteggio Giornaliero",
+    "shareCareer": "Condividi Statistiche",
+    "shareHallOfFame": "Condividi Hall of Fame",
+    "copied": "Copiato negli appunti!",
+    "returnToGreenroom": "Torna alla Greenroom",
+    "perfect": "Perfetto",
+    "finished": "Terminato",
+    "douzePoints": "DOUZE POINTS!",
+    "nulPoints": "NUL POINTS",
+    "points": "Punti",
+    "pointsShort": "pt",
+    "attempts": "tentativi",
+    "songs": "canzoni",
+    "steps": "passaggi",
+    "mistakesLeft": "Errori rimasti",
+    "howToPlay": "Come giocare",
+    "close": "Chiudi",
+    "selectLanguage": "Seleziona Lingua",
+    "languages": "Lingue",
+    "qualified": "Qualificato",
+    "semiFinal": "Semifinale",
+    "joinCommunity": "Unisciti alla community",
+    "liveCompanion": "Compagno dal vivo",
+    "fanProject": "Progetto dei Fan",
+    "fanProjectDesc": "Questo è un progetto creato dai fan ispirato all'Eurovision. Non è affiliato o approvato dall'EBU o dall'Eurovision Song Contest ufficiale.",
+    "patchNotes": "Note di rilascio",
+    "patchNotesDesc": "Rimani aggiornato sulle ultime aggiunte, correzioni e miglioramenti di Douze Points."
+  },
+  "seo": {
+    "home": "Douze Points | Giochi Quotidiani sull'Eurovision",
+    "eurosong": "EuroSong - Gioco Quotidiano Eurovision stile Wordle",
+    "euroartist": "EuroArtist - Indovina l'Artista Eurovision del Giorno",
+    "eurorefrain": "EuroRefrain - Puzzle Quotidiano di Testi di Canzoni",
+    "eurolinks": "EuroLinks - Puzzle di Connessioni Eurovision",
+    "euroguess": "EuroGuess - Quiz di Canzoni Misteriose dell'Eurovision",
+    "euroarena": "EuroArena - Battaglia di Statistiche Eurovision",
+    "eurobingo": "EuroBingo - Compagno dello Show Eurovision dal Vivo",
+    "infinite": "Modalità Infinita | Giochi Eurovision Douze Points",
+    "patchNotes": "Note di Rilascio | Aggiornamenti Douze Points",
+    "privacy": "Informativa sulla Privacy | Douze Points",
+    "terms": "Termini di Servizio | Douze Points",
+    "about": "Su Douze Points | Progetto dei Fan dell'Eurovision",
+    "contact": "Contattaci | Douze Points"
+  },
+  "scorecard": {
+    "signalLost": "Segnale Perso",
+    "signalLostDesc": "La pagina che stai cercando è stata squalificata o non è mai esistita."
+  },
+  "support": {
+    "title": "Ti piace Douze Points?",
+    "subtitle": "Sostieni il progetto",
+    "completed": "Hai completato le sfide di oggi!",
+    "button": "Offrimi un caffè"
+  }
+};

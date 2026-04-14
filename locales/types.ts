@@ -316,4 +316,26 @@ export interface TranslationSchema {
       "1956": string;
     };
   };
+  bingo: {
+    title: string;
+    subtitle: string;
+    howToPlay: string;
+    newBoard: string;
+    confirmNewBoard: string;
+    bingoTitle: string;
+    bingoMessage: string;
+    continuePlaying: string;
+    generateNew: string;
+    freeSquare: string;
+    countdown: {
+      days: string;
+      hours: string;
+      minutes: string;
+      seconds: string;
+      toShow: string;
+      isLive: string;
+      allShowsFinished: string;
+    };
+    events: Record<string, string>;
+  };
 }
