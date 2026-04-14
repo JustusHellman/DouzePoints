@@ -476,7 +476,7 @@ export const EuroBingo: React.FC<{ onReturn: () => void }> = ({ onReturn }) => {
         <div className="grid grid-cols-5 gap-1 sm:gap-2 w-full aspect-square">
           {squares.map((square, i) => {
           const text = square.isFree ? "12" : t(`bingo.events.${square.id}`);
-          const maxWordLength = Math.max(...text.split(/\s+/).map(w => w.length));
+          const maxWordLength = Math.max(...text.split(/\s+/).map((w: string) => w.length));
           
           return (
             <button

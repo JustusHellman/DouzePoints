@@ -36,7 +36,7 @@ interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  t: (key: string) => any;
+  t: (key: string, params?: Record<string, any>) => any;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);

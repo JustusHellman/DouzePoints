@@ -782,7 +782,7 @@ export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, myS
             <div className="aspect-square w-full max-w-[600px] mx-auto bg-white/5 border border-white/10 rounded-3xl p-2 sm:p-4 grid grid-cols-5 gap-1 sm:gap-2 shadow-2xl">
               {mySquares.map((square, i) => {
                 const text = square.isFree ? "12" : t(`bingo.events.${square.id}`);
-                const maxWordLength = Math.max(...text.split(/\s+/).map(w => w.length));
+                const maxWordLength = Math.max(...text.split(/\s+/).map((w: string) => w.length));
                 
                 return (
                   <button 
