@@ -202,6 +202,89 @@
         }
       },
       "required": ["date", "lastUpdated"]
+    },
+    "BingoRoom": {
+      "title": "Bingo Room",
+      "description": "A multiplayer room for EuroBingo.",
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "finished"]
+        },
+        "playerCount": {
+          "type": "integer"
+        }
+      },
+      "required": ["createdAt", "createdBy", "status", "playerCount"]
+    },
+    "BingoPlayer": {
+      "title": "Bingo Player",
+      "description": "A player in a Bingo room.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "score": {
+          "type": "integer"
+        },
+        "squares": {
+          "type": "array",
+          "items": { "type": "boolean" }
+        },
+        "joinedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastActive": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["name", "color", "score", "squares", "joinedAt", "lastActive"]
+    },
+    "BingoEvent": {
+      "title": "Bingo Event",
+      "description": "A live activity feed event in a Bingo room.",
+      "type": "object",
+      "properties": {
+        "playerName": {
+          "type": "string"
+        },
+        "playerColor": {
+          "type": "string"
+        },
+        "eventId": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["playerName", "playerColor", "eventId", "timestamp"]
+    },
+    "SystemLog": {
+      "title": "System Log",
+      "description": "System logs for errors and events.",
+      "type": "object",
+      "properties": {
+        "event": { "type": "string" },
+        "roomId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["event", "timestamp"]
     }
   },
   "firestore": {
@@ -232,6 +315,22 @@
     "/playtime_stats/{dateId}": {
       "schema": "PlaytimeStats",
       "description": "Collection of daily playtime tracking."
+    },
+    "/rooms/{roomId}": {
+      "schema": "BingoRoom",
+      "description": "Collection of multiplayer Bingo rooms."
+    },
+    "/rooms/{roomId}/players/{playerId}": {
+      "schema": "BingoPlayer",
+      "description": "Collection of players in a Bingo room."
+    },
+    "/rooms/{roomId}/events/{eventId}": {
+      "schema": "BingoEvent",
+      "description": "Collection of live activity events in a Bingo room."
+    },
+    "/system_logs/{logId}": {
+      "schema": "SystemLog",
+      "description": "System logs for errors and events."
     }
   }
 }

@@ -211,6 +211,70 @@ service cloud.firestore {
                       (!('date' in resource.data) || request.resource.data.date == resource.data.date);
     }
 
+    function isValidBingoRoomDoc(data) {
+      return (!('createdAt' in data) || data.createdAt is timestamp) &&
+             (!('createdBy' in data) || data.createdBy is string) &&
+             (!('status' in data) || data.status in ['active', 'finished']) &&
+             (!('expiresAt' in data) || data.expiresAt is timestamp) &&
+             data.playerCount is number;
+    }
+
+    function isValidBingoPlayerDoc(data) {
+      return data.name is string &&
+             data.name.size() > 0 &&
+             data.name.size() <= 20 &&
+             data.color is string &&
+             data.score is number &&
+             data.squares is list &&
+             data.squares.size() == 25 &&
+             (!('joinedAt' in data) || data.joinedAt is timestamp) &&
+             (!('lastActive' in data) || data.lastActive is timestamp);
+    }
+
+    function isValidBingoEventDoc(data) {
+      return data.playerName is string &&
+             data.playerColor is string &&
+             data.eventId is string &&
+             data.timestamp is timestamp;
+    }
+
+    function isValidSystemLogDoc(data) {
+      return data.event is string &&
+             (!('roomId' in data) || data.roomId is string) &&
+             data.timestamp is timestamp;
+    }
+
+    match /rooms/{roomId} {
+      allow read: if true; // Anyone can read room details to join
+      allow create: if isValidBingoRoomDoc(request.resource.data);
+      allow update: if isValidBingoRoomDoc(request.resource.data) &&
+                      (!('createdAt' in resource.data) || request.resource.data.createdAt == resource.data.createdAt) &&
+                      (!('createdBy' in resource.data) || request.resource.data.createdBy == resource.data.createdBy);
+      
+      match /players/{playerId} {
+        allow read: if true; // Anyone in the room can read players
+        allow create: if isValidBingoPlayerDoc(request.resource.data) &&
+                        getAfter(/databases/$(database)/documents/rooms/$(roomId)).data.playerCount <= 10; // Enforce 10 player limit
+        allow update: if isValidBingoPlayerDoc(request.resource.data) &&
+                        (!('joinedAt' in resource.data) || request.resource.data.joinedAt == resource.data.joinedAt);
+      }
+      
+      match /events/{eventId} {
+        allow read: if true; // Anyone in the room can read events
+        allow create: if isValidBingoEventDoc(request.resource.data);
+      }
+    }
+
+    match /system_logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isValidSystemLogDoc(request.resource.data);
+    }
+
+    match /global_state/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // Default deny
     match /{document=**} {
       allow read, write: if false;
