@@ -1,0 +1,62 @@
+export default {
+  "common": {
+    "back": "Takaisin",
+    "play": "Pelaa",
+    "submit": "Lähetä",
+    "loading": "Ladataan...",
+    "share": "Jaa osallistumiskortti",
+    "shareDaily": "Jaa päivän tulos",
+    "shareCareer": "Jaa tilastot",
+    "shareHallOfFame": "Jaa Hall of Fame",
+    "copied": "Kopioitu leikepöydälle!",
+    "returnToGreenroom": "Palaa Greenroomiin",
+    "perfect": "Täydellinen",
+    "finished": "Valmis",
+    "douzePoints": "DOUZE POINTS!",
+    "nulPoints": "NUL POINTS",
+    "points": "Pistettä",
+    "pointsShort": "p",
+    "attempts": "yritystä",
+    "songs": "kappaletta",
+    "steps": "askelta",
+    "mistakesLeft": "Virheitä jäljellä",
+    "howToPlay": "Kuinka pelata",
+    "close": "Sulje",
+    "selectLanguage": "Valitse kieli",
+    "languages": "Kielet",
+    "qualified": "Karsiutunut jatkoon",
+    "semiFinal": "Semifinaali",
+    "joinCommunity": "Liity yhteisöön",
+    "liveCompanion": "Live-kumppani",
+    "fanProject": "Faniprojekti",
+    "fanProjectDesc": "Tämä on fanien tekemä projekti, joka on saanut inspiraationsa Euroviisuista. Se ei ole sidoksissa EBU:hun tai viralliseen Eurovision laulukilpailuun, eikä se ole heidän tukemansa.",
+    "patchNotes": "Päivitystiedot",
+    "patchNotesDesc": "Pysy ajan tasalla Douze Pointsin uusimmista lisäyksistä, korjauksista ja parannuksista."
+  },
+  "seo": {
+    "home": "Douze Points | Päivittäiset Euroviisupelit",
+    "eurosong": "EuroSong - Päivittäinen Euroviisu-Wordle",
+    "euroartist": "EuroArtist - Arvaa päivän ESC-artisti",
+    "eurorefrain": "EuroRefrain - Päivittäinen sanoituspeli",
+    "eurolinks": "EuroLinks - ESC-yhteyspeli",
+    "euroguess": "EuroGuess - Mysteerikappale-visa",
+    "euroarena": "EuroArena - ESC-tilastotaistelu",
+    "eurobingo": "EuroBingo - Live-lähetyksen kumppani",
+    "infinite": "Loputon tila | Douze Points Euroviisupelit",
+    "patchNotes": "Päivitystiedot | Douze Points -päivitykset",
+    "privacy": "Tietosuojaseloste | Douze Points",
+    "terms": "Käyttöehdot | Douze Points",
+    "about": "Tietoa meistä | Douze Points -faniprojekti",
+    "contact": "Ota yhteyttä | Douze Points"
+  },
+  "scorecard": {
+    "signalLost": "Signaali katosi",
+    "signalLostDesc": "Etsimääsi sivua ei ole olemassa tai se on hylätty."
+  },
+  "support": {
+    "title": "Pidätkö Douze Pointsista?",
+    "subtitle": "Tue projektia",
+    "completed": "Suoritit tämän päivän haasteet!",
+    "button": "Tarjoa minulle kahvi"
+  }
+};

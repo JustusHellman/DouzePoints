@@ -1,0 +1,62 @@
+export default {
+  "common": {
+    "back": "Zurück",
+    "play": "Spielen",
+    "submit": "Absenden",
+    "loading": "Laden...",
+    "share": "Karte teilen",
+    "shareDaily": "Tagespunktzahl teilen",
+    "shareCareer": "Statistiken teilen",
+    "shareHallOfFame": "Hall of Fame teilen",
+    "copied": "In die Zwischenablage kopiert!",
+    "returnToGreenroom": "Zurück zum Greenroom",
+    "perfect": "Perfekt",
+    "finished": "Beendet",
+    "douzePoints": "DOUZE POINTS!",
+    "nulPoints": "NULL PUNKTE",
+    "points": "Punkte",
+    "pointsShort": "Pkt",
+    "attempts": "Versuche",
+    "songs": "Lieder",
+    "steps": "Schritte",
+    "mistakesLeft": "Fehler verbleibend",
+    "howToPlay": "Spielanleitung",
+    "close": "Schließen",
+    "selectLanguage": "Sprache Wählen",
+    "languages": "Sprachen",
+    "qualified": "Qualifiziert",
+    "semiFinal": "Halbfinale",
+    "joinCommunity": "Tritt der Community bei",
+    "liveCompanion": "Live-Begleiter",
+    "fanProject": "Fan-Projekt",
+    "fanProjectDesc": "Dies ist ein von Fans erstelltes Projekt, das vom Eurovision Song Contest inspiriert wurde. Es ist nicht mit der EBU oder dem offiziellen Eurovision Song Contest verbunden oder wird von diesen unterstützt.",
+    "patchNotes": "Patchnotes",
+    "patchNotesDesc": "Bleiben Sie auf dem Laufenden über die neuesten Ergänzungen, Fehlerbehebungen und Verbesserungen bei Douze Points."
+  },
+  "seo": {
+    "home": "Douze Points | Tägliche Eurovision-Spiele",
+    "eurosong": "EuroSong - Tägliches Eurovision-Spiel im Wordle-Stil",
+    "euroartist": "EuroArtist - Tägliches ESC-Künstler-Raten",
+    "eurorefrain": "EuroRefrain - Tägliches Songtext-Rätsel",
+    "eurolinks": "EuroLinks - ESC-Verbindungsrätsel",
+    "euroguess": "EuroGuess - Mysteriöses Eurovision-Song-Quiz",
+    "euroarena": "EuroArena - ESC-Statistik-Battle",
+    "eurobingo": "EuroBingo - Live-Begleiter zur Eurovision-Show",
+    "infinite": "Endlos-Modus | Douze Points Eurovision-Spiele",
+    "patchNotes": "Patchnotes | Douze Points Updates",
+    "privacy": "Datenschutzerklärung | Douze Points",
+    "terms": "Nutzungsbedingungen | Douze Points",
+    "about": "Über Douze Points | Eurovision Fan-Projekt",
+    "contact": "Kontaktieren Sie uns | Douze Points"
+  },
+  "scorecard": {
+    "signalLost": "Signal verloren",
+    "signalLostDesc": "Die gesuchte Seite wurde disqualifiziert oder hat nie existiert."
+  },
+  "support": {
+    "title": "Gefällt dir Douze Points?",
+    "subtitle": "Unterstütze das Projekt",
+    "completed": "Du hast die heutigen Herausforderungen abgeschlossen!",
+    "button": "Kauf mir einen Kaffee"
+  }
+};

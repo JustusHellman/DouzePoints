@@ -1,0 +1,62 @@
+export default {
+  "common": {
+    "back": "Πίσω",
+    "play": "Παίξε",
+    "submit": "Υποβολή",
+    "loading": "Φόρτωση...",
+    "share": "Κοινοποίηση Κάρτας",
+    "shareDaily": "Κοινοποίηση Σημερινού Αποτελέσματος",
+    "shareCareer": "Κοινοποίηση Στατιστικών",
+    "shareHallOfFame": "Κοινοποίηση Hall of Fame",
+    "copied": "Αντιγράφηκε στο πρόχειρο!",
+    "returnToGreenroom": "Επιστροφή στο Greenroom",
+    "perfect": "Τέλειο",
+    "finished": "Ολοκληρώθηκε",
+    "douzePoints": "DOUZE POINTS!",
+    "nulPoints": "NUL POINTS",
+    "points": "Πόντοι",
+    "pointsShort": "π",
+    "attempts": "προσπάθειες",
+    "songs": "τραγούδια",
+    "steps": "βήματα",
+    "mistakesLeft": "Λάθη που απομένουν",
+    "howToPlay": "Πώς να παίξετε",
+    "close": "Κλείσιμο",
+    "selectLanguage": "Επιλογή Γλώσσας",
+    "languages": "Γλώσσες",
+    "qualified": "Προκρίθηκε",
+    "semiFinal": "Ημιτελικός",
+    "joinCommunity": "Γίνετε μέλος της κοινότητας",
+    "liveCompanion": "Ζωντανός Σύντροφος",
+    "fanProject": "Fan Project",
+    "fanProjectDesc": "Αυτό είναι ένα fan project εμπνευσμένο από τον Διαγωνισμό Τραγουδιού της Eurovision. Δεν σχετίζεται ούτε υποστηρίζεται από την EBU ή τον επίσημο Διαγωνισμό Τραγουδιού της Eurovision.",
+    "patchNotes": "Σημειώσεις Ενημέρωσης",
+    "patchNotesDesc": "Μείνετε ενημερωμένοι με τις τελευταίες προσθήκες, διορθώσεις και βελτιώσεις στο Douze Points."
+  },
+  "seo": {
+    "home": "Douze Points | Καθημερινά Παιχνίδια Eurovision",
+    "eurosong": "EuroSong - Καθημερινό Wordle Eurovision",
+    "euroartist": "EuroArtist - Μαντέψτε τον Καλλιτέχνη της Ημέρας",
+    "eurorefrain": "EuroRefrain - Καθημερινό Παιχνίδι Στίχων",
+    "eurolinks": "EuroLinks - Παιχνίδι Συνδέσεων Eurovision",
+    "euroguess": "EuroGuess - Κουίζ Μυστηριώδους Τραγουδιού",
+    "euroarena": "EuroArena - Μάχη Στατιστικών Eurovision",
+    "eurobingo": "EuroBingo - Σύντροφος Ζωντανής Μετάδοσης",
+    "infinite": "Infinite Mode | Παιχνίδια Douze Points",
+    "patchNotes": "Σημειώσεις Ενημέρωσης | Ενημερώσεις Douze Points",
+    "privacy": "Πολιτική Απορρήτου | Douze Points",
+    "terms": "Όροι Χρήσης | Douze Points",
+    "about": "Σχετικά με εμάς | Douze Points Fan Project",
+    "contact": "Επικοινωνία | Douze Points"
+  },
+  "scorecard": {
+    "signalLost": "Το σήμα χάθηκε",
+    "signalLostDesc": "Η σελίδα που αναζητάτε δεν υπάρχει ή έχει αποκλειστεί."
+  },
+  "support": {
+    "title": "Σας αρέσει το Douze Points;",
+    "subtitle": "Υποστηρίξτε το project",
+    "completed": "Ολοκληρώσατε τις σημερινές προκλήσεις!",
+    "button": "Κεράστε με έναν καφέ"
+  }
+};

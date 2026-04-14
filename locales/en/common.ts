@@ -1,0 +1,62 @@
+export default {
+  "common": {
+    "back": "Back",
+    "play": "Play",
+    "submit": "Submit",
+    "loading": "Loading...",
+    "share": "Share Entry Card",
+    "shareDaily": "Share Daily Score",
+    "shareCareer": "Share Stats",
+    "shareHallOfFame": "Share Hall of Fame",
+    "copied": "Copied to clipboard!",
+    "returnToGreenroom": "Return to Greenroom",
+    "perfect": "Perfect",
+    "finished": "Finished",
+    "douzePoints": "DOUZE POINTS!",
+    "nulPoints": "NUL POINTS",
+    "points": "Points",
+    "pointsShort": "pts",
+    "attempts": "attempts",
+    "songs": "songs",
+    "steps": "steps",
+    "mistakesLeft": "Mistakes Left",
+    "howToPlay": "How to play",
+    "close": "Close",
+    "selectLanguage": "Select Language",
+    "languages": "Languages",
+    "qualified": "Qualified",
+    "semiFinal": "Semi Final",
+    "joinCommunity": "Join the Community",
+    "liveCompanion": "Live Companion",
+    "fanProject": "Fan Project",
+    "fanProjectDesc": "This is a fan-made project inspired by Eurovision. It is not affiliated with or endorsed by the EBU or the official Eurovision Song Contest.",
+    "patchNotes": "Patch Notes",
+    "patchNotesDesc": "Stay up to date with the latest additions, fixes, and improvements to Douze Points."
+  },
+  "seo": {
+    "home": "Douze Points | Daily Eurovision Games",
+    "eurosong": "EuroSong - Daily Eurovision Wordle-style Game",
+    "euroartist": "EuroArtist - Daily ESC Artist Guessing",
+    "eurorefrain": "EuroRefrain - Daily Lyric Hook Puzzle",
+    "eurolinks": "EuroLinks - ESC Connections-style Puzzle",
+    "euroguess": "EuroGuess - Mystery Eurovision Song Quiz",
+    "euroarena": "EuroArena - ESC Stats Battle",
+    "eurobingo": "EuroBingo - Live Eurovision Show Companion",
+    "infinite": "Infinite Mode | Douze Points Eurovision Games",
+    "patchNotes": "Patch Notes | Douze Points Updates",
+    "privacy": "Privacy Policy | Douze Points",
+    "terms": "Terms of Service | Douze Points",
+    "about": "About Douze Points | Eurovision Fan Project",
+    "contact": "Contact Us | Douze Points"
+  },
+  "scorecard": {
+    "signalLost": "Signal Lost",
+    "signalLostDesc": "The page you are looking for has been disqualified or never existed in the first place."
+  },
+  "support": {
+    "title": "Enjoying Douze Points?",
+    "subtitle": "Support the project",
+    "completed": "You completed today's challenges!",
+    "button": "Buy me a coffee"
+  }
+};

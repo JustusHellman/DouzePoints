@@ -1,0 +1,62 @@
+export default {
+  "common": {
+    "back": "Retour",
+    "play": "Jouer",
+    "submit": "Envoyer",
+    "loading": "Chargement...",
+    "share": "Partager la Fiche",
+    "shareDaily": "Partager le Score du Jour",
+    "shareCareer": "Partager les Stats",
+    "shareHallOfFame": "Partager le Hall of Fame",
+    "copied": "Copié dans le presse-papiers !",
+    "returnToGreenroom": "Retour au Greenroom",
+    "perfect": "Parfait",
+    "finished": "Terminé",
+    "douzePoints": "DOUZE POINTS !",
+    "nulPoints": "NUL POINTS",
+    "points": "Points",
+    "pointsShort": "pts",
+    "attempts": "essais",
+    "songs": "chansons",
+    "steps": "étapes",
+    "mistakesLeft": "Erreurs restantes",
+    "howToPlay": "Comment jouer",
+    "close": "Fermer",
+    "selectLanguage": "Choisir la Langue",
+    "languages": "Langues",
+    "qualified": "Qualifié",
+    "semiFinal": "Demi-finale",
+    "joinCommunity": "Rejoignez la communauté",
+    "liveCompanion": "Compagnon en direct",
+    "fanProject": "Projet de Fans",
+    "fanProjectDesc": "Ceci est un projet créé par des fans, inspiré de l'Eurovision. Il n'est ni affilié ni approuvé par l'UER ou le Concours Eurovision de la Chanson officiel.",
+    "patchNotes": "Notes de mise à jour",
+    "patchNotesDesc": "Restez au courant des derniers ajouts, correctifs et améliorations apportés à Douze Points."
+  },
+  "seo": {
+    "home": "Douze Points | Jeux Quotidiens de l'Eurovision",
+    "eurosong": "EuroSong - Jeu Quotidien Eurovision style Wordle",
+    "euroartist": "EuroArtist - Devinez l'Artiste Eurovision du Jour",
+    "eurorefrain": "EuroRefrain - Puzzle Quotidien de Paroles de Chansons",
+    "eurolinks": "EuroLinks - Puzzle de Connexions Eurovision",
+    "euroguess": "EuroGuess - Quiz de Chansons Mystères de l'Eurovision",
+    "euroarena": "EuroArena - Bataille de Statistiques Eurovision",
+    "eurobingo": "EuroBingo - Compagnon du Show Eurovision en Direct",
+    "infinite": "Mode Infini | Jeux Eurovision Douze Points",
+    "patchNotes": "Notes de Mise à Jour | Nouveautés Douze Points",
+    "privacy": "Politique de Confidentialité | Douze Points",
+    "terms": "Conditions d'Utilisation | Douze Points",
+    "about": "À Propos de Douze Points | Projet de Fans Eurovision",
+    "contact": "Contactez-nous | Douze Points"
+  },
+  "scorecard": {
+    "signalLost": "Signal Perdu",
+    "signalLostDesc": "La page que vous recherchez a été disqualifiée ou n'a jamais existé."
+  },
+  "support": {
+    "title": "Vous aimez Douze Points ?",
+    "subtitle": "Soutenez le projet",
+    "completed": "Vous avez terminé les défis d'aujourd'hui !",
+    "button": "Offrez-moi un café"
+  }
+};

@@ -1,0 +1,62 @@
+export default {
+  "common": {
+    "back": "Volver",
+    "play": "Jugar",
+    "submit": "Enviar",
+    "loading": "Cargando...",
+    "share": "Compartir Ficha",
+    "shareDaily": "Compartir Puntuación Diaria",
+    "shareCareer": "Compartir Estadísticas",
+    "shareHallOfFame": "Compartir Salón de la Fama",
+    "copied": "¡Copiado al portapapeles!",
+    "returnToGreenroom": "Volver a la Sala Verde",
+    "perfect": "Perfecto",
+    "finished": "Terminado",
+    "douzePoints": "¡DOUZE POINTS!",
+    "nulPoints": "NUL POINTS",
+    "points": "Puntos",
+    "pointsShort": "pts",
+    "attempts": "intentos",
+    "songs": "canciones",
+    "steps": "pasos",
+    "mistakesLeft": "Errores restantes",
+    "howToPlay": "Cómo jugar",
+    "close": "Cerrar",
+    "selectLanguage": "Seleccionar Idioma",
+    "languages": "Idiomas",
+    "qualified": "Calificado",
+    "semiFinal": "Semifinal",
+    "joinCommunity": "Únete a la comunidad",
+    "liveCompanion": "Compañero en vivo",
+    "fanProject": "Proyecto de Fans",
+    "fanProjectDesc": "Este es un proyecto creado por fans inspirado en Eurovisión. No está afiliado ni respaldado por la UER ni por el Festival de la Canción de Eurovisión oficial.",
+    "patchNotes": "Notas del Parche",
+    "patchNotesDesc": "Mantente al día con las últimas incorporaciones, correcciones y mejoras de Douze Points."
+  },
+  "seo": {
+    "home": "Douze Points | Juegos Diarios de Eurovisión",
+    "eurosong": "EuroSong - Juego Diario de Eurovisión estilo Wordle",
+    "euroartist": "EuroArtist - Adivina el Artista de Eurovisión Diario",
+    "eurorefrain": "EuroRefrain - Puzzle Diario de Letras de Canciones",
+    "eurolinks": "EuroLinks - Puzzle de Conexiones de Eurovisión",
+    "euroguess": "EuroGuess - Quiz de Canciones Misteriosas de Eurovisión",
+    "euroarena": "EuroArena - Batalla de Estadísticas de Eurovisión",
+    "eurobingo": "EuroBingo - Compañero del Show de Eurovisión en Vivo",
+    "infinite": "Modo Infinito | Juegos de Eurovisión Douze Points",
+    "patchNotes": "Notas del Parche | Actualizaciones de Douze Points",
+    "privacy": "Política de Privacidad | Douze Points",
+    "terms": "Términos de Servicio | Douze Points",
+    "about": "Sobre Douze Points | Proyecto de Fans de Eurovisión",
+    "contact": "Contáctanos | Douze Points"
+  },
+  "scorecard": {
+    "signalLost": "Señal Perdida",
+    "signalLostDesc": "La página que buscas ha sido descalificada o nunca existió en primer lugar."
+  },
+  "support": {
+    "title": "¿Disfrutas de Douze Points?",
+    "subtitle": "Apoya el proyecto",
+    "completed": "¡Has completado los desafíos de hoy!",
+    "button": "Cómprame un café"
+  }
+};
