@@ -34,7 +34,7 @@ try {
   let matchedCount = 0;
   let unmatchedCount = 0;
 
-  parsedData.forEach((entry: any) => {
+  parsedData.forEach((entry: { lyrics?: string; year?: number; country?: string; artist?: string; title?: string }) => {
     if (!entry.lyrics || typeof entry.lyrics !== 'string') return;
 
     // Try to match with fullMasterData.ts

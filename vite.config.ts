@@ -31,6 +31,16 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true,
     assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-utils': ['canvas-confetti', 'html-to-image', 'html2canvas', 'papaparse', 'qrcode.react'],
+          'vendor-ui': ['motion', 'lucide-react', 'recharts'],
+          'vendor-firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/analytics']
+        }
+      }
+    }
   },
   server: {
     port: 3000,

@@ -131,7 +131,7 @@ export const LINKS_CATEGORIES: LinkMainCategory[] = ${JSON.stringify(result.cate
     console.log(`Total Main Categories: ${result.categories.length}`);
     
     let totalSubs = 0;
-    result.categories.forEach((c: any) => totalSubs += c.subs.length);
+    result.categories.forEach((c: { subs: unknown[] }) => totalSubs += c.subs.length);
     console.log(`Total Sub-Categories: ${totalSubs}`);
 
   } catch (error) {

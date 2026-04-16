@@ -17,7 +17,6 @@ const MODEL = "gemini-3-flash-preview";
 const uniqueCountries = Array.from(new Set(MASTER_DATA.map(m => m.country))).sort();
 const uniqueArtists = Array.from(new Set(MASTER_DATA.map(m => m.artist))).sort();
 const uniqueTitles = Array.from(new Set(MASTER_DATA.map(m => m.title))).sort();
-const uniqueYears = Array.from(new Set(MASTER_DATA.map(m => m.year))).sort();
 const winners = MASTER_DATA.filter(m => m.placing === 1)
   .map(m => `${m.year}: ${m.country} - ${m.artist} "${m.title}"`);
 
@@ -234,10 +233,11 @@ async function pass2_populateSubCategoryWithRetry(
       return await pass2_populateSubCategory(
         mainCategory, itemType, sub, contextData
       );
-    } catch (err: any) {
-      const isRateLimit = err?.message?.includes("429") 
-        || err?.message?.includes("RESOURCE_EXHAUSTED")
-        || err?.toString()?.includes("429");
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      const isRateLimit = errorMessage.includes("429") 
+        || errorMessage.includes("RESOURCE_EXHAUSTED")
+        || errorMessage.includes("429");
 
       if (isRateLimit && attempt < maxRetries) {
         const waitSeconds = Math.pow(2, attempt) * 10;
@@ -311,52 +311,6 @@ Return items as a JSON array of strings. Be exhaustive.`;
   };
 }
 
-async function pass2_populateAll(
-  structure: MainCategoryDraft[]
-): Promise<{ main: string; itemType: string; subs: PopulatedSub[] }[]> {
-  console.log("\n═══ PASS 2: Populating items (this will take a while) ═══");
-
-  const populated: { main: string; itemType: string; subs: PopulatedSub[] }[] = [];
-
-  for (const mainCat of structure) {
-    console.log(`\n  Main: ${mainCat.main}`);
-    const populatedSubs: PopulatedSub[] = [];
-
-    // Process in batches of 5 to avoid rate limits but still parallelize
-    const BATCH_SIZE = 5;
-    for (let i = 0; i < mainCat.subs.length; i += BATCH_SIZE) {
-      const batch = mainCat.subs.slice(i, i + BATCH_SIZE);
-      const results = await Promise.all(
-        batch.map(sub =>
-          pass2_populateSubCategory(mainCat.main, mainCat.itemType, sub, compactData)
-            .catch(err => {
-              console.error(`    ✗ Failed: "${sub.name}" — ${err.message}`);
-              return { name: sub.name, items: [] as string[] };
-            })
-        )
-      );
-
-      for (const result of results) {
-        console.log(`    ${result.items.length >= 6 ? '✓' : '⚠'} "${result.name}": ${result.items.length} items`);
-        populatedSubs.push(result);
-      }
-
-      // Small delay between batches to be nice to the API
-      if (i + BATCH_SIZE < mainCat.subs.length) {
-        await new Promise(r => setTimeout(r, 1000));
-      }
-    }
-
-    populated.push({
-      main: mainCat.main,
-      itemType: mainCat.itemType,
-      subs: populatedSubs
-    });
-  }
-
-  return populated;
-}
-
 async function pass2_retryEmpty(
   populated: { main: string; itemType: string; subs: PopulatedSub[] }[],
   structure: MainCategoryDraft[]
@@ -390,7 +344,7 @@ async function pass2_retryEmpty(
         mainCat.subs[i] = result;
         retried++;
         await sleep(8000);
-      } catch (err: any) {
+      } catch {
         console.log(`    ✗ Still failing: "${sub.name}"`);
         stillEmpty++;
       }
@@ -556,7 +510,7 @@ function ensureCheckpointDir() {
   }
 }
 
-function saveCheckpoint(name: string, data: any) {
+function saveCheckpoint(name: string, data: unknown) {
   ensureCheckpointDir();
   const filePath = path.join(CHECKPOINT_DIR, `${name}.json`);
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
@@ -621,8 +575,9 @@ async function main() {
           const icon = result.items.length >= 6 ? '✓' : result.items.length >= 4 ? '~' : '✗';
           console.log(`    ${icon} "${result.name}": ${result.items.length} items`);
           populatedSubs.push(result);
-        } catch (err: any) {
-          console.error(`    ✗ Failed after retries: "${sub.name}" — ${err.message}`);
+        } catch (err: unknown) {
+          const errorMessage = err instanceof Error ? err.message : String(err);
+          console.error(`    ✗ Failed after retries: "${sub.name}" — ${errorMessage}`);
           populatedSubs.push({ name: sub.name, items: [] });
         }
         // 8 second delay to stay under 5 requests/minute

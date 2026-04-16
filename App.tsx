@@ -28,6 +28,8 @@ import { EurovisionCountdown } from './components/EurovisionCountdown.tsx';
 import { InfiniteArena } from './components/InfiniteArena.tsx';
 import { EUROVISION_SCHEDULE } from './config/eurovisionSchedule.ts';
 
+const isWindows = typeof navigator !== 'undefined' && /Win/i.test(navigator.userAgent);
+
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -78,7 +80,16 @@ const LanguageOverlay: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   : 'bg-white/5 border-white/5 text-white hover:bg-white/10'
               }`}
             >
-              <span className="text-3xl mb-1" role="img" aria-label={lang.name}>{lang.flag}</span>
+              {isWindows ? (
+                <img 
+                  src={`https://flagcdn.com/w80/${lang.flagCode}.png`}
+                  alt={lang.name}
+                  className="w-10 h-6 object-cover rounded shadow-sm mb-2"
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                <span className="text-3xl mb-1" role="img" aria-label={lang.name}>{lang.flag}</span>
+              )}
               <span className="font-black uppercase tracking-tighter text-[9px] text-center leading-none opacity-60">
                 {lang.name}
               </span>
@@ -772,18 +783,12 @@ const App: React.FC = () => {
 
   }, [location.pathname, language, t]);
 
+  const currentFlagCode = useMemo(() => {
+    return SUPPORTED_LANGUAGES.find(l => l.code === language)?.flagCode || 'gb';
+  }, [language]);
+
   const currentFlag = useMemo(() => {
-    switch (language) {
-      case 'es': return '🇪🇸';
-      case 'fr': return '🇫🇷';
-      case 'it': return '🇮🇹';
-      case 'de': return '🇩🇪';
-      case 'pl': return '🇵🇱';
-      case 'sv': return '🇸🇪';
-      case 'uk': return '🇺🇦';
-      case 'pt': return '🇵🇹';
-      default: return '🇬🇧';
-    }
+    return SUPPORTED_LANGUAGES.find(l => l.code === language)?.flag || '🇬🇧';
   }, [language]);
 
   const isLobby = useMemo(() => {
@@ -858,7 +863,16 @@ const App: React.FC = () => {
             className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all active:scale-95 group overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
             aria-label={t('common.selectLanguage')}
           >
-            <span className="text-base md:text-lg group-hover:scale-110 transition-transform duration-300" role="img" aria-label="Language">{currentFlag}</span>
+            {isWindows ? (
+              <img 
+                src={`https://flagcdn.com/w40/${currentFlagCode}.png`}
+                alt="Language"
+                className="w-6 h-4 object-cover rounded-sm group-hover:scale-110 transition-transform duration-300"
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <span className="text-base md:text-lg group-hover:scale-110 transition-transform duration-300" role="img" aria-label="Language">{currentFlag}</span>
+            )}
           </button>
           
           <button 

@@ -36,13 +36,17 @@ export const EuroBingoPrint: React.FC<{ onClose: () => void, totalCards: number,
   const appUrl = 'https://www.douzepoints.net';
 
   return (
-    <div className="bg-gray-200 min-h-screen text-black p-4 sm:p-8 font-sans min-w-[210mm] flex flex-col items-center gap-8">
+    <div className="print-container bg-gray-200 min-h-screen text-black p-4 sm:p-8 font-sans min-w-[210mm] flex flex-col items-center gap-8">
       <style>
         {`
           @media print {
-            @page { margin: 0; size: ${cardsPerPage === 2 ? 'A4 landscape' : 'A4 portrait'}; }
-            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: white !important; }
-            .no-print { display: none !important; }
+            @page { margin: 0; size: ${cardsPerPage === 2 ? 'landscape' : 'portrait'}; }
+            body * { visibility: hidden; }
+            #root, body, html { height: auto !important; min-height: auto !important; background: white !important; }
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .print-container, .print-container * { visibility: visible; }
+            .print-container { position: absolute; left: 0; top: 0; width: 100%; display: block !important; padding: 0 !important; background: white !important; margin: 0 !important; }
+            .no-print, .no-print * { display: none !important; visibility: hidden !important; }
             .print-page { margin: 0 !important; box-shadow: none !important; break-after: page; page-break-after: always; }
             .print-page:last-child { break-after: auto; page-break-after: auto; }
           }

@@ -17,19 +17,19 @@ import { TranslationSchema } from '../locales/types.ts';
 
 export type Language = 'en' | 'es' | 'fr' | 'it' | 'de' | 'pl' | 'sv' | 'uk' | 'pt' | 'nl' | 'fi' | 'el';
 
-export const SUPPORTED_LANGUAGES: { code: Language; name: string; flag: string }[] = [
-  { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
-  { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-  { code: 'el', name: 'Ελληνικά', flag: '🇬🇷' },
-  { code: 'fi', name: 'Suomi', flag: '🇫🇮' },
-  { code: 'nl', name: 'Nederlands', flag: '🇳🇱' },
-  { code: 'pl', name: 'Polski', flag: '🇵🇱' },
-  { code: 'sv', name: 'Svenska', flag: '🇸🇪' },
-  { code: 'uk', name: 'Українська', flag: '🇺🇦' },
-  { code: 'pt', name: 'Português', flag: '🇵🇹' }
+export const SUPPORTED_LANGUAGES: { code: Language; name: string; flag: string; flagCode: string }[] = [
+  { code: 'en', name: 'English', flag: '🇬🇧', flagCode: 'gb' },
+  { code: 'de', name: 'Deutsch', flag: '🇩🇪', flagCode: 'de' },
+  { code: 'es', name: 'Español', flag: '🇪🇸', flagCode: 'es' },
+  { code: 'fr', name: 'Français', flag: '🇫🇷', flagCode: 'fr' },
+  { code: 'it', name: 'Italiano', flag: '🇮🇹', flagCode: 'it' },
+  { code: 'el', name: 'Ελληνικά', flag: '🇬🇷', flagCode: 'gr' },
+  { code: 'fi', name: 'Suomi', flag: '🇫🇮', flagCode: 'fi' },
+  { code: 'nl', name: 'Nederlands', flag: '🇳🇱', flagCode: 'nl' },
+  { code: 'pl', name: 'Polski', flag: '🇵🇱', flagCode: 'pl' },
+  { code: 'sv', name: 'Svenska', flag: '🇸🇪', flagCode: 'se' },
+  { code: 'uk', name: 'Українська', flag: '🇺🇦', flagCode: 'ua' },
+  { code: 'pt', name: 'Português', flag: '🇵🇹', flagCode: 'pt' }
 ];
 
 interface LanguageContextType {
