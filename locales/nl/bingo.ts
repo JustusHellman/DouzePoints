@@ -2,7 +2,7 @@ export default {
   bingo: {
     title: "EuroBingo",
     subtitle: "Probeer 5 op een rij te krijgen van gebeurtenissen in de live show",
-    howToPlay: "Markeer vakjes als je gebeurtenissen ziet tijdens de show. Krijg 5 op een rij (horizontaal, verticaal of diagonaal) om te winnen!",
+    howToPlay: "Markeer vakjes zodra je gebeurtenissen ziet tijdens de uitzending.\n\nHet middelste '12'-vakje is een gratis plekje dat je meteen krijgt. Krijg 5 gemarkeerde vakjes op een rij, kolom of diagonaal om Bingo te halen! Vul de hele kaart voor een Full House.\n\nJe kunt ook een Live Room hosten om in realtime met vrienden te spelen, of fysieke kaarten genereren en afdrukken voor een kijkfeest!",
     rules: {
       rule1: "Tik op een vakje om het te markeren wanneer je de gebeurtenis op het scherm ziet.",
       rule2: "Houd een vakje lang ingedrukt (of klik met de rechtermuisknop) om de volledige beschrijving te lezen.",
