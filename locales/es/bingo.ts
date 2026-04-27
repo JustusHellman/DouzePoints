@@ -87,6 +87,8 @@ export default {
       roomSupport: "Las salas admiten hasta 10 jugadores.",
       liveMultiplayer: "Multijugador en Vivo",
       joiningRoom: "Uniéndose a la Sala...",
+      myBoard: "Mi cartón",
+      view: "Ver",
       noActivity: "Aún no hay actividad. ¡Marca una casilla para empezar!",
       gotABingo: "¡HIZO BINGO!",
       gotAFullHouse: "¡HIZO CARTÓN LLENO!",

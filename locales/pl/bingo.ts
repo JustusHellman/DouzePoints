@@ -87,6 +87,8 @@ export default {
       roomSupport: "Pokoje obsługują do 10 graczy.",
       liveMultiplayer: "Tryb wieloosobowy na żywo",
       joiningRoom: "Dołączanie do pokoju...",
+      myBoard: "Moja karta",
+      view: "Zobacz",
       noActivity: "Brak aktywności. Zaznacz pole, aby rozpocząć!",
       gotABingo: "MA BINGO!",
       gotAFullHouse: "MA PEŁNĄ PLANSZĘ!",

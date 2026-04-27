@@ -87,6 +87,8 @@ export default {
       roomSupport: "Huoneet tukevat jopa 10 pelaajaa.",
       liveMultiplayer: "Live-moninpeli",
       joiningRoom: "Liitytään huoneeseen...",
+      myBoard: "Oma kuponki",
+      view: "Katso",
       noActivity: "Ei vielä toimintaa. Merkitse ruutu aloittaaksesi!",
       gotABingo: "SAI BINGON!",
       gotAFullHouse: "SAI FULL HOUSEN!",

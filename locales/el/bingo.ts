@@ -85,7 +85,7 @@ export default {
       enterRoomCodePlaceholder: "π.χ. ABBAX",
       back: "Πίσω",
       roomSupport: "Τα δωμάτια υποστηρίζουν έως και 10 παίκτες.",
-      liveMultiplayer: "Live Multiplayer",
+      liveMultiplayer: "Ζωντανό Multiplayer",
       joiningRoom: "Είσοδος στο δωμάτιο...",
       noActivity: "Καμία δραστηριότητα ακόμα. Σημειώστε ένα τετράγωνο για να ξεκινήσετε!",
       gotABingo: "ΕΚΑΝΕ BINGO!",

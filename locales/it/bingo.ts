@@ -87,6 +87,8 @@ export default {
       roomSupport: "Le stanze supportano fino a 10 giocatori.",
       liveMultiplayer: "Multigiocatore in Diretta",
       joiningRoom: "Unione alla Stanza...",
+      myBoard: "La mia cartella",
+      view: "Vedi",
       noActivity: "Nessuna attività ancora. Segna una casella per iniziare!",
       gotABingo: "HA FATTO BINGO!",
       gotAFullHouse: "HA FATTO CARTELLA PIENA!",

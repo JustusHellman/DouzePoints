@@ -87,6 +87,8 @@ export default {
       roomSupport: "Rooms support up to 10 players.",
       liveMultiplayer: "Live Multiplayer",
       joiningRoom: "Joining Room...",
+      myBoard: "Your Board",
+      view: "View",
       noActivity: "No activity yet. Stamp a square to start!",
       gotABingo: "GOT BINGO!",
       gotAFullHouse: "GOT A FULL HOUSE!",

@@ -87,6 +87,8 @@ export default {
       roomSupport: "Кімнати підтримують до 10 гравців.",
       liveMultiplayer: "Мультиплеєр наживо",
       joiningRoom: "Приєднання до кімнати...",
+      myBoard: "Моя дошка",
+      view: "Переглянути",
       noActivity: "Активності поки немає. Відмітьте квадрат, щоб почати!",
       gotABingo: "МАЄ БІНГО!",
       gotAFullHouse: "МАЄ ПОВНУ ДОШКУ!",

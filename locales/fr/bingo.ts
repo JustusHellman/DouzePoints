@@ -87,6 +87,8 @@ export default {
       roomSupport: "Les salons peuvent accueillir jusqu'à 10 joueurs.",
       liveMultiplayer: "Multijoueur en direct",
       joiningRoom: "Connexion au salon...",
+      myBoard: "Ma grille",
+      view: "Voir",
       noActivity: "Aucune activité pour le moment. Cochez une case pour commencer !",
       gotABingo: "A FAIT BINGO !",
       gotAFullHouse: "A FAIT UNE GRILLE COMPLÈTE !",
