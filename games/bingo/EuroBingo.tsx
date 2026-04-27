@@ -8,8 +8,9 @@ import { useTranslation } from '../../context/LanguageContext.tsx';
 import { BINGO_EVENTS } from '../../data/bingoEvents.ts';
 import { EuroBingoPrint } from './EuroBingoPrint.tsx';
 import { BingoMultiplayer } from './BingoMultiplayer.tsx';
+import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
 import { EUROVISION_SCHEDULE } from '../../config/eurovisionSchedule.ts';
-import { Users } from 'lucide-react';
+import { Users, ChevronRight } from 'lucide-react';
 import { REDDIT_URL, DISCORD_URL, BUY_ME_A_COFFEE_URL } from '../../data/constants.tsx';
 
 import { logAnalyticsEvent } from '../../utils/analytics.ts';
@@ -60,7 +61,15 @@ export const EuroBingo: React.FC<{ onReturn: () => void }> = ({ onReturn }) => {
   const [showBingoModal, setShowBingoModal] = useState(false);
   const [showFullHouseModal, setShowFullHouseModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [showHowToPlay, setShowHowToPlay] = useState(false);
+  const [showHowToPlay, setShowHowToPlay] = useState(() => {
+    const seenKey = 'hasSeenRules-eurobingo';
+    const hasSeen = localStorage.getItem(seenKey);
+    if (!hasSeen) {
+      localStorage.setItem(seenKey, 'true');
+      return true;
+    }
+    return false;
+  });
   const [showShareModal, setShowShareModal] = useState(false);
   const [selectedSquare, setSelectedSquare] = useState<number | null>(null);
   const [showPrintView, setShowPrintView] = useState(false);
@@ -452,22 +461,25 @@ export const EuroBingo: React.FC<{ onReturn: () => void }> = ({ onReturn }) => {
 
       {!isMultiplayerJoined && (
         <>
-          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-4 flex-wrap justify-center">
-            <h1 className="text-2xl md:text-4xl font-black bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter leading-none">
-              {t('bingo.title')}
-            </h1>
-            <button 
-              onClick={() => setShowHowToPlay(true)} 
-              className="w-5 h-5 md:w-7 md:h-7 rounded-full border border-white/20 text-[9px] md:text-xs flex items-center justify-center font-bold text-gray-500 hover:text-white hover:border-white transition-all active:scale-90"
-            >
-              ?
-            </button>
+          <div className="flex flex-col items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+            <div className="flex items-center gap-2 sm:gap-3 justify-center">
+              <h1 className="text-2xl md:text-4xl font-black bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent italic pr-[0.1em] uppercase tracking-tighter leading-none">
+                {t('bingo.title')}
+              </h1>
+              <button 
+                onClick={() => setShowHowToPlay(true)} 
+                className="w-5 h-5 md:w-7 md:h-7 rounded-full border border-white/20 text-[9px] md:text-xs flex items-center justify-center font-bold text-gray-500 hover:text-white hover:border-white transition-all active:scale-90"
+              >
+                ?
+              </button>
+            </div>
             <button 
               onClick={() => setShowMultiplayerPrototype(true)}
-              className="ml-1 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-full font-black uppercase text-[10px] md:text-xs tracking-widest transition-all shadow-[0_0_20px_rgba(219,39,119,0.5)] hover:shadow-[0_0_25px_rgba(219,39,119,0.7)] hover:scale-105 flex items-center gap-2 animate-pulse-slow"
+              className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-full font-black uppercase text-[10px] md:text-xs tracking-widest transition-all shadow-[0_0_20px_rgba(219,39,119,0.5)] hover:shadow-[0_0_25px_rgba(219,39,119,0.7)] hover:scale-105 flex items-center gap-2 animate-pulse-slow"
             >
               <Users className="w-4 h-4 md:w-5 md:h-5" />
               {t('bingo.playLiveWithFriends')}
+              <ChevronRight className="w-4 h-4 md:w-5 md:h-5 ml-1" />
             </button>
           </div>
 
@@ -609,15 +621,13 @@ export const EuroBingo: React.FC<{ onReturn: () => void }> = ({ onReturn }) => {
         document.body
       )}
 
-      {showHowToPlay && createPortal(
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[60] flex items-center justify-center p-6 animate-in fade-in duration-300">
-          <div className="bg-[#0b0b18] border border-white/10 rounded-[2.5rem] p-8 max-w-sm w-full relative shadow-3xl border-t-pink-500/30">
-            <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white mb-4">{t('bingo.title')}</h2>
-            <p className="text-gray-400 text-sm font-medium leading-relaxed mb-8">{t('bingo.howToPlay')}</p>
-            <button onClick={() => setShowHowToPlay(false)} className="w-full bg-white text-black py-4 rounded-full font-black uppercase text-[10px] tracking-widest">{t('common.close')}</button>
-          </div>
-        </div>,
-        document.body
+      {showHowToPlay && (
+        <HowToPlayModal 
+          isOpen={showHowToPlay} 
+          onClose={() => setShowHowToPlay(false)} 
+          title={t('bingo.title')} 
+          rules={t('bingo.howToPlay')} 
+        />
       )}
 
       {showConfirmModal && createPortal(
