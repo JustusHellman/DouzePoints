@@ -2,7 +2,7 @@ export default {
   bingo: {
     title: "EuroBingo",
     subtitle: "Cerca di ottenere 5 di fila con gli eventi dello show dal vivo",
-    howToPlay: "Segna le caselle quando vedi accadere gli eventi durante lo show. Ottieni 5 di fila, in colonna o in diagonale per vincere!",
+    howToPlay: "Segna le caselle quando vedi accadere gli eventi durante la trasmissione.\n\nLa casella centrale '12' è uno spazio gratuito che ti viene dato dall'inizio. Ottieni 5 caselle segnate di fila, in colonna o in diagonale per fare Bingo! Riempi l'intera cartella per fare Tombola.\n\nPuoi anche ospitare una Stanza Live per giocare insieme agli amici in tempo reale, oppure generare e stampare cartelle fisiche per un watch party!",
     rules: {
       rule1: "Tocca una casella per segnarla quando vedi l'evento sullo schermo.",
       rule2: "Tieni premuta (o fai clic con il tasto destro) qualsiasi casella per leggere la sua descrizione completa.",

@@ -2,7 +2,7 @@ export default {
   bingo: {
     title: "EuroBingo",
     subtitle: "Tente obter 5 em linha com eventos do programa ao vivo",
-    howToPlay: "Marque os quadrados ao ver os eventos acontecerem durante o programa. Obtenha 5 em linha, coluna ou diagonal para ganhar!",
+    howToPlay: "Marca os quadrados à medida que os eventos acontecem durante a transmissão.\n\nO quadrado central '12' é um espaço livre que te é dado desde o início. Consegue 5 quadrados marcados numa linha, coluna ou diagonal para obteres um Bingo! Preenche o cartão inteiro para fazeres Casa Cheia.\n\nPodes também criar uma Sala ao Vivo para jogar em conjunto com amigos em tempo real, ou gerar e imprimir cartões físicos para uma festa de visualização!",
     rules: {
       rule1: "Toque num quadrado para marcá-lo quando vir o evento no ecrã.",
       rule2: "Mantenha premido (ou clique com o botão direito) em qualquer quadrado para ler a sua descrição completa.",

@@ -2,7 +2,7 @@ export default {
   bingo: {
     title: "EuroBingo",
     subtitle: "Försök få 5 i rad med händelser från livesändningen",
-    howToPlay: "Kryssa rutorna när du ser händelserna inträffa under showen. Få 5 i rad, kolumn eller diagonalt för att vinna!",
+    howToPlay: "Markera rutor när du ser händelser inträffa under sändningen.\n\nMittenrutan '12' är en gratisruta som du får från start. Få 5 markerade rutor i rad, kolumn eller diagonalt för att få Bingo! Fyll hela brickan för Fullt Hus.\n\nDu kan också skapa ett Liverum för att spela tillsammans med vänner i realtid, eller generera och skriva ut fysiska brickor för en visningsfest!",
     rules: {
       rule1: "Tryck på en ruta för att kryssa den när du ser händelsen på skärmen.",
       rule2: "Håll in (eller högerklicka) på valfri ruta för att läsa hela beskrivningen.",

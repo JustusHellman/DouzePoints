@@ -2,7 +2,7 @@ export default {
   bingo: {
     title: "EuroBingo",
     subtitle: "Spróbuj zdobyć 5 w rzędzie z wydarzeń podczas występu na żywo",
-    howToPlay: "Zaznaczaj pola, gdy zobaczysz wydarzenia podczas programu. Zdobądź 5 w rzędzie, kolumnie lub po przekątnej, aby wygrać!",
+    howToPlay: "Zaznaczaj pola, gdy zobaczysz, że wydarzenia mają miejsce podczas transmisji.\n\nŚrodkowe pole '12' jest darmowym miejscem przyznawanym od początku. Zdobądź 5 zaznaczonych pól w rzędzie, kolumnie lub po przekątnej, aby wygrać Bingo! Wypełnij całą planszę, aby zdobyć Full House.\n\nMożesz również zorganizować Pokój na żywo, aby grać razem z przyjaciółmi w czasie rzeczywistym, lub wygenerować i wydrukować fizyczne plansze na imprezę ze wspólnym oglądaniem!",
     rules: {
       rule1: "Dotknij pola, aby je zaznaczyć, gdy zauważysz wydarzenie na ekranie.",
       rule2: "Przytrzymaj (lub kliknij prawym przyciskiem myszy) dowolne pole, aby przeczytać jego pełny opis.",

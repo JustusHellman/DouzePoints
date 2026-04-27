@@ -2,7 +2,7 @@ export default {
   bingo: {
     title: "EuroBingo",
     subtitle: "Try to get 5 in a row from events in the live show",
-    howToPlay: "Mark squares as you see events happen during the show. Get 5 in a row, column, or diagonal to win!",
+    howToPlay: "Mark squares as you see events happen during the broadcast.\n\nThe center '12' square is a free spot given to you from the start. Get 5 marked squares in a row, column, or diagonal to get a Bingo! Fill the whole board for a Full House.\n\nYou can also host a Live Room to play together with friends in real-time, or generate and print physical boards for a watch party!",
     rules: {
       rule1: "Tap a square to mark it when you spot the event on screen.",
       rule2: "Long-press (or right-click) any square to read its full description.",

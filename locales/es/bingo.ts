@@ -2,7 +2,7 @@ export default {
   bingo: {
     title: "EuroBingo",
     subtitle: "Intenta conseguir 5 en línea con eventos del show en vivo",
-    howToPlay: "Marca las casillas cuando veas que ocurren los eventos durante el show. ¡Consigue 5 en línea, columna o diagonal para ganar!",
+    howToPlay: "Marca las casillas a medida que veas los eventos suceder durante la transmisión.\n\nLa casilla central de '12' es un espacio gratuito que se te da desde el principio. ¡Consigue 5 casillas marcadas en fila, columna o diagonal para cantar Bingo! Llena todo el cartón para hacer Pleno.\n\n¡También puedes alojar una Sala en Vivo para jugar junto con amigos en tiempo real, o generar e imprimir cartones físicos para una fiesta de visionado!",
     rules: {
       rule1: "Toca una casilla para marcarla cuando veas el evento en pantalla.",
       rule2: "Mantén presionada (o haz clic derecho) cualquier casilla para leer su descripción completa.",

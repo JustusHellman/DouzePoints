@@ -2,7 +2,7 @@ export default {
   bingo: {
     title: "EuroBingo",
     subtitle: "Yritä saada 5 suoraa live-lähetyksen tapahtumista",
-    howToPlay: "Merkitse ruutuja, kun näet tapahtumien tapahtuvan lähetyksen aikana. Saa 5 suoraa vaaka-, pysty- tai vinosuunnassa voittaaksesi!",
+    howToPlay: "Merkitse ruudut, kun näet tapahtumien sattuvan lähetyksen aikana.\n\nKeskimmäinen '12'-ruutu on ilmainen ruutu, jonka saat heti alussa. Saa 5 merkittyä ruutua peräkkäin, allekkain tai vinottain saadaksesi Bingon! Täytä koko ruudukko saadaksesi Täyskäden.\n\nVoit myös isännöidä Live-huoneen pelataksesi ystävien kanssa reaaliajassa, tai luoda ja tulostaa fyysisiä pelilaudat katselubileitä varten!",
     rules: {
       rule1: "Napauta ruutua merkitäksesi sen, kun huomaat tapahtuman ruudulla.",
       rule2: "Paina ruutua pitkään (tai klikkaa hiiren kakkospainikkeella) lukeaksesi sen koko kuvauksen.",

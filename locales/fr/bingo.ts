@@ -2,7 +2,7 @@ export default {
   bingo: {
     title: "EuroBingo",
     subtitle: "Essayez d'obtenir 5 à la suite avec les événements de l'émission en direct",
-    howToPlay: "Cochez les cases lorsque vous voyez les événements se produire pendant l'émission. Obtenez 5 à la suite, en colonne ou en diagonale pour gagner !",
+    howToPlay: "Cochez les cases au fur et à mesure que vous voyez les événements se produire pendant la diffusion.\n\nLa case centrale '12' est un emplacement gratuit qui vous est offert dès le départ. Obtenez 5 cases cochées sur une ligne, une colonne ou une diagonale pour faire un Bingo ! Remplissez tout le carton pour faire un Carton Plein.\n\nVous pouvez également créer un Salon en Direct pour jouer avec vos amis en temps réel, ou générer et imprimer des cartons physiques pour une soirée de visionnage !",
     rules: {
       rule1: "Appuyez sur une case pour la cocher lorsque vous repérez l'événement à l'écran.",
       rule2: "Appuyez longuement (ou faites un clic droit) sur n'importe quelle case pour lire sa description complète.",

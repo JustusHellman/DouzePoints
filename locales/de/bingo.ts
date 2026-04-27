@@ -2,7 +2,7 @@ export default {
   bingo: {
     title: "EuroBingo",
     subtitle: "Versuche, 5 in einer Reihe aus Ereignissen der Live-Show zu bekommen",
-    howToPlay: "Markiere Felder, wenn du Ereignisse während der Show siehst. Erreiche 5 in einer Reihe, Spalte oder Diagonale, um zu gewinnen!",
+    howToPlay: "Markiere Felder, wenn du Ereignisse während der Übertragung siehst.\n\nDas mittlere Feld '12' ist ein Freifeld, das du von Anfang an erhältst. Erreiche 5 markierte Felder in einer Reihe, Spalte oder Diagonale, um ein Bingo zu erhalten! Fülle das gesamte Feld für ein Full House.\n\nDu kannst auch einen Live-Raum erstellen, um in Echtzeit mit Freunden zu spielen, oder physische Spielpläne für eine Watch-Party generieren und ausdrucken!",
     rules: {
       rule1: "Tippe auf ein Feld, um es zu markieren, wenn du das Ereignis auf dem Bildschirm siehst.",
       rule2: "Halte ein Feld gedrückt (oder Rechtsklick), um die vollständige Beschreibung zu lesen.",
