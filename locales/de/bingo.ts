@@ -87,6 +87,8 @@ export default {
       roomSupport: "Räume unterstützen bis zu 10 Spieler.",
       liveMultiplayer: "Live-Mehrspieler",
       joiningRoom: "Raum beitreten...",
+      myBoard: "Mein Spielfeld",
+      view: "Ansehen",
       noActivity: "Noch keine Aktivität. Markiere ein Feld, um zu beginnen!",
       gotABingo: "HAT BINGO!",
       gotAFullHouse: "HAT EIN VOLLES HAUS!",
