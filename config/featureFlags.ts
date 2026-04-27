@@ -4,5 +4,5 @@ export const FEATURE_FLAGS = {
   // Set to April 6, 2026 at 00:00:00 GMT (a week from now)
   NEW_REFRAIN_DATA_SWAP_TIMESTAMP: Date.UTC(2026, 3, 1, 0, 0, 0),
   // Set to April 10, 2026 at 00:00:00 GMT
-  NEW_LINKS_DATA_SWAP_TIMESTAMP: Date.UTC(2026, 4, 1, 0, 0, 0),
+  NEW_LINKS_DATA_SWAP_TIMESTAMP: Date.UTC(2026, 5, 1, 0, 0, 0),
 };
