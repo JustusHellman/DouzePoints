@@ -42,10 +42,11 @@ export const EuroBingoPrint: React.FC<{ onClose: () => void, totalCards: number,
           @media print {
             @page { margin: 0; size: ${cardsPerPage === 2 ? 'landscape' : 'portrait'}; }
             body * { visibility: hidden; }
-            #root, body, html { height: auto !important; min-height: auto !important; background: white !important; }
+            #root { display: none !important; }
+            body, html { height: auto !important; min-height: auto !important; background: white !important; }
             body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .print-container, .print-container * { visibility: visible; }
-            .print-container { position: absolute; left: 0; top: 0; width: 100%; display: block !important; padding: 0 !important; background: white !important; margin: 0 !important; }
+            .print-container { display: block !important; padding: 0 !important; background: white !important; margin: 0 !important; }
             .no-print, .no-print * { display: none !important; visibility: hidden !important; }
             .print-page { margin: 0 !important; box-shadow: none !important; break-after: page; page-break-after: always; }
             .print-page:last-child { break-after: auto; page-break-after: auto; }
@@ -102,22 +103,30 @@ export const EuroBingoPrint: React.FC<{ onClose: () => void, totalCards: number,
                   <div className="grid grid-cols-5 gap-1 flex-1">
                     {board.map((square, i) => {
                       const text = square.isFree ? "12" : t(`bingo.events.${square.id}`);
+                      
+                      // Calculate effective length to handle languages with very long words
+                      const words = text.split(/[\s-]+/);
+                      const maxWordLen = words.reduce((max: number, w: string) => Math.max(max, w.length), 0);
+                      const effectiveLength = Math.max(text.length, maxWordLen * 2.2);
+
                       return (
                         <div
                           key={i}
                           className={`
-                            flex items-center justify-center p-1 border-2 border-gray-300 rounded-lg text-center
+                            flex items-center justify-center p-1 border-2 border-gray-300 rounded-lg text-center overflow-hidden
                             ${square.isFree ? 'bg-yellow-100 border-yellow-400' : 'bg-white'}
                           `}
                         >
                           <span className={`
+                            w-full flex items-center justify-center break-words hyphens-auto
                             leading-[1.1] font-black uppercase tracking-tighter
                             ${square.isFree ? (isLarge ? 'text-5xl' : isMedium ? 'text-4xl' : 'text-xl') + ' italic text-yellow-600' : 
-                              text.length > 25 ? (isLarge ? 'text-xs' : isMedium ? 'text-[10px]' : 'text-[6px]') :
-                              text.length > 18 ? (isLarge ? 'text-sm' : isMedium ? 'text-xs' : 'text-[7px]') :
-                              text.length > 14 ? (isLarge ? 'text-base' : isMedium ? 'text-sm' : 'text-[8px]') :
-                              text.length > 10 ? (isLarge ? 'text-lg' : isMedium ? 'text-base' : 'text-[9px]') : 
-                              text.length > 7 ? (isLarge ? 'text-xl' : isMedium ? 'text-lg' : 'text-[10px]') :
+                              effectiveLength > 28 ? (isLarge ? 'text-[11px]' : isMedium ? 'text-[8.5px]' : 'text-[5px]') :
+                              effectiveLength > 22 ? (isLarge ? 'text-xs' : isMedium ? 'text-[10px]' : 'text-[6px]') :
+                              effectiveLength > 18 ? (isLarge ? 'text-sm' : isMedium ? 'text-xs' : 'text-[7px]') :
+                              effectiveLength > 14 ? (isLarge ? 'text-base' : isMedium ? 'text-sm' : 'text-[8px]') :
+                              effectiveLength > 10 ? (isLarge ? 'text-lg' : isMedium ? 'text-base' : 'text-[9px]') : 
+                              effectiveLength > 7 ? (isLarge ? 'text-xl' : isMedium ? 'text-lg' : 'text-[10px]') :
                               (isLarge ? 'text-2xl' : isMedium ? 'text-xl' : 'text-[11px]')
                             }
                           `}>
