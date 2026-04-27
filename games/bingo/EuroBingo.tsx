@@ -10,7 +10,7 @@ import { EuroBingoPrint } from './EuroBingoPrint.tsx';
 import { BingoMultiplayer } from './BingoMultiplayer.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
 import { EUROVISION_SCHEDULE } from '../../config/eurovisionSchedule.ts';
-import { Users, ChevronRight } from 'lucide-react';
+import { Users, ChevronRight, Info, RefreshCw, Share2 } from 'lucide-react';
 import { REDDIT_URL, DISCORD_URL, BUY_ME_A_COFFEE_URL } from '../../data/constants.tsx';
 
 import { logAnalyticsEvent } from '../../utils/analytics.ts';
@@ -25,7 +25,7 @@ const STORAGE_KEY = 'eurobingo-state';
 const START_LOGGED_KEY = 'eurobingo-start-logged';
 
 export const EuroBingo: React.FC<{ onReturn: () => void }> = ({ onReturn }) => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const boardRef = useRef<HTMLDivElement>(null);
   const hasLoggedStartRef = useRef<boolean>(localStorage.getItem(START_LOGGED_KEY) === 'true');
   
@@ -151,7 +151,7 @@ export const EuroBingo: React.FC<{ onReturn: () => void }> = ({ onReturn }) => {
       grid += row + '\n';
     }
     
-    const text = t('bingo.share.emojiText').replace('{grid}', grid).replace('{url}', 'https://www.douzepoints.net');
+    const text = t('bingo.share.emojiText').replace('{grid}', grid).replace('{url}', 'https://www.douzepoints.net') + '\n\n#EuroBingo #DouzePoints';
     
     try {
       await navigator.clipboard.writeText(text);
@@ -484,11 +484,13 @@ export const EuroBingo: React.FC<{ onReturn: () => void }> = ({ onReturn }) => {
           </div>
 
           {/* Bingo Grid */}
-          <div ref={boardRef} className="w-full mb-8 bg-[#0b0b18] p-2 sm:p-4 rounded-xl sm:rounded-3xl flex flex-col gap-2 sm:gap-3">
+          <div ref={boardRef} className="w-full max-w-[800px] mx-auto mb-8 bg-[#0b0b18] p-2 sm:p-4 rounded-xl sm:rounded-3xl flex flex-col gap-2 sm:gap-3">
         <div className="grid grid-cols-5 gap-1 sm:gap-2 w-full aspect-square">
           {squares.map((square, i) => {
           const text = square.isFree ? "12" : t(`bingo.events.${square.id}`);
-          const maxWordLength = Math.max(...text.split(/\s+/).map((w: string) => w.length));
+          const words = text.split(/[\s-]+/);
+          const maxWordLen = words.reduce((max: number, w: string) => Math.max(max, w.length), 0);
+          const effectiveLength = Math.max(text.length, maxWordLen * 2.5);
           
           return (
             <button
@@ -498,6 +500,7 @@ export const EuroBingo: React.FC<{ onReturn: () => void }> = ({ onReturn }) => {
                 e.preventDefault();
                 setSelectedSquare(i);
               }}
+              style={{ containerType: 'inline-size' }}
               className={`
                 relative flex items-center justify-center p-0.5 sm:p-1 rounded-lg sm:rounded-2xl border-2 transition-all duration-300 aspect-square overflow-hidden select-none
                 ${square.marked 
@@ -513,22 +516,32 @@ export const EuroBingo: React.FC<{ onReturn: () => void }> = ({ onReturn }) => {
             >
               <div className={`
                 text-center w-full h-full flex items-center justify-center transition-all text-white
-                ${square.isFree ? 'text-2xl sm:text-4xl italic drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] font-black uppercase tracking-tighter' : 
-                  (text.length > 25 || maxWordLength > 10) ? 'text-[7px] sm:text-[9px]' :
-                  (text.length > 18 || maxWordLength > 8) ? 'text-[8px] sm:text-[10px]' :
-                  (text.length > 14 || maxWordLength > 7) ? 'text-[9px] sm:text-[11px]' :
-                  (text.length > 10 || maxWordLength > 6) ? 'text-[10px] sm:text-[12px]' : 
-                  'text-[11px] sm:text-[14px]'
-                }
+                ${square.isFree ? 'italic font-black uppercase tracking-tighter leading-none' : ''}
               `}>
-                {square.isFree ? text : (
-                  <span className="line-clamp-4 leading-[1.1] font-black uppercase tracking-tighter break-words w-full">
+                {square.isFree ? <span style={{ fontSize: '40cqi' }} className={square.marked ? 'text-white drop-shadow-md' : 'text-white/30 drop-shadow-sm'}>12</span> : (
+                  <span 
+                    lang={language}
+                    style={{
+                      fontSize: maxWordLen > 14 ? '11cqi' : effectiveLength > 40 ? '12cqi' : effectiveLength > 30 ? '13cqi' : effectiveLength > 20 ? '16cqi' : effectiveLength > 15 ? '19cqi' : '23cqi'
+                    }}
+                    className="line-clamp-4 leading-[1.1] font-black uppercase tracking-tighter break-words hyphens-auto w-full"
+                  >
                     {text}
                   </span>
                 )}
               </div>
               
-              {/* Long press hint for mobile */}
+              {/* Info icon for both mobile and PC */}
+              <div 
+                className="absolute bottom-0 sm:bottom-1 right-0 sm:right-1 p-0.5 sm:p-1 text-white/40 hover:text-white/80 transition-colors z-10 hidden sm:block"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedSquare(i);
+                }}
+              >
+                <Info className="w-3 h-3 opacity-50" />
+              </div>
+              {/* Mobile hint logic */}
               <div 
                 className="absolute bottom-0.5 right-0.5 w-1 h-1 bg-white/20 rounded-full sm:hidden"
                 onClick={(e) => {
@@ -541,8 +554,11 @@ export const EuroBingo: React.FC<{ onReturn: () => void }> = ({ onReturn }) => {
         })}
         </div>
         {isCapturing && (
-          <div className="flex items-center justify-between px-1 sm:px-2 opacity-50">
-            <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-white">DOUZE POINTS</span>
+          <div className="flex items-center justify-between px-1 sm:px-2 opacity-50 mt-4 mb-2">
+            <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-white flex flex-col gap-1">
+              <span>DOUZE POINTS</span>
+              <span className="text-pink-400">#EuroBingo #DouzePoints</span>
+            </span>
             <span className="text-[8px] sm:text-[10px] font-bold text-white">douzepoints.net</span>
           </div>
         )}
@@ -552,39 +568,38 @@ export const EuroBingo: React.FC<{ onReturn: () => void }> = ({ onReturn }) => {
         {!isEventLive && (
           <button 
             onClick={handlePrint}
-            className="w-full bg-white/10 text-white py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-2 hover:bg-white/20 transition-colors border border-white/10"
+            className="w-full h-14 bg-[#1a1a1a] border-2 border-white/10 rounded-2xl font-black uppercase tracking-tighter hover:bg-white/10 transition-all active:scale-95 text-white shadow-xl flex items-center justify-center gap-2 group"
           >
+            <span className="text-xl group-hover:scale-110 transition-transform">🖨️</span>
             <span>{t('bingo.share.print')}</span>
-            <span className="text-lg">🖨️</span>
           </button>
         )}
 
-        <div className="flex w-full gap-2">
+        <div className="flex w-full gap-4">
           <button
             onClick={() => generateNewBoard(true)}
-            className="flex-1 py-4 bg-white/5 border border-white/10 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-400 hover:text-white hover:bg-white/10 transition-all active:scale-95"
+            className="flex-1 h-14 bg-[#1a1a1a] border-2 border-white/10 rounded-2xl font-black uppercase tracking-tighter hover:bg-white/10 transition-all active:scale-95 text-white shadow-xl flex items-center justify-center gap-2 group"
           >
-            {t('bingo.newBoard')}
+            <RefreshCw className="w-5 h-5 text-white/40 group-hover:rotate-180 transition-transform duration-500" />
+            <span>{t('bingo.newBoard')}</span>
           </button>
           <button 
             onClick={() => setShowShareModal(true)} 
-            className="flex-1 py-4 bg-white/5 border border-white/10 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-400 hover:text-white hover:bg-white/10 transition-all active:scale-95 flex items-center justify-center gap-2"
+            className="flex-1 h-14 bg-[#1a1a1a] border-2 border-white/10 rounded-2xl font-black uppercase tracking-tighter hover:bg-white/10 transition-all active:scale-95 text-white shadow-xl flex items-center justify-center gap-2 group"
             title={t('bingo.share.title')}
           >
+            <Share2 className="w-5 h-5 text-indigo-400 group-hover:scale-110 transition-transform" />
             <span>{t('bingo.share.title')}</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-            </svg>
           </button>
         </div>
 
         {isEventLive && (
           <button 
             onClick={handlePrint}
-            className="w-full bg-white/5 text-gray-400 py-3 rounded-2xl font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-2 hover:bg-white/10 hover:text-white transition-colors border border-white/5"
+            className="w-full h-12 bg-[#1a1a1a] border-2 border-white/10 rounded-2xl font-black uppercase tracking-tighter hover:bg-white/10 transition-all active:scale-95 text-white/60 hover:text-white shadow-lg flex items-center justify-center gap-2 group mt-2"
           >
-            <span>{t('bingo.share.print')}</span>
-            <span className="text-sm">🖨️</span>
+            <span className="text-lg group-hover:scale-110 transition-transform opacity-60 group-hover:opacity-100">🖨️</span>
+            <span className="text-[10px] tracking-widest">{t('bingo.share.print')}</span>
           </button>
         )}
       </div>

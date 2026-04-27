@@ -227,6 +227,7 @@ service cloud.firestore {
              data.score is number &&
              data.squares is list &&
              data.squares.size() == 25 &&
+             (!('boardIds' in data) || data.boardIds is list) &&
              (!('joinedAt' in data) || data.joinedAt is timestamp) &&
              (!('lastActive' in data) || data.lastActive is timestamp);
     }
@@ -257,6 +258,7 @@ service cloud.firestore {
                         getAfter(/databases/$(database)/documents/rooms/$(roomId)).data.playerCount <= 10; // Enforce 10 player limit
         allow update: if isValidBingoPlayerDoc(request.resource.data) &&
                         (!('joinedAt' in resource.data) || request.resource.data.joinedAt == resource.data.joinedAt);
+        allow delete: if isAuthenticated() && request.auth.uid == playerId;
       }
       
       match /events/{eventId} {

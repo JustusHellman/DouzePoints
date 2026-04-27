@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { Users, Link, Trophy, Activity, X, Crown, Eye, AlertCircle } from 'lucide-react';
+import { Users, Link, Trophy, Activity, X, Crown, Eye, AlertCircle, Info, RefreshCw, Share2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useTranslation } from '../../context/LanguageContext';
 import { db, auth } from '../../firebase';
 import { REDDIT_URL, DISCORD_URL } from '../../data/constants.tsx';
-import { doc, updateDoc, onSnapshot, collection, query, orderBy, limit, serverTimestamp, addDoc, runTransaction, Timestamp } from 'firebase/firestore';
+import { doc, updateDoc, onSnapshot, collection, query, orderBy, limit, serverTimestamp, addDoc, runTransaction, Timestamp, deleteDoc } from 'firebase/firestore';
 import { signInAnonymously } from 'firebase/auth';
+import { motion, AnimatePresence } from 'motion/react';
 
 enum OperationType {
   CREATE = 'create',
@@ -65,6 +66,7 @@ interface Player {
   score: number;
   color: string;
   squares: boolean[];
+  boardIds?: string[];
   lastActive: Timestamp | null;
 }
 
@@ -147,7 +149,7 @@ const generateRoomCode = () => {
 };
 
 export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, mySquares, onSquareClick, onSquareLongPress, onJoinStateChange, onNewBoard, onShareBoard }) => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   
   const [roomId, setRoomId] = useState<string>(() => localStorage.getItem('bingo_room_id') || '');
   const [isJoined, setIsJoined] = useState(() => !!(localStorage.getItem('bingo_player_name') && localStorage.getItem('bingo_room_id')));
@@ -178,6 +180,12 @@ export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, myS
   const previousOpponentsRef = useRef<Record<string, { hasBingo: boolean, hasFullHouse: boolean }>>({});
   const myPreviousStateRef = useRef({ hasBingo: false, hasFullHouse: false });
   const boardSignatureRef = useRef(mySquares.map(s => s.id).join(','));
+
+  const myScore = useMemo(() => mySquares.filter(s => s.marked).length, [mySquares]);
+  const maxScore = useMemo(() => {
+    const allScores = [myScore, ...opponents.map(p => p.score)];
+    return Math.max(...allScores);
+  }, [myScore, opponents]);
 
   const countBingosForArray = useCallback((sqs: boolean[]) => {
     if (!sqs || sqs.length !== 25) return 0;
@@ -214,7 +222,19 @@ export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, myS
     return oneAway;
   }, [mySquares, countBingosForArray]);
 
-  const handleLeaveRoom = () => {
+  const handleLeaveRoom = async () => {
+    if (auth.currentUser && roomId) {
+      const uid = auth.currentUser.uid;
+      try {
+        await deleteDoc(doc(db, `rooms/${roomId.toUpperCase()}/players`, uid));
+        await updateDoc(doc(db, 'rooms', roomId.toUpperCase()), {
+          // You could decrement playerCount here if we were strictly tracking it inside a transaction,
+          // but deleting the doc is enough to remove them from the list.
+        });
+      } catch (err) {
+        console.error("Error leaving room:", err);
+      }
+    }
     localStorage.removeItem('bingo_room_id');
     setIsJoined(false);
     onClose();
@@ -289,6 +309,7 @@ export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, myS
             color: colorToAssign,
             score: mySquares.filter(s => s.marked).length,
             squares: mySquares.map(s => s.marked),
+            boardIds: mySquares.map(s => s.id),
             lastActive: serverTimestamp()
           });
         } else {
@@ -297,6 +318,7 @@ export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, myS
             color: colorToAssign,
             score: mySquares.filter(s => s.marked).length,
             squares: mySquares.map(s => s.marked),
+            boardIds: mySquares.map(s => s.id),
             joinedAt: serverTimestamp(),
             lastActive: serverTimestamp()
           });
@@ -420,6 +442,7 @@ export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, myS
     updateDoc(playerRef, {
       score: mySquares.filter(s => s.marked).length,
       squares: boolArray,
+      boardIds: mySquares.map(s => s.id),
       lastActive: serverTimestamp()
     }).catch(err => handleMidGameError(err, OperationType.UPDATE, playerRef.path));
     
@@ -653,22 +676,6 @@ export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, myS
                         {t('bingo.multiplayer.joinRoom')}
                       </button>
                     </div>
-                    
-                    {/* DEV MODE BUTTONS */}
-                    <div className="flex gap-2 pt-2 border-t border-white/5">
-                      <button 
-                        onClick={() => setErrorScreen('room_full')}
-                        className="flex-1 bg-red-500/10 text-red-400 text-[8px] py-2 rounded-lg font-bold uppercase tracking-widest hover:bg-red-500/20 transition-colors border border-red-500/20"
-                      >
-                        Dev: Full
-                      </button>
-                      <button 
-                        onClick={() => setErrorScreen('quota_exceeded')}
-                        className="flex-1 bg-orange-500/10 text-orange-400 text-[8px] py-2 rounded-lg font-bold uppercase tracking-widest hover:bg-orange-500/20 transition-colors border border-orange-500/20"
-                      >
-                        Dev: Quota
-                      </button>
-                    </div>
 
                     <p className="text-center text-white/40 text-xs font-medium">
                       {t('bingo.multiplayer.roomSupport')}
@@ -716,7 +723,7 @@ export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, myS
   }
 
   return (
-    <div className="w-full text-white flex flex-col font-sans">
+    <div className="w-full text-white flex flex-col font-sans bg-black/40 min-h-screen">
       {/* Opponent Notifications */}
       <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[300] flex flex-col gap-2 pointer-events-none">
         {opponentNotifications.map(notif => (
@@ -732,7 +739,7 @@ export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, myS
       </div>
 
       {/* Header */}
-      <div className="bg-white/5 border border-white/10 p-4 flex items-center justify-between rounded-2xl mb-6">
+      <div className="bg-white/5 border border-white/10 p-3 sm:p-4 flex items-center justify-between rounded-2xl mb-2">
         <div className="flex items-center gap-3 sm:gap-6">
           <div className="flex flex-col">
             <div className="flex flex-col sm:flex-row sm:items-center gap-0 sm:gap-2">
@@ -750,7 +757,7 @@ export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, myS
         <div className="flex items-center gap-2">
           <button 
             onClick={() => {
-              navigator.clipboard.writeText(`Join my EuroBingo room: ${roomId}\nhttps://www.douzepoints.net`);
+              navigator.clipboard.writeText(`Join my EuroBingo room: ${roomId}\nhttps://www.douzepoints.net\n\n#EuroBingo #DouzePoints`);
               setCopied(true);
               setTimeout(() => setCopied(false), 2000);
             }}
@@ -772,17 +779,29 @@ export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, myS
       </div>
 
       {/* Content */}
-      <div className="flex-1 p-4 sm:p-8 max-w-7xl mx-auto w-full flex flex-col gap-8">
+      <div className="flex-1 p-2 sm:p-6 2xl:px-12 max-w-[1920px] mx-auto w-full flex flex-col gap-6">
         
         {/* Top Section: My Board & Feed */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="flex flex-col gap-6 items-start w-full justify-center">
           
           {/* Left: Your Board */}
-          <div className="lg:col-span-2">
-            <div className="aspect-square w-full max-w-[600px] mx-auto bg-white/5 border border-white/10 rounded-3xl p-2 sm:p-4 grid grid-cols-5 gap-1 sm:gap-2 shadow-2xl">
+          <div className="w-full max-w-[900px] mx-auto flex flex-col gap-3">
+            <div className="w-full flex items-center justify-between px-2 sm:px-4">
+              <div className="flex items-center gap-2">
+                <span className="font-black text-white/50 uppercase tracking-widest text-xs sm:text-sm">{t('bingo.multiplayer.myBoard', { defaultValue: 'Your Board' })}</span>
+                {myScore === maxScore && maxScore > 0 && <Crown className="w-4 h-4 text-yellow-500" />}
+              </div>
+              <div className="flex items-center gap-1.5 bg-[#1a1a1a] px-2 sm:px-3 py-1 rounded-full border-2 border-white/10">
+                <span className="font-black text-xs sm:text-sm text-white">{myScore}</span>
+                <span className="font-bold text-[10px] sm:text-xs text-white/40">/ 25</span>
+              </div>
+            </div>
+            <div className="aspect-square w-full bg-[#1a1a1a] border-2 border-white/10 rounded-3xl p-2 sm:p-4 grid grid-cols-5 gap-1.5 sm:gap-2.5 shadow-2xl">
               {mySquares.map((square, i) => {
                 const text = square.isFree ? "12" : t(`bingo.events.${square.id}`);
-                const maxWordLength = Math.max(...text.split(/\s+/).map((w: string) => w.length));
+                const words = text.split(/[\s-]+/);
+                const maxWordLen = words.reduce((max: number, w: string) => Math.max(max, w.length), 0);
+                const effectiveLength = Math.max(text.length, maxWordLen * 2.5);
                 
                 return (
                   <button 
@@ -792,6 +811,7 @@ export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, myS
                       e.preventDefault();
                       if (onSquareLongPress) onSquareLongPress(i);
                     }}
+                    style={{ containerType: 'inline-size' }}
                     className={`
                       rounded-xl border-2 flex items-center justify-center p-1 sm:p-2 text-center transition-all relative overflow-hidden select-none aspect-square
                       ${square.marked 
@@ -801,29 +821,38 @@ export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, myS
                           : 'bg-white/5 border-white/10 hover:bg-white/10'
                       }
                       ${square.isFree ? 'bg-yellow-500/20 border-yellow-500/50 cursor-default' : 'active:scale-95'}
-                      ${square.isFree && square.marked ? 'bg-yellow-500 border-yellow-300 shadow-[0_0_15px_rgba(234,179,8,0.4)] text-black' : ''}
+                      ${square.isFree && square.marked ? 'bg-yellow-500 border-yellow-300 shadow-[0_0_15px_rgba(234,179,8,0.4)]' : ''}
                     `}
                   >
-                    <span className={`
-                      font-black uppercase tracking-tighter leading-[1.1] break-words w-full
-                      ${square.isFree ? 'text-2xl sm:text-4xl italic' : 
-                        `line-clamp-4 ${
-                          (text.length > 25 || maxWordLength > 10) ? 'text-[7px] sm:text-[9px]' :
-                          (text.length > 18 || maxWordLength > 8) ? 'text-[8px] sm:text-[10px]' :
-                          (text.length > 14 || maxWordLength > 7) ? 'text-[9px] sm:text-[11px]' :
-                          (text.length > 10 || maxWordLength > 6) ? 'text-[10px] sm:text-[12px]' : 
-                          'text-[11px] sm:text-[14px]'
-                        }`
-                      }
-                      ${square.marked && !square.isFree ? 'text-white' : 'text-white/80'}
-                    `}>
-                      {text}
-                    </span>
+                    {square.isFree ? <span style={{ fontSize: '40cqi' }} className={`font-black italic uppercase tracking-tighter leading-[0.9] ${square.marked ? 'text-white drop-shadow-md' : 'text-white/30 drop-shadow-sm'}`}>12</span> : (
+                      <span 
+                        lang={language}
+                        className={`
+                          font-black uppercase tracking-tighter leading-[1.1] break-words hyphens-auto w-full
+                          line-clamp-4 ${square.marked ? 'text-white' : 'text-white/80'}
+                        `}
+                        style={{
+                          fontSize: maxWordLen > 14 ? '11cqi' : effectiveLength > 40 ? '12cqi' : effectiveLength > 30 ? '13cqi' : effectiveLength > 20 ? '16cqi' : effectiveLength > 15 ? '19cqi' : '23cqi'
+                        }}
+                      >
+                        {text}
+                      </span>
+                    )}
                     {square.marked && !square.isFree && (
                       <div className={`absolute inset-0 ${PULSE_STYLES[myColor] || PULSE_STYLES['bg-pink-500']} animate-pulse pointer-events-none`}></div>
                     )}
                     
-                    {/* Long press hint for mobile */}
+                    {/* Info icon for both mobile and PC */}
+                    <div 
+                      className="absolute bottom-0 sm:bottom-1 right-0 sm:right-1 p-0.5 sm:p-1 text-white/40 hover:text-white/80 transition-colors z-10 hidden sm:block"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (onSquareLongPress) onSquareLongPress(i);
+                      }}
+                    >
+                      <Info className="w-3 h-3 opacity-50" />
+                    </div>
+                    {/* Mobile hint logic */}
                     <div 
                       className="absolute bottom-0.5 right-0.5 w-1 h-1 bg-white/20 rounded-full sm:hidden"
                       onClick={(e) => {
@@ -837,32 +866,30 @@ export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, myS
             </div>
             
             {/* Action Buttons */}
-            <div className="flex w-full max-w-[600px] mx-auto gap-2 mt-4">
+            <div className="flex w-full max-w-[800px] mx-auto gap-4 mt-6">
               {onNewBoard && (
                 <button
                   onClick={onNewBoard}
-                  className="flex-1 py-4 bg-white/5 border border-white/10 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-400 hover:text-white hover:bg-white/10 transition-all active:scale-95"
+                  className="flex-1 h-14 bg-[#1a1a1a] border-2 border-white/10 rounded-2xl flex items-center justify-center gap-2 font-black uppercase tracking-tighter hover:bg-white/10 transition-all active:scale-95 group shadow-xl text-white"
                 >
-                  {t('bingo.newBoard')}
+                  <RefreshCw className="w-5 h-5 text-white/40 group-hover:rotate-180 transition-transform duration-500" />
+                  <span>{t('bingo.newBoard')}</span>
                 </button>
               )}
               {onShareBoard && (
-                <button 
+                <button
                   onClick={onShareBoard} 
-                  className="flex-1 py-4 bg-white/5 border border-white/10 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-400 hover:text-white hover:bg-white/10 transition-all active:scale-95 flex items-center justify-center gap-2"
-                  title={t('bingo.share.title')}
+                  className="flex-1 h-14 bg-[#1a1a1a] border-2 border-white/10 rounded-2xl flex items-center justify-center gap-2 font-black uppercase tracking-tighter hover:bg-white/10 transition-all active:scale-95 group shadow-xl text-white"
                 >
+                  <Share2 className="w-5 h-5 text-indigo-400" />
                   <span>{t('bingo.share.title')}</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                  </svg>
                 </button>
               )}
             </div>
           </div>
 
           {/* Right: Activity Feed */}
-          <div className="bg-white/5 border border-white/10 rounded-3xl p-6 shadow-xl h-fit max-h-[600px] overflow-y-auto">
+          <div className="w-full max-w-[900px] mx-auto bg-white/10 border-2 border-white/10 rounded-3xl p-6 shadow-xl h-fit max-h-[400px] overflow-y-auto">
             <h4 className="font-black uppercase tracking-widest text-sm text-white/50 mb-4 flex items-center gap-2">
               <Activity className="w-4 h-4" />
               {t('bingo.multiplayer.liveActivity')}
@@ -911,40 +938,49 @@ export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, myS
           </h3>
           
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
-            {opponents.length === 0 && (
+            {opponents.filter(p => !auth.currentUser || p.id !== auth.currentUser.uid).length === 0 && (
               <div className="col-span-full text-center py-8 text-white/40 font-bold uppercase tracking-widest">
                 {t('bingo.multiplayer.waitingForPlayers')}
               </div>
             )}
-            {opponents.map((player, idx) => (
-              <div key={player.id} className="bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-2 sm:p-4 flex flex-col gap-2 sm:gap-4 relative transition-all hover:bg-white/10">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 sm:gap-3">
-                    <div className={`w-5 h-5 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-black text-[10px] sm:text-sm shadow-lg ${player.color} ${idx === 0 && player.score > 0 ? 'ring-1 sm:ring-2 ring-yellow-400 ring-offset-1 sm:ring-offset-2 ring-offset-[#1a1a1a]' : ''}`}>
-                      {idx === 0 && player.score > 0 ? <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-white" /> : idx + 1}
+            {opponents.filter(p => !auth.currentUser || p.id !== auth.currentUser.uid).map((player) => (
+              <div 
+                key={player.id} 
+                className="bg-[#1a1a1a] border-2 border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col gap-3 relative transition-all hover:bg-[#222] hover:border-white/20 group cursor-pointer shadow-lg active:scale-[0.98]"
+                onClick={() => setViewingPlayer(player)}
+              >
+                <div className="flex flex-col gap-2 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className={`shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-black text-[10px] sm:text-xs shadow-lg ${player.color} text-white border border-white/20`}>
+                        {player.name.charAt(0).toUpperCase()}
+                      </div>
+                      <span className="font-bold text-sm sm:text-lg text-white truncate leading-tight group-hover:text-pink-400 transition-colors">{player.name}</span>
                     </div>
-                    <span className="font-bold text-xs sm:text-lg text-white truncate max-w-[60px] sm:max-w-[100px]">{player.name}</span>
+                    {player.score === maxScore && maxScore > 0 && <Crown className="w-4 h-4 text-yellow-500 shrink-0" />}
                   </div>
-                  <div className="flex items-center gap-1.5 sm:gap-3">
-                    <span className="font-black text-sm sm:text-xl text-white">{player.score}<span className="text-[8px] sm:text-xs text-white/30">/25</span></span>
-                    <button 
-                      onClick={() => setViewingPlayer(player)}
-                      className="p-1.5 sm:p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors shrink-0"
-                      title="View Board"
-                    >
-                      <Eye className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-                    </button>
+                </div>
+
+                <div className="flex items-center justify-between border-t border-white/5 pt-2">
+                  <div className="flex flex-col">
+                    <span className="font-black text-base sm:text-lg text-white">{player.score}<span className="text-[10px] sm:text-xs text-white/30 ml-0.5">/25</span></span>
+                  </div>
+                  <div 
+                    className="p-1.5 sm:p-2 bg-white/5 group-hover:bg-pink-500/10 rounded-xl transition-all flex items-center gap-2 border border-white/5 group-hover:border-pink-500/30 shadow-inner"
+                  >
+                    <Eye className="w-4 h-4 text-pink-400 group-hover:scale-110 transition-transform" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">{t('bingo.multiplayer.view')}</span>
                   </div>
                 </div>
                 
                 {/* Mini Board Visualization */}
-                <div className="bg-black/40 rounded-lg sm:rounded-xl p-1.5 sm:p-2 cursor-pointer" onClick={() => setViewingPlayer(player)}>
-                  <div className="grid grid-cols-5 gap-1 w-full">
+                <div className="bg-black/40 rounded-lg p-1.5 transition-all group-hover:bg-black/60 shadow-inner">
+                  <div className="grid grid-cols-5 gap-0.5 sm:gap-1 w-full">
                     {player.squares.map((stamped, i) => (
                       <div 
                         key={i} 
                         className={`
-                          aspect-square rounded-[2px] sm:rounded-sm transition-all duration-500
+                          aspect-square rounded-[1px] sm:rounded-[2px] transition-all duration-500
                           ${stamped ? player.color + ' shadow-[0_0_5px_currentColor]' : 'bg-white/10'}
                           ${i === 12 ? (stamped ? 'bg-yellow-500' : 'bg-yellow-500/20') : ''}
                         `} 
@@ -965,56 +1001,86 @@ export const BingoMultiplayer: React.FC<BingoMultiplayerProps> = ({ onClose, myS
       </div>
 
       {/* Viewing Player Modal */}
-      {viewingPlayer && (
-        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[200] flex items-center justify-center p-4 sm:p-8 animate-in fade-in duration-300">
-          <div className="bg-[#1a1a1a] border border-white/10 rounded-3xl w-full max-w-2xl flex flex-col shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
-            <div className={`p-4 flex items-center justify-between ${viewingPlayer.color} bg-opacity-20 border-b border-white/10`}>
-              <div className="flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-lg shadow-lg ${viewingPlayer.color}`}>
-                  {viewingPlayer.name.charAt(0).toUpperCase()}
+      <AnimatePresence>
+        {viewingPlayer && (
+          <div 
+            className="fixed inset-0 bg-black/90 backdrop-blur-md z-[1000] flex items-center justify-center p-4 sm:p-6"
+            onClick={() => setViewingPlayer(null)}
+          >
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="bg-[#1a1a1a] border-2 border-white/10 rounded-[2rem] sm:rounded-[2.5rem] p-0 max-w-lg w-full relative shadow-[0_35px_60px_-15px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col outline-none"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className={`p-4 flex items-center justify-between ${viewingPlayer.color} bg-opacity-20 border-b border-white/10`}>
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-lg shadow-lg ${viewingPlayer.color}`}>
+                    {viewingPlayer.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <h3 className="font-black text-xl text-white uppercase tracking-tight">
+                      {t('bingo.multiplayer.playerBoard', { name: viewingPlayer.name })}
+                    </h3>
+                    <p className="text-xs font-bold text-white/70 uppercase tracking-widest">
+                      {t('bingo.multiplayer.playerStamped', { count: viewingPlayer.score })}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-black text-xl text-white uppercase tracking-tight">
-                    {t('bingo.multiplayer.playerBoard', { name: viewingPlayer.name })}
-                  </h3>
-                  <p className="text-xs font-bold text-white/70 uppercase tracking-widest">
-                    {t('bingo.multiplayer.playerStamped', { count: viewingPlayer.score })}
-                  </p>
+                <button 
+                  onClick={() => setViewingPlayer(null)} 
+                  className="p-2 hover:bg-white/10 rounded-full transition-colors active:scale-95"
+                >
+                  <X className="w-6 h-6 text-white" />
+                </button>
+              </div>
+              
+              <div className="p-4 sm:p-8">
+                <div className="aspect-square w-full max-w-[500px] mx-auto bg-white/5 border border-white/10 rounded-2xl p-2 grid grid-cols-5 gap-1 shadow-inner">
+                  {viewingPlayer.squares.map((stamped, i) => {
+                    const isFree = i === 12;
+                    const eventId = viewingPlayer.boardIds ? viewingPlayer.boardIds[i] : null;
+                    const text = eventId && eventId !== 'FREE_SPACE' ? t(`bingo.events.${eventId}`) : null;
+                    
+                    return (
+                      <div 
+                        key={i} 
+                        style={{ containerType: 'inline-size' }}
+                        className={`
+                          rounded-lg border flex items-center justify-center p-1 text-center 
+                          ${stamped 
+                            ? `${viewingPlayer.color} border-white/30 shadow-lg` 
+                            : 'bg-white/5 border-white/10'
+                          }
+                          ${isFree ? 'bg-yellow-500/20 border-yellow-500/50' : ''}
+                          ${isFree && stamped ? 'bg-yellow-500 border-yellow-300 text-white' : ''}
+                        `}
+                      >
+                        {isFree && <span className="font-black text-xl sm:text-3xl italic text-white leading-none drop-shadow-sm">12</span>}
+                        {!isFree && text && (
+                          <span 
+                              lang={language}
+                              className={`
+                                font-black uppercase tracking-tighter leading-[1.1] break-words hyphens-auto w-full
+                                line-clamp-4 ${stamped ? 'text-white' : 'text-white/80'}
+                              `}
+                              style={{
+                                fontSize: text.length > 35 ? '11cqi' : text.length > 28 ? '13cqi' : text.length > 20 ? '16cqi' : text.length > 15 ? '18cqi' : '22cqi'
+                              }}
+                          >
+                              {text}
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-              <button onClick={() => setViewingPlayer(null)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-                <X className="w-6 h-6 text-white" />
-              </button>
-            </div>
-            
-            <div className="p-4 sm:p-8">
-              <div className="aspect-square w-full max-w-[500px] mx-auto bg-white/5 border border-white/10 rounded-2xl p-2 grid grid-cols-5 gap-1 shadow-inner">
-                {viewingPlayer.squares.map((stamped, i) => {
-                  // We don't have the exact board layout of the opponent, so we just show generic squares
-                  // In a real app, we'd store their full board layout in Firebase
-                  const isFree = i === 12;
-                  return (
-                    <div 
-                      key={i} 
-                      className={`
-                        rounded-lg border flex items-center justify-center p-1 text-center
-                        ${stamped 
-                          ? `${viewingPlayer.color} border-white/30 shadow-lg` 
-                          : 'bg-white/5 border-white/10'
-                        }
-                        ${isFree ? 'bg-yellow-500/20 border-yellow-500/50' : ''}
-                        ${isFree && stamped ? 'bg-yellow-500 border-yellow-300 text-black' : ''}
-                      `}
-                    >
-                      {isFree && <span className="font-black text-xl sm:text-3xl italic text-black">12</span>}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 };
