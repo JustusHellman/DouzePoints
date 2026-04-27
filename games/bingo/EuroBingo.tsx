@@ -807,7 +807,7 @@ export const EuroBingo: React.FC<{ onReturn: () => void }> = ({ onReturn }) => {
       )}
 
       {showPrintView && createPortal(
-        <div className="fixed inset-0 bg-white z-[9999] overflow-auto">
+        <div className="print-portal-wrapper fixed print:static print:overflow-visible inset-0 bg-white z-[9999] overflow-auto print:h-auto print:bg-transparent">
           <EuroBingoPrint 
             onClose={() => setShowPrintView(false)} 
             totalCards={typeof printConfig.totalCards === 'number' ? Math.max(1, printConfig.totalCards) : 4}
