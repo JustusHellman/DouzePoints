@@ -60,5 +60,11 @@ export const PATCH_NOTES: PatchNote[] = [
     date: "2026-04-14",
     title: "Languages and Bingo",
     description: "Hey! Sorry for the long break, I've been having a cold and I'm still quite knocked out, but I couldn't resist pushing this one out!\nWe've now got language support for 12 languages as well as Bingo for the live shows added to the game! The Bingo has some smaller tweeks to fix, but it has support for printing physical cards, playing locally or live with your friends! I hope you'll all enjoy it!",
+  },
+  {
+    id: "10",
+    date: "2026-07-03",
+    title: "Eurovision 2026",
+    description: "Hey! Sorry for the longER break! It's been quite some time since we had the nerve wracking final but I've finally added in the result of 2026! So starting from tomorrow (July the 4:th) you may start seeing this years entries in the daily challenges as well as in the Encore mode. Thanks for playing and stay put for future updates!",
   }
 ];
