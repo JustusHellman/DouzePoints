@@ -49,6 +49,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.douzepoints.net/euro-collection</loc>
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.douzepoints.net/infinite</loc>
     <lastmod>2026-03-24</lastmod>
     <changefreq>weekly</changefreq>
