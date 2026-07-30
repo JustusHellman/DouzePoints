@@ -1,7 +1,7 @@
 export default {
   "privacy": {
     "title": "Informativa sulla Privacy",
-    "lastUpdated": "Marzo 2026",
+    "lastUpdated": "Luglio 2026",
     "introduction": {
       "title": "Introduzione",
       "p1": "Benvenuti su Douze Points (www.douzepoints.net).",
@@ -22,10 +22,13 @@ export default {
         "Sito web di provenienza"
       ],
       "autoFootnote": "Queste informazioni possono essere elaborate dai nostri fornitori di analisi.",
-      "cookiesTitle": "b) Memoria locale",
-      "cookiesDesc1": "Utilizziamo la memoria locale del tuo browser esclusivamente per salvare i tuoi progressi di gioco, i punteggi e le statistiche.",
-      "cookiesDesc2": "Questi dati sono memorizzati solo sul tuo dispositivo, non vengono trasmessi ai nostri server e possono essere eliminati cancellando i dati del browser.",
-      "cookiesDesc3": "Utilizziamo Google Analytics per aiutarci a capire come gli utenti interagiscono con il nostro sito web. Questo ci aiuta a migliorare l'esperienza dell'utente e a capire quali funzionalità sono più popolari."
+      "cookiesTitle": "c) Archiviazione locale e analisi",
+      "cookiesDesc1": "Utilizziamo l'archiviazione locale del tuo browser per memorizzare nella cache lo stato del gioco, le impostazioni utente e i dati temporanei della sessione.",
+      "cookiesDesc2": "I tuoi effettivi progressi di gioco e gli elementi di EuroCollection vengono salvati nel nostro database cloud sotto il tuo ID anonimo.",
+      "cookiesDesc3": "Utilizziamo Google Analytics per raccogliere statistiche aggregate sul traffico del sito web per aiutarci a migliorare l'esperienza utente e la qualità delle funzionalità.",
+      "cloudTitle": "b) Identificatore anonimo e sincronizzazione in cloud",
+      "cloudDesc1": "Per salvare i tuoi progressi di gioco, i punteggi migliori, il rango, i punti carriera e i dati di EuroCollection (carte sbloccate, coriandoli, pacchetti giornalieri), generiamo automaticamente un ID utente casuale e non identificabile tramite l'autenticazione anonima di Firebase.",
+      "cloudDesc2": "Questo ID anonimo non raccoglie né richiede informazioni personali (come il nome reale, l'indirizzo e-mail o il numero di telefono). Viene memorizzato in Google Cloud Firestore al solo scopo di collegare in modo sicuro i progressi di gioco alla sessione del dispositivo."
     },
     "legalBasis": {
       "title": "Base giuridica (GDPR)",
@@ -38,20 +41,22 @@ export default {
       "legal": "ove richiesto dalla legge applicabile."
     },
     "localStorage": {
-      "title": "Memoria locale",
-      "p1": "Utilizziamo la memoria locale del tuo browser per salvare i progressi di gioco, i punteggi e le statistiche. Queste informazioni:",
+      "title": "Archiviazione locale e persistenza in cloud",
+      "p1": "Utilizziamo l'archiviazione locale del browser insieme all'archiviazione sicura nel database cloud (Google Cloud Firestore) per salvare lo stato del gioco, il rango e i dati di EuroCollection:",
       "items": [
-        "Sono memorizzate solo sul tuo dispositivo",
-        "Non vengono trasmesse ai nostri server",
-        "Possono essere eliminate cancellando i dati del browser"
+        "Memorizzato nella cache del browser locale per un caricamento rapido e prestazioni fluide",
+        "Sincronizzato in modo sicuro con Google Cloud Firestore utilizzando un ID utente non identificabile",
+        "Non raccoglie, memorizza o richiede credenziali personali o identità personale",
+        "Può essere ripristinato localmente svuotando la cache del browser, anche se i progressi nel cloud rimangono legati all'identificatore di sessione"
       ]
     },
     "dataSharing": {
-      "title": "Condivisione dei dati",
-      "p1": "Non vendiamo dati personali. Tuttavia, i dati possono essere elaborati da fornitori di servizi terzi, tra cui:",
+      "title": "Condivisione dei dati e fornitori di infrastruttura",
+      "p1": "Non vendiamo dati personali o profili utente. Tuttavia, i dati tecnici vengono elaborati da fornitori essenziali di servizi e infrastrutture terze, tra cui:",
       "items": [
-        "Fornitori di hosting",
-        "Fornitori di servizi tecnici necessari per il funzionamento del sito web"
+        "Google Cloud Firestore & Firebase (per l'archiviazione in cloud di statistiche di gioco anonime, punteggi e progressi di EuroCollection)",
+        "Fornitori di hosting e infrastruttura necessari per il funzionamento dell'applicazione",
+        "Google Analytics (per l'analisi aggregata dell'utilizzo)"
       ]
     },
     "internationalTransfers": {
@@ -60,7 +65,7 @@ export default {
     },
     "dataRetention": {
       "title": "Conservazione dei dati",
-      "p1": "Non manteniamo un database di utenti. I log tecnici per scopi di sicurezza vengono conservati in conformità con le politiche dei nostri fornitori e la memoria locale rimane fino a quando non viene eliminata."
+      "p1": "Le statistiche di gioco anonime, i punti carriera e i progressi di EuroCollection memorizzati in Google Cloud Firestore vengono conservati per consentirti di continuare a giocare tra le sessioni. I log tecnici del server vengono conservati secondo le politiche standard dei nostri fornitori di infrastruttura."
     },
     "yourRights": {
       "title": "I tuoi diritti (UE/SEE)",
@@ -179,7 +184,7 @@ export default {
     }
   },
   "terms": {
-    "lastUpdated": "Marzo 2026",
+    "lastUpdated": "Luglio 2026",
     "title": "Termini di Servizio",
     "acceptance": {
       "title": "Accettazione dei Termini",
@@ -187,7 +192,7 @@ export default {
     },
     "description": {
       "title": "Descrizione del Servizio",
-      "p1": "Douze Points è un sito web creato dai fan che fornisce giochi e curiosità a tema Eurovision a scopo di intrattenimento. Il servizio è fornito 'così com'è' e può essere modificato o interrotto in qualsiasi momento."
+      "p1": "Douze Points è un sito web creato dai fan che offre giochi a tema Eurovision, quiz e l'esperienza di raccolta di carte digitali EuroCollection a scopo di intrattenimento. Il servizio viene fornito 'così com'è' e può essere modificato o interrotto in qualsiasi momento."
     },
     "ip": {
       "title": "Proprietà Intellettuale",
@@ -223,6 +228,18 @@ export default {
     "contact": {
       "title": "Contatti",
       "p1": "In caso di domande su questi Termini di Servizio, è possibile contattarci all'indirizzo: douzepointsgame@gmail.com"
+    },
+    "collectibles": {
+      "title": "Oggetti virtuali e EuroCollection",
+      "p1": "EuroCollection include carte collezionabili digitali, pacchetti di carte, coriandoli e badge virtuali ('Oggetti virtuali').",
+      "p2": "Tutti gli Oggetti virtuali sono beni puramente digitali destinati esclusivamente alla raccolta nel gioco e all'intrattenimento all'interno di Douze Points. Gli Oggetti virtuali non hanno valore monetario nel mondo reale, non maturano interessi e non possono essere convertiti o scambiati con denaro reale o valore monetario.",
+      "p3": "Gli Oggetti virtuali, comprese le EuroCards e i coriandoli, sono strettamente non trasferibili. Non puoi vendere, scambiare, barattare, rivendere o trasferire Oggetti virtuali a qualsiasi altro giocatore o terza parte, sia all'interno che all'esterno del sito web.",
+      "p4": "Ci riserviamo il diritto di gestire, modificare, riequilibrare, regolare o rimuovere Oggetti virtuali e dinamiche di gioco in qualsiasi momento senza alcuna responsabilità."
+    },
+    "accounts": {
+      "title": "Account anonimi e persistenza dei dati",
+      "p1": "Per preservare i tuoi progressi di gioco, i punteggi migliori e EuroCollection, il sito web utilizza un identificatore di account anonimo automatizzato associato alla sessione del dispositivo.",
+      "p2": "Poiché gli account sono anonimi e legati alla sessione del dispositivo/browser, la cancellazione dei dati del browser o il cambio di dispositivo senza strumenti di ripristino potrebbe comportare la perdita di accesso ai progressi. Non possiamo garantire il ripristino di profili anonimi o oggetti virtuali persi."
     }
   }
 };

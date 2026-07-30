@@ -58,5 +58,16 @@ export default {
     "subtitle": "Tue projektia",
     "completed": "Suoritit tämän päivän haasteet!",
     "button": "Tarjoa minulle kahvi"
+  },
+  "settings": {
+    "title": "Asetukset",
+    "userId": "Käyttäjä-ID",
+    "copyUserId": "Kopioi käyttäjä-ID",
+    "selectAvatar": "Valitse profiilikuva",
+    "soundEffects": "Äänitehosteet",
+    "soundEffectsDesc": "Ota pelin ja pakettien avaamisen äänet käyttöön tai pois käytöstä",
+    "on": "PÄÄLLÄ",
+    "off": "POIS",
+    "saveAndClose": "Tallenna ja sulje"
   }
 };

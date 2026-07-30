@@ -4,6 +4,7 @@ export default {
     "voterBreakdown": "Röstfördelning",
     "howToWin": "Hur man vinner",
     "earnPoints": "Tjäna rankningspoäng",
+    "rankPoints": "Rankningspoäng",
     "earnPointsDesc": "Samla poäng för att klättra i rankingen. Felfria segrar ger högre poäng.",
     "claimDouze": "Ta hem Douze Points 🏆",
     "claimDouzeDesc": "Ges för perfekta spel (inga fel eller vinst på första försöket).",

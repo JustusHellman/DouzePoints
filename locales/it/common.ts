@@ -58,5 +58,16 @@ export default {
     "subtitle": "Sostieni il progetto",
     "completed": "Hai completato le sfide di oggi!",
     "button": "Offrimi un caffè"
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "userId": "ID utente",
+    "copyUserId": "Copia ID utente",
+    "selectAvatar": "Seleziona immagine del profilo",
+    "soundEffects": "Effetti sonori",
+    "soundEffectsDesc": "Attiva o disattiva i suoni del gioco e dell'apertura dei pacchetti",
+    "on": "ON",
+    "off": "OFF",
+    "saveAndClose": "Salva e chiudi"
   }
 };

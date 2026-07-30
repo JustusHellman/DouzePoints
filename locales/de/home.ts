@@ -10,6 +10,7 @@ export default {
     "todayScore": "Heutiger Punktestand",
     "howToPlayTitle": "Spielanleitung für Douze Points",
     "howToPlayP1": "Douze Points ist deine tägliche Anlaufstelle für Eurovision-Herausforderungen. Jeden Tag werden sechs einzigartige Spiele veröffentlicht, um dein Wissen über die Geschichte des Wettbewerbs, die Künstler und die Songtexte zu testen. Dein Ziel ist es, jede Herausforderung mit so wenigen Fehlern wie möglich abzuschließen, um die maximale Punktzahl von 12 Punkten zu erreichen – die legendären 'Douze Points'!",
-    "howToPlayP2": "Während du in allen Spielen Punkte sammelst, steigst du in den globalen Fandom-Rängen auf, vom 'Erst-Wähler' bis hin zur echten 'Eurovision-Legende'. Du kannst deinen täglichen Fortschritt, deine Karriere-Meilensteine und deinen aktuellen Rang jederzeit verfolgen, indem du auf die Schaltfläche 'Stats' im Header klickst. Viel Glück, und möge der beste Fan gewinnen!"
+    "howToPlayP2": "Während du in allen Spielen Punkte sammelst, steigst du in den globalen Fandom-Rängen auf, vom 'Erst-Wähler' bis hin zur echten 'Eurovision-Legende'. Du kannst deinen täglichen Fortschritt, deine Karriere-Meilensteine und deinen aktuellen Rang jederzeit verfolgen, indem du auf die Schaltfläche 'Stats' im Header klickst. Viel Glück, und möge der beste Fan gewinnen!",
+    "howToPlayP3": "Wenn du die täglichen Spiele spielst, erhältst du außerdem Pakete, um deine EuroCollection an digitalen Sammelkarten aufzubauen. Versuche sie alle zu finden, um deinen Superfan-Status zu zeigen!"
   }
 };

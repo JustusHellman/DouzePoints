@@ -1,7 +1,7 @@
 export default {
   "privacy": {
     "title": "Politique de Confidentialité",
-    "lastUpdated": "Mars 2026",
+    "lastUpdated": "Juillet 2026",
     "introduction": {
       "title": "Introduction",
       "p1": "Bienvenue sur Douze Points (www.douzepoints.net).",
@@ -22,10 +22,13 @@ export default {
         "Site web référent"
       ],
       "autoFootnote": "Ces informations peuvent être traitées par nos prestataires d'analyse.",
-      "cookiesTitle": "b) Stockage local",
-      "cookiesDesc1": "Nous utilisons le stockage local de votre navigateur exclusivement pour enregistrer votre progression dans le jeu, vos scores et vos statistiques.",
-      "cookiesDesc2": "Ces données sont stockées uniquement sur votre appareil, ne sont pas transmises à nos serveurs et peuvent être supprimées en effaçant les données de votre navigateur.",
-      "cookiesDesc3": "Nous utilisons Google Analytics pour nous aider à comprendre comment les utilisateurs interagissent avec notre site Web. Cela nous aide à améliorer l'expérience utilisateur et à comprendre quelles fonctionnalités sont les plus populaires."
+      "cookiesTitle": "c) Stockage local et analyses",
+      "cookiesDesc1": "Nous utilisons le stockage local de votre navigateur pour mettre en cache l'état du jeu, les paramètres utilisateur et les données de session temporaires.",
+      "cookiesDesc2": "Votre progression réelle et vos objets EuroCollection sont sauvegardés dans notre base de données cloud sous votre ID anonyme.",
+      "cookiesDesc3": "Nous utilisons Google Analytics pour collecter des statistiques globales sur le trafic du site afin de nous aider à améliorer l'expérience utilisateur.",
+      "cloudTitle": "b) Identifiant anonyme et synchronisation dans le cloud",
+      "cloudDesc1": "Pour sauvegarder votre progression de jeu, vos meilleurs scores, votre rang, vos points de carrière et vos données EuroCollection (cartes débloquées, confettis, packs quotidiens), nous générons automatiquement un ID utilisateur aléatoire non identifiable via l'authentification anonyme Firebase.",
+      "cloudDesc2": "Cet ID anonyme ne collecte ni ne requiert aucune information personnelle (telle que votre nom réel, adresse e-mail ou numéro de téléphone). Il est stocké dans Google Cloud Firestore uniquement pour lier en toute sécurité votre progression de jeu à votre session d'appareil."
     },
     "legalBasis": {
       "title": "Base juridique (RGPD)",
@@ -38,20 +41,22 @@ export default {
       "legal": "lorsque cela est requis par la loi applicable."
     },
     "localStorage": {
-      "title": "Stockage local",
-      "p1": "Nous utilisons le stockage local de votre navigateur pour enregistrer la progression du jeu, les scores et les statistiques. Ces informations :",
+      "title": "Stockage local et persistance dans le cloud",
+      "p1": "Nous utilisons le stockage local du navigateur ainsi qu'un stockage sécurisé dans une base de données cloud (Google Cloud Firestore) pour sauvegarder votre état de jeu, votre rang et vos données EuroCollection :",
       "items": [
-        "Sont stockées uniquement sur votre appareil",
-        "Ne sont pas transmises à nos serveurs",
-        "Peuvent être supprimées en effaçant les données de votre navigateur"
+        "Mis en cache sur votre navigateur local pour un chargement rapide et des performances fluides",
+        "Synchronisé en toute sécurité avec Google Cloud Firestore à l'aide d'un ID utilisateur non identifiable",
+        "Ne collecte, ne stocke ni ne requiert d'identifiants personnels ou d'identité personnelle",
+        "Peut être réinitialisé localement en effaçant le cache du navigateur, bien que la progression dans le cloud reste liée à votre identifiant de session"
       ]
     },
     "dataSharing": {
-      "title": "Partage de données",
-      "p1": "Nous ne vendons pas de données personnelles. Toutefois, les données peuvent être traitées par des prestataires de services tiers, notamment :",
+      "title": "Partage de données et fournisseurs d'infrastructure",
+      "p1": "Nous ne vendons pas de données personnelles ni de profils d'utilisateurs. Cependant, les données techniques sont traitées par des fournisseurs de services et d'infrastructures tiers essentiels, notamment :",
       "items": [
-        "Fournisseurs d'hébergement",
-        "Prestataires de services techniques nécessaires au fonctionnement du site web"
+        "Google Cloud Firestore & Firebase (pour le stockage cloud des statistiques de jeu anonymes, des scores et de la progression EuroCollection)",
+        "Fournisseurs d'hébergement et d'infrastructure nécessaires au fonctionnement de l'application",
+        "Google Analytics (pour l'analyse d'utilisation agrégée)"
       ]
     },
     "internationalTransfers": {
@@ -60,7 +65,7 @@ export default {
     },
     "dataRetention": {
       "title": "Rétention des données",
-      "p1": "Nous ne maintenons pas de base de données d'utilisateurs. Les journaux techniques à des fins de sécurité sont conservés conformément aux politiques de nos fournisseurs, et le stockage local demeure jusqu'à ce que vous le supprimiez."
+      "p1": "Les statistiques de jeu anonymes, les points de carrière et la progression EuroCollection stockés dans Google Cloud Firestore sont conservés pour vous permettre de poursuivre votre jeu entre les sessions. Les journaux de serveur techniques sont conservés conformément aux politiques standard de nos fournisseurs d'infrastructure."
     },
     "yourRights": {
       "title": "Vos droits (UE/EEE)",
@@ -179,7 +184,7 @@ export default {
     }
   },
   "terms": {
-    "lastUpdated": "Mars 2026",
+    "lastUpdated": "Juillet 2026",
     "title": "Conditions d'utilisation",
     "acceptance": {
       "title": "Acceptation des conditions",
@@ -187,7 +192,7 @@ export default {
     },
     "description": {
       "title": "Description du service",
-      "p1": "Douze Points est un site web créé par des fans proposant des jeux et des anecdotes sur le thème de l'Eurovision à des fins de divertissement. Le service est fourni 'tel quel' et peut être modifié ou interrompu à tout moment."
+      "p1": "Douze Points est un site web créé par des fans proposant des jeux thématiques sur l'Eurovision, des quiz et l'expérience de collection de cartes numériques EuroCollection à des fins de divertissement. Le service est fourni 'en l'état' et peut être modifié ou interrompu à tout moment."
     },
     "ip": {
       "title": "Propriété intellectuelle",
@@ -223,6 +228,18 @@ export default {
     "contact": {
       "title": "Informations de contact",
       "p1": "Si vous avez des questions sur ces Conditions d'utilisation, veuillez nous contacter à l'adresse : douzepointsgame@gmail.com"
+    },
+    "collectibles": {
+      "title": "Objets virtuels et EuroCollection",
+      "p1": "EuroCollection comprend des cartes à collectionner numériques, des packs de cartes, des confettis et des badges virtuels ('Objets virtuels').",
+      "p2": "Tous les Objets virtuels sont des actifs purement numériques destinés uniquement à la collection en jeu et au divertissement sur Douze Points. Les Objets virtuels n'ont aucune valeur monétaire réelle, ne produisent pas d'intérêts et ne peuvent pas être échangés contre de l'argent réel ou une valeur monétaire.",
+      "p3": "Les Objets virtuels, y compris les EuroCards et les confettis, sont strictement intransférables. Vous ne pouvez pas vendre, échanger, troquer, revendre ou transférer des Objets virtuels à un autre joueur ou tiers, que ce soit à l'intérieur ou à l'extérieur du site web.",
+      "p4": "Nous nous réservons le droit de gérer, modifier, rééquilibrer, réguler ou supprimer des Objets virtuels et des mécaniques de jeu à tout moment sans responsabilité."
+    },
+    "accounts": {
+      "title": "Comptes anonymes et persistance des données",
+      "p1": "Pour préserver votre progression de jeu, vos meilleurs scores et EuroCollection, le site web utilise un identifiant de compte anonyme automatisé associé à votre session d'appareil.",
+      "p2": "Les comptes étant anonymes et liés à la session de votre appareil/navigateur, l'effacement des données du navigateur ou le changement d'appareil sans outils de récupération peut entraîner la perte d'accès à votre progression. Nous ne pouvons garantir la récupération des profils anonymes ou des objets virtuels perdus."
     }
   }
 };

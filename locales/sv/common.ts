@@ -58,5 +58,16 @@ export default {
     "subtitle": "Stöd projektet",
     "completed": "Du har klarat dagens utmaningar!",
     "button": "Köp mig en kaffe"
+  },
+  "settings": {
+    "title": "Inställningar",
+    "userId": "Användar-ID",
+    "copyUserId": "Kopiera användar-ID",
+    "selectAvatar": "Välj profilbild",
+    "soundEffects": "Ljudeffekter",
+    "soundEffectsDesc": "Aktivera eller inaktivera ljud för spel och paketöppning",
+    "on": "PÅ",
+    "off": "AV",
+    "saveAndClose": "Spara och stäng"
   }
 };

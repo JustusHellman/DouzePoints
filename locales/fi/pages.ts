@@ -1,7 +1,7 @@
 export default {
   "privacy": {
     "title": "Tietosuojaseloste",
-    "lastUpdated": "Maaliskuu 2026",
+    "lastUpdated": "Heinäkuu 2026",
     "introduction": {
       "title": "Johdanto",
       "p1": "Tervetuloa Douze Pointsiin (www.douzepoints.net).",
@@ -22,10 +22,13 @@ export default {
         "Viittaava verkkosivusto"
       ],
       "autoFootnote": "Analytiikkapalveluntarjoajamme voivat käsitellä näitä tietoja.",
-      "cookiesTitle": "b) Paikallinen tallennustila",
-      "cookiesDesc1": "Käytämme selaimesi paikallista tallennustilaa (local storage) ainoastaan pelisi edistymisen, pisteiden ja tilastojen tallentamiseen.",
-      "cookiesDesc2": "Nämä tiedot tallennetaan vain laitteellesi, niitä ei lähetetä palvelimillemme, ja ne voidaan poistaa tyhjentämällä selaimen tiedot.",
-      "cookiesDesc3": "Käytämme Google Analyticsia ymmärtääksemme, miten käyttäjät toimivat verkkosivustollamme. Tämä auttaa meitä parantamaan käyttökokemusta ja ymmärtämään, mitkä ominaisuudet ovat suosituimpia."
+      "cookiesTitle": "c) Paikallinen tallennus ja analytiikka",
+      "cookiesDesc1": "Käytämme selaimesi paikallista tallennustilaa pelitilan, käyttäjäasetusten ja väliaikaisten istuntotietojen tallentamiseen.",
+      "cookiesDesc2": "Varsinainen peliedistymisesi ja EuroCollection-kohteesi varmuuskopioidaan pilvitietokantaamme anonyymin tunnisteen alle.",
+      "cookiesDesc3": "Käytämme Google Analyticsia verkkosivuston liikennetilastojen keräämiseen auttaaksemme parantamaan käyttäjäkokemusta ja ominaisuuksien laatua.",
+      "cloudTitle": "b) Anonyymi tunniste & pilvisynkronointi",
+      "cloudDesc1": "Tallentaaksemme peliedistymisesi, huipputuloksesi, arvosi, urapisteesi ja EuroCollection-tiedot (avatut kortit, konfettivaluutta, päivittäiset paketit), luomme automaattisesti satunnaisen, ei-tunnistettavan käyttäjätunnuksen Firebasen anonyymin tunnistautumisen kautta.",
+      "cloudDesc2": "Tämä anonyymi tunniste ei kerää eikä vaadi mitään henkilötietoja (kuten oikeaa nimeäsi, sähköpostiosoitettasi tai puhelinnumeroasi). Se tallennetaan Google Cloud Firestoreen vain peliedistymisesi turvalliseen yhdistämiseen laitteesi istuntoon."
     },
     "legalBasis": {
       "title": "Oikeusperusta (GDPR)",
@@ -38,20 +41,22 @@ export default {
       "legal": "sovellettavan lain edellyttämällä tavalla."
     },
     "localStorage": {
-      "title": "Paikallinen tallennustila",
-      "p1": "Käytämme selaimesi paikallista tallennustilaa pelin edistymisen, pisteiden ja tilastojen tallentamiseen. Nämä tiedot:",
+      "title": "Paikallinen tallennus ja pilvipersistenssi",
+      "p1": "Käytämme selaimen paikallista tallennustilaa yhdessä turvallisen pilvitietokantatallennuksen (Google Cloud Firestore) kanssa pelitilasi, arvosi ja EuroCollection-tietojesi tallentamiseen:",
       "items": [
-        "Tallennetaan vain laitteellesi",
-        "Ei lähetetä palvelimillemme",
-        "Voidaan poistaa tyhjentämällä selaimen tiedot"
+        "Tallennettu selaimesi muistiin nopeaa latausta ja sujuvaa suorituskykyä varten",
+        "Synkronoitu turvallisesti Google Cloud Firestoreen ei-tunnistettavan käyttäjätunnuksen avulla",
+        "Ei kerää, tallenna tai vaadi henkilökohtaisia tunnistetietoja tai henkilöllisyyttä",
+        "Voidaan nollata paikallisesti tyhjentämällä selaimen välimuisti, vaikka pilviedistyminen säilyy sidottuna istuntotunnisteeseesi"
       ]
     },
     "dataSharing": {
-      "title": "Tietojen jakaminen",
-      "p1": "Emme myy henkilötietoja. Tietoja voivat kuitenkin käsitellä kolmannen osapuolen palveluntarjoajat, mukaan lukien:",
+      "title": "Tietojen jakaminen ja infrastruktuurintarjoajat",
+      "p1": "Emme myy henkilötietoja tai käyttäjäprofiileja. Teknisiä tietoja käsittelevät kuitenkin olennaiset kolmannen osapuolen palvelu- ja infrastruktuurintarjoajat, mukaan lukien:",
       "items": [
-        "Hosting-palveluntarjoajat",
-        "Verkkosivuston toiminnan kannalta välttämättömät tekniset palveluntarjoajat"
+        "Google Cloud Firestore & Firebase (anonyymien pelitilastojen, tulosten ja EuroCollection-edistymisen pilvitallennukseen)",
+        "Isännöinti- ja infrastruktuurintarjoajat, joita tarvitaan sovelluksen pyörittämiseen",
+        "Google Analytics (yhdistettyä käyttöanalyysiä varten)"
       ]
     },
     "internationalTransfers": {
@@ -60,7 +65,7 @@ export default {
     },
     "dataRetention": {
       "title": "Tietojen säilyttäminen",
-      "p1": "Emme ylläpidä käyttäjätietokantaa. Turvallisuustarkoituksiin käytettävät tekniset lokit säilytetään palveluntarjoajiemme käytäntöjen mukaisesti, ja paikallinen tallennustila säilyy, kunnes poistat sen."
+      "p1": "Google Cloud Firestoreen tallennetut anonyymit pelitilastot, urapisteet ja EuroCollection-edistyminen säilytetään, jotta voit jatkaa pelaamista istuntojen välillä. Teknisiä palvelinlokeja säilytetään infrastruktuurintarjoajiemme vakiokäytäntöjen mukaisesti."
     },
     "yourRights": {
       "title": "Oikeutesi (EU/ETA)",
@@ -179,7 +184,7 @@ export default {
     }
   },
   "terms": {
-    "lastUpdated": "Maaliskuu 2026",
+    "lastUpdated": "Heinäkuu 2026",
     "title": "Käyttöehdot",
     "acceptance": {
       "title": "Ehtojen hyväksyminen",
@@ -187,7 +192,7 @@ export default {
     },
     "description": {
       "title": "Palvelun kuvaus",
-      "p1": "Douze Points on fanien tekemä verkkosivusto, joka tarjoaa Euroviisu-aiheisia pelejä ja tietovisoja viihdetarkoituksiin. Palvelu tarjotaan sellaisena kuin se on, ja sitä voidaan muuttaa tai se voidaan lopettaa milloin tahansa."
+      "p1": "Douze Points on fanien luoma verkkosivusto, joka tarjoaa euroviisuaiheisia pelejä, tietokilpailuja ja EuroCollection-digitaalisten korttien keräilykokemuksen viihdetarkoituksiin. Palvelu tarjotaan 'sellaisena kuin se on' ja sitä voidaan muuttaa tai se voidaan lakkauttaa milloin tahansa."
     },
     "ip": {
       "title": "Immateriaalioikeudet",
@@ -223,6 +228,18 @@ export default {
     "contact": {
       "title": "Yhteystiedot",
       "p1": "Jos sinulla on kysyttävää näistä käyttöehdoista, ota meihin yhteyttä osoitteeseen: douzepointsgame@gmail.com"
+    },
+    "collectibles": {
+      "title": "Virtuaaliset esineet & EuroCollection",
+      "p1": "EuroCollection sisältää digitaalisia keräilykortteja, korttipaketteja, konfettivaluuttaa ja virtuaalisia merkkejä ('Virtuaaliset esineet').",
+      "p2": "Kaikki virtuaaliset esineet ovat puhtaasti digitaalisia hyödykkeitä, jotka on tarkoitettu ainoastaan pelinsisäiseen keräilyyn ja viihdykkeeksi Douze Pointsissa. Virtuaalisilla esineillä ei ole mitään todellista rahallista arvoa, ne eivät kerrytä korkoa, eikä niitä voi lunastaa tai vaihtaa oikeaan rahaan tai rahalliseen arvoon.",
+      "p3": "Virtuaaliset esineet, mukaan lukien EuroCard-kortit ja konfetti, ovat ehdottomasti siirtokelvottomia. Et saa myydä, vaihtaa, kaupata, jälleenmyydä tai siirtää virtuaalisia esineitä kenellekään muulle pelaajalle tai kolmannelle osapuolelle sivustolla tai sen ulkopuolella.",
+      "p4": "Pidätämme oikeuden hallinnoida, muokata, tasapainottaa, säädellä tai poistaa virtuaalisia esineitä ja pelimekaniikkoja milloin tahansa ilman korvausvelvollisuutta."
+    },
+    "accounts": {
+      "title": "Anonyymit tilit ja tietojen säilyvyys",
+      "p1": "Säilyttääkseen peliedistymisesi, huipputuloksesi ja EuroCollection-korttisi verkkosivusto käyttää automaattista anonyymiä tilitunnisteen yhdistettynä laitteesi istuntoon.",
+      "p2": "Koska tilit ovat anonyymejä ja sidottuja laite-/selainistuntoosi, selaintietojen tyhjentäminen tai laitteen vaihtaminen ilman palautustyökaluja voi johtaa edistymisen menettämiseen. Emme voi taata kadonneiden anonyymien profiilien tai virtuaalisten esineiden palauttamista."
     }
   }
 };

@@ -58,5 +58,16 @@ export default {
     "subtitle": "Υποστηρίξτε το project",
     "completed": "Ολοκληρώσατε τις σημερινές προκλήσεις!",
     "button": "Κεράστε με έναν καφέ"
+  },
+  "settings": {
+    "title": "Ρυθμίσεις",
+    "userId": "ID Χρήστη",
+    "copyUserId": "Αντιγραφή ID Χρήστη",
+    "selectAvatar": "Επιλογή Εικόνας Προφίλ",
+    "soundEffects": "Ηχητικά Εφέ",
+    "soundEffectsDesc": "Ενεργοποίηση ή απενεργοποίηση ήχων παιχνιδιού και πακέτων",
+    "on": "ON",
+    "off": "OFF",
+    "saveAndClose": "Αποθήκευση & Κλείσιμο"
   }
 };

@@ -1,7 +1,7 @@
 export default {
   "privacy": {
     "title": "Privacy Policy",
-    "lastUpdated": "March 2026",
+    "lastUpdated": "July 2026",
     "introduction": {
       "title": "Introduction",
       "p1": "Welcome to Douze Points (www.douzepoints.net).",
@@ -22,10 +22,13 @@ export default {
         "Referring website"
       ],
       "autoFootnote": "This information may be processed by our analytics providers.",
-      "cookiesTitle": "b) Local Storage",
-      "cookiesDesc1": "We use your browser's local storage exclusively to save your game progress, scores, and statistics.",
-      "cookiesDesc2": "This data is stored only on your device, is not transmitted to our servers, and can be deleted by clearing your browser data.",
-      "cookiesDesc3": "We use Google Analytics to help us understand how users interact with our website. This helps us improve the user experience and understand which features are most popular."
+      "cloudTitle": "b) Anonymous Identifier & Cloud Synchronization",
+      "cloudDesc1": "To save your gameplay progress, high scores, rank, career points, and EuroCollection data (unlocked cards, confetti currency, daily packs), we automatically generate a random, non-identifiable user ID via Firebase Anonymous Authentication.",
+      "cloudDesc2": "This anonymous ID does not collect or require any personal information (such as your real name, email address, or phone number). It is stored in Google Cloud Firestore solely to link your game progress securely to your device session.",
+      "cookiesTitle": "c) Local Storage & Analytics",
+      "cookiesDesc1": "We use your browser's local storage to cache game state, user settings, and temporary active session data for instant offline loading.",
+      "cookiesDesc2": "Your actual game progress and EuroCollection items are backed up in our cloud database under your anonymous ID.",
+      "cookiesDesc3": "We use Google Analytics to collect aggregated website traffic statistics to help us improve user experience and feature quality."
     },
     "legalBasis": {
       "title": "Legal Basis (GDPR)",
@@ -38,20 +41,22 @@ export default {
       "legal": "where required by applicable law."
     },
     "localStorage": {
-      "title": "Local Storage",
-      "p1": "We use your browser’s local storage to save game progress, scores, and statistics. This information:",
+      "title": "Local Storage & Cloud Persistence",
+      "p1": "We use browser local storage alongside secure cloud database storage (Google Cloud Firestore) to save your game state, rank, and EuroCollection data:",
       "items": [
-        "Is stored only on your device",
-        "Is not transmitted to our servers",
-        "Can be deleted by clearing your browser data"
+        "Cached on your local browser for rapid loading and smooth performance",
+        "Synced securely to Google Cloud Firestore using a non-identifiable user ID",
+        "Does not collect, store, or require personal credentials or personal identity",
+        "Can be reset locally by clearing your browser cache, though cloud progress remains tied to your session identifier"
       ]
     },
     "dataSharing": {
-      "title": "Data Sharing",
-      "p1": "We do not sell personal data. However, data may be processed by third-party service providers, including:",
+      "title": "Data Sharing & Infrastructure Providers",
+      "p1": "We do not sell personal data or user profiles. However, technical data is processed by essential third-party service and infrastructure providers, including:",
       "items": [
-        "Hosting providers",
-        "Technical service providers necessary for website operation"
+        "Google Cloud Firestore & Firebase (for cloud storage of anonymous game stats, scores, and EuroCollection progress)",
+        "Hosting and infrastructure providers required to operate the application",
+        "Google Analytics (for aggregated usage analysis)"
       ]
     },
     "internationalTransfers": {
@@ -60,7 +65,7 @@ export default {
     },
     "dataRetention": {
       "title": "Data Retention",
-      "p1": "We do not maintain a user database. Technical logs for security purposes are retained according to our providers' policies, and local storage remains until you delete it."
+      "p1": "Anonymous game statistics, career points, and EuroCollection progress stored in Google Cloud Firestore are retained to allow you to continue your gameplay across sessions. Technical server logs are retained according to our infrastructure providers' standard policies."
     },
     "yourRights": {
       "title": "Your Rights (EU/EEA)",
@@ -179,7 +184,7 @@ export default {
     }
   },
   "terms": {
-    "lastUpdated": "March 2026",
+    "lastUpdated": "July 2026",
     "title": "Terms of Service",
     "acceptance": {
       "title": "Acceptance of Terms",
@@ -187,7 +192,19 @@ export default {
     },
     "description": {
       "title": "Description of Service",
-      "p1": "Douze Points is a fan-made website providing Eurovision-themed games and trivia for entertainment purposes. The service is provided 'as is' and may be modified or discontinued at any time."
+      "p1": "Douze Points is a fan-made website providing Eurovision-themed games, trivia, and the EuroCollection digital card collecting experience for entertainment purposes. The service is provided 'as is' and may be modified or discontinued at any time."
+    },
+    "collectibles": {
+      "title": "Virtual Items & EuroCollection",
+      "p1": "EuroCollection features digital collectible cards, card packs, confetti currency, and virtual badges ('Virtual Items').",
+      "p2": "All Virtual Items are purely digital assets intended solely for in-game collection and entertainment within Douze Points. Virtual Items have no real-world monetary value, do not accrue interest, and cannot be redeemed or exchanged for real currency or monetary value.",
+      "p3": "Virtual Items, including EuroCards and confetti, are strictly non-transferable. You may not sell, trade, barter, resell, or transfer Virtual Items to any other player or third party, whether inside or outside the website.",
+      "p4": "We reserve the right to manage, modify, rebalance, regulate, or remove Virtual Items and game mechanics at any time without liability."
+    },
+    "accounts": {
+      "title": "Anonymous Accounts & Data Persistence",
+      "p1": "To preserve your game progress, high scores, and EuroCollection, the website uses an automated anonymous account identifier associated with your device session.",
+      "p2": "Because accounts are anonymous and tied to your device/browser session, clearing browser data or switching devices without account recovery tools may result in loss of access to your progress. We cannot guarantee recovery of lost anonymous profiles or virtual items."
     },
     "ip": {
       "title": "Intellectual Property",

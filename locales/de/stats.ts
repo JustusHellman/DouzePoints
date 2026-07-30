@@ -4,6 +4,7 @@ export default {
     "voterBreakdown": "Wähler-Details",
     "howToWin": "Wie man gewinnt",
     "earnPoints": "Rang-Punkte verdienen",
+    "rankPoints": "Rang-Punkte",
     "earnPointsDesc": "Sammle Punkte, um in der Rangliste aufzusteigen. Makellose Siege bringen höhere Punktzahlen.",
     "claimDouze": "Douze Points erhalten 🏆",
     "claimDouzeDesc": "Vergeben für perfekte Spiele (keine Fehler oder Sieg beim ersten Versuch).",

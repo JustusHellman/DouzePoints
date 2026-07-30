@@ -58,5 +58,16 @@ export default {
     "subtitle": "Soutenez le projet",
     "completed": "Vous avez terminé les défis d'aujourd'hui !",
     "button": "Offrez-moi un café"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "userId": "ID utilisateur",
+    "copyUserId": "Copier l'ID utilisateur",
+    "selectAvatar": "Choisir la photo de profil",
+    "soundEffects": "Effets sonores",
+    "soundEffectsDesc": "Activer ou désactiver les sons du jeu et d'ouverture de packs",
+    "on": "ON",
+    "off": "OFF",
+    "saveAndClose": "Enregistrer et fermer"
   }
 };

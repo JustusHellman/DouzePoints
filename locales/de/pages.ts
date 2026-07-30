@@ -1,7 +1,7 @@
 export default {
   "privacy": {
     "title": "Datenschutz",
-    "lastUpdated": "März 2026",
+    "lastUpdated": "Juli 2026",
     "introduction": {
       "title": "Einleitung",
       "p1": "Willkommen bei Douze Points (www.douzepoints.net).",
@@ -22,10 +22,13 @@ export default {
         "Referrer-Website"
       ],
       "autoFootnote": "Diese Informationen können von unseren Analyseanbietern verarbeitet werden.",
-      "cookiesTitle": "b) Lokaler Speicher",
-      "cookiesDesc1": "Wir verwenden den lokalen Speicher Ihres Browsers ausschließlich, um Ihren Spielfortschritt, Ihre Spielstände und Statistiken zu speichern.",
-      "cookiesDesc2": "Diese Daten werden nur auf Ihrem Gerät gespeichert, nicht an unsere Server übertragen und können durch Löschen Ihrer Browserdaten gelöscht werden.",
-      "cookiesDesc3": "Wir verwenden Google Analytics, um uns zu helfen zu verstehen, wie Nutzer mit unserer Website interagieren. Dies hilft uns, die Nutzererfahrung zu verbessern und zu verstehen, welche Funktionen am beliebtesten sind."
+      "cookiesTitle": "c) Lokaler Speicher & Analysen",
+      "cookiesDesc1": "Wir verwenden den lokalen Speicher Ihres Browsers, um den Spielstatus, Benutzereinstellungen und temporäre Sitzungsdaten für ein sofortiges Offline-Laden zwischenzuspeichern.",
+      "cookiesDesc2": "Ihr tatsächlicher Spielfortschritt und Ihre EuroCollection-Objekte werden in unserer Cloud-Datenbank unter Ihrer anonymen ID gesichert.",
+      "cookiesDesc3": "Wir verwenden Google Analytics, um aggregierte Website-Zugriffsstatistiken zu sammeln, die uns helfen, die Nutzererfahrung und Funktionsqualität zu verbessern.",
+      "cloudTitle": "b) Anonymer Identifikator & Cloud-Synchronisierung",
+      "cloudDesc1": "Um Ihren Spielfortschritt, Ihre Highscores, Ihren Rang, Ihre Karrierepunkte und Ihre EuroCollection-Daten (freigeschaltete Karten, Konfetti-Währung, tägliche Packs) zu speichern, generieren wir über die anonyme Firebase-Authentifizierung automatisch eine zufällige, nicht identifizierbare Benutzer-ID.",
+      "cloudDesc2": "Diese anonyme ID erfasst oder erfordert keine personenbezogenen Daten (wie Ihren echten Namen, Ihre E-Mail-Adresse oder Telefonnummer). Sie wird in Google Cloud Firestore ausschließlich gespeichert, um Ihren Spielfortschritt sicher mit Ihrer Gerätesitzung zu verknüpfen."
     },
     "legalBasis": {
       "title": "Rechtsgrundlage (DSGVO)",
@@ -38,20 +41,22 @@ export default {
       "legal": "wo dies nach geltendem Recht erforderlich ist."
     },
     "localStorage": {
-      "title": "Lokaler Speicher",
-      "p1": "Wir verwenden den lokalen Speicher Ihres Browsers, um Spielfortschritte, Spielstände und Statistiken zu speichern. Diese Informationen:",
+      "title": "Lokaler Speicher & Cloud-Dauerhaftigkeit",
+      "p1": "Wir verwenden den lokalen Speicher des Browsers zusammen mit einer sicheren Cloud-Datenbank (Google Cloud Firestore), um Ihren Spielstatus, Ihren Rang und Ihre EuroCollection-Daten zu speichern:",
       "items": [
-        "Werden nur auf Ihrem Gerät gespeichert",
-        "Werden nicht an unsere Server übertragen",
-        "Können durch Löschen Ihrer Browserdaten gelöscht werden"
+        "Auf Ihrem lokalen Browser zwischengespeichert für schnelles Laden und reibungslose Leistung",
+        "Sicher synchronisiert mit Google Cloud Firestore unter Verwendung einer nicht identifizierbaren Benutzer-ID",
+        "Sammelt, speichert oder erfordert keine persönlichen Anmeldedaten oder persönliche Identität",
+        "Kann lokal durch Löschen des Browser-Caches zurückgesetzt werden, obwohl der Cloud-Fortschritt an Ihre Sitzungskennung gebunden bleibt"
       ]
     },
     "dataSharing": {
-      "title": "Weitergabe von Daten",
-      "p1": "Wir verkaufen keine personenbezogenen Daten. Daten können jedoch von Drittanbietern verarbeitet werden, darunter:",
+      "title": "Datenweitergabe & Infrastruktur-Anbieter",
+      "p1": "Wir verkaufen keine personenbezogenen Daten oder Nutzerprofile. Technische Daten werden jedoch von wesentlichen Drittanbieter-Dienstleistern und Infrastruktur-Anbietern verarbeitet, darunter:",
       "items": [
-        "Hosting-Anbieter",
-        "Technische Dienstleister, die für den Betrieb der Website erforderlich sind"
+        "Google Cloud Firestore & Firebase (zur Cloud-Speicherung von anonymen Spielstatistiken, Spielständen und EuroCollection-Fortschritten)",
+        "Hosting- und Infrastruktur-Anbieter, die für den Betrieb der Anwendung erforderlich sind",
+        "Google Analytics (für aggregierte Nutzungsanalysen)"
       ]
     },
     "internationalTransfers": {
@@ -60,7 +65,7 @@ export default {
     },
     "dataRetention": {
       "title": "Datenspeicherung",
-      "p1": "Wir führen keine Benutzerdatenbank. Technische Protokolle für Sicherheitszwecke werden gemäß den Richtlinien unserer Anbieter aufbewahrt, und der lokale Speicher bleibt erhalten, bis Sie ihn löschen."
+      "p1": "In Google Cloud Firestore gespeicherte anonyme Spielstatistiken, Karrierepunkte und EuroCollection-Fortschritte werden aufbewahrt, damit Sie Ihr Spiel über Sitzungen hinweg fortsetzen können. Technische Server-Logs werden gemäß den Standardrichtlinien unserer Infrastruktur-Anbieter aufbewahrt."
     },
     "yourRights": {
       "title": "Ihre Rechte (EU/EWR)",
@@ -179,7 +184,7 @@ export default {
     }
   },
   "terms": {
-    "lastUpdated": "März 2026",
+    "lastUpdated": "Juli 2026",
     "title": "Nutzungsbedingungen",
     "acceptance": {
       "title": "Annahme der Bedingungen",
@@ -187,7 +192,7 @@ export default {
     },
     "description": {
       "title": "Beschreibung des Dienstes",
-      "p1": "Douze Points ist eine von Fans erstellte Website, die Eurovision-Themenspiele und Trivia zu Unterhaltungszwecken anbietet. Der Dienst wird 'wie besehen' bereitgestellt und kann jederzeit geändert oder eingestellt werden."
+      "p1": "Douze Points ist eine von Fans erstellte Website, die Eurovision-Themenspiele, Trivia und das digitale Kartensammelerlebnis EuroCollection zu Unterhaltungszwecken anbietet. Der Dienst wird 'wie besehen' bereitgestellt und kann jederzeit geändert oder eingestellt werden."
     },
     "ip": {
       "title": "Geistiges Eigentum",
@@ -223,6 +228,18 @@ export default {
     "contact": {
       "title": "Kontaktinformationen",
       "p1": "Wenn Sie Fragen zu diesen Nutzungsbedingungen haben, kontaktieren Sie uns bitte unter: douzepointsgame@gmail.com"
+    },
+    "collectibles": {
+      "title": "Virtuelle Gegenstände & EuroCollection",
+      "p1": "EuroCollection umfasst digitale Sammelkarten, Kartenpacks, die Konfetti-Währung und virtuelle Abzeichen („Virtuelle Gegenstände“).",
+      "p2": "Alle Virtuellen Gegenstände sind reine digitale Vermögenswerte, die ausschließlich für das Sammeln im Spiel und zur Unterhaltung auf Douze Points bestimmt sind. Virtuelle Gegenstände haben keinen Geldwert in der realen Welt, werfen keine Zinsen ab und können nicht gegen echtes Geld oder einen Geldwert eingelöst oder umgetauscht werden.",
+      "p3": "Virtuelle Gegenstände, einschließlich EuroCards und Konfetti, sind strikt nicht übertragbar. Sie dürfen Virtuelle Gegenstände weder innerhalb noch außerhalb der Website an andere Spieler oder Dritte verkaufen, handeln, tauschen, weiterverkaufen oder übertragen.",
+      "p4": "Wir behalten uns das Recht vor, Virtuelle Gegenstände und Spielmechaniken jederzeit ohne Haftung zu verwalten, zu ändern, neu zu gewichten, zu regulieren oder zu entfernen."
+    },
+    "accounts": {
+      "title": "Anonyme Konten & Daten-Dauerhaftigkeit",
+      "p1": "Um Ihren Spielfortschritt, Ihre Highscores und EuroCollection zu bewahren, verwendet die Website eine automatisierte anonyme Kontokennung, die Ihrer Gerätesitzung zugeordnet ist.",
+      "p2": "Da Konten anonym und an Ihre Geräte-/Browsersitzung gebunden sind, kann das Löschen von Browserdaten oder das Wechseln von Geräten ohne Wiederherstellungstools zum Verlust des Zugriffs auf Ihren Fortschritt führen. Wir können keine Wiederherstellung verlorener anonymer Profile oder virtueller Gegenstände garantieren."
     }
   }
 };

@@ -58,5 +58,16 @@ export default {
     "subtitle": "Unterstütze das Projekt",
     "completed": "Du hast die heutigen Herausforderungen abgeschlossen!",
     "button": "Kauf mir einen Kaffee"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "userId": "Benutzer-ID",
+    "copyUserId": "Benutzer-ID kopieren",
+    "selectAvatar": "Profilbild auswählen",
+    "soundEffects": "Soundeffekte",
+    "soundEffectsDesc": "Spiel- und Paketöffnungssounds aktivieren oder deaktivieren",
+    "on": "EIN",
+    "off": "AUS",
+    "saveAndClose": "Speichern & Schließen"
   }
 };

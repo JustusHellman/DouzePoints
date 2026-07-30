@@ -10,6 +10,7 @@ export default {
     "todayScore": "Päivän pisteet",
     "howToPlayTitle": "Kuinka pelata Douze Pointsia",
     "howToPlayP1": "Douze Points on päivittäinen Euroviisu-haasteesi. Joka päivä julkaistaan kuusi ainutlaatuista peliä, jotka testaavat tietosi kilpailun historiasta, artisteista ja sanoituksista. Tavoitteenasi on suorittaa jokainen haaste mahdollisimman vähillä virheillä ansaitaksesi maksimipisteet: 12 pistettä – legendaarinen 'Douze Points'!",
-    "howToPlayP2": "Kun keräät pisteitä kaikista peleistä, nouset globaalissa fanirankingissa 'Ensikertalaisesta' todelliseksi 'Euroviisu-legendaksi'. Voit seurata päivittäistä edistymistäsi, urasi virstanpylväitä ja nykyistä sijoitustasi klikkaamalla 'Tilastot'-painiketta yläpalkissa milloin tahansa. Onnea matkaan, ja paras fani voittakoon!"
+    "howToPlayP2": "Kun keräät pisteitä kaikista peleistä, nouset globaalissa fanirankingissa 'Ensikertalaisesta' todelliseksi 'Euroviisu-legendaksi'. Voit seurata päivittäistä edistymistäsi, urasi virstanpylväitä ja nykyistä sijoitustasi klikkaamalla 'Tilastot'-painiketta yläpalkissa milloin tahansa. Onnea matkaan, ja paras fani voittakoon!",
+    "howToPlayP3": "Pelaamalla päivittäisiä pelejä ansaitset myös pakkoja rakentaaksesi digitaalisten keräilykorttien EuroCollectioniasi. Katso, löydätkö ne kaikki näyttääksesi superfanistatuksesi!"
   }
 };

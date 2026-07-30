@@ -10,6 +10,7 @@ export default {
     "todayScore": "Today's Score",
     "howToPlayTitle": "How to Play Douze Points",
     "howToPlayP1": "Douze Points is your daily Eurovision challenge hub. Every day, six unique games are released to test your knowledge of the contest's history, artists, and lyrics. Your goal is to complete each challenge with as few mistakes as possible to earn the maximum score of 12 points—the legendary 'Douze Points'!",
-    "howToPlayP2": "As you accumulate points across all games, you will climb the global fandom ranks, evolving from a 'First-Time Voter' to a true 'Eurovision Legend'. You can track your daily progress, career milestones, and current rank by clicking the 'Stats' button in the header at any time. Good luck, and may the best fan win!"
+    "howToPlayP2": "As you accumulate points across all games, you will climb the global fandom ranks, evolving from a 'First-Time Voter' to a true 'Eurovision Legend'. You can track your daily progress, career milestones, and current rank by clicking the 'Stats' button in the header at any time.",
+    "howToPlayP3": "By playing the daily games, you will also earn packs to build your EuroCollection of digital trading cards. See if you can find them all to show off your superfan status!"
   }
 };

@@ -4,6 +4,7 @@ export default {
     "voterBreakdown": "Desglose de Votante",
     "howToWin": "Cómo Ganar",
     "earnPoints": "Gana Puntos de Rango",
+    "rankPoints": "Puntos de Rango",
     "earnPointsDesc": "Acumula puntos para subir en la clasificación. Las victorias perfectas dan puntuaciones más altas.",
     "claimDouze": "Consigue Douze Points 🏆",
     "claimDouzeDesc": "Otorgado por juegos perfectos (sin errores o victorias al primer intento).",

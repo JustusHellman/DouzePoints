@@ -1,7 +1,7 @@
 export default {
   "privacy": {
     "title": "Integritetspolicy",
-    "lastUpdated": "Mars 2026",
+    "lastUpdated": "Juli 2026",
     "introduction": {
       "title": "Introduktion",
       "p1": "Välkommen till Douze Points (www.douzepoints.net).",
@@ -22,10 +22,13 @@ export default {
         "Hänvisande webbplats"
       ],
       "autoFootnote": "Denna information kan behandlas av våra analysleverantörer.",
-      "cookiesTitle": "b) Lokal lagring (Local Storage)",
-      "cookiesDesc1": "Vi använder din webbläsares lokala lagring enbart för att spara dina spelframsteg, poäng och statistik.",
-      "cookiesDesc2": "Dessa uppgifter lagras endast på din enhet, skickas inte till våra servrar och kan raderas genom att du rensar din webbläsares data.",
-      "cookiesDesc3": "Vi använder Google Analytics för att hjälpa oss förstå hur användare interagerar med vår webbplats. Detta hjälper oss att förbättra användarupplevelsen och förstå vilka funktioner som är mest populära."
+      "cookiesTitle": "c) Lokal lagring & analys",
+      "cookiesDesc1": "Vi använder din webbläsares lokala lagring för att mellanlagra speltillstånd, användarinställningar och tillfälliga sessionstillstånd för snabb laddning.",
+      "cookiesDesc2": "Dina faktiska spelframsteg och EuroCollection-objekt säkerhetskopieras i vår molndatabas under ditt anonyma ID.",
+      "cookiesDesc3": "Vi använder Google Analytics för att samla in aggregerad statistik om webbplatstrafik för att hjälpa oss förbättra användarupplevelsen och funktionskvaliteten.",
+      "cloudTitle": "b) Anonym identifierare & molnsynkronisering",
+      "cloudDesc1": "För att spara dina spelframsteg, poäng, rank, karriärpoäng och EuroCollection-data (upplåsta kort, konfettivaluta, dagliga paket), genererar vi automatiskt ett slumpmässigt, icke-identifierbart användar-ID via Firebase Anonym Autentisering.",
+      "cloudDesc2": "Detta anonyma ID samlar inte in eller kräver några personuppgifter (såsom ditt riktiga namn, e-postadress eller telefonnummer). Det lagras i Google Cloud Firestore enbart för att säkert koppla dina spelframsteg till din enhetssession."
     },
     "legalBasis": {
       "title": "Rättslig grund (GDPR)",
@@ -38,20 +41,22 @@ export default {
       "legal": "där det krävs enligt tillämplig lag."
     },
     "localStorage": {
-      "title": "Lokal lagring",
-      "p1": "Vi använder din webbläsares lokala lagring för att spara dina spelframsteg, poäng och statistik. Denna information:",
+      "title": "Lokal lagring & molnlagring",
+      "p1": "Vi använder webbläsarens lokala lagring tillsammans med säker molndatabaslagring (Google Cloud Firestore) för att spara ditt speltillstånd, din rank och dina EuroCollection-data:",
       "items": [
-        "Lagras endast på din enhet",
-        "Skickas inte till våra servrar",
-        "Kan raderas genom att du rensar din webbläsares data"
+        "Mellanlagras i din lokala webbläsare för snabb laddning och smidig prestanda",
+        "Synkroniseras säkert till Google Cloud Firestore med ett icke-identifierbart användar-ID",
+        "Samlar inte in, lagrar eller kräver personliga inloggningsuppgifter eller personlig identitet",
+        "Kan återställas lokalt genom att rensa din webbläsarcache, även om molnframstegen finns kvar kopplade till din session"
       ]
     },
     "dataSharing": {
-      "title": "Datadelning",
-      "p1": "Vi säljer inte personuppgifter. Uppgifter kan dock behandlas av tredjepartsleverantörer, inklusive:",
+      "title": "Datadelning & infrastrukturleverantörer",
+      "p1": "Vi säljer inte personuppgifter eller användarprofiler. Tekniska data behandlas dock av väsentliga tredjepartsleverantörer och infrastrukturleverantörer, inklusive:",
       "items": [
-        "Hostingleverantörer",
-        "Tekniska tjänsteleverantörer som är nödvändiga för webbplatsens drift"
+        "Google Cloud Firestore & Firebase (för molnlagring av anonyma spelstatistik, poäng och EuroCollection-framsteg)",
+        "Hosting- och infrastrukturleverantörer som krävs för att driva applikationen",
+        "Google Analytics (för aggregerad användningsanalys)"
       ]
     },
     "internationalTransfers": {
@@ -60,7 +65,7 @@ export default {
     },
     "dataRetention": {
       "title": "Datalagring",
-      "p1": "Vi har ingen användardatabas. Tekniska loggar för säkerhetsändamål lagras enligt våra leverantörers policyer, och lokal lagring finns kvar tills du raderar den."
+      "p1": "Anonym spelstatistik, karriärpoäng och EuroCollection-framsteg som lagras i Google Cloud Firestore sparas för att du ska kunna fortsätta ditt spelande mellan sessioner. Tekniska serverloggar sparas enligt våra infrastrukturleverantörers standardpolicyer."
     },
     "yourRights": {
       "title": "Dina rättigheter (EU/EES)",
@@ -179,7 +184,7 @@ export default {
     }
   },
   "terms": {
-    "lastUpdated": "Mars 2026",
+    "lastUpdated": "Juli 2026",
     "title": "Användarvillkor",
     "acceptance": {
       "title": "Godkännande av villkor",
@@ -187,7 +192,7 @@ export default {
     },
     "description": {
       "title": "Beskrivning av tjänsten",
-      "p1": "Douze Points är en fan-skapad webbplats som erbjuder spel och trivia med Eurovision-tema för underhållningsändamål. Tjänsten tillhandahålls i befintligt skick och kan ändras eller avbrytas när som helst."
+      "p1": "Douze Points är en fan-skapad webbplats som erbjuder Eurovision-spel, trivia och den digitala kortsamlingsupplevelsen EuroCollection för underhållningsändamål. Tjänsten tillhandahålls i befintligt skick och kan ändras eller avslutas när som helst."
     },
     "ip": {
       "title": "Immaterialrätt",
@@ -223,6 +228,18 @@ export default {
     "contact": {
       "title": "Kontaktinformation",
       "p1": "Om du har några frågor om dessa användarvillkor, vänligen kontakta oss på: douzepointsgame@gmail.com"
+    },
+    "collectibles": {
+      "title": "Virtuella objekt & EuroCollection",
+      "p1": "EuroCollection innehåller digitala samlarkort, kortpaket, konfettivaluta och virtuella märken (\"Virtuella objekt\").",
+      "p2": "Alla virtuella objekt är rena digitala tillgångar som enbart är avsedda för samlande i spelet och underhållning inom Douze Points. Virtuella objekt har inget verkligt monetärt värde, ger ingen ränta och kan inte lösas in eller växlas mot riktiga pengar eller monetärt värde.",
+      "p3": "Virtuella objekt, inklusive EuroCards och konfetti, är strängt icke-överförbara. Du får inte sälja, byta, köpa, återförsälja eller överföra virtuella objekt till någon annan spelare eller tredje part, vare sig på eller utanför webbplatsen.",
+      "p4": "Vi förbehåller oss rätten att hantera, ändra, ombalansera, reglera eller ta bort virtuella objekt och spelmekaniker när som helst utan ansvar."
+    },
+    "accounts": {
+      "title": "Anonyma konton & datalagring",
+      "p1": "För att bevara dina spelframsteg, poäng och EuroCollection använder webbplatsen en automatisk anonym kontoidentifierare kopplad till din enhetssession.",
+      "p2": "Eftersom konton är anonyma och kopplade till din enhets-/webbläsarsession kan rensning av webbläsardata eller byte av enhet utan återställningsverktyg leda till att du förlorar åtkomsten till dina framsteg. Vi kan inte garantera återställning av förlorade anonyma profiler eller virtuella objekt."
     }
   }
 };
