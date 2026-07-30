@@ -58,5 +58,16 @@ export default {
     "subtitle": "Steun het project",
     "completed": "Je hebt de uitdagingen van vandaag voltooid!",
     "button": "Koop een kopje koffie voor me"
+  },
+  "settings": {
+    "title": "Instellingen",
+    "userId": "Gebruikers-ID",
+    "copyUserId": "Kopieer gebruikers-ID",
+    "selectAvatar": "Selecteer profielfoto",
+    "soundEffects": "Geluidseffecten",
+    "soundEffectsDesc": "Schakel spel- en pakketopeningsgeluiden in of uit",
+    "on": "AAN",
+    "off": "UIT",
+    "saveAndClose": "Opslaan & sluiten"
   }
 };

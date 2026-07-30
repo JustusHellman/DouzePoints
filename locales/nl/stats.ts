@@ -4,6 +4,7 @@ export default {
     "voterBreakdown": "Stemverdeling",
     "howToWin": "Hoe te winnen",
     "earnPoints": "Verdien rangpunten",
+    "rankPoints": "Rangpunten",
     "earnPointsDesc": "Verzamel punten om op het klassement te klimmen. Foutloze overwinningen geven hogere scores.",
     "claimDouze": "Claim Douze Points 🏆",
     "claimDouzeDesc": "Toegekend voor perfecte spellen (geen fouten of winst bij de eerste poging).",

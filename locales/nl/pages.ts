@@ -1,7 +1,7 @@
 export default {
   "privacy": {
     "title": "Privacybeleid",
-    "lastUpdated": "Maart 2026",
+    "lastUpdated": "Juli 2026",
     "introduction": {
       "title": "Inleiding",
       "p1": "Welkom bij Douze Points (www.douzepoints.net).",
@@ -22,10 +22,13 @@ export default {
         "Verwijzende website"
       ],
       "autoFootnote": "Deze informatie kan worden verwerkt door onze analytics-providers.",
-      "cookiesTitle": "b) Lokale opslag",
-      "cookiesDesc1": "We gebruiken de lokale opslag van je browser uitsluitend om je spelvoortgang, scores en statistieken op te slaan.",
-      "cookiesDesc2": "Deze gegevens worden alleen op jouw apparaat opgeslagen, worden niet naar onze servers verzonden en kunnen worden verwijderd door je browsergegevens te wissen.",
-      "cookiesDesc3": "We gebruiken Google Analytics om ons te helpen begrijpen hoe gebruikers omgaan met onze website. Dit helpt ons de gebruikerservaring te verbeteren en te begrijpen welke functies het populairst zijn."
+      "cookiesTitle": "c) Lokale opslag & analyse",
+      "cookiesDesc1": "We gebruiken de lokale opslag van je browser om de spelstatus, gebruikersinstellingen en tijdelijke sessiegegevens op te slaan voor snelle verwerking.",
+      "cookiesDesc2": "Je daadwerkelijke spelvoortgang en EuroCollection-items worden opgeslagen in onze cloud-database onder je anonieme ID.",
+      "cookiesDesc3": "We gebruiken Google Analytics om geaggregeerde statistieken over websiteverkeer verzamelen om de gebruikerservaring en functiekwaliteit te verbeteren.",
+      "cloudTitle": "b) Anonieme identificatie & cloudsynchronisatie",
+      "cloudDesc1": "Om je voortgang, highscores, rang, carrièrepunten en EuroCollection-gegevens (ontgrendelde kaarten, confetti, dagelijkse packs) op te slaan, genereren we automatisch een willekeurige, niet-identificeerbare gebruikers-ID via anonieme Firebase-authenticatie.",
+      "cloudDesc2": "Deze anonieme ID verzamelt of vereist geen persönliche gegevens (zoals je echte naam, e-mailadres of telefoonnummer). Het wordt uitsluitend opgeslagen in Google Cloud Firestore om je spelvoortgang veilig te koppelen aan je apparaatsessie."
     },
     "legalBasis": {
       "title": "Wettelijke basis (AVG)",
@@ -38,20 +41,22 @@ export default {
       "legal": "waar vereist door de toepasselijke wetgeving."
     },
     "localStorage": {
-      "title": "Lokale opslag",
-      "p1": "We gebruiken de lokale opslag van je browser om spelvoortgang, scores en statistieken op te slaan. Deze informatie:",
+      "title": "Lokale opslag & cloud-persistentie",
+      "p1": "We gebruiken de lokale opslag van de browser samen met veilige cloud-databasestorage (Google Cloud Firestore) om je spelstatus, rang en EuroCollection-gegevens op te slaan:",
       "items": [
-        "Wordt alleen op jouw apparaat opgeslagen",
-        "Wordt niet naar onze servers verzonden",
-        "Kan worden verwijderd door je browsergegevens te wissen"
+        "Opgeslagen in de cache van je lokale browser voor snelle verwerking en soepele prestaties",
+        "Veilig gesynchroniseerd met Google Cloud Firestore via een niet-identificeerbare gebruikers-ID",
+        "Verzamelt, slaat op of vereist geen persönliche inloggegevens of persönliche identiteit",
+        "Kan lokaal worden gereset door het cachegeheugen van de browser te wissen, hoewel cloudvoortgang gekoppeld blijft aan je sessie-ID"
       ]
     },
     "dataSharing": {
-      "title": "Gegevens delen",
-      "p1": "We verkopen geen persoonlijke gegevens. Gegevens kunnen echter worden verwerkt door externe dienstverleners, waaronder:",
+      "title": "Delen van gegevens & infrastructuurproviders",
+      "p1": "We verkopen geen persoonlijke gegevens of gebruikersprofielen. Technische gegevens worden echter verwerkt door essentiële externe dienstverleners en infrastructuurproviders, waaronder:",
       "items": [
-        "Hostingproviders",
-        "Technische dienstverleners die nodig zijn voor de werking van de website"
+        "Google Cloud Firestore & Firebase (voor cloudopslag van anonieme spelstatistieken, scores en EuroCollection-voortgang)",
+        "Hosting- en infrastructuurproviders die nodig zijn om de applicatie te laten werken",
+        "Google Analytics (voor geaggregeerde gebruiksanalyse)"
       ]
     },
     "internationalTransfers": {
@@ -60,7 +65,7 @@ export default {
     },
     "dataRetention": {
       "title": "Gegevensbewaring",
-      "p1": "We houden geen gebruikersdatabase bij. Technische logs voor beveiligingsdoeleinden worden bewaard volgens het beleid van onze providers, en lokale opslag blijft behouden totdat je deze verwijdert."
+      "p1": "Anonieme spelstatistieken, carrièrepunten en EuroCollection-voortgang die zijn opgeslagen in Google Cloud Firestore worden bewaard zodat je je spel tussen sessies door kunt voortzetten. Technische serverlogs worden bewaard volgens het standaardbeleid van onze infrastructuurproviders."
     },
     "yourRights": {
       "title": "Jouw rechten (EU/EER)",
@@ -179,7 +184,7 @@ export default {
     }
   },
   "terms": {
-    "lastUpdated": "Maart 2026",
+    "lastUpdated": "Juli 2026",
     "title": "Servicevoorwaarden",
     "acceptance": {
       "title": "Acceptatie van de voorwaarden",
@@ -187,7 +192,7 @@ export default {
     },
     "description": {
       "title": "Beschrijving van de dienst",
-      "p1": "Douze Points is een door fans gemaakte website die Eurovisie-thema spellen en trivia aanbiedt voor amusementsdoeleinden. De dienst wordt geleverd 'zoals deze is' en kan op elk moment worden gewijzigd of beëindigd."
+      "p1": "Douze Points is een door fans gemaakte website met spelletjes over het Eurovisiesongfestival, trivia en de digitale kaartverzamelervaring EuroCollection voor entertainmentdoeleinden. De dienst wordt geleverd 'zoals deze is' en kan op elk moment worden gewijzigd of stopgezet."
     },
     "ip": {
       "title": "Intellectueel eigendom",
@@ -223,6 +228,18 @@ export default {
     "contact": {
       "title": "Contactinformatie",
       "p1": "Als je vragen hebt over deze Servicevoorwaarden, neem dan contact met ons op via: douzepointsgame@gmail.com"
+    },
+    "collectibles": {
+      "title": "Virtuele items & EuroCollection",
+      "p1": "EuroCollection bevat digitale verzamelkaarten, packs, confetti en virtuele badges ('Virtuele items').",
+      "p2": "Alle Virtuele items zijn louter digitale activa die uitsluitend zijn bedoeld voor in-game verzameling en entertainment binnen Douze Points. Virtuele items hebben geen geldelijke waarde in de echte wereld, leveren geen rente op en kunnen niet worden ingewisseld of omgeruild voor echt geld of geldelijke waarde.",
+      "p3": "Virtuele items, waaronder EuroCards en confetti, zijn strikt niet-overdraagbaar. Je mag Virtuele items niet verkopen, verhandelen, ruilen, doorverkopen of overdragen aan een andere speler of derde partij, hetzij binnen of buiten de website.",
+      "p4": "We behouden ons het recht vor om Virtuele items en spelmechaniken op elk moment zonder aansprakelijkheid te beheren, te wijzigen, te herbalanceren, te reguleren of te verwijderen."
+    },
+    "accounts": {
+      "title": "Anonieme accounts & gegevens-persistentie",
+      "p1": "Om je spelvoortgang, highscores en EuroCollection te behouden, gebruikt de website een geautomatiseerde anonieme account-ID die gekoppeld is aan je apparaatsessie.",
+      "p2": "Omdat accounts anoniem zijn en gekoppeld aan je apparaat-/browsersessie, kan het wissen van browsergegevens of het wisselen van apparaat zonder hersteltools leiden tot verlies van toegang tot je voortgang. We kunnen het herstel van verloren anonieme profielen of virtuele items niet garanderen."
     }
   }
 };

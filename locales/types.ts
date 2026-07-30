@@ -1,4 +1,42 @@
 export interface TranslationSchema {
+  eurocollection?: {
+    title: string;
+    subtitle: string;
+    openPacks: string;
+    viewGallery: string;
+    packsEarnedToday: string;
+    dailyLimitReached: string;
+    playMoreGames: string;
+    yourPacks: string;
+    packsDescription1: string;
+    packsDescription2: string;
+    packsDescription3: string;
+    available: string;
+    opening: string;
+    openPack: string;
+    open6Packs: string;
+    newCards: string;
+    collectAll: string;
+    flipAll: string;
+    yourCollection: string;
+    uniqueCards: string;
+    totalCards: string;
+    noCardsFound: string;
+    noCardsInCategory: string;
+    goOpenPacks: string;
+    howToPlay: string;
+    lockedCard: string;
+    readyToCraft: string;
+    insufficientConfetti: string;
+    craftCard: string;
+    duplicate: string;
+    confetti: string;
+    converted: string;
+    group: string;
+    sort: string;
+    showUnowned: string;
+    cards: string;
+  };
   common: {
     back: string;
     play: string;
@@ -95,6 +133,7 @@ export interface TranslationSchema {
     voterBreakdown: string;
     howToWin: string;
     earnPoints: string;
+    rankPoints: string;
     earnPointsDesc: string;
     claimDouze: string;
     claimDouzeDesc: string;
@@ -337,5 +376,16 @@ export interface TranslationSchema {
       allShowsFinished: string;
     };
     events: Record<string, string>;
+  };
+  settings?: {
+    title: string;
+    userId: string;
+    copyUserId: string;
+    selectAvatar: string;
+    soundEffects: string;
+    soundEffectsDesc: string;
+    on: string;
+    off: string;
+    saveAndClose: string;
   };
 }

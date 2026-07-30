@@ -7,6 +7,7 @@ import stats from './stats.ts';
 import metadata from './metadata.ts';
 import pages from './pages.ts';
 import bingo from './bingo.ts';
+import eurocollection from './eurocollection.ts';
 
 export const uk: TranslationSchema = {
   ...common,
@@ -16,5 +17,6 @@ export const uk: TranslationSchema = {
   ...stats,
   ...metadata,
   ...pages,
-  ...bingo
+  ...bingo,
+  ...eurocollection
 };
