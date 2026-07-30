@@ -5,6 +5,7 @@ import * as htmlToImage from 'html-to-image';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db, auth } from '../../firebase.ts';
 import { useTranslation } from '../../context/LanguageContext.tsx';
+import { soundManager } from '../../utils/sounds.ts';
 import { BINGO_EVENTS } from '../../data/bingoEvents.ts';
 import { EuroBingoPrint } from './EuroBingoPrint.tsx';
 import { BingoMultiplayer } from './BingoMultiplayer.tsx';
@@ -302,6 +303,7 @@ export const EuroBingo: React.FC<{ onReturn: () => void }> = ({ onReturn }) => {
 
   const toggleSquare = (index: number) => {
     if (squares[index].isFree) return;
+    soundManager.play('click');
 
     if (!hasLoggedStartRef.current) {
       hasLoggedStartRef.current = true;
@@ -324,6 +326,7 @@ export const EuroBingo: React.FC<{ onReturn: () => void }> = ({ onReturn }) => {
       const isFullHouse = newSquares.every(s => s.marked);
 
       if (isFullHouse) {
+        soundManager.play('victory');
         confetti({
           particleCount: 200,
           spread: 100,
@@ -332,6 +335,7 @@ export const EuroBingo: React.FC<{ onReturn: () => void }> = ({ onReturn }) => {
         });
         setShowFullHouseModal(true);
       } else if (isBingo) {
+        soundManager.play('victory');
         confetti({
           particleCount: 150,
           spread: 70,

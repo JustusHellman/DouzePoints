@@ -37,7 +37,29 @@ const TermsOfService: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">03</span> {t('terms.ip.title')}
+            <span className="text-pink-500 italic">03</span> {t('terms.collectibles.title')}
+          </h2>
+          <div className="pl-12 space-y-4">
+            <p>{t('terms.collectibles.p1')}</p>
+            <p>{t('terms.collectibles.p2')}</p>
+            <p>{t('terms.collectibles.p3')}</p>
+            <p>{t('terms.collectibles.p4')}</p>
+          </div>
+        </section>
+
+        <section className="space-y-6">
+          <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
+            <span className="text-pink-500 italic">04</span> {t('terms.accounts.title')}
+          </h2>
+          <div className="pl-12 space-y-4">
+            <p>{t('terms.accounts.p1')}</p>
+            <p>{t('terms.accounts.p2')}</p>
+          </div>
+        </section>
+
+        <section className="space-y-6">
+          <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
+            <span className="text-pink-500 italic">05</span> {t('terms.ip.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('terms.ip.p1')}</p>
@@ -47,7 +69,7 @@ const TermsOfService: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">04</span> {t('terms.conduct.title')}
+            <span className="text-pink-500 italic">06</span> {t('terms.conduct.title')}
           </h2>
           <div className="pl-12 space-y-6">
             <p>{t('terms.conduct.p1')}</p>
@@ -61,7 +83,7 @@ const TermsOfService: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">05</span> {t('terms.disclaimer.title')}
+            <span className="text-pink-500 italic">07</span> {t('terms.disclaimer.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('terms.disclaimer.p1')}</p>
@@ -70,7 +92,7 @@ const TermsOfService: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">06</span> {t('terms.limitation.title')}
+            <span className="text-pink-500 italic">08</span> {t('terms.limitation.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('terms.limitation.p1')}</p>
@@ -79,7 +101,7 @@ const TermsOfService: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">07</span> {t('terms.governingLaw.title')}
+            <span className="text-pink-500 italic">09</span> {t('terms.governingLaw.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('terms.governingLaw.p1')}</p>
@@ -88,7 +110,7 @@ const TermsOfService: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">08</span> {t('terms.changes.title')}
+            <span className="text-pink-500 italic">10</span> {t('terms.changes.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('terms.changes.p1')}</p>
@@ -97,7 +119,7 @@ const TermsOfService: React.FC = () => {
 
         <section className="space-y-6">
           <h2 className="text-xl md:text-2xl font-black uppercase text-white tracking-widest flex items-baseline gap-4">
-            <span className="text-pink-500 italic">09</span> {t('terms.contact.title')}
+            <span className="text-pink-500 italic">11</span> {t('terms.contact.title')}
           </h2>
           <div className="pl-12 space-y-4">
             <p>{t('terms.contact.p1')}</p>

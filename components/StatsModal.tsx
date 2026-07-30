@@ -37,6 +37,16 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, initialT
   const [showCopied, setShowCopied] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   const rankInfo = useMemo(() => {
     const current = getCurrentRank(stats.totalPoints);
     const next = getNextRank(stats.totalPoints);
@@ -130,8 +140,11 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, initialT
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-2xl z-[200] flex items-center justify-center p-4 animate-in fade-in duration-300">
-      <div className="bg-[#0a0a1a] border border-white/10 rounded-[2.5rem] p-8 max-w-md md:max-w-4xl w-fit relative shadow-3xl overflow-hidden border-t-purple-500/50 max-h-[90vh] overflow-y-auto scrollbar-hide transition-all">
+    <div 
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      className="fixed inset-0 top-12 md:top-16 bg-black/60 backdrop-blur-2xl z-[200] flex items-center justify-center p-4 animate-in fade-in duration-300 overflow-y-auto"
+    >
+      <div className="bg-[#0a0a1a] border border-white/10 rounded-[2.5rem] p-8 max-w-md md:max-w-4xl w-fit relative shadow-3xl overflow-hidden border-t-purple-500/50 max-h-[85vh] overflow-y-auto scrollbar-hide transition-all my-auto">
         <button onClick={onClose} className="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors p-2 z-10 hover:bg-white/5 rounded-full">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
@@ -191,7 +204,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, initialT
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <StatBox label="Rank Points" value={stats.totalPoints} />
+                <StatBox label={t('stats.rankPoints') || "Rank Points"} value={stats.totalPoints} />
                 <StatBox label="Douze Points" value={stats.totalDouzePoints} color="yellow-500" icon="🏆" />
                 <StatBox label={t('stats.wins')} value={stats.word_game.wins + stats.artists.wins + stats.links.wins + stats.refrain.wins + stats.guesser.wins + stats.arena.wins} color="green-400" />
                 <StatBox label={t('stats.winRate')} value={(() => {

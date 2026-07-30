@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { getDayString } from '../../utils/daily.ts';
+import { syncDailyStateToFirestore } from '../../utils/syncService.ts';
+
 import { updateGameStats } from '../../utils/stats.ts';
 import { GameType, LyricSnippet } from '../../data/types.ts';
 import { getActiveRefrainData } from '../../data/activeData.ts';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
+import { soundManager } from '../../utils/sounds.ts';
 
 interface Tile {
   id: string;
@@ -252,12 +255,16 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
     if (completedGroups.length === 0 && mistakes === 0 && selectedIds.length === 0 && !isGameOver) return;
     localStorage.setItem(`eurorefrain-${getDayString()}`, JSON.stringify({ completedGroups, guessHistory, mistakes, isGameOver, won, selectedIds }));
     if (isGameOver) {
+      syncDailyStateToFirestore('eurorefrain', { completedGroups, guessHistory, mistakes, isGameOver, won }).catch(console.error);
+    }
+    if (isGameOver) {
       if (won) confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
     }
   }, [completedGroups, guessHistory, mistakes, isGameOver, won, selectedIds]);
 
   const handleSelect = (id: string) => {
     if (isGameOver || showWrongFlash) return;
+    soundManager.play('click');
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter(i => i !== id));
     } else if (selectedIds.length < 4) {
@@ -312,6 +319,11 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
       setDisplayTiles(prev => prev.filter(tile => !selectedIds.includes(tile.id)));
       setSelectedIds([]);
       if (newCompleted.length === 4) { 
+        if (mistakes === 0) {
+          soundManager.play('victory');
+        } else {
+          soundManager.play('success');
+        }
         setWon(true); 
         setIsGameOver(true); 
         
@@ -319,6 +331,8 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
         
         confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         setShowModal(true); 
+      } else {
+        soundManager.play('success');
       }
     } else {
       let oneAway = false;
@@ -332,11 +346,14 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
       setMistakes(newMistakes);
       if (oneAway && newMistakes < 6) { setMessage(t('links.oneAway')); setTimeout(() => setMessage(null), 1200); }
       if (newMistakes >= 6) { 
+        soundManager.play('fail');
         setIsGameOver(true);
         setWon(false);
         setTimeout(() => { 
           revealRemainingGroups();
         }, 800); 
+      } else {
+        soundManager.play('buzz');
       }
       setTimeout(() => { setShaking(false); setShowWrongFlash(false); }, 800);
     }

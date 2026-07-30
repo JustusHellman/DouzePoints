@@ -260,8 +260,12 @@ export const getGenreParent = (genre: string) => {
 };
 
 export const getPlacingLabel = (placing: number, t: (key: string) => string) => {
+  void t;
+  if (placing === 100) {
+    return "SF";
+  }
   if (placing > 100) {
-    return `${t('common.semiFinal')} (${placing - 100})`;
+    return `SF${placing - 100}`;
   }
   return placing.toString();
 };

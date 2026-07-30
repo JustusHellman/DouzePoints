@@ -28,6 +28,7 @@ const getCounterKey = (pathname: string): string | null => {
 };
 
 export const usePlaytimeTracker = () => {
+  return; // Disabled to save on DB writes
   const location = useLocation();
   const countersRef = useRef<Record<string, number>>({});
   const lastTickRef = useRef<number>(0);

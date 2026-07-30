@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, query, getDocs, orderBy, where } from 'firebase/firestore';
-import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, User } from 'firebase/auth';
+import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { db, auth } from '../firebase.ts';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import WeightSimulator from './WeightSimulator.tsx';
@@ -13,6 +13,8 @@ import { getDailyIndex, normalize, isLetter } from '../utils/daily.ts';
 import { MasterSong, ConnectionsGroup } from '../data/types.ts';
 import { generateRandomEuroLinksPuzzle } from '../utils/linksGenerator.ts';
 import { BingoAdminPanel } from './BingoAdminPanel.tsx';
+import { DataImportPanel } from './DataImportPanel.tsx';
+import { GrantConfettiPanel } from './GrantConfettiPanel.tsx';
 
 const ADMIN_EMAILS = ['justusmhellman@gmail.com', 'justus.jo.li@gmail.com', 'douzepointsgame@gmail.com'];
 
@@ -127,7 +129,7 @@ const Admin: React.FC = () => {
   const [daysSpan, setDaysSpan] = useState(30);
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
-  const [activeTab, setActiveTab] = useState<'stats' | 'weights' | 'links-preview' | 'bingo-admin'>('stats');
+  const [activeTab, setActiveTab] = useState<'stats' | 'grant-confetti' | 'weights' | 'links-preview' | 'bingo-admin' | 'data-import'>('stats');
   const [linksPuzzle, setLinksPuzzle] = useState<ConnectionsGroup[]>([]);
   const [detailDate, setDetailDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [detailMode, setDetailMode] = useState<'day' | 'period'>('day');
@@ -210,6 +212,10 @@ const Admin: React.FC = () => {
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider(); provider.setCustomParameters({ prompt: 'select_account' });
     try { await signInWithPopup(auth, provider); } catch (e) { console.error("Error signing in", e); alert("If the login window didn't open, please check if your browser is blocking popups."); }
+  };
+
+  const handleLogout = async () => {
+    try { await signOut(auth); } catch (e) { console.error("Error signing out", e); }
   };
 
   const gameTypes = Array.from(new Set(stats.map(s => s.gameType)));
@@ -454,30 +460,28 @@ const Admin: React.FC = () => {
 
   if (loading) return <div className="min-h-screen flex items-center justify-center text-white bg-[#050510]">Loading...</div>;
 
-  if (!user) {
+  if (!user || !ADMIN_EMAILS.includes(user.email || '')) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center text-white bg-[#050510] page-fade px-6">
-        <div className="max-w-md w-full text-center space-y-12">
+        <div className="max-w-md w-full text-center space-y-8">
           <div className="space-y-4">
-            <h1 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter glow-text">Backstage</h1>
-            <p className="text-gray-400 font-medium text-sm md:text-base leading-relaxed">You've reached the restricted area. This section is reserved for the production crew.</p>
+            <div className="text-6xl mb-2">🔒</div>
+            <h1 className="text-5xl md:text-6xl font-black italic uppercase tracking-tighter glow-text">Backstage</h1>
+            <p className="text-gray-400 font-medium text-sm md:text-base leading-relaxed">
+              {user?.email 
+                ? `Signed in as ${user.email}, which is not authorized for backstage access.`
+                : "You've reached the restricted area. This section is reserved for the production crew."}
+            </p>
           </div>
           <div className="flex flex-col gap-4">
-            <button onClick={() => navigate('/')} className="w-full px-8 py-5 bg-gradient-to-r from-pink-500 to-purple-600 rounded-2xl font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-pink-500/20">Return to Greenroom</button>
-            <button onClick={handleLogin} className="w-full px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl font-bold uppercase tracking-widest text-xs text-gray-400 transition-all">Admin Login</button>
+            <button onClick={() => navigate('/')} className="w-full px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 rounded-2xl font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-pink-500/20 text-sm">
+              Return to Greenroom
+            </button>
+            <button onClick={handleLogin} className="w-full px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl font-bold uppercase tracking-widest text-xs text-gray-400 hover:text-white transition-all">
+              {user?.email ? "Switch Google Account" : "Admin Login with Google"}
+            </button>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  if (!ADMIN_EMAILS.includes(user.email || '')) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center text-white page-fade px-6 text-center">
-        <div className="text-6xl mb-6">🚫</div>
-        <h1 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter mb-4 text-pink-500">Whoops!</h1>
-        <p className="text-gray-400 font-medium mb-8 max-w-md">Looks like you wandered into the restricted backstage area. This section is for authorized personnel only!</p>
-        <button onClick={() => navigate('/')} className="px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 rounded-xl font-black uppercase tracking-widest hover:scale-105 transition-transform">Return to Greenroom</button>
       </div>
     );
   }
@@ -486,12 +490,22 @@ const Admin: React.FC = () => {
     <div className="max-w-6xl mx-auto py-12 px-4 md:px-8 page-fade">
       <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter text-white glow-text leading-none">Admin Dashboard</h1>
-          <div className="flex gap-4 mt-6">
+          <div className="flex items-center gap-4 mb-2">
+            <h1 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter text-white glow-text leading-none">Admin Dashboard</h1>
+            <span className="text-xs bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-mono px-3 py-1 rounded-full">
+              {user.email}
+            </span>
+            <button onClick={handleLogout} className="text-xs text-gray-400 hover:text-white underline font-semibold">
+              Sign Out
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-4 mt-6">
             <button onClick={() => setActiveTab('stats')} className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'stats' ? 'bg-white text-black' : 'bg-white/5 text-gray-500 hover:text-white'}`}>Stats</button>
+            <button onClick={() => setActiveTab('grant-confetti')} className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'grant-confetti' ? 'bg-white text-black' : 'bg-white/5 text-gray-500 hover:text-white'}`}>Grant Confetti 🎉</button>
             <button onClick={() => setActiveTab('weights')} className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'weights' ? 'bg-white text-black' : 'bg-white/5 text-gray-500 hover:text-white'}`}>Weight Simulator</button>
             <button onClick={() => setActiveTab('links-preview')} className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'links-preview' ? 'bg-white text-black' : 'bg-white/5 text-gray-500 hover:text-white'}`}>Links Preview</button>
             <button onClick={() => setActiveTab('bingo-admin')} className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'bingo-admin' ? 'bg-white text-black' : 'bg-white/5 text-gray-500 hover:text-white'}`}>Bingo Admin</button>
+            <button onClick={() => setActiveTab('data-import')} className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'data-import' ? 'bg-white text-black' : 'bg-white/5 text-gray-500 hover:text-white'}`}>Data Import</button>
           </div>
         </div>
         {activeTab === 'stats' && (
@@ -1111,10 +1125,14 @@ const Admin: React.FC = () => {
             </div>
           </section>
         </div>
+      ) : activeTab === 'grant-confetti' ? (
+        <GrantConfettiPanel />
       ) : activeTab === 'weights' ? (
         <WeightSimulator />
       ) : activeTab === 'bingo-admin' ? (
         <BingoAdminPanel />
+      ) : activeTab === 'data-import' ? (
+        <DataImportPanel onImportComplete={() => fetchData()} />
       ) : (
         <div className="space-y-8">
           <div className="flex justify-between items-center bg-white/5 border border-white/10 rounded-2xl p-6">

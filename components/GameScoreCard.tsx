@@ -8,6 +8,7 @@ import { reportShareClick } from '../utils/firebaseService.ts';
 import { CountdownTimer } from './CountdownTimer.tsx';
 import { PointsDistribution } from './PointsDistribution.tsx';
 import { getPlacingLabel } from '../data/constants.tsx';
+import { soundManager } from '../utils/sounds.ts';
 
 interface GameScoreCardProps {
   won: boolean;
@@ -161,6 +162,7 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
   )).join(' ');
 
   const handleShare = () => {
+    soundManager.play('click');
     reportShareClick(mode === 'infinite' ? `GameScoreCard_Infinite_${gameTitle.replace(/\s+/g, '')}` : `GameScoreCard_${gameTitle.replace(/\s+/g, '')}`);
     if (onShare) {
       onShare();
@@ -246,7 +248,10 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
             <div className="mt-4 flex flex-col items-center gap-3">
               {won && (
                 <button 
-                  onClick={onContinue} 
+                  onClick={() => {
+                    soundManager.play('click');
+                    onContinue?.();
+                  }} 
                   className="w-full max-w-[200px] bg-pink-600 text-white py-3 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-pink-600/20 flex items-center justify-center gap-2"
                 >
                   {t('infinite.continueRun')}
@@ -311,7 +316,7 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
                   <div className="flex flex-col">
                     <span className="text-[8px] sm:text-[10px] font-black text-gray-600 uppercase tracking-widest">{t('scorecard.placing')}</span>
                     <span className="text-xs sm:text-sm font-black text-yellow-500 uppercase flex items-center gap-1">
-                      {song.placing === 1 ? '🏆' : song.placing <= 100 ? '#' : ''} {getPlacingLabel(song.placing, t)}
+                      {song.placing === 1 ? '🏆' : song.placing < 100 ? '#' : ''} {getPlacingLabel(song.placing, t)}
                     </span>
                   </div>
                </div>
@@ -349,6 +354,31 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
                 {showCopied ? t('scorecard.resultsCopied') : t('scorecard.shareResult')}
               </button>
             )}
+
+            {mode !== 'infinite' && (
+              <button 
+                onClick={() => navigate('/euro-collection', { state: { tab: 'packs' } })}
+                className="mt-5 w-full bg-gradient-to-br from-indigo-600/20 to-indigo-900/40 border-2 border-indigo-500/30 hover:border-indigo-400/50 hover:from-indigo-500/20 hover:to-indigo-800/40 hover:scale-[1.01] active:scale-95 transition-all duration-300 rounded-xl p-4 sm:p-5 flex items-center justify-between shadow-lg relative overflow-hidden group text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-500/20"
+              >
+                <div className="absolute -top-12 -right-12 w-32 h-32 bg-indigo-500 rounded-full blur-[40px] opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 mix-blend-overlay pointer-events-none"></div>
+                
+                <div className="relative z-10 pr-2">
+                  <span className="text-[9px] sm:text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-1 block">
+                    +1 Card Pack Earned
+                  </span>
+                  <h2 className="text-sm sm:text-base font-black italic uppercase tracking-tighter text-white leading-tight">
+                    Open in EuroCollection
+                  </h2>
+                </div>
+
+                <div className="relative z-10 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-indigo-500/20 flex items-center justify-center shrink-0 group-hover:bg-indigo-500/40 transition-colors">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400 ml-0.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </button>
+            )}
           </div>
 
           {extraInfo && (
@@ -363,13 +393,16 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
                
                {gameType !== GameType.REFRAIN_GAME && gameType !== GameType.LINKS_GAME && (
                  <button 
-                   onClick={() => navigate('/', { state: { scrollTo: 'encore' } })}
+                   onClick={() => {
+                     soundManager.play('click');
+                     navigate('/', { state: { scrollTo: 'encore' } });
+                   }}
                    className="w-full bg-gradient-to-r from-pink-500/30 to-purple-500/30 border-2 border-pink-500/60 hover:border-pink-400 hover:from-pink-500/50 hover:to-purple-500/50 text-pink-100 py-4 px-6 rounded-xl flex items-center justify-between transition-all group shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-[0_0_30px_rgba(236,72,153,0.6)] relative overflow-hidden transform hover:-translate-y-1 active:translate-y-0"
                  >
                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
                    <div className="flex flex-col text-left relative z-10">
-                     <span className="text-[11px] font-black uppercase tracking-[0.25em] text-pink-300 mb-1 drop-shadow-md animate-pulse">Can't wait?</span>
-                     <span className="text-base font-black text-white drop-shadow-lg tracking-wide">Try Infinite Mode!</span>
+                     <span className="text-[11px] font-black uppercase tracking-[0.25em] text-pink-300 mb-1 drop-shadow-md animate-pulse">{t('infinite.cantWait') || "Can't wait?"}</span>
+                     <span className="text-base font-black text-white drop-shadow-lg tracking-wide">{t('infinite.playUnlimited') || "Try Infinite Mode!"}</span>
                    </div>
                    <div className="w-12 h-12 rounded-full bg-pink-500/40 flex items-center justify-center group-hover:bg-pink-500/60 transition-colors shadow-xl shadow-pink-500/40 relative z-10 border border-pink-400/50 group-hover:scale-110">
                      <svg className="w-6 h-6 text-pink-200 translate-x-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
@@ -383,7 +416,10 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
         <div className="p-5 border-t border-white/5 bg-black/40 flex flex-col gap-2">
            {mode === 'infinite' && !won && (
              <button 
-               onClick={onTryAgain} 
+               onClick={() => {
+                 soundManager.play('click');
+                 onTryAgain?.();
+               }} 
                className="w-full bg-pink-600 text-white py-4 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:scale-[1.01] active:scale-[0.98] transition-all shadow-xl shadow-pink-600/20 flex items-center justify-center gap-2 mb-1"
              >
                {t('infinite.tryAgain')}
@@ -391,14 +427,20 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
            )}
 
            <button 
-             onClick={onReturn} 
+             onClick={() => {
+               soundManager.play('click');
+               onReturn();
+             }} 
              className={`w-full py-4 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:scale-[1.01] active:scale-[0.98] transition-all shadow-xl flex items-center justify-center gap-2 ${mode === 'infinite' && won ? 'bg-white/10 text-white border border-white/10' : 'bg-white text-black shadow-white/10'}`}
            >
              {mode === 'infinite' ? t('infinite.exitToEncore') : t('common.returnToGreenroom')}
            </button>
            
            <button 
-             onClick={onClose} 
+             onClick={() => {
+               soundManager.play('click');
+               onClose();
+             }} 
              className="w-full bg-white/5 border border-white/10 text-white/50 py-3 rounded-full font-black uppercase text-[7px] tracking-[0.2em] hover:text-white transition-all"
            >
              {t('scorecard.reviewBoard')}

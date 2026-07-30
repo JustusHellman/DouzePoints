@@ -1,3 +1,4 @@
+import { PartyPopper } from 'lucide-react';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { REDDIT_URL, DISCORD_URL, BUY_ME_A_COFFEE_URL } from './data/constants.tsx';
@@ -7,6 +8,7 @@ import EuroRefrain from './games/refrain/EuroRefrain.tsx';
 import EuroGuess from './games/guesser/EuroGuess.tsx';
 import EuroArena from './games/arena/EuroArena.tsx';
 import { EuroBingo } from './games/bingo/EuroBingo.tsx';
+import EuroCollectionGame from './components/EuroCollectionGame.tsx';
 import { GameType, GlobalStats } from './data/types.ts';
 import { getActiveMasterData } from './data/activeData.ts';
 import { getStoredStats, getCurrentRank, getDailyGameState } from './utils/stats.ts';
@@ -16,6 +18,8 @@ import { StatsModal } from './components/StatsModal.tsx';
 import { DailyShareModal } from './components/DailyShareModal.tsx';
 import { RankUpCelebration } from './components/RankUpCelebration.tsx';
 import { getDayString } from './utils/daily.ts';
+import { useAuth } from './hooks/useAuth.ts';
+import { useUserData } from './hooks/useUserData.ts';
 import { useTranslation, SUPPORTED_LANGUAGES } from './context/LanguageContext.tsx';
 import { PrivacyPolicy } from './components/PrivacyPolicy.tsx';
 import TermsOfService from './components/TermsOfService.tsx';
@@ -27,6 +31,7 @@ import { CountdownTimer } from './components/CountdownTimer.tsx';
 import { EurovisionCountdown } from './components/EurovisionCountdown.tsx';
 import { InfiniteArena } from './components/InfiniteArena.tsx';
 import { EUROVISION_SCHEDULE } from './config/eurovisionSchedule.ts';
+import { soundManager } from './utils/sounds.ts';
 
 const isWindows = typeof navigator !== 'undefined' && /Win/i.test(navigator.userAgent);
 
@@ -38,16 +43,74 @@ const ScrollToTop = () => {
   return null;
 };
 
-const LanguageOverlay: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+export const AVATARS = [
+  { id: 'default', emoji: '👤', name: 'Fan', color: 'from-slate-300 to-slate-500 shadow-slate-400/30' },
+  { id: 'singer', emoji: '🎤', name: 'Euro Star', color: 'from-fuchsia-500 to-indigo-500 shadow-fuchsia-500/30' },
+  { id: 'diva', emoji: '👩‍🎤', name: 'Glam Diva', color: 'from-pink-500 to-rose-500 shadow-pink-500/30' },
+  { id: 'retro', emoji: '🪩', name: 'Disco King', color: 'from-cyan-500 to-blue-500 shadow-cyan-500/30' },
+  { id: 'sax', emoji: '🎷', name: 'Epic Sax', color: 'from-amber-500 to-orange-500 shadow-amber-500/30' },
+  { id: 'rock', emoji: '🎸', name: 'Metal Lord', color: 'from-slate-700 to-slate-900 shadow-slate-800/30' },
+];
+
+interface SettingsOverlayProps {
+  onClose: () => void;
+  avatarId: string;
+  setAvatarId: (id: string) => void;
+  soundMuted: boolean;
+  setSoundMuted: (muted: boolean) => void;
+  userId?: string;
+}
+
+const SettingsOverlay: React.FC<SettingsOverlayProps> = ({ onClose, avatarId, setAvatarId, soundMuted, setSoundMuted, userId }) => {
   const { language, setLanguage, t } = useTranslation();
   
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  const handleCopyId = () => {
+    if (userId) {
+      navigator.clipboard.writeText(userId);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   const sortedLangs = useMemo(() => {
     return [...SUPPORTED_LANGUAGES].sort((a, b) => a.name.localeCompare(b.name));
   }, []);
 
+  const handleToggleSound = () => {
+    const nextMuted = !soundMuted;
+    setSoundMuted(nextMuted);
+    soundManager.setMuted(nextMuted);
+    if (!nextMuted) {
+      soundManager.play('click');
+    }
+  };
+
+  const handleSelectAvatar = (id: string) => {
+    setAvatarId(id);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('douze_points_avatar', id);
+    }
+    soundManager.play('click');
+  };
+
   return (
-    <div className="fixed inset-0 z-[500] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl animate-in fade-in duration-300">
-      <div className="bg-[#0b0b18] border border-white/10 rounded-[2.5rem] p-8 max-w-xl w-full relative shadow-[0_0_50px_rgba(0,0,0,0.5)] border-t-pink-500/30 overflow-y-auto max-h-[85vh] scrollbar-hide">
+    <div 
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      className="fixed inset-0 top-12 md:top-16 z-[500] flex items-center justify-center p-4 md:p-6 bg-black/80 backdrop-blur-xl animate-in fade-in duration-300 overflow-y-auto overflow-x-hidden"
+    >
+      <div className="bg-[#0b0b18] border border-white/10 rounded-[2.5rem] p-6 md:p-8 max-w-xl w-full relative shadow-[0_0_50px_rgba(0,0,0,0.5)] border-t-pink-500/30 overflow-y-auto overflow-x-hidden max-h-[85vh] scrollbar-hide my-auto">
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-pink-500/10 rounded-full blur-3xl"></div>
         
         <button 
@@ -59,49 +122,134 @@ const LanguageOverlay: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </svg>
         </button>
 
-        <div className="mb-8">
-          <span className="text-[10px] font-black text-pink-500 uppercase tracking-[0.4em] mb-1.5 block">{t('common.selectLanguage')}</span>
+        <div className="mb-6 md:mb-8 border-b border-white/5 pb-6">
+          <span className="text-[10px] font-black text-pink-500 uppercase tracking-[0.4em] mb-1.5 block">Douze Points</span>
           <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white leading-tight">
-            {t('common.languages')}
+            {t('settings.title')}
           </h2>
+          {userId && (
+            <div className="mt-2 flex items-center gap-2 flex-wrap min-w-0">
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest shrink-0">{t('settings.userId')}:</span>
+              <span className="text-[10px] font-mono text-slate-400 opacity-80 break-all min-w-0">{userId}</span>
+              <button 
+                onClick={handleCopyId}
+                className="p-1 hover:bg-white/10 rounded transition-colors group cursor-copy shrink-0"
+                title={t('settings.copyUserId')}
+              >
+                {copied ? (
+                  <svg className="w-3 h-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>
+                ) : (
+                  <svg className="w-3 h-3 text-slate-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                )}
+              </button>
+            </div>
+          )}
         </div>
 
-        <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-8">
-          {sortedLangs.map((lang) => (
+        {/* Section 1: Choose Avatar */}
+        <div className="mb-6 md:mb-8 border-b border-white/5 pb-6">
+          <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">
+            {t('settings.selectAvatar')}
+          </h3>
+          <div className="grid grid-cols-6 gap-1.5 md:gap-3">
+            {AVATARS.map((av) => (
+              <button
+                key={av.id}
+                onClick={() => handleSelectAvatar(av.id)}
+                className={`aspect-square rounded-full flex items-center justify-center relative transition-all active:scale-95 ${
+                  avatarId === av.id
+                    ? 'ring-4 ring-pink-500 ring-offset-2 ring-offset-[#0b0b18] scale-105'
+                    : 'hover:scale-105'
+                }`}
+              >
+                <div className={`absolute inset-0 rounded-full bg-gradient-to-br opacity-80 ${av.color}`}></div>
+                <span className="text-2xl md:text-3xl relative z-10">{av.emoji}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Section 2: Sound Settings */}
+        <div className="mb-6 md:mb-8 border-b border-white/5 pb-6">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex-1 min-w-0 pr-2">
+              <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">
+                {t('settings.soundEffects')}
+              </h3>
+              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider leading-relaxed">
+                {t('settings.soundEffectsDesc')}
+              </p>
+            </div>
+            
             <button
-              key={lang.code}
-              onClick={() => {
-                setLanguage(lang.code);
-                onClose();
-              }}
-              className={`flex flex-col items-center justify-center p-4 rounded-3xl border-2 transition-all active:scale-95 relative ${
-                language === lang.code 
-                  ? 'bg-white border-white text-black shadow-xl' 
-                  : 'bg-white/5 border-white/5 text-white hover:bg-white/10'
+              onClick={handleToggleSound}
+              className={`w-20 h-10 rounded-full p-1 flex items-center justify-between transition-all duration-300 relative select-none shrink-0 ${
+                !soundMuted 
+                  ? 'bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-pink-500/25 border border-pink-400/30' 
+                  : 'bg-white/5 border border-white/10'
               }`}
             >
-              {isWindows ? (
-                <img 
-                  src={`https://flagcdn.com/w80/${lang.flagCode}.png`}
-                  alt={lang.name}
-                  className="w-10 h-6 object-cover rounded shadow-sm mb-2"
-                  referrerPolicy="no-referrer"
-                />
-              ) : (
-                <span className="text-3xl mb-1" role="img" aria-label={lang.name}>{lang.flag}</span>
-              )}
-              <span className="font-black uppercase tracking-tighter text-[9px] text-center leading-none opacity-60">
-                {lang.name}
-              </span>
+              <div className="absolute inset-0 flex items-center justify-between px-2.5 pointer-events-none text-[10px] font-black uppercase tracking-widest text-white/40">
+                <span className={`transition-all duration-200 ${!soundMuted ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>{t('settings.on')}</span>
+                <span className={`transition-all duration-200 ${soundMuted ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>{t('settings.off')}</span>
+              </div>
+              <div
+                className={`w-8 h-8 rounded-full bg-white flex items-center justify-center transition-all duration-300 shadow-md relative z-10 ${
+                  !soundMuted ? 'translate-x-10' : 'translate-x-0'
+                }`}
+              >
+                {!soundMuted ? (
+                  <span className="text-sm">🔊</span>
+                ) : (
+                  <span className="text-sm">🔇</span>
+                )}
+              </div>
             </button>
-          ))}
+          </div>
+        </div>
+
+        {/* Section 3: Select Language */}
+        <div className="mb-6 md:mb-8">
+          <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">
+            {t('common.languages')}
+          </h3>
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+            {sortedLangs.map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => {
+                  setLanguage(lang.code);
+                  soundManager.play('click');
+                }}
+                className={`flex flex-col items-center justify-center p-4 rounded-3xl border-2 transition-all active:scale-95 relative ${
+                  language === lang.code 
+                    ? 'bg-white border-white text-black shadow-xl' 
+                    : 'bg-white/5 border-white/5 text-white hover:bg-white/10'
+                }`}
+              >
+                {isWindows ? (
+                  <img 
+                    src={`https://flagcdn.com/w80/${lang.flagCode}.png`}
+                    alt={lang.name}
+                    className="w-10 h-6 object-cover rounded shadow-sm mb-2"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <span className="text-3xl mb-1" role="img" aria-label={lang.name}>{lang.flag}</span>
+                )}
+                <span className="font-black uppercase tracking-tighter text-[9px] text-center leading-none opacity-60">
+                  {lang.name}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
 
         <button 
           onClick={onClose}
-          className="w-full bg-white/5 text-gray-400 py-4 rounded-full font-black uppercase text-[10px] tracking-widest hover:text-white transition-all mb-12 md:mb-0"
+          className="w-full bg-pink-600 hover:bg-pink-700 text-white py-4 rounded-full font-black uppercase text-[10px] tracking-widest transition-all shadow-lg"
         >
-          {t('common.close')}
+          {t('settings.saveAndClose')}
         </button>
       </div>
     </div>
@@ -147,7 +295,7 @@ interface GameInstance {
   };
 }
 
-const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstance[]) => void }> = ({ stats, onShareDaily }) => {
+const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstance[]) => void; availablePacks: number }> = ({ stats, onShareDaily, availablePacks }) => {
   const { t } = useTranslation();
   const today = getDayString();
   
@@ -214,12 +362,13 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
       eurolinks: stats?.links?.perfectGames || 0,
       eurorefrain: stats?.refrain?.perfectGames || 0,
       euroguess: stats?.guesser?.perfectGames || 0,
-      euroarena: stats?.arena?.perfectGames || 0
+      euroarena: stats?.arena?.perfectGames || 0,
+      eurocards: availablePacks || 0
     };
     const stat = statsMap[config.id] || 0;
 
     return { ...config, stat, done, points };
-  }), [stats, today, gameConfigs]);
+  }), [stats, today, gameConfigs, availablePacks]);
 
   const completedCount = games.filter(g => g.done).length;
   const totalDailyPoints = games.reduce((acc, g) => acc + g.points, 0);
@@ -236,7 +385,7 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
       {/* EuroBingo Wide Card (Hype Week) */}
       {isHypeWeek && (
         <div className="px-2 md:px-6 mb-4 md:mb-6">
-          <Link 
+          <Link onClick={() => soundManager.play('click')} 
             to={bingoGame.path}
             className={`
               group relative flex flex-col md:flex-row md:items-center justify-between p-4 sm:p-6 rounded-[1.25rem] md:rounded-[1.5rem] 
@@ -381,7 +530,7 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 px-2 md:px-6">
         {games.map((game) => (
-          <Link 
+          <Link onClick={() => soundManager.play('click')} 
             key={game.path}
             to={game.path}
             aria-label={`${t('common.play')} ${game.title}`}
@@ -423,12 +572,47 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
         ))}
       </div>
 
-      {/* Infinite Mode Entrance */}
-      <div className="mt-8 px-2 md:px-6">
+      {/* EuroCollection Wide Card */}
+      <div className="mt-4 sm:mt-6 px-2 md:px-6">
+        <Link onClick={() => soundManager.play('click')} 
+          to="/euro-collection"
+          state={{ tab: availablePacks > 0 ? 'packs' : 'gallery' }}
+          className={`
+            group relative flex flex-col md:flex-row md:items-center justify-between p-4 sm:p-6 rounded-[1.25rem] md:rounded-[1.5rem] 
+            bg-gradient-to-br from-indigo-600/20 to-indigo-900/40 border-2 border-indigo-500/30 transition-all duration-300 
+            hover:scale-[1.01] active:scale-95 shadow-lg overflow-hidden
+            focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-500/20
+          `}
+        >
+          <div className={`absolute -top-12 -right-12 w-48 h-48 bg-indigo-500 rounded-full blur-[60px] opacity-10 group-hover:opacity-20 transition-opacity`}></div>
+          
+          <div className="relative z-10 flex-1">
+            <h2 className="text-lg md:text-xl font-black italic uppercase tracking-tighter text-white leading-tight mb-1">
+              {t('eurocollection.title')}
+            </h2>
+            <p className="text-indigo-200 text-[9px] md:text-[11px] font-bold uppercase tracking-widest leading-relaxed opacity-60 max-w-md">
+              {t('eurocollection.subtitle')}
+            </p>
+          </div>
+
+          <div className="mt-4 md:mt-0 md:ml-8 relative z-10 flex flex-col sm:flex-row md:flex-col items-start sm:items-center md:items-end gap-3 shrink-0">
+            <div className="w-full sm:w-auto px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white group-hover:bg-white/10 transition-colors text-center relative flex items-center justify-center gap-2">
+              <span>{availablePacks > 0 ? t('eurocollection.openPacks').toUpperCase() : t('eurocollection.viewGallery').toUpperCase()}</span>
+              {availablePacks > 0 && (
+                <span className="flex items-center justify-center h-4 min-w-4 px-1 rounded-full bg-pink-500 text-white text-[8px] font-black">{availablePacks}</span>
+              )}
+            </div>
+          </div>
+        </Link>
+      </div>
+
+      {/* Infinite Mode Entrance (Encore) */}
+      <div className="mt-4 sm:mt-6 px-2 md:px-6">
         <Link
+          onClick={() => soundManager.play('click')}
           to="/infinite"
           id="encore-section"
-          className="group relative flex items-center justify-between p-4 sm:p-6 rounded-[1rem] md:rounded-[1.5rem] bg-gradient-to-br from-amber-600/20 to-amber-900/40 border-2 border-amber-500/30 hover:scale-[1.01] active:scale-95 transition-all duration-300 shadow-lg overflow-hidden text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-500/20 w-full"
+          className="group relative flex items-center justify-between p-4 sm:p-6 rounded-[1.25rem] md:rounded-[1.5rem] bg-gradient-to-br from-amber-600/20 to-amber-900/40 border-2 border-amber-500/30 hover:scale-[1.01] active:scale-95 transition-all duration-300 shadow-lg overflow-hidden text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-500/20 w-full"
         >
           <div className="absolute inset-0 bg-amber-500/5 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
           
@@ -447,9 +631,49 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
         </Link>
       </div>
 
+      {/* EuroBingo Small Card (Off-season) */}
+      {!isHypeWeek && (
+        <div className="mt-4 sm:mt-6 px-2 md:px-6">
+          <Link onClick={() => soundManager.play('click')} 
+            to={bingoGame.path}
+            className={`
+              group relative flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-6 rounded-[1.25rem] md:rounded-[1.5rem] 
+              bg-gradient-to-br ${bingoGame.styles.bg} border-2 border-pink-500/30 transition-all duration-300 
+              hover:scale-[1.01] active:scale-95 shadow-lg overflow-hidden
+              focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pink-500/20
+            `}
+          >
+            <div className={`absolute -top-12 -right-12 w-48 h-48 ${bingoGame.styles.glow} rounded-full blur-[60px] opacity-10 group-hover:opacity-20 transition-opacity`}></div>
+            
+            <div className="relative z-10 flex-1 pr-4">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="bg-pink-500/20 text-pink-400 text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest border border-pink-500/30">
+                  {t('common.liveCompanion')}
+                </span>
+              </div>
+              <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-white leading-tight mb-1">
+                {bingoGame.title}
+              </h2>
+              <p className={`${bingoGame.styles.text} text-[9px] md:text-[11px] font-bold uppercase tracking-widest leading-relaxed opacity-60 max-w-md`}>
+                {bingoGame.desc}
+              </p>
+            </div>
+
+            <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0 mt-4 sm:mt-0">
+              <div className="w-full sm:w-auto scale-90 origin-left sm:origin-right">
+                <EurovisionCountdown />
+              </div>
+              <div className="w-full sm:w-auto px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white group-hover:bg-white/10 transition-colors text-center">
+                {t('common.play')}
+              </div>
+            </div>
+          </Link>
+        </div>
+      )}
+
       {/* Support Section */}
       {completedCount > 0 && (
-        <div className="mt-6 px-2 md:px-6">
+        <div className="mt-4 sm:mt-6 px-2 md:px-6">
           <a
             href={BUY_ME_A_COFFEE_URL}
             target="_blank"
@@ -473,46 +697,6 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
               {t('support.button')}
             </div>
           </a>
-        </div>
-      )}
-
-      {/* EuroBingo Small Card (Off-season) */}
-      {!isHypeWeek && (
-        <div className="mt-4 px-2 md:px-6">
-          <Link 
-            to={bingoGame.path}
-            className={`
-              group relative flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl
-              bg-gradient-to-br ${bingoGame.styles.bg} border border-pink-500/20 transition-all duration-300 
-              hover:scale-[1.01] active:scale-95 shadow-md overflow-hidden
-              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500/20
-            `}
-          >
-            <div className={`absolute -top-8 -right-8 w-24 h-24 ${bingoGame.styles.glow} rounded-full blur-[40px] opacity-5 group-hover:opacity-10 transition-opacity`}></div>
-            
-            <div className="relative z-10 flex-1 pr-4">
-              <div className="flex items-center gap-2 mb-0.5">
-                <h3 className="text-sm md:text-base font-black italic uppercase tracking-tighter text-white leading-tight">
-                  {bingoGame.title}
-                </h3>
-                <span className="bg-pink-500/20 text-pink-400 text-[6px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-widest border border-pink-500/30">
-                  {t('common.liveCompanion')}
-                </span>
-              </div>
-              <p className={`${bingoGame.styles.text} text-[8px] md:text-[9px] font-bold uppercase tracking-widest leading-relaxed opacity-60`}>
-                {bingoGame.desc}
-              </p>
-            </div>
-
-            <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center gap-2 shrink-0 mt-3 sm:mt-0">
-              <div className="w-full sm:w-auto scale-90 origin-left sm:origin-right">
-                <EurovisionCountdown />
-              </div>
-              <div className="w-full sm:w-auto px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[8px] font-black uppercase tracking-widest text-white group-hover:bg-white/10 transition-colors text-center">
-                {t('common.play')}
-              </div>
-            </div>
-          </Link>
         </div>
       )}
 
@@ -558,6 +742,7 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
           <div className="space-y-4 text-gray-400 text-xs md:text-sm font-medium leading-relaxed max-w-3xl">
             <p>{t('greenroom.howToPlayP1')}</p>
             <p>{t('greenroom.howToPlayP2')}</p>
+            {t('greenroom.howToPlayP3') && <p>{t('greenroom.howToPlayP3')}</p>}
           </div>
         </div>
       </div>
@@ -568,6 +753,8 @@ const Dashboard: React.FC<{ stats: GlobalStats; onShareDaily: (games: GameInstan
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 import { usePlaytimeTracker } from './hooks/usePlaytimeTracker.ts';
 
+import { frozenConfettiValue } from './utils/confettiState';
+
 const App: React.FC = () => {
   usePlaytimeTracker();
   const navigate = useNavigate();
@@ -575,17 +762,62 @@ const App: React.FC = () => {
   const prevPathRef = useRef(location.pathname);
   const { t, language } = useTranslation();
   
+  const [localFrozenConfetti, setLocalFrozenConfetti] = useState<number | null>(frozenConfettiValue);
+
+  useEffect(() => {
+    const handleFrozenConfettiChanged = () => {
+      setLocalFrozenConfetti(frozenConfettiValue);
+    };
+    window.addEventListener('frozenConfettiChanged', handleFrozenConfettiChanged);
+    return () => window.removeEventListener('frozenConfettiChanged', handleFrozenConfettiChanged);
+  }, []);
+  
   useEffect(() => {
     import('./utils/firebaseService.ts').then(m => m.reportDailyLanguage(language));
     setAnalyticsUserProperty({ preferred_language: language });
   }, [language]);
 
   const [showStats, setShowStats] = useState(false);
-  const [showLang, setShowLang] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [avatarId, setAvatarId] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('douze_points_avatar') || 'default';
+    }
+    return 'singer';
+  });
+  const [soundMuted, setSoundMuted] = useState(() => {
+    return soundManager.getIsMuted();
+  });
   const [showDailyShare, setShowDailyShare] = useState(false);
   const [dailyShareGames, setDailyShareGames] = useState<GameInstance[]>([]);
-  const [stats, setStats] = useState<GlobalStats>(() => getStoredStats());
+  const { user } = useAuth();
+  const { stats, setStats, collectionData } = useUserData(user);
   const [rankUpData, setRankUpData] = useState<{ title: string; threshold: number } | null>(null);
+  const lastGreenroomRankThresholdRef = useRef<number | null>(null);
+
+  const isLobby = useMemo(() => {
+    return location.pathname === '/' || location.pathname === '' || location.pathname.endsWith('index.html');
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (stats?.totalPoints !== undefined) {
+      const currentRank = getCurrentRank(stats.totalPoints);
+      
+      if (lastGreenroomRankThresholdRef.current === null) {
+        lastGreenroomRankThresholdRef.current = currentRank.threshold;
+        return;
+      }
+
+      if (isLobby && currentRank.threshold > lastGreenroomRankThresholdRef.current) {
+        logAnalyticsEvent('level_up', {
+          level: currentRank.threshold,
+          character: currentRank.title
+        });
+        setRankUpData(currentRank);
+        lastGreenroomRankThresholdRef.current = currentRank.threshold;
+      }
+    }
+  }, [stats?.totalPoints, isLobby]);
 
   // Handle cross-page scrolling to Encore
   useEffect(() => {
@@ -783,46 +1015,18 @@ const App: React.FC = () => {
 
   }, [location.pathname, language, t]);
 
-  const currentFlagCode = useMemo(() => {
-    return SUPPORTED_LANGUAGES.find(l => l.code === language)?.flagCode || 'gb';
-  }, [language]);
-
-  const currentFlag = useMemo(() => {
-    return SUPPORTED_LANGUAGES.find(l => l.code === language)?.flag || '🇬🇧';
-  }, [language]);
-
-  const isLobby = useMemo(() => {
-    return location.pathname === '/' || location.pathname === '' || location.pathname.endsWith('index.html');
-  }, [location.pathname]);
-
   useEffect(() => {
     const wasInGame = prevPathRef.current !== '/' && !prevPathRef.current.endsWith('index.html');
     if (wasInGame && isLobby) {
       const refreshedStats = getStoredStats();
-      const oldPoints = stats?.totalPoints || 0;
-      const newPoints = refreshedStats.totalPoints || 0;
-      
-      const oldRank = getCurrentRank(oldPoints);
-      const newRank = getCurrentRank(newPoints);
-      
-      if (newRank.threshold > oldRank.threshold) {
-        logAnalyticsEvent('level_up', {
-          level: newRank.threshold,
-          character: newRank.title
-        });
-        setTimeout(() => setRankUpData(newRank), 0);
-      }
-      
-      // Only update if points actually changed to avoid unnecessary re-renders
-      if (newPoints !== oldPoints) {
-        setTimeout(() => setStats(refreshedStats), 0);
-      }
+      setStats(refreshedStats);
     }
     prevPathRef.current = location.pathname;
-  }, [location.pathname, isLobby, stats?.totalPoints]); // Added stats?.totalPoints to dependencies
+  }, [location.pathname, isLobby, setStats]);
 
   const currentRank = useMemo(() => getCurrentRank(stats?.totalPoints || 0), [stats?.totalPoints]);
   const handleReturn = () => {
+    soundManager.play('click');
     const pathParts = location.pathname.split('/').filter(Boolean);
     if (pathParts.length > 1) {
       navigate('/' + pathParts.slice(0, -1).join('/'));
@@ -832,7 +1036,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen relative flex flex-col">
+    <div className="min-h-[100dvh] relative flex flex-col">
       <a 
         href="#main-content" 
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[1000] focus:px-6 focus:py-3 focus:bg-pink-500 focus:text-white focus:font-black focus:rounded-xl focus:shadow-2xl focus:outline-none focus:ring-4 focus:ring-pink-500/50 uppercase text-xs tracking-widest"
@@ -841,7 +1045,7 @@ const App: React.FC = () => {
       </a>
       <ScrollToTop />
       
-      <header className="px-4 md:px-8 border-b border-white/10 backdrop-blur-md sticky top-0 z-[100] flex items-center justify-between bg-black/40 h-12 md:h-16 transition-all duration-300" role="banner">
+      <header className="px-4 md:px-8 border-b border-white/10 backdrop-blur-md sticky top-0 z-[600] flex items-center justify-between bg-black/40 h-12 md:h-16 transition-all duration-300" role="banner">
         <div className="flex items-center gap-2 md:gap-4">
            {!isLobby && (
              <button 
@@ -852,37 +1056,57 @@ const App: React.FC = () => {
                 <svg className="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M15 19l-7-7 7-7"/></svg>
              </button>
            )}
-           <Link to="/" className="text-sm md:text-xl font-black tracking-tighter uppercase italic pr-[0.2em] hover:opacity-80 transition-opacity whitespace-nowrap">
+           <Link onClick={() => soundManager.play('click')} to="/" className="text-sm md:text-xl font-black tracking-tighter uppercase italic pr-[0.2em] hover:opacity-80 transition-opacity whitespace-nowrap">
              <span className="inline-block bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">Douze Points</span>
            </Link>
         </div>
         
         <div className="flex items-center gap-1.5 md:gap-3">
+          {location.pathname !== '/euro-collection' ? (
+            <button 
+              onClick={() => { setStats(getStoredStats()); setShowStats(true); soundManager.play('click'); }} 
+              className="flex items-center gap-1.5 px-2.5 md:px-4 py-1.5 md:py-2 hover:bg-white/10 rounded-full transition-all text-white bg-white/5 border border-white/10 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
+            >
+              <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.5)]"></div>
+              <span className="text-[7px] md:text-[9px] font-black uppercase tracking-widest whitespace-nowrap">
+                {t('greenroom.statsButton')}
+              </span>
+            </button>
+          ) : (
+            /* Confetti Display */
+            collectionData && (
+              <div 
+                className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-gradient-to-r from-pink-950/40 to-indigo-950/40 border border-pink-500/30 rounded-full shadow-lg shadow-pink-500/10 cursor-pointer transition-all hover:scale-105 hover:border-pink-500/50 hover:shadow-pink-500/20 active:scale-95 group animate-in fade-in zoom-in-95 duration-200"
+                onClick={() => {
+                  if (location.pathname !== '/euro-collection') {
+                    navigate('/euro-collection', { state: { tab: (collectionData?.availablePacks || 0) > 0 ? 'packs' : 'gallery' } });
+                  }
+                }}
+                title="Your Confetti"
+              >
+                <PartyPopper className="w-4 h-4 md:w-5 md:h-5 text-pink-400 transform group-hover:rotate-12 transition-transform" />
+                <span className="text-[10px] md:text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-indigo-300 tracking-widest">
+                  {localFrozenConfetti !== null ? localFrozenConfetti : (collectionData.confetti || 0)}
+                </span>
+              </div>
+            )
+          )}
+
+          {/* Profile Picture Settings Button */}
           <button 
-            onClick={() => setShowLang(true)}
-            className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all active:scale-95 group overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
-            aria-label={t('common.selectLanguage')}
+            onClick={() => { setShowSettings(true); soundManager.play('click'); }}
+            className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/15 hover:border-white/30 transition-all active:scale-95 relative group cursor-pointer shadow-lg overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
+            aria-label="Settings"
           >
-            {isWindows ? (
-              <img 
-                src={`https://flagcdn.com/w40/${currentFlagCode}.png`}
-                alt="Language"
-                className="w-6 h-4 object-cover rounded-sm group-hover:scale-110 transition-transform duration-300"
-                referrerPolicy="no-referrer"
-              />
-            ) : (
-              <span className="text-base md:text-lg group-hover:scale-110 transition-transform duration-300" role="img" aria-label="Language">{currentFlag}</span>
-            )}
-          </button>
-          
-          <button 
-            onClick={() => { setStats(getStoredStats()); setShowStats(true); }} 
-            className="flex items-center gap-1.5 px-2.5 md:px-4 py-1.5 md:py-2 hover:bg-white/10 rounded-full transition-all text-white bg-white/5 border border-white/10 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
-          >
-            <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.5)]"></div>
-            <span className="text-[7px] md:text-[9px] font-black uppercase tracking-widest whitespace-nowrap">
-              {t('greenroom.statsButton')}
-            </span>
+            {(() => {
+              const activeAv = AVATARS.find(a => a.id === avatarId) || AVATARS[0];
+              return (
+                <>
+                  <div className={`absolute inset-0 bg-gradient-to-br opacity-90 group-hover:opacity-100 transition-opacity ${activeAv.color}`}></div>
+                  <span className="text-base md:text-lg relative z-10 transform group-hover:scale-110 transition-transform duration-300">{activeAv.emoji}</span>
+                </>
+              );
+            })()}
           </button>
         </div>
       </header>
@@ -900,7 +1124,7 @@ const App: React.FC = () => {
           )}
           
           <Routes>
-            <Route path="/" element={<Dashboard stats={stats} onShareDaily={(games) => { setDailyShareGames(games); setShowDailyShare(true); }} />} />
+            <Route path="/" element={<Dashboard stats={stats} availablePacks={collectionData?.availablePacks || 0} onShareDaily={(games) => { setDailyShareGames(games); setShowDailyShare(true); }} />} />
             <Route path="/euro-song" element={<EuroWordGame onReturn={handleReturn} data={getActiveMasterData()} gameType={GameType.WORD_GAME} gameId="eurosong" title={t('games.eurosong.title')} />} />
             <Route path="/euro-artist" element={<EuroWordGame onReturn={handleReturn} data={getActiveMasterData()} gameType={GameType.ARTIST_WORD_GAME} gameId="euroartist" title={t('games.euroartist.title')} />} />
             <Route path="/euro-refrain" element={<EuroRefrain onReturn={handleReturn} />} />
@@ -908,6 +1132,7 @@ const App: React.FC = () => {
             <Route path="/euro-guess" element={<EuroGuess onReturn={handleReturn} data={getActiveMasterData()} />} />
             <Route path="/euro-arena" element={<EuroArena onReturn={handleReturn} data={getActiveMasterData()} />} />
             <Route path="/euro-bingo" element={<EuroBingo onReturn={handleReturn} />} />
+            <Route path="/euro-collection" element={<EuroCollectionGame onReturn={handleReturn} />} />
             
             {/* Infinite Mode Routes */}
             <Route path="/infinite" element={<InfiniteArena />} />
@@ -930,7 +1155,16 @@ const App: React.FC = () => {
       {rankUpData && <RankUpCelebration newRank={rankUpData} onClose={() => setRankUpData(null)} />}
       {showStats && <StatsModal stats={stats} onClose={() => setShowStats(false)} onShowInfo={() => {}} initialTab="TOTAL" />}
       {showDailyShare && <DailyShareModal games={dailyShareGames} onClose={() => setShowDailyShare(false)} totalPoints={stats.totalPoints} />}
-      {showLang && <LanguageOverlay onClose={() => setShowLang(false)} />}
+      {showSettings && (
+        <SettingsOverlay 
+          onClose={() => setShowSettings(false)} 
+          avatarId={avatarId}
+          setAvatarId={setAvatarId}
+          soundMuted={soundMuted}
+          setSoundMuted={setSoundMuted}
+          userId={user?.uid}
+        />
+      )}
       
       <footer className="pt-12 pb-24 text-center border-t border-white/5 px-6" role="contentinfo">
         <div className="flex flex-col items-center gap-8">
@@ -963,11 +1197,11 @@ const App: React.FC = () => {
             </a>
           </div>
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[9px] font-black uppercase tracking-widest text-gray-500">
-            <Link to="/patch-notes" className="hover:text-white transition-colors">{t('common.patchNotes')}</Link>
-            <Link to="/privacy" className="hover:text-white transition-colors">{t('privacy.title')}</Link>
-            <Link to="/about" className="hover:text-white transition-colors">{t('about.title')}</Link>
-            <Link to="/contact" className="hover:text-white transition-colors">{t('contact.title')}</Link>
-            <Link to="/terms" className="hover:text-white transition-colors">{t('terms.title')}</Link>
+            <Link onClick={() => soundManager.play('click')} to="/patch-notes" className="hover:text-white transition-colors">{t('common.patchNotes')}</Link>
+            <Link onClick={() => soundManager.play('click')} to="/privacy" className="hover:text-white transition-colors">{t('privacy.title')}</Link>
+            <Link onClick={() => soundManager.play('click')} to="/about" className="hover:text-white transition-colors">{t('about.title')}</Link>
+            <Link onClick={() => soundManager.play('click')} to="/contact" className="hover:text-white transition-colors">{t('contact.title')}</Link>
+            <Link onClick={() => soundManager.play('click')} to="/terms" className="hover:text-white transition-colors">{t('terms.title')}</Link>
           </div>
         </div>
       </footer>

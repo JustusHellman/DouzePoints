@@ -126,89 +126,49 @@ service cloud.firestore {
     match /game_stats/{statsId} {
       // Only the admin can see the global stats
       allow read: if isAdmin();
-      
       // Anyone can report a score (create or update)
-      // We validate the schema to prevent junk data
-      allow create: if isValidStatsDoc(request.resource.data);
-      
-      // For updates, we ensure they are only incrementing and not changing metadata
-      allow update: if isValidStatsDoc(request.resource.data) &&
-                      request.resource.data.gameType == resource.data.gameType &&
-                      request.resource.data.date == resource.data.date;
+      allow create, update: if true;
     }
 
     match /support_clicks/{dateId} {
       allow read: if isAdmin();
-      
-      allow create: if isValidSupportClicksDoc(request.resource.data);
-      
-      allow update: if isValidSupportClicksDoc(request.resource.data) &&
-                      request.resource.data.date == resource.data.date;
+      allow create, update: if true;
     }
 
     match /share_clicks/{dateId} {
       allow read: if isAdmin();
-      
-      allow create: if isValidShareClicksDoc(request.resource.data);
-      
-      allow update: if isValidShareClicksDoc(request.resource.data) &&
-                      request.resource.data.date == resource.data.date;
+      allow create, update: if true;
     }
 
     match /language_stats/{dateId} {
       allow read: if isAdmin();
-      
-      allow create: if isValidLanguageStatsDoc(request.resource.data);
-      
-      allow update: if isValidLanguageStatsDoc(request.resource.data) &&
-                      request.resource.data.date == resource.data.date;
+      allow create, update: if true;
     }
 
     match /completion_stats/{dateId} {
       allow read: if isAdmin();
-      
-      allow create: if isValidCompletionStatsDoc(request.resource.data);
-      
-      allow update: if isValidCompletionStatsDoc(request.resource.data) &&
-                      request.resource.data.date == resource.data.date;
+      allow create, update: if true;
     }
 
     match /discoveries/{dateId} {
       allow read: if isAdmin();
-      
-      allow create: if isValidDiscoveryStatsDoc(request.resource.data);
-      
-      allow update: if isValidDiscoveryStatsDoc(request.resource.data) &&
-                      (!('date' in resource.data) || request.resource.data.date == resource.data.date);
+      allow create, update: if true;
     }
 
     match /infinite_daily_stats/{statsId} {
       allow read: if isAdmin();
-      
-      allow create: if isValidInfiniteDailyStatsDoc(request.resource.data);
-      
-      allow update: if isValidInfiniteDailyStatsDoc(request.resource.data) &&
-                      (!('date' in resource.data) || request.resource.data.date == resource.data.date) &&
-                      (!('gameId' in resource.data) || request.resource.data.gameId == resource.data.gameId) &&
-                      (!('difficulty' in resource.data) || request.resource.data.difficulty == resource.data.difficulty);
+      allow create, update: if true;
     }
 
     match /infinite_runs/{runId} {
       allow read: if isAdmin();
-      
-      allow create: if isValidInfiniteRunDoc(request.resource.data);
-      
-      // Runs are immutable
+      allow create: if true;
       allow update, delete: if false;
     }
 
     match /playtime_stats/{dateId} {
       allow read: if isAdmin();
-      
-      allow create: if isValidPlaytimeStatsDoc(request.resource.data);
-      
-      allow update: if isValidPlaytimeStatsDoc(request.resource.data) &&
-                      (!('date' in resource.data) || request.resource.data.date == resource.data.date);
+      allow create, update: if true;
     }
 
     function isValidBingoRoomDoc(data) {
@@ -275,6 +235,12 @@ service cloud.firestore {
     match /global_state/{docId} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+
+    match /users/{userId} {
+      allow read: if (request.auth != null && request.auth.uid == userId) || isAdmin();
+      allow create: if (request.auth != null && request.auth.uid == userId) || isAdmin();
+      allow update: if (request.auth != null && request.auth.uid == userId) || isAdmin();
     }
 
     // Default deny

@@ -1,3 +1,4 @@
+import { syncDailyStateToFirestore } from '../../utils/syncService.ts';
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import confetti from 'canvas-confetti';
@@ -9,6 +10,7 @@ import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
 import { CategoryMasteredScreen } from '../../components/CategoryMasteredScreen.tsx';
 import { reportInfiniteRun } from '../../utils/firebaseService.ts';
+import { soundManager } from '../../utils/sounds.ts';
 import { 
   getInfiniteGameState, 
   saveInfiniteGameState, 
@@ -359,6 +361,9 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
       }
     } else {
       localStorage.setItem(`${gameId}-${getDayString()}`, JSON.stringify({ guesses, currentGuess, isGameOver, won }));
+      if (isGameOver && mode === 'daily') {
+        syncDailyStateToFirestore(gameId, { guesses, isGameOver, won }).catch(console.error);
+      }
     }
 
     if (isGameOver) {
@@ -498,6 +503,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
     }
 
     if (e.key === 'Enter') {
+      soundManager.play('click');
       if (currentGuess.length === inputLength) {
         const newGuess = currentGuess.toUpperCase();
         const newGuesses = [...guesses, newGuess];
@@ -506,12 +512,21 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
         
         const finalCheckTarget = normalize(target).split('').filter(isLetter).join('');
         if (newGuess === finalCheckTarget) {
+          if (mode !== 'infinite') {
+            const safeGameType = gameId === 'eurosong' ? GameType.WORD_GAME : (gameId === 'euroartist' ? GameType.ARTIST_WORD_GAME : gameType);
+            updateGameStats(safeGameType, true, { attempts: newGuesses.length, guesses: newGuesses });
+          }
           setTimeout(() => {
             setIsGameOver(true);
             setWon(true);
+            const pointsMap = [12, 10, 8, 6, 4, 2];
+            const pts = pointsMap[newGuesses.length - 1] || 2;
+            if (pts === 12) {
+              soundManager.play('victory');
+            } else {
+              soundManager.play('success');
+            }
             if (mode === 'infinite' && infiniteState) {
-              const pointsMap = [12, 10, 8, 6, 4, 2];
-              const pts = pointsMap[newGuesses.length - 1] || 2;
               const nextState = { ...infiniteState, guesses: newGuesses, isGameOver: true, won: true, lastResult: { won: true, points: pts } };
               saveInfiniteGameState(gameId, difficulty, nextState);
               saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore + pts, infiniteState.currentStreak + 1);
@@ -520,13 +535,16 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
               if (isExhausted) {
                 reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore + pts, infiniteState.currentStreak + 1, true);
               }
-            } else {
-              updateGameStats(gameType, true, { attempts: newGuesses.length });
             }
             setShowModal(true);
           }, target.length * animationDelay + 500);
         } else if (newGuesses.length >= MAX_ATTEMPTS) {
+          if (mode !== 'infinite') {
+            const safeGameType = gameId === 'eurosong' ? GameType.WORD_GAME : (gameId === 'euroartist' ? GameType.ARTIST_WORD_GAME : gameType);
+            updateGameStats(safeGameType, false, { attempts: newGuesses.length, guesses: newGuesses });
+          }
           setTimeout(() => {
+            soundManager.play('fail');
             setIsGameOver(true);
             if (mode === 'infinite' && infiniteState) {
               // On loss, the run is over. We can save the record now.
@@ -535,20 +553,24 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
               clearInfiniteGameState(gameId, difficulty);
               setInfiniteState(nextState);
               reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore, infiniteState.currentStreak, false);
-            } else {
-              updateGameStats(gameType, false, { attempts: newGuesses.length });
             }
             setShowModal(true);
           }, target.length * animationDelay + 500);
+        } else {
+          setTimeout(() => {
+            soundManager.play('buzz');
+          }, target.length * animationDelay + 200);
         }
       } else {
         setMessage(t('wordGame.notEnoughLetters'));
         setTimeout(() => setMessage(null), 1500);
       }
     } else if (e.key === 'Backspace') {
+      soundManager.play('click');
       setCurrentGuess((prev: string) => prev.slice(0, -1));
     } else if (e.key.length === 1 && /^[a-zA-Z]$/.test(e.key)) {
       if (currentGuess.length < inputLength) {
+        soundManager.play('click');
         setCurrentGuess((prev: string) => (prev + e.key).toUpperCase());
       }
     }

@@ -41,6 +41,16 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({ games, onClose
   const [confetti, setConfetti] = useState<{ color: string; alpha: number; size: number; isCircle: boolean; x: number; y: number }[]>([]);
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  useEffect(() => {
     const generatedConfetti = Array.from({ length: 50 }).map(() => ({
       color: ['#ec4899', '#3b82f6', '#8b5cf6', '#eab308', '#ffffff'][Math.floor(Math.random() * 5)],
       alpha: Math.random() * 0.5,
@@ -281,8 +291,11 @@ export const DailyShareModal: React.FC<DailyShareModalProps> = ({ games, onClose
   };
 
   return (
-    <div className="fixed inset-0 z-[500] flex items-center justify-center p-4 md:p-6 bg-black/90 backdrop-blur-2xl animate-in fade-in duration-300">
-      <div className="max-w-md w-full relative flex flex-col gap-6">
+    <div 
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      className="fixed inset-0 top-12 md:top-16 z-[500] flex items-center justify-center p-4 md:p-6 bg-black/90 backdrop-blur-2xl animate-in fade-in duration-300 overflow-y-auto"
+    >
+      <div className="max-w-md w-full relative flex flex-col gap-6 my-auto">
         
         {/* Close Button */}
         <button 

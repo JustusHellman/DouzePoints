@@ -8,6 +8,14 @@ export enum GameType {
   BINGO_GAME = 'BINGO_GAME'
 }
 
+export interface DailyCompletion {
+  won: boolean;
+  points: number;
+  isPerfect: boolean;
+  guesses?: string[];
+  mistakes?: number;
+}
+
 export interface DetailedStats {
   played: number;
   wins: number;
@@ -16,6 +24,7 @@ export interface DetailedStats {
   maxStreak: number;
   distribution: number[];
   lastPlayed: string;
+  dailyCompletion?: DailyCompletion;
 }
 
 export interface GlobalStats {
@@ -61,6 +70,7 @@ export interface MasterSong {
   tier?: 'golden' | 'cult';
   weight?: number;
   weightModifiers?: string[];
+  rarity?: CardRarity;
 }
 
 export type ArenaSong = MasterSong;
@@ -108,9 +118,61 @@ export interface InfiniteRecord {
   bestScore: number;
   bestStreak: number;
   mastered?: boolean;
+  currentStreak?: number;
+  currentScore?: number;
 }
 
 export type InfiniteRecords = Record<string, InfiniteRecord>; // key: `${gameId}_${difficulty}`
+
+export type Era = '50s' | '60s' | '70s' | '80s' | '90s' | '00s' | '10s' | '20s';
+export type WatermarkSymbol = '12';
+
+export interface CardData {
+  id: string;
+  country: string;
+  countryCode: string;
+  year: number;
+  artist: string;
+  song: string;
+  placement: number | string;
+  genre: string;
+  members: string;
+  gender: string;
+  funFact: string;
+  rarity: CardRarity;
+  era: Era;
+  imageUrl: string;
+  watermark: WatermarkSymbol;
+}
+
+export enum CardRarity {
+  COMMON = 'Common',
+  UNCOMMON = 'Uncommon',
+  RARE = 'Rare',
+  LEGENDARY = 'Legendary'
+}
+
+export interface EuroCard {
+  
+  obtainedAt: number;
+}
+
+export interface OpenedCard {
+  songId: string;
+  
+  obtainedAt: number;
+  isDuplicate?: boolean;
+  confettiValue?: number;
+}
+
+export interface UserCollection {
+  cards: Record<string, EuroCard>; // key: songId
+  availablePacks: number;
+  packsOpened: number;
+  lastDailyReset: number;
+  dailyPacksEarned: number;
+  confetti: number;
+}
 
 export interface BingoEvent {
   id: string;

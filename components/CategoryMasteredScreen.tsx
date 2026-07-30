@@ -1,5 +1,6 @@
-import React, { useRef, useLayoutEffect } from 'react';
+import React, { useRef, useLayoutEffect, useEffect } from 'react';
 import { useTranslation } from '../context/LanguageContext.tsx';
+import { soundManager } from '../utils/sounds.ts';
 
 interface CategoryMasteredScreenProps {
   onPlayAgain: () => void;
@@ -22,6 +23,10 @@ export const CategoryMasteredScreen: React.FC<CategoryMasteredScreenProps> = ({
   const [showCopied, setShowCopied] = React.useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    soundManager.play('celebration');
+  }, []);
 
   // Extract base color name from glow class (e.g., "bg-emerald-500" -> "emerald")
   const colorName = styles?.glow.replace('bg-', '').split('-')[0] || 'amber';
@@ -107,6 +112,7 @@ export const CategoryMasteredScreen: React.FC<CategoryMasteredScreenProps> = ({
         {onShare && (
           <button 
             onClick={() => {
+              soundManager.play('click');
               onShare();
               setShowCopied(true);
               setTimeout(() => setShowCopied(false), 2000);
@@ -120,7 +126,10 @@ export const CategoryMasteredScreen: React.FC<CategoryMasteredScreenProps> = ({
         
         <div className="flex flex-col sm:flex-row gap-4 w-full">
           <button 
-            onClick={onPlayAgain}
+            onClick={() => {
+              soundManager.play('click');
+              onPlayAgain();
+            }}
             className="flex-1 bg-gradient-to-r from-amber-500 to-yellow-600 text-black py-4 px-6 rounded-full font-black uppercase text-xs tracking-[0.2em] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_20px_rgba(245,158,11,0.4)] flex items-center justify-center gap-2"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
@@ -128,7 +137,10 @@ export const CategoryMasteredScreen: React.FC<CategoryMasteredScreenProps> = ({
           </button>
           
           <button 
-            onClick={onReturn}
+            onClick={() => {
+              soundManager.play('click');
+              onReturn();
+            }}
             className="flex-1 bg-white/10 text-white border border-white/20 py-4 px-6 rounded-full font-black uppercase text-xs tracking-[0.2em] hover:bg-white/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
           >
             {t('infinite.exitToEncore')}

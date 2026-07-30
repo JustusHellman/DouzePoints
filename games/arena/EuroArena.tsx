@@ -1,3 +1,4 @@
+import { syncDailyStateToFirestore } from '../../utils/syncService.ts';
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import confetti from 'canvas-confetti';
@@ -11,6 +12,7 @@ import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
 import { CategoryMasteredScreen } from '../../components/CategoryMasteredScreen.tsx';
 import { reportInfiniteRun } from '../../utils/firebaseService.ts';
+import { soundManager } from '../../utils/sounds.ts';
 
 import { 
   getInfiniteGameState, 
@@ -239,6 +241,9 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
       }
     } else {
       localStorage.setItem(`euroarena-${getDayString()}`, JSON.stringify({ guesses: guesses.map(g => String(g.id)), isGameOver, won }));
+      if (isGameOver && mode === 'daily') {
+        syncDailyStateToFirestore('euroarena', { guesses: guesses.map(g => String(g.id)), isGameOver, won }).catch(console.error);
+      }
     }
 
     if (isGameOver && won) {
@@ -254,9 +259,16 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
     if (isWin) { 
       setWon(true); 
       setIsGameOver(true); 
+      const pointsMap = [12, 12, 10, 8, 6, 4, 2];
+      const pts = pointsMap[newGuesses.length - 1] || 2;
+      
+      if (pts === 12) {
+        soundManager.play('victory');
+      } else {
+        soundManager.play('success');
+      }
+
       if (mode === 'infinite' && infiniteState) {
-        const pointsMap = [12, 12, 10, 8, 6, 4, 2];
-        const pts = pointsMap[newGuesses.length - 1] || 2;
         const nextState = { ...infiniteState, guesses: newGuesses.map(g => String(g.id)), isGameOver: true, lastResult: { won: true, points: pts } };
         saveInfiniteGameState(gameId, difficulty, nextState);
         saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore + pts, infiniteState.currentStreak + 1);
@@ -266,11 +278,12 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
           reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore + pts, infiniteState.currentStreak + 1, true);
         }
       } else {
-        updateGameStats(GameType.ARENA, true, { attempts: newGuesses.length });
+        updateGameStats(GameType.ARENA, true, { attempts: newGuesses.length, guesses: newGuesses.map(g => g.country) });
       }
       setTimeout(() => setShowModal(true), 1500); 
     }
     else if (newGuesses.length >= MAX_GUESSES) { 
+      soundManager.play('fail');
       setIsGameOver(true); 
       setWon(false);
       if (mode === 'infinite' && infiniteState) {
@@ -280,9 +293,12 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
         setInfiniteState(nextState);
         reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore, infiniteState.currentStreak, false);
       } else {
-        updateGameStats(GameType.ARENA, false, { attempts: newGuesses.length });
+        updateGameStats(GameType.ARENA, false, { attempts: newGuesses.length, guesses: newGuesses.map(g => g.country) });
       }
       setTimeout(() => setShowModal(true), 1500); 
+    }
+    else {
+      soundManager.play('buzz');
     }
   }, [isGameOver, guesses, target.id, mode, infiniteState, gameId, difficulty]);
 

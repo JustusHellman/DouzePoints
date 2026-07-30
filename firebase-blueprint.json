@@ -285,9 +285,35 @@
         "timestamp": { "type": "string", "format": "date-time" }
       },
       "required": ["event", "timestamp"]
+    },
+    "User": {
+      "title": "User Profile",
+      "description": "User profile containing game stats, eurocards collection, confetti, and packs.",
+      "type": "object",
+      "properties": {
+        "totalPoints": { "type": "integer" },
+        "totalDouzePoints": { "type": "integer" },
+        "collection": {
+          "type": "object",
+          "properties": {
+            "availablePacks": { "type": "integer" },
+            "packsOpened": { "type": "integer" },
+            "dailyPacksEarned": { "type": "integer" },
+            "lastDailyReset": { "type": "integer" },
+            "confetti": { "type": "integer" },
+            "cards": { "type": "object" }
+          }
+        },
+        "stats": { "type": "object" },
+        "lastUpdated": { "type": "string", "format": "date-time" }
+      }
     }
   },
   "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection of user profiles and EuroCollection items."
+    },
     "/game_stats/{statsId}": {
       "schema": "DailyGameStats",
       "description": "Collection of daily aggregated game statistics."

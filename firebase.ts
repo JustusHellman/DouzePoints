@@ -1,27 +1,42 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-import 'firebase/analytics';
 import { getAnalytics, isSupported } from 'firebase/analytics';
-import firebaseConfig from './firebase-applet-config.json';
+import localConfig from './firebase-applet-config.json';
+
+// Use Vite environment variables if provided, otherwise fallback to local config
+const config = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || localConfig.apiKey,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || localConfig.authDomain,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || localConfig.projectId,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || localConfig.storageBucket,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || localConfig.messagingSenderId,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || localConfig.appId,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || (localConfig as any).measurementId,
+  firestoreDatabaseId: import.meta.env.VITE_FIRESTORE_DATABASE_ID || localConfig.firestoreDatabaseId || "(default)"
+};
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(config);
 
-// Initialize Analytics (only if supported in the current environment)
-// We use a promise to handle the async nature of isSupported()
-export const analytics = isSupported().then(yes => {
-  if (yes) {
-    return getAnalytics(app);
+// Initialize Analytics
+export const analytics = (async () => {
+  try {
+    if (!config.measurementId) {
+      return null;
+    }
+    const yes = await isSupported();
+    if (yes) {
+      return getAnalytics(app);
+    }
+  } catch {
+    // Fail silently if network/analytics is blocked or unavailable
   }
   return null;
-}).catch(err => {
-  console.error("Analytics initialization failed:", err);
-  return null;
-});
+})();
 
-// Initialize Firestore with the specific database ID from config
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+// Initialize Firestore
+export const db = getFirestore(app, config.firestoreDatabaseId);
 
 // Initialize Auth
 export const auth = getAuth();
@@ -38,8 +53,6 @@ async function testConnection() {
     if (error instanceof Error && error.message.includes('the client is offline')) {
       console.error("Firebase is offline. Please check your configuration.");
     }
-    // Other errors (like 403) are expected if rules are tight, but "offline" is the critical one
   }
 }
-
 testConnection();

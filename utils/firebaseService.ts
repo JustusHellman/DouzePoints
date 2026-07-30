@@ -1,4 +1,4 @@
-import { doc, setDoc, increment, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, increment, serverTimestamp, DocumentData } from 'firebase/firestore';
 import { db } from '../firebase.ts';
 import { GameType } from '../data/types.ts';
 import { logAnalyticsEvent } from './analytics';
@@ -6,18 +6,12 @@ import { logAnalyticsEvent } from './analytics';
 export const reportInfiniteStart = async (gameId: string, difficulty: string) => {
   const [placement, era] = difficulty.split('_');
 
-  // Log to GA4 (always log, even in dev if we want to see it in console)
   logAnalyticsEvent('level_start', {
     level_name: `${gameId}_infinite`,
     game_id: gameId,
     placement: placement,
     era: era
   });
-
-  if (import.meta.env.DEV) {
-    console.log(`[DEV MODE] Would have reported infinite start for ${gameId} (${difficulty})`);
-    return;
-  }
 
   const date = new Date().toISOString().split('T')[0];
   const statsId = `${date}_${gameId}_${difficulty}`;
@@ -32,7 +26,6 @@ export const reportInfiniteStart = async (gameId: string, difficulty: string) =>
       lastUpdated: serverTimestamp()
     }, { merge: true });
     
-    // Also report discovery if this is their first game ever
     reportNewPlayerDiscovery(`infinite_${gameId}_${difficulty}`);
   } catch (error) {
     console.error('Failed to report infinite start:', error);
@@ -42,7 +35,6 @@ export const reportInfiniteStart = async (gameId: string, difficulty: string) =>
 export const reportInfiniteRun = async (gameId: string, difficulty: string, score: number, streak: number, wasCompleted: boolean) => {
   const [placement, era] = difficulty.split('_');
 
-  // Log to GA4
   logAnalyticsEvent('level_end', {
     level_name: `${gameId}_infinite`,
     success: wasCompleted,
@@ -52,16 +44,10 @@ export const reportInfiniteRun = async (gameId: string, difficulty: string, scor
     era: era
   });
 
-  if (import.meta.env.DEV) {
-    console.log(`[DEV MODE] Would have reported infinite run for ${gameId} (${difficulty}): score=${score}, streak=${streak}, completed=${wasCompleted}`);
-    return;
-  }
-
   const date = new Date().toISOString().split('T')[0];
   const statsId = `${date}_${gameId}_${difficulty}`;
 
   try {
-    // 1. Update Aggregated Stats
     const statsRef = doc(db, 'infinite_daily_stats', statsId);
     await setDoc(statsRef, {
       date,
@@ -73,48 +59,26 @@ export const reportInfiniteRun = async (gameId: string, difficulty: string, scor
       totalStreak: increment(streak),
       lastUpdated: serverTimestamp()
     }, { merge: true });
-
-    // 2. Log Individual Run
-    const runId = `${date}_${gameId}_${difficulty}_${Math.random().toString(36).substring(2, 9)}`;
-    const runRef = doc(db, 'infinite_runs', runId);
-    await setDoc(runRef, {
-      gameId,
-      difficulty,
-      score,
-      streak,
-      wasCompleted,
-      timestamp: serverTimestamp()
-    });
   } catch (error) {
     console.error('Failed to report infinite run:', error);
   }
 };
 
 export const reportGameScore = async (gameType: GameType, points: number) => {
-  // Log to GA4
   logAnalyticsEvent('post_score', {
     score: points,
     level_name: gameType
   });
-
-  if (import.meta.env.DEV) {
-    console.log(`[DEV MODE] Would have reported ${points} points for ${gameType}`);
-    return;
-  }
 
   const date = new Date().toISOString().split('T')[0];
   const statsId = `${date}_${gameType}`;
 
   try {
     const docRef = doc(db, 'game_stats', statsId);
-    
-    // We use setDoc with merge: true and increment to atomically update the daily totals
     await setDoc(docRef, {
       gameType,
       date,
-      distribution: {
-        [points.toString()]: increment(1)
-      },
+      [`distribution.${points}`]: increment(1),
       totalPlayed: increment(1),
       lastUpdated: serverTimestamp()
     }, { merge: true });
@@ -123,34 +87,24 @@ export const reportGameScore = async (gameType: GameType, points: number) => {
       console.log(`Reported ${points} points for ${gameType} on ${date}`);
     }
   } catch (error) {
-    // Fail silently for the user, but log for the developer
     console.error('Failed to report score to Firebase:', error instanceof Error ? error.message : String(error));
   }
 };
 
 export const reportSupportClick = async (source: string = 'unknown') => {
-  // Log to GA4
   logAnalyticsEvent('select_content', {
     content_type: 'support_link',
     item_id: source
   });
 
-  if (import.meta.env.DEV) {
-    console.log(`[DEV MODE] Would have reported support click from ${source}`);
-    return;
-  }
-
   const date = new Date().toISOString().split('T')[0];
 
   try {
     const docRef = doc(db, 'support_clicks', date);
-    
     await setDoc(docRef, {
       date,
       count: increment(1),
-      sources: {
-        [source]: increment(1)
-      },
+      [`sources.${source}`]: increment(1),
       lastUpdated: serverTimestamp()
     }, { merge: true });
     
@@ -163,29 +117,20 @@ export const reportSupportClick = async (source: string = 'unknown') => {
 };
 
 export const reportShareClick = async (source: string = 'unknown') => {
-  // Log to GA4
   logAnalyticsEvent('share', {
     method: 'web_share',
     content_type: 'game_result',
     item_id: source
   });
 
-  if (import.meta.env.DEV) {
-    console.log(`[DEV MODE] Would have reported share click from ${source}`);
-    return;
-  }
-
   const date = new Date().toISOString().split('T')[0];
 
   try {
     const docRef = doc(db, 'share_clicks', date);
-    
     await setDoc(docRef, {
       date,
       count: increment(1),
-      sources: {
-        [source]: increment(1)
-      },
+      [`sources.${source}`]: increment(1),
       lastUpdated: serverTimestamp()
     }, { merge: true });
     
@@ -198,15 +143,10 @@ export const reportShareClick = async (source: string = 'unknown') => {
 };
 
 export const reportDailyLanguage = async (language: string) => {
-  if (import.meta.env.DEV) {
-    console.log(`[DEV MODE] Would have reported daily language: ${language}`);
-    return;
-  }
-
   const date = new Date().toISOString().split('T')[0];
-  const storageKey = 'last_language_reported_date';
+  const storageKey = `last_language_reported_${date}_${language}`;
   
-  if (localStorage.getItem(storageKey) === date) {
+  if (localStorage.getItem(storageKey) === 'true') {
     return;
   }
 
@@ -215,13 +155,11 @@ export const reportDailyLanguage = async (language: string) => {
     await setDoc(docRef, {
       date,
       total: increment(1),
-      languages: {
-        [language]: increment(1)
-      },
+      [`languages.${language}`]: increment(1),
       lastUpdated: serverTimestamp()
     }, { merge: true });
     
-    localStorage.setItem(storageKey, date);
+    localStorage.setItem(storageKey, 'true');
     if (import.meta.env.DEV) {
       console.log(`Reported language ${language} on ${date}`);
     }
@@ -231,17 +169,11 @@ export const reportDailyLanguage = async (language: string) => {
 };
 
 export const reportDailyCompletion = async (totalScore: number) => {
-  // Log to GA4
   logAnalyticsEvent('level_end', {
     level_name: 'daily_challenges',
     success: true,
     score: totalScore
   });
-
-  if (import.meta.env.DEV) {
-    console.log(`[DEV MODE] Would have reported daily completion with score: ${totalScore}`);
-    return;
-  }
 
   const date = new Date().toISOString().split('T')[0];
   const storageKey = 'last_completion_reported_date';
@@ -255,9 +187,7 @@ export const reportDailyCompletion = async (totalScore: number) => {
     await setDoc(docRef, {
       date,
       totalCompleted: increment(1),
-      distribution: {
-        [totalScore.toString()]: increment(1)
-      },
+      [`distribution.${totalScore}`]: increment(1),
       lastUpdated: serverTimestamp()
     }, { merge: true });
     
@@ -271,29 +201,24 @@ export const reportDailyCompletion = async (totalScore: number) => {
 };
 
 export const reportPlaytime = async (counters: Record<string, number>) => {
-  if (import.meta.env.DEV) {
-    console.log(`[DEV MODE] Would have reported playtime:`, counters);
-    return;
-  }
-
   const date = new Date().toISOString().split('T')[0];
 
   try {
     const docRef = doc(db, 'playtime_stats', date);
-    
-    const updates: Record<string, string | number | boolean | undefined | null | object> = {
-      date,
-      lastUpdated: serverTimestamp()
-    };
-    
+
     let totalSeconds = 0;
     let dailySeconds = 0;
     let infiniteSeconds = 0;
     let navigationSeconds = 0;
 
+    const atomicUpdates: DocumentData = {
+      date,
+      lastUpdated: serverTimestamp()
+    };
+
     for (const [key, seconds] of Object.entries(counters)) {
       if (seconds <= 0) continue;
-      updates[key] = increment(seconds);
+      atomicUpdates[key] = increment(seconds);
       totalSeconds += seconds;
       
       if (key.endsWith('_daily')) {
@@ -307,24 +232,18 @@ export const reportPlaytime = async (counters: Record<string, number>) => {
 
     if (totalSeconds === 0) return;
 
-    updates['totalSeconds'] = increment(totalSeconds);
-    updates['dailySeconds'] = increment(dailySeconds);
-    updates['infiniteSeconds'] = increment(infiniteSeconds);
-    updates['navigationSeconds'] = increment(navigationSeconds);
+    atomicUpdates['totalSeconds'] = increment(totalSeconds);
+    atomicUpdates['dailySeconds'] = increment(dailySeconds);
+    atomicUpdates['infiniteSeconds'] = increment(infiniteSeconds);
+    atomicUpdates['navigationSeconds'] = increment(navigationSeconds);
 
-    await setDoc(docRef, updates, { merge: true });
+    await setDoc(docRef, atomicUpdates, { merge: true });
   } catch (error) {
     console.error('Failed to report playtime:', error);
   }
 };
 
 export const reportNewPlayerDiscovery = async (source: string = 'unknown') => {
-
-  if (import.meta.env.DEV) {
-    console.log(`[DEV MODE] Would have reported new player discovery from ${source}`);
-    return;
-  }
-
   const date = new Date().toISOString().split('T')[0];
   const storageKey = 'new_player_reported';
   
@@ -346,9 +265,6 @@ export const reportNewPlayerDiscovery = async (source: string = 'unknown') => {
       console.log(`Reported new player discovery on ${date} from ${source}`);
     }
   } catch (error) {
-    // If it fails, we might want to allow a retry, so we could remove the item
-    // but the user wants to be sure it doesn't fire twice, so keeping it set is safer
-    // even if we miss a report due to a network error.
     console.error('Failed to report discovery to Firebase:', error instanceof Error ? error.message : String(error));
   }
 };

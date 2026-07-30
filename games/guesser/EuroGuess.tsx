@@ -1,3 +1,4 @@
+import { syncDailyStateToFirestore } from '../../utils/syncService.ts';
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { getDailyIndex, getDayString } from '../../utils/daily.ts';
@@ -11,6 +12,7 @@ import { useLocation } from 'react-router-dom';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
 import { CategoryMasteredScreen } from '../../components/CategoryMasteredScreen.tsx';
 import { reportInfiniteRun } from '../../utils/firebaseService.ts';
+import { soundManager } from '../../utils/sounds.ts';
 import { 
   getInfiniteGameState, 
   saveInfiniteGameState, 
@@ -245,6 +247,9 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
     if (isInfinite) return;
     if (attempts.length === 0 && !isGameOver) return;
     localStorage.setItem(`euroguess-${getDayString()}`, JSON.stringify({ attempts, isGameOver, revealedHints, won }));
+    if (isGameOver && mode === 'daily') {
+      syncDailyStateToFirestore('euroguess', { attempts, isGameOver, revealedHints, won }).catch(console.error);
+    }
     if (isGameOver && won) {
       const pts = getPointsInfo.points;
       confetti({
@@ -295,9 +300,18 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
       const pointsMap = [12, 10, 8, 6, 4, 2];
       const pts = pointsMap[newAttempts.length - 1] || 2;
 
+      if (pts === 12) {
+        soundManager.play('victory');
+      } else {
+        soundManager.play('success');
+      }
+
       if (!isInfinite) {
-        updateGameStats(GameType.GUESSER, true, { attempts: newAttempts.length });
+        updateGameStats(GameType.GUESSER, true, { attempts: newAttempts.length, guesses: newAttempts });
         localStorage.setItem(`euroguess-${getDayString()}`, JSON.stringify({ attempts: newAttempts, isGameOver: true, revealedHints, won: true }));
+        if (mode === 'daily') {
+          syncDailyStateToFirestore('euroguess', { attempts: newAttempts, isGameOver: true, revealedHints, won: true }).catch(console.error);
+        }
       } else if (infiniteState) {
         const nextState = { ...infiniteState, guesses: newAttempts, isGameOver: true, lastResult: { won: true, points: pts } };
         setInfiniteState(nextState);
@@ -319,12 +333,16 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
     } else {
       setRevealedHints(Math.min(newAttempts.length + 1, 6));
       if (newAttempts.length >= 6) { 
+        soundManager.play('fail');
         setIsGameOver(true); 
         setWon(false);
         setRevealedHints(6);
         if (!isInfinite) {
-          updateGameStats(GameType.GUESSER, false, { attempts: newAttempts.length });
+          updateGameStats(GameType.GUESSER, false, { attempts: newAttempts.length, guesses: newAttempts });
           localStorage.setItem(`euroguess-${getDayString()}`, JSON.stringify({ attempts: newAttempts, isGameOver: true, revealedHints: 6, won: false }));
+          if (mode === 'daily') {
+            syncDailyStateToFirestore('euroguess', { attempts: newAttempts, isGameOver: true, revealedHints: 6, won: false }).catch(console.error);
+          }
         } else if (infiniteState) {
           const nextState = { ...infiniteState, guesses: newAttempts, isGameOver: true, lastResult: { won: false, points: 0 } };
           saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore, infiniteState.currentStreak);
@@ -333,14 +351,17 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
           reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore, infiniteState.currentStreak, false);
         }
         setTimeout(() => setShowModal(true), 1500);
-      } else if (isInfinite && infiniteState) {
-        const newState = { ...infiniteState, guesses: newAttempts };
-        setInfiniteState(newState);
-        saveInfiniteGameState(gameId, difficulty, newState);
+      } else {
+        soundManager.play('buzz');
+        if (isInfinite && infiniteState) {
+          const newState = { ...infiniteState, guesses: newAttempts };
+          setInfiniteState(newState);
+          saveInfiniteGameState(gameId, difficulty, newState);
+        }
       }
       setQuery("");
     }
-  }, [song, attempts, isInfinite, infiniteState, difficulty, gameId, revealedHints]);
+  }, [song, attempts, isInfinite, infiniteState, difficulty, gameId, revealedHints, mode]);
 
   const handleSelectSong = (selected: MasterSong) => {
     setQuery(selected.title);

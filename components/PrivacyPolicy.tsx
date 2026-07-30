@@ -66,6 +66,12 @@ export const PrivacyPolicy: React.FC = () => {
             </div>
 
             <div>
+              <h3 className="text-white font-black uppercase text-xs tracking-widest mb-3">{t('privacy.dataCollection.cloudTitle')}</h3>
+              <p className="mb-2 opacity-80">{t('privacy.dataCollection.cloudDesc1')}</p>
+              <p className="opacity-80">{t('privacy.dataCollection.cloudDesc2')}</p>
+            </div>
+
+            <div>
               <h3 className="text-white font-black uppercase text-xs tracking-widest mb-3">{t('privacy.dataCollection.cookiesTitle')}</h3>
               <p className="mb-4 opacity-80">{t('privacy.dataCollection.cookiesDesc1')}</p>
               <p>{t('privacy.dataCollection.cookiesDesc2')}</p>

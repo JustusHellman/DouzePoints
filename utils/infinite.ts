@@ -1,5 +1,6 @@
 import { MasterSong, InfinitePlacement, InfiniteYear, InfiniteDifficulty, InfiniteGameState, InfiniteRecords, LyricSnippet } from '../data/types.ts';
 import { getActiveMasterData } from '../data/activeData.ts';
+import { syncInfiniteRecordsToFirestore } from './syncService.ts';
 
 const INFINITE_STATE_KEY_PREFIX = 'euro-infinite-state-';
 const INFINITE_RECORDS_KEY = 'euro-infinite-records';
@@ -106,15 +107,18 @@ export const getInfiniteRecords = (): InfiniteRecords => {
 export const saveInfiniteRecord = (gameId: string, difficulty: InfiniteDifficulty, score: number, streak: number, mastered: boolean = false) => {
   const records = getInfiniteRecords();
   const key = `${gameId}_${serializeDifficulty(difficulty)}`;
-  const current = records[key] || { bestScore: 0, bestStreak: 0, mastered: false };
+  const current = records[key] || { bestScore: 0, bestStreak: 0, mastered: false, currentStreak: 0, currentScore: 0 };
   
   records[key] = {
     bestScore: Math.max(current.bestScore, score),
     bestStreak: Math.max(current.bestStreak, streak),
-    mastered: current.mastered || mastered
+    mastered: current.mastered || mastered,
+    currentStreak: streak,
+    currentScore: score
   };
   
   localStorage.setItem(INFINITE_RECORDS_KEY, JSON.stringify(records));
+  syncInfiniteRecordsToFirestore(records).catch(e => console.error("Failed to sync infinite records", e));
 };
 
 export const clearAllInfiniteData = () => {

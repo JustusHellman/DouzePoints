@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { getDayString } from '../../utils/daily.ts';
+import { syncDailyStateToFirestore } from '../../utils/syncService.ts';
+
 import { getEuroLinksPuzzle } from '../../utils/linksGenerator.ts';
 import { updateGameStats } from '../../utils/stats.ts';
 import { GameType, ConnectionsGroup } from '../../data/types.ts';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
+import { soundManager } from '../../utils/sounds.ts';
 
 interface Tile {
   id: string;
@@ -203,6 +206,9 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
     if (completedGroups.length === 0 && mistakes === 0 && selectedIds.length === 0 && !isGameOver) return;
     
     localStorage.setItem(`eurolinks-${getDayString()}`, JSON.stringify({ completedGroups, guessHistory, mistakes, isGameOver, won, selectedIds }));
+    if (isGameOver) {
+      syncDailyStateToFirestore('eurolinks', { completedGroups, guessHistory, mistakes, isGameOver, won }).catch(console.error);
+    }
 
     if (isGameOver) {
       if (won) confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
@@ -211,6 +217,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
 
   const handleSelect = (id: string) => {
     if (isGameOver || showWrongFlash) return;
+    soundManager.play('click');
     if (selectedIds.includes(id)) {
       setSelectedIds(selectedIds.filter(i => i !== id));
     } else if (selectedIds.length < 4) {
@@ -279,10 +286,17 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
         setDisplayTiles(prev => prev.filter(tile => !selectedIds.includes(tile.id)));
         setSelectedIds([]);
         if (newCompleted.length === 4) { 
+          if (mistakes === 0) {
+            soundManager.play('victory');
+          } else {
+            soundManager.play('success');
+          }
           setWon(true); 
           setIsGameOver(true); 
           updateGameStats(GameType.LINKS_GAME, true, { mistakes });
           setShowModal(true); 
+        } else {
+          soundManager.play('success');
         }
       }
     } else {
@@ -304,11 +318,14 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
       }
       
       if (newMistakes >= 6) { 
+        soundManager.play('fail');
         setIsGameOver(true);
         setWon(false);
         setTimeout(() => { 
           revealRemainingGroups();
         }, 800); 
+      } else {
+        soundManager.play('buzz');
       }
       
       setTimeout(() => { 

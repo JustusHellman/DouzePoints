@@ -8,8 +8,15 @@
   
   --animate-fade-in: fadeIn 0.4s ease-out forwards;
   --animate-ping-slow: ping 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+  --animate-border-spin: border-spin 4s linear infinite;
   
   --shadow-3xl: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
+  
+  @keyframes border-spin {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(8px); }
@@ -19,7 +26,7 @@
 
 @layer base {
   body {
-    @apply bg-euro-dark text-white min-h-screen overflow-x-hidden;
+    @apply bg-euro-dark text-white min-h-screen overflow-x-hidden overflow-y-scroll;
     font-family: 'Montserrat', sans-serif;
     background: #050510;
   }
@@ -58,4 +65,42 @@
 
 .glow-text {
   text-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+}
+@keyframes holo {
+  0% { background-position: 100% 100%; }
+  100% { background-position: -100% -100%; }
+}
+@keyframes holoSlide {
+  0% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+.foil-overlay {
+  background-image: 
+    linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.5) 25%, transparent 30%, rgba(255, 215, 0, 0.4) 45%, transparent 55%),
+    linear-gradient(245deg, transparent 20%, rgba(255, 100, 200, 0.4) 30%, transparent 40%, rgba(100, 255, 255, 0.4) 60%, transparent 70%);
+  background-size: 300% 300%;
+  animation: holo 8s ease-in-out infinite alternate;
+}
+
+.legendary-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  transform: skewX(-20deg) translateX(-150%);
+  animation: shimmer 4s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: skewX(-20deg) translateX(250%);
+  }
+}
+
+@keyframes sparkle-pulse-random {
+  0%, 100% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1.2); }
 }

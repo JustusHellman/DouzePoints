@@ -1,6 +1,9 @@
 import { GlobalStats, DetailedStats, GameType } from '../data/types.ts';
 import { getDayString } from './daily.ts';
+import { auth, db } from '../firebase';
+import { doc, deleteField } from 'firebase/firestore';
 import { reportGameScore, reportNewPlayerDiscovery } from './firebaseService.ts';
+import { syncGameResultToFirestore, safeUpdateUserDoc } from './syncService.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getDailyGameState = (config: any, today: string) => {
@@ -70,6 +73,31 @@ const emptyStats = (): DetailedStats => ({
   lastPlayed: "" 
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const sanitizeDetailedStats = (raw: any): DetailedStats => {
+  const base = emptyStats();
+  if (!raw || typeof raw !== 'object') return base;
+  return {
+    played: Number(raw.played) || 0,
+    wins: Number(raw.wins) || 0,
+    perfectGames: Number(raw.perfectGames) || 0,
+    currentStreak: Number(raw.currentStreak) || 0,
+    maxStreak: Number(raw.maxStreak) || 0,
+    distribution: Array.isArray(raw.distribution) && raw.distribution.length === 6 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ? raw.distribution.map((n: any) => Number(n) || 0)
+      : [0, 0, 0, 0, 0, 0],
+    lastPlayed: typeof raw.lastPlayed === 'string' ? raw.lastPlayed : "",
+    dailyCompletion: raw.dailyCompletion ? {
+      won: Boolean(raw.dailyCompletion.won),
+      points: Number(raw.dailyCompletion.points) || 0,
+      isPerfect: Boolean(raw.dailyCompletion.isPerfect),
+      guesses: Array.isArray(raw.dailyCompletion.guesses) ? raw.dailyCompletion.guesses : [],
+      mistakes: Number(raw.dailyCompletion.mistakes) || 0
+    } : undefined
+  };
+};
+
 export const initialGlobalStats: GlobalStats = { 
   word_game: emptyStats(), 
   artists: emptyStats(),
@@ -88,48 +116,50 @@ export const getStoredStats = (): GlobalStats => {
     const parsed = JSON.parse(saved);
     
     return {
-      ...initialGlobalStats,
-      ...parsed,
-      word_game: parsed.word_game || parsed.wordle ? { ...emptyStats(), ...(parsed.word_game || parsed.wordle) } : emptyStats(),
-      artists: parsed.artists ? { ...emptyStats(), ...parsed.artists } : emptyStats(),
-      links: parsed.links || parsed.linksgame ? { ...emptyStats(), ...(parsed.links || parsed.linksgame) } : emptyStats(),
-      guesser: parsed.guesser ? { ...emptyStats(), ...parsed.guesser } : emptyStats(),
-      arena: parsed.arena ? { ...emptyStats(), ...parsed.arena } : emptyStats(),
-      refrain: parsed.refrain ? { ...emptyStats(), ...parsed.refrain } : emptyStats(),
+      word_game: sanitizeDetailedStats(parsed.word_game || parsed.wordle),
+      artists: sanitizeDetailedStats(parsed.artists),
+      links: sanitizeDetailedStats(parsed.links || parsed.linksgame),
+      guesser: sanitizeDetailedStats(parsed.guesser),
+      arena: sanitizeDetailedStats(parsed.arena),
+      refrain: sanitizeDetailedStats(parsed.refrain),
+      totalPoints: Number(parsed.totalPoints) || 0,
+      totalDouzePoints: Number(parsed.totalDouzePoints) || 0,
     };
   } catch {
     return initialGlobalStats;
   }
 };
 
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const calculatePoints = (gameType: GameType, performanceMetrics: any): { points: number; isPerfect: boolean } => {
   let pointsEarned = 0;
   let isPerfect = false;
+  const metrics = performanceMetrics || {};
 
   if (gameType === GameType.WORD_GAME || gameType === GameType.ARTIST_WORD_GAME) {
-    const attempts = performanceMetrics.attempts;
+    const attempts = Number(metrics.attempts ?? metrics.guesses?.length) || 1;
     const pointsMap = [12, 10, 8, 6, 4, 2];
-    pointsEarned = pointsMap[attempts - 1] || 0;
+    pointsEarned = pointsMap[attempts - 1] || 2;
     if (attempts === 1) isPerfect = true;
   } 
   else if (gameType === GameType.LINKS_GAME || gameType === GameType.REFRAIN_GAME) {
-    const mistakes = performanceMetrics.mistakes;
+    const mistakes = Number(metrics.mistakes) || 0;
     const pointsMap = [12, 10, 8, 6, 4, 2];
-    pointsEarned = pointsMap[mistakes] || 0;
+    pointsEarned = pointsMap[mistakes] || 2;
     if (mistakes === 0) isPerfect = true;
   }
   else if (gameType === GameType.GUESSER) {
-    const attemptsCount = performanceMetrics.attempts;
+    const attemptsCount = Number(metrics.attempts ?? metrics.guesses?.length) || 1;
     const pointsMap = [12, 10, 8, 6, 4, 2];
-    pointsEarned = pointsMap[attemptsCount - 1] || 0;
+    pointsEarned = pointsMap[attemptsCount - 1] || 2;
     if (attemptsCount === 1) isPerfect = true;
   }
   else if (gameType === GameType.ARENA) {
-    const attemptsCount = performanceMetrics.attempts;
-    const pointsMap = [12, 12, 10, 8, 6, 4, 2];
-    pointsEarned = pointsMap[attemptsCount - 1] || 0;
-    if (attemptsCount === 1 || attemptsCount === 2) isPerfect = true;
+    const attemptsCount = Number(metrics.attempts ?? metrics.guesses?.length) || 1;
+    const pointsMap = [12, 10, 8, 6, 4, 2];
+    pointsEarned = pointsMap[attemptsCount - 1] || 2;
+    if (attemptsCount === 1) isPerfect = true;
   }
 
   return { points: pointsEarned, isPerfect };
@@ -148,24 +178,26 @@ export const updateGameStats = (gameType: GameType, won: boolean, performanceMet
     case GameType.GUESSER: gameKey = 'guesser'; break;
     case GameType.ARENA: gameKey = 'arena'; break;
     case GameType.REFRAIN_GAME: gameKey = 'refrain'; break;
-    default: return stats;
+    default: console.error("Invalid gameType:", gameType); return stats;
   }
   
-  if (stats[gameKey].lastPlayed === today) return stats;
+  if (stats[gameKey].lastPlayed === today && stats[gameKey].dailyCompletion) return stats;
 
-  stats[gameKey].played += 1;
+  stats[gameKey].played = (Number(stats[gameKey].played) || 0) + 1;
   stats[gameKey].lastPlayed = today;
+  
+  // pack will be awarded during syncGameResultToFirestore
 
   const { points: pointsEarned, isPerfect } = won 
     ? calculatePoints(gameType, performanceMetrics)
     : { points: 0, isPerfect: false };
 
   if (won) {
-    stats[gameKey].wins += 1;
-    stats[gameKey].currentStreak += 1;
-    stats[gameKey].maxStreak = Math.max(stats[gameKey].maxStreak, stats[gameKey].currentStreak);
+    stats[gameKey].wins = (Number(stats[gameKey].wins) || 0) + 1;
+    stats[gameKey].currentStreak = (Number(stats[gameKey].currentStreak) || 0) + 1;
+    stats[gameKey].maxStreak = Math.max((Number(stats[gameKey].maxStreak) || 0), stats[gameKey].currentStreak);
 
-    if (gameType === GameType.WORD_GAME || gameType === GameType.ARTIST_WORD_GAME) {
+    if (gameType === GameType.WORD_GAME || gameType === GameType.ARTIST_WORD_GAME || gameType === GameType.GUESSER || gameType === GameType.ARENA) {
       const attempts = performanceMetrics.attempts;
       if (stats[gameKey].distribution) {
         stats[gameKey].distribution[attempts - 1] = (stats[gameKey].distribution[attempts - 1] || 0) + 1;
@@ -177,57 +209,61 @@ export const updateGameStats = (gameType: GameType, won: boolean, performanceMet
         stats[gameKey].distribution[mistakes] = (stats[gameKey].distribution[mistakes] || 0) + 1;
       }
     }
-    else if (gameType === GameType.GUESSER) {
-      const attemptsCount = performanceMetrics.attempts;
-      if (stats[gameKey].distribution) {
-        stats[gameKey].distribution[attemptsCount - 1] = (stats[gameKey].distribution[attemptsCount - 1] || 0) + 1;
-      }
-    }
-    else if (gameType === GameType.ARENA) {
-      const attemptsCount = performanceMetrics.attempts;
-      let bucketIdx = 0;
-      if (attemptsCount === 1 || attemptsCount === 2) {
-        bucketIdx = 0; // 12 pts
-      } else {
-        bucketIdx = attemptsCount - 2; // 3->1 (10pt), 4->2 (8pt), etc.
-      }
-
-      if (stats[gameKey].distribution) {
-        stats[gameKey].distribution[bucketIdx] = (stats[gameKey].distribution[bucketIdx] || 0) + 1;
-      }
-    }
-
-    stats.totalPoints += pointsEarned;
-    if (isPerfect) {
-      stats[gameKey].perfectGames += 1;
-      stats.totalDouzePoints += 1;
-    }
   } else {
     stats[gameKey].currentStreak = 0;
+  }
+  
+  // Set dailyCompletion
+  let guesses = [];
+  if (gameType === GameType.WORD_GAME || gameType === GameType.ARTIST_WORD_GAME || gameType === GameType.GUESSER || gameType === GameType.ARENA) {
+      guesses = performanceMetrics.guesses || [];
+  }
+  let mistakes = 0;
+  if (gameType === GameType.LINKS_GAME || gameType === GameType.REFRAIN_GAME) {
+      mistakes = performanceMetrics.mistakes || 0;
+  }
+  
+  stats[gameKey].dailyCompletion = {
+    won,
+    points: pointsEarned,
+    isPerfect,
+    guesses,
+    mistakes
+  };
+  
+  if (isPerfect) {
+    stats[gameKey].perfectGames = (Number(stats[gameKey].perfectGames) || 0) + 1;
+  }
+  
+  stats.totalPoints = (Number(stats.totalPoints) || 0) + pointsEarned;
+  if (isPerfect) {
+    stats.totalDouzePoints = (Number(stats.totalDouzePoints) || 0) + 1;
   }
 
   // Report to Firebase (one write per day per game type per device)
   reportGameScore(gameType, pointsEarned);
 
-  // Check if this is the first game ever finished by this user
   const totalPlayedBefore = Object.values(stats).reduce((sum, s) => {
     if (typeof s === 'object' && s !== null && 'played' in s) {
-      return sum + (s.played as number);
+      return sum + (s.played);
     }
     return sum;
   }, 0);
 
-  // If total played was 0 before this update, it's their first game
-  // (Note: we already incremented stats[gameKey].played above, so we check if it was 1 after increment)
   if (totalPlayedBefore === 1) {
     reportNewPlayerDiscovery(`daily_${gameKey}`);
   }
 
   try {
     localStorage.setItem('euro-stats-v2', JSON.stringify(stats));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('euro-stats-updated'));
+    }
   } catch (err) {
     console.error("Failed to save stats", err);
   }
+  
+  syncGameResultToFirestore(stats, true).catch(err => console.error("Failed to sync stats with pack reward", err));
   return stats;
 };
 
@@ -239,70 +275,122 @@ export const getNextRank = (points: number) => {
   return RANK_TIERS.find(tier => tier.threshold > points);
 };
 
-export const resetDailyProgressForDev = () => {
+export const resetDailyProgressForDev = async () => {
   if (!import.meta.env.DEV) return;
   
   const today = getDayString();
-  const stats = getStoredStats();
-  
   const games = [
-    { id: 'eurosong', type: GameType.WORD_GAME, key: 'word_game' },
-    { id: 'euroartist', type: GameType.ARTIST_WORD_GAME, key: 'artists' },
-    { id: 'eurolinks', type: GameType.LINKS_GAME, key: 'links' },
-    { id: 'euroguess', type: GameType.GUESSER, key: 'guesser' },
-    { id: 'euroarena', type: GameType.ARENA, key: 'arena' },
-    { id: 'eurorefrain', type: GameType.REFRAIN_GAME, key: 'refrain' }
+    { id: 'eurosong' },
+    { id: 'euroartist' },
+    { id: 'eurolinks' },
+    { id: 'euroguess' },
+    { id: 'euroarena' },
+    { id: 'eurorefrain' },
+    { id: 'eurobingo' }
   ];
 
-  let pointsToSubtract = 0;
-  let douzePointsToSubtract = 0;
-
+  // Remove daily game progress for today from local storage
   games.forEach(game => {
-    const saved = localStorage.getItem(`${game.id}-${today}`);
-    if (saved) {
-      try {
-        const dailyData = JSON.parse(saved);
-        if (dailyData.isGameOver && dailyData.won) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          let metrics: any = {};
-          if (game.id === 'eurosong' || game.id === 'euroartist' || game.id === 'euroarena') {
-            metrics = { attempts: dailyData.guesses?.length || dailyData.attempts?.length || 0 };
-          } else if (game.id === 'eurolinks' || game.id === 'eurorefrain') {
-            metrics = { mistakes: dailyData.mistakes };
-          } else if (game.id === 'euroguess') {
-            metrics = { attempts: dailyData.attempts?.length || 0 };
-          }
-          
-          const { points, isPerfect } = calculatePoints(game.type, metrics);
-          pointsToSubtract += points;
-          if (isPerfect) douzePointsToSubtract += 1;
-          
-          // Also decrement stats
-          if (stats[game.key as keyof GlobalStats]) {
-            const gameStats = stats[game.key as keyof GlobalStats] as DetailedStats;
-            if (gameStats.lastPlayed === today) {
-              gameStats.played = Math.max(0, gameStats.played - 1);
-              gameStats.wins = Math.max(0, gameStats.wins - 1);
-              if (isPerfect) gameStats.perfectGames = Math.max(0, gameStats.perfectGames - 1);
-              gameStats.currentStreak = Math.max(0, gameStats.currentStreak - 1);
-              gameStats.lastPlayed = ""; // Reset last played
-            }
-          }
-        }
-      } catch {
-        // ignore parse errors
+    localStorage.removeItem(`${game.id}-${today}`);
+  });
+
+  // Revert today's score additions from global stats
+  const stats = getStoredStats();
+  let pointsToDeduct = 0;
+  let douzePointsToDeduct = 0;
+  const statsUpdates: Record<string, DetailedStats> = {};
+
+  ['word_game', 'artists', 'links', 'guesser', 'arena', 'refrain'].forEach(gameKey => {
+    const stat = stats[gameKey as keyof GlobalStats] as DetailedStats;
+    if (stat && stat.dailyCompletion) {
+      pointsToDeduct += stat.dailyCompletion.points || 0;
+      if (stat.dailyCompletion.isPerfect) {
+        douzePointsToDeduct += 1;
+        stat.perfectGames = Math.max(0, stat.perfectGames - 1);
       }
       
-      // Remove the daily save
-      localStorage.removeItem(`${game.id}-${today}`);
+      stat.played = Math.max(0, stat.played - 1);
+      if (stat.dailyCompletion.won) {
+        stat.wins = Math.max(0, stat.wins - 1);
+        stat.currentStreak = Math.max(0, stat.currentStreak - 1);
+        
+        // Revert max streak if it was just increased
+        if (stat.maxStreak > 0 && stat.maxStreak === stat.currentStreak + 1) {
+          stat.maxStreak = stat.currentStreak;
+        }
+
+        // Revert distribution (point history)
+        if (['word_game', 'artists', 'guesser', 'arena'].includes(gameKey)) {
+          const attempts = stat.dailyCompletion.guesses?.length;
+          if (attempts && stat.distribution && stat.distribution[attempts - 1] > 0) {
+            stat.distribution[attempts - 1] -= 1;
+          }
+        } else if (['links', 'refrain'].includes(gameKey)) {
+          const mistakes = stat.dailyCompletion.mistakes ?? 0;
+          if (stat.distribution && stat.distribution[mistakes] > 0) {
+            stat.distribution[mistakes] -= 1;
+          }
+        }
+      }
+      
+      // Clear lastPlayed if it was today so they can play again
+      if (stat.lastPlayed === today) {
+        stat.lastPlayed = "";
+      }
+      
+      delete stat.dailyCompletion;
+      statsUpdates[`stats.${gameKey}`] = stat;
     }
   });
 
-  stats.totalPoints = Math.max(0, stats.totalPoints - pointsToSubtract);
-  stats.totalDouzePoints = Math.max(0, stats.totalDouzePoints - douzePointsToSubtract);
+  stats.totalPoints = Math.max(0, stats.totalPoints - pointsToDeduct);
+  stats.totalDouzePoints = Math.max(0, stats.totalDouzePoints - douzePointsToDeduct);
   
   localStorage.setItem('euro-stats-v2', JSON.stringify(stats));
-  
-  // Reload the page to reflect changes
-  window.location.reload();
+
+  // Reset dailyPacksEarned inside collection in localStorage (preserving availablePacks)
+  const cachedCollectionStr = localStorage.getItem('douzepoints_eurocards_collection');
+  let collectionToSave = {
+    cards: {},
+    availablePacks: 0,
+    packsOpened: 0,
+    dailyPacksEarned: 0,
+    lastDailyReset: Date.now(),
+    confetti: 0
+  };
+  if (cachedCollectionStr) {
+    try {
+      const parsed = JSON.parse(cachedCollectionStr);
+      collectionToSave = {
+        ...parsed,
+        dailyPacksEarned: 0,
+        lastDailyReset: Date.now()
+      };
+    } catch {
+      // fallback
+    }
+  }
+  localStorage.setItem('douzepoints_eurocards_collection', JSON.stringify(collectionToSave));
+
+  if (auth.currentUser) {
+    const userRef = doc(db, 'users', auth.currentUser.uid);
+    const updates = {
+      'collection.dailyPacksEarned': 0,
+      'collection.lastDailyReset': Date.now(),
+      cards: deleteField(), // remove legacy top-level cards field if present
+      dailyState: {}, // reset daily state for today
+      totalPoints: stats.totalPoints,
+      totalDouzePoints: stats.totalDouzePoints,
+      ...statsUpdates
+    };
+
+    try {
+      await safeUpdateUserDoc(userRef, updates);
+    } catch (e) {
+      console.warn("safeUpdateUserDoc failed during dev reset:", e);
+    }
+    window.location.reload();
+  } else {
+    window.location.reload();
+  }
 };

@@ -66,5 +66,11 @@ export const PATCH_NOTES: PatchNote[] = [
     date: "2026-07-03",
     title: "Eurovision 2026",
     description: "Hey! Sorry for the longER break! It's been quite some time since we had the nerve wracking final but I've finally added in the result of 2026! So starting from tomorrow (July the 4:th) you may start seeing this years entries in the daily challenges as well as in the Encore mode. Thanks for playing and stay put for future updates!",
+  },
+  {
+    id: "11",
+    date: "2026-07-30",
+    title: "EuroCollection and sound effects",
+    description: "Today we're releasing the next game on our site - It's a card collecting game which ties together with our other games! In EuroCollection, you earn a card pack containing 6 cards every time you finish any of the daily games. These card represent one Eurovision Content entry each! You can view them in sets and if you get duplicates you'll be awarded with conteffi with which you can craft cards you don't already own! Fancy, huh? And right, I've also added some sound effects! Don't like it? Well you can turn them off in the new profile settings in the top right!\n\nThank you so much for sicking around, I love the continued support! More updates coming soon!",
   }
 ];
