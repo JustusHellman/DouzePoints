@@ -463,7 +463,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
       }
       setInfiniteState(nextState);
       saveInfiniteGameState(gameId, difficulty, nextState);
-      saveInfiniteRecord(gameId, difficulty, nextState.currentScore, nextState.currentStreak);
+      saveInfiniteRecord(gameId, difficulty, nextState.currentScore, nextState.currentStreak, false, false);
       
       // Reset local game state for the next round
       setGuesses([]);
@@ -480,7 +480,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
   const handleTryAgain = useCallback(() => {
     if (mode === 'infinite') {
       if (infiniteState) {
-        saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore, infiniteState.currentStreak);
+        saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore, infiniteState.currentStreak, false, true);
       }
       const newState = startNewInfiniteGame(gameId, difficulty, validPool);
       setInfiniteState(newState);
@@ -529,9 +529,9 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
             if (mode === 'infinite' && infiniteState) {
               const nextState = { ...infiniteState, guesses: newGuesses, isGameOver: true, won: true, lastResult: { won: true, points: pts } };
               saveInfiniteGameState(gameId, difficulty, nextState);
-              saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore + pts, infiniteState.currentStreak + 1);
-              setInfiniteState(nextState);
               const isExhausted = infiniteState.currentIndex + 1 >= infiniteState.shuffledIds.length;
+              saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore + pts, infiniteState.currentStreak + 1, false, isExhausted);
+              setInfiniteState(nextState);
               if (isExhausted) {
                 reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore + pts, infiniteState.currentStreak + 1, true);
               }
@@ -549,7 +549,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
             if (mode === 'infinite' && infiniteState) {
               // On loss, the run is over. We can save the record now.
               const nextState = { ...infiniteState, guesses: newGuesses, isGameOver: true, won: false, lastResult: { won: false, points: 0 } };
-              saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore, infiniteState.currentStreak);
+              saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore, infiniteState.currentStreak, false, true);
               clearInfiniteGameState(gameId, difficulty);
               setInfiniteState(nextState);
               reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore, infiniteState.currentStreak, false);

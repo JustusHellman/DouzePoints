@@ -271,9 +271,9 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
       if (mode === 'infinite' && infiniteState) {
         const nextState = { ...infiniteState, guesses: newGuesses.map(g => String(g.id)), isGameOver: true, lastResult: { won: true, points: pts } };
         saveInfiniteGameState(gameId, difficulty, nextState);
-        saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore + pts, infiniteState.currentStreak + 1);
-        setInfiniteState(nextState);
         const isExhausted = infiniteState.currentIndex + 1 >= infiniteState.shuffledIds.length;
+        saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore + pts, infiniteState.currentStreak + 1, false, isExhausted);
+        setInfiniteState(nextState);
         if (isExhausted) {
           reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore + pts, infiniteState.currentStreak + 1, true);
         }
@@ -287,7 +287,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
       setIsGameOver(true); 
       setWon(false);
       if (mode === 'infinite' && infiniteState) {
-        saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore, infiniteState.currentStreak);
+        saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore, infiniteState.currentStreak, false, true);
         const nextState = { ...infiniteState, guesses: newGuesses.map(g => String(g.id)), isGameOver: true, lastResult: { won: false, points: 0 } };
         clearInfiniteGameState(gameId, difficulty);
         setInfiniteState(nextState);
@@ -386,7 +386,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
       const nextState = advanceInfiniteGame(gameId, difficulty, infiniteState, pts, true);
       setInfiniteState(nextState);
       saveInfiniteGameState(gameId, difficulty, nextState);
-      saveInfiniteRecord(gameId, difficulty, nextState.currentScore, nextState.currentStreak);
+      saveInfiniteRecord(gameId, difficulty, nextState.currentScore, nextState.currentStreak, false, false);
       
       setGuesses([]);
       setQuery("");
@@ -412,7 +412,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
   const handleTryAgain = useCallback(() => {
     if (mode === 'infinite') {
       if (infiniteState) {
-        saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore, infiniteState.currentStreak);
+        saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore, infiniteState.currentStreak, false, true);
       }
       const newState = startNewInfiniteGame(gameId, difficulty);
       setInfiniteState(newState);

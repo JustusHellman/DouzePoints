@@ -316,8 +316,8 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
         const nextState = { ...infiniteState, guesses: newAttempts, isGameOver: true, lastResult: { won: true, points: pts } };
         setInfiniteState(nextState);
         saveInfiniteGameState(gameId, difficulty, nextState);
-        saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore + pts, infiniteState.currentStreak + 1);
         const isExhausted = infiniteState.currentIndex + 1 >= infiniteState.shuffledIds.length;
+        saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore + pts, infiniteState.currentStreak + 1, false, isExhausted);
         if (isExhausted) {
           reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore + pts, infiniteState.currentStreak + 1, true);
         }
@@ -345,7 +345,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
           }
         } else if (infiniteState) {
           const nextState = { ...infiniteState, guesses: newAttempts, isGameOver: true, lastResult: { won: false, points: 0 } };
-          saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore, infiniteState.currentStreak);
+          saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore, infiniteState.currentStreak, false, true);
           clearInfiniteGameState(gameId, difficulty);
           setInfiniteState(nextState);
           reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore, infiniteState.currentStreak, false);
@@ -375,7 +375,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
       const nextState = advanceInfiniteGame(gameId, difficulty, infiniteState, points, true);
       setInfiniteState(nextState);
       saveInfiniteGameState(gameId, difficulty, nextState);
-      saveInfiniteRecord(gameId, difficulty, nextState.currentScore, nextState.currentStreak);
+      saveInfiniteRecord(gameId, difficulty, nextState.currentScore, nextState.currentStreak, false, false);
       
       setShowModal(false);
       setIsGameOver(false);
@@ -402,7 +402,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
   const handleTryAgain = useCallback(() => {
     if (!isInfinite) return;
     if (infiniteState) {
-      saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore, infiniteState.currentStreak);
+      saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore, infiniteState.currentStreak, false, true);
     }
     const pool = getInfiniteDifficultyPool(difficulty);
     const newState = startNewInfiniteGame(gameId, difficulty, pool);
