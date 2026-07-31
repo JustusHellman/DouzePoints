@@ -104,7 +104,14 @@ export const getInfiniteRecords = (): InfiniteRecords => {
   }
 };
 
-export const saveInfiniteRecord = (gameId: string, difficulty: InfiniteDifficulty, score: number, streak: number, mastered: boolean = false) => {
+export const saveInfiniteRecord = (
+  gameId: string, 
+  difficulty: InfiniteDifficulty, 
+  score: number, 
+  streak: number, 
+  mastered: boolean = false,
+  syncToFirestore: boolean = false
+) => {
   const records = getInfiniteRecords();
   const key = `${gameId}_${serializeDifficulty(difficulty)}`;
   const current = records[key] || { bestScore: 0, bestStreak: 0, mastered: false, currentStreak: 0, currentScore: 0 };
@@ -118,7 +125,9 @@ export const saveInfiniteRecord = (gameId: string, difficulty: InfiniteDifficult
   };
   
   localStorage.setItem(INFINITE_RECORDS_KEY, JSON.stringify(records));
-  syncInfiniteRecordsToFirestore(records).catch(e => console.error("Failed to sync infinite records", e));
+  if (syncToFirestore) {
+    syncInfiniteRecordsToFirestore(records).catch(e => console.error("Failed to sync infinite records", e));
+  }
 };
 
 export const clearAllInfiniteData = () => {
@@ -200,7 +209,10 @@ export const advanceInfiniteGame = (
     // Finished all items in the pool or lost!
     newState.isGameOver = true;
     const isMastered = nextIndex >= state.shuffledIds.length && won;
-    saveInfiniteRecord(gameId, difficulty, newScore, newStreak, isMastered);
+    saveInfiniteRecord(gameId, difficulty, newScore, newStreak, isMastered, true);
+  } else {
+    // Mid-run: update local records without triggering Firestore writes
+    saveInfiniteRecord(gameId, difficulty, newScore, newStreak, false, false);
   }
 
   saveInfiniteGameState(gameId, difficulty, newState);
