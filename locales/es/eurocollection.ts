@@ -6,7 +6,9 @@ export default {
     "viewGallery": "Ver galería",
     "packsEarnedToday": "SOBRES GANADOS HOY",
     "dailyLimitReached": "¡Límite diario alcanzado. Vuelve mañana!",
-    "playMoreGames": "Juega más juegos para ganar sobres.",
+    "playMoreGames": "¡Puedes ganar 1 sobre por cada victoria diaria y 1 sobre por cada racha de 5 en el modo Encore!",
+    "packEarnedStamp": "¡+1 SOBRE GANADO!",
+    "tapToOpen": "TOCA PARA ABRIR ➔",
     "yourPacks": "Tus sobres",
     "packsDescription1": "Juega juegos diarios para ganar hasta",
     "packsDescription2": "sobres cada día",
@@ -15,6 +17,7 @@ export default {
     "opening": "Abriendo...",
     "openPack": "Abrir sobre",
     "open6Packs": "Abrir 6 sobres",
+    "openXPacks": "Abrir {count} sobres",
     "newCards": "¡Nuevas cartas!",
     "collectAll": "Recoger todo",
     "flipAll": "Voltear todo",
@@ -35,6 +38,9 @@ export default {
     "group": "Grupo:",
     "sort": "Ordenar:",
     "showUnowned": "Mostrar no obtenidas",
-    "cards": "Cartas"
+    "cards": "Cartas",
+    "searchPlaceholder": "Buscar por canción, artista, país, año...",
+    "noSearchResults": "No se encontraron cartas que coincidan con tu búsqueda.",
+    "clearSearch": "Borrar búsqueda"
   }
 };

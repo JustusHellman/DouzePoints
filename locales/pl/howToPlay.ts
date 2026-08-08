@@ -22,7 +22,7 @@ export default {
       "title": "EuroLinks",
       "desc": "Połącz 4 powiązane elementy Eurowizji.",
       "rulesShort": "Pogrupuj 16 elementów Eurowizji w cztery kategorie po cztery na podstawie wspólnego powiązania. Dozwolone 6 błędów.",
-      "rulesLong": "EuroLinks to gra logiczna i wiedzy o Eurowizji. Musisz znaleźć ukryte powiązania między 16 różnymi elementami związanymi z konkursem.\n\nJak grać:\n• Siatka zawiera 16 elementów, które można pogrupować w cztery kategorie po cztery elementy każda.\n• Kategorie mogą obejmować zakres od „Zwycięzcy z lat 90.” po „Kraje, które nigdy nie wygrały” lub „Artyści, którzy startowali wielokrotnie”.\n• Wybierz cztery elementy i dotknij „Zatwierdź”, aby sprawdzić, czy dzielą kategorię.\n• Masz prawo do 6 błędów, aby rozwiązać całą zagadkę.\n• Każda kategoria ma poziom trudności, od prostych po eksperckie ciekawostki!"
+      "rulesLong": "EuroLinks to gra logiczna i ciekawostki o Eurowizji. Musisz znaleźć ukryte powiązania między 16 różnymi elementami związanymi z konkursem.\n\nJak grać:\n• Siatka zawiera 16 elementów, które można pogrupować w cztery kategorie po cztery elementy w każdej.\n• Wybierz cztery elementy i kliknij 'Prześlij', aby sprawdzić, czy współdzielą kategorię.\n• Jeśli Twój wybór jest prawidłowy, kategoria zostanie odkryta.\n• Jeśli jest nieprawidłowy, liczy się jako błąd. Jeśli masz 3 prawidłowe elementy, zostaniesz powiadomiony, że brakuje Ci tylko jednego.\n• Masz prawo do 6 błędów, aby rozwiązać całą łamigłówkę.\n• Każda kategoria ma poziom trudności, który po rozwiązaniu określa jej kolor: Żółty (Łatwy), Zielony (Średni), Niebieski (Trudny) i Fioletowy (Ekspert)."
     },
     "euroguess": {
       "title": "EuroGuess",

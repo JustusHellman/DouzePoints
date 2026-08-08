@@ -6,7 +6,9 @@ export default {
     "viewGallery": "Zobacz galerię",
     "packsEarnedToday": "PAKIETY ZDOBYTE DZISIAJ",
     "dailyLimitReached": "Osiągnięto dzienny limit. Wróć jutro!",
-    "playMoreGames": "Graj w więcej gier, aby zdobywać pakiety.",
+    "playMoreGames": "Możesz zdobyć 1 paczkę za wygraną grę dzienną oraz 1 paczkę za każdą serię 5 wygranych w trybie Encore!",
+    "packEarnedStamp": "+1 PACZKA ZDOBYTA!",
+    "tapToOpen": "DOTKNIJ, ABY OTWORZYĆ ➔",
     "yourPacks": "Twoje pakiety",
     "packsDescription1": "Graj w codzienne gry, aby zdobyć do",
     "packsDescription2": "pakietów każdego dnia",
@@ -15,6 +17,7 @@ export default {
     "opening": "Otwieranie...",
     "openPack": "Otwórz pakiet",
     "open6Packs": "Otwórz 6 pakietów",
+    "openXPacks": "Otwórz {count} pakietów",
     "newCards": "Nowe karty!",
     "collectAll": "Zbierz wszystko",
     "flipAll": "Obróć wszystko",
@@ -35,6 +38,9 @@ export default {
     "group": "Grupa:",
     "sort": "Sortuj:",
     "showUnowned": "Pokaż nieposiadane",
-    "cards": "Karty"
+    "cards": "Karty",
+    "searchPlaceholder": "Szukaj według piosenki, wykonawcy, kraju, roku...",
+    "noSearchResults": "Nie znaleziono kart pasujących do wyszukiwania.",
+    "clearSearch": "Wyczyść wyszukiwanie"
   }
 };

@@ -22,7 +22,7 @@ export default {
       "title": "EuroLinks",
       "desc": "Connect 4 related Eurovision items.",
       "rulesShort": "Group 16 Eurovision items into four categories of four based on a shared connection. 6 mistakes allowed.",
-      "rulesLong": "EuroLinks is a game of logic and Eurovision trivia. You must find the hidden connections between 16 different items related to the contest.\n\nHow to play:\n• The grid contains 16 items that can be grouped into four categories of four items each.\n• Categories can range from 'Winners from the 90s' to 'Countries that have never won' or 'Artists who competed multiple times'.\n• Select four items and tap 'Submit' to check if they share a category.\n• You have 6 mistakes allowed to solve the entire puzzle.\n• Each category has a difficulty level, ranging from straightforward to expert-level trivia!"
+      "rulesLong": "EuroLinks is a game of logic and Eurovision trivia. You must find the hidden connections between 16 different items related to the contest.\n\nHow to play:\n• The grid contains 16 items that can be grouped into four categories of four items each.\n• Select four items and tap 'Submit' to check if they share a category.\n• If your guess is correct, the category will be revealed.\n• If your guess is incorrect, it counts as a mistake. If you have 3 correct items, you'll be notified that you are \"one away\".\n• You have 6 mistakes allowed to solve the entire puzzle.\n• Each category has a difficulty level, revealed by its color when solved: Yellow (Easy), Green (Medium), Blue (Hard), and Purple (Expert)."
     },
     "euroguess": {
       "title": "EuroGuess",

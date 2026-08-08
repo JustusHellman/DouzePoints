@@ -6,7 +6,9 @@ export default {
     "viewGallery": "Galerij bekijken",
     "packsEarnedToday": "VANDAAG VERDIENDE PAKKETEN",
     "dailyLimitReached": "Dagelijks limiet bereikt. Kom morgen terug!",
-    "playMoreGames": "Speel meer spellen om pakketten te verdienen.",
+    "playMoreGames": "Je kunt 1 pakket verdienen voor elke dagelijkse overwinning en 1 pakket per 5 opeenvolgende zeges in Encore-modus!",
+    "packEarnedStamp": "+1 PAKKET VERDIEND!",
+    "tapToOpen": "TIK OM TE OPENEN ➔",
     "yourPacks": "Jouw pakketten",
     "packsDescription1": "Speel dagelijkse spellen om tot wel",
     "packsDescription2": "pakketten per dag te verdienen",
@@ -15,6 +17,7 @@ export default {
     "opening": "Openen...",
     "openPack": "Pakket openen",
     "open6Packs": "6 Pakketten openen",
+    "openXPacks": "{count} Pakketten openen",
     "newCards": "Nieuwe kaarten!",
     "collectAll": "Alles verzamelen",
     "flipAll": "Alles omdraaien",
@@ -35,6 +38,9 @@ export default {
     "group": "Groep:",
     "sort": "Sorteren:",
     "showUnowned": "Toon niet-bezeten",
-    "cards": "Kaarten"
+    "cards": "Kaarten",
+    "searchPlaceholder": "Zoek op nummer, artiest, land, jaar...",
+    "noSearchResults": "Geen kaarten gevonden die overeenkomen met je zoekopdracht.",
+    "clearSearch": "Zoekopdracht wis"
   }
 };

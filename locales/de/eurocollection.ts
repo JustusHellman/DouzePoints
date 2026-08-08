@@ -6,7 +6,9 @@ export default {
     "viewGallery": "Galerie ansehen",
     "packsEarnedToday": "HEUTE VERDIENTE PACKS",
     "dailyLimitReached": "Tageslimit erreicht. Komm morgen wieder!",
-    "playMoreGames": "Spiele mehr Spiele, um Packs zu verdienen.",
+    "playMoreGames": "Du kannst 1 Pack für jeden Tagessieg und 1 Pack für alle 5 Siege in Folge im Encore-Modus verdienen!",
+    "packEarnedStamp": "+1 PACK VERDIENT!",
+    "tapToOpen": "TIPPEN ZUM ÖFFNEN ➔",
     "yourPacks": "Deine Packs",
     "packsDescription1": "Spiele tägliche Spiele, um bis zu",
     "packsDescription2": "Packs jeden Tag zu verdienen",
@@ -15,6 +17,7 @@ export default {
     "opening": "Wird geöffnet...",
     "openPack": "Pack öffnen",
     "open6Packs": "6 Packs öffnen",
+    "openXPacks": "{count} Packs öffnen",
     "newCards": "Neue Karten!",
     "collectAll": "Alle einsammeln",
     "flipAll": "Alle umdrehen",
@@ -35,6 +38,9 @@ export default {
     "group": "Gruppe:",
     "sort": "Sortieren:",
     "showUnowned": "Nicht besessene anzeigen",
-    "cards": "Karten"
+    "cards": "Karten",
+    "searchPlaceholder": "Nach Titel, Interpret, Land, Jahr suchen...",
+    "noSearchResults": "Keine Karten gefunden, die deiner Suche entsprechen.",
+    "clearSearch": "Suche zurücksetzen"
   }
 };

@@ -6,7 +6,9 @@ export default {
     "viewGallery": "Ver galeria",
     "packsEarnedToday": "PACOTES GANHOS HOJE",
     "dailyLimitReached": "Limite diário atingido. Volte amanhã!",
-    "playMoreGames": "Jogue mais jogos para ganhar pacotes.",
+    "playMoreGames": "Pode ganhar 1 pacote por cada vitória diária e 1 pacote a cada sequência de 5 no modo Encore!",
+    "packEarnedStamp": "+1 PACOTE GANHO!",
+    "tapToOpen": "TOQUE PARA ABRIR ➔",
     "yourPacks": "Os seus pacotes",
     "packsDescription1": "Jogue jogos diários para ganhar até",
     "packsDescription2": "pacotes todos os dias",
@@ -15,6 +17,7 @@ export default {
     "opening": "A abrir...",
     "openPack": "Abrir pacote",
     "open6Packs": "Abrir 6 pacotes",
+    "openXPacks": "Abrir {count} pacotes",
     "newCards": "Novas cartas!",
     "collectAll": "Coletar tudo",
     "flipAll": "Virar tudo",
@@ -35,6 +38,9 @@ export default {
     "group": "Grupo:",
     "sort": "Ordenar:",
     "showUnowned": "Mostrar não obtidas",
-    "cards": "Cartas"
+    "cards": "Cartas",
+    "searchPlaceholder": "Pesquisar por canção, artista, país, ano...",
+    "noSearchResults": "Nenhuma carta encontrada que corresponda à sua pesquisa.",
+    "clearSearch": "Limpar pesquisa"
   }
 };

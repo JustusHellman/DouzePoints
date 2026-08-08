@@ -22,7 +22,7 @@ export default {
       "title": "EuroLinks",
       "desc": "Yhdistä 4 toisiinsa liittyvää Euroviisu-asiaa.",
       "rulesShort": "Ryhmittele 16 Euroviisu-asiaa neljään neljän ryhmään yhteisen tekijän perusteella. 6 virhettä sallittu.",
-      "rulesLong": "EuroLinks on logiikkaa ja Euroviisu-tietämystä testaava peli. Sinun on löydettävä piilotetut yhteydet 16 eri kilpailuun liittyvän asian välillä.\n\nKuinka pelata:\n• Ruudukko sisältää 16 asiaa, jotka voidaan ryhmitellä neljään kategoriaan, joissa kussakin on neljä asiaa.\n• Kategoriat voivat vaihdella '90-luvun voittajista' 'maihin, jotka eivät ole koskaan voittaneet' tai 'artisteihin, jotka ovat kilpailleet useita kertoja'.\n• Valitse neljä asiaa ja paina 'Lähetä' tarkistaaksesi, kuuluvatko ne samaan kategoriaan.\n• Sinulla on 6 virhettä sallittu koko palapelin ratkaisemiseen.\n• Jokaisella kategorialla on vaikeustaso, joka vaihtelee helposta asiantuntijatason tietämykseen!"
+      "rulesLong": "EuroLinks on logiikka- ja Euroviisu-tietopeli. Sinun on löydettävä piilotetut yhteydet 16 eri kilpailuun liittyvän kohteen välillä.\n\nKuinka pelata:\n• Ruudukko sisältää 16 kohdetta, jotka voidaan ryhmitellä neljään neljän kohteen kategoriaan.\n• Valitse neljä kohdetta ja napauta 'Lähetä' tarkistaaksesi, jakavatko ne kategorian.\n• Jos arvauksesi on oikein, kategoria paljastetaan.\n• Jos se on väärin, se lasketaan virheeksi. Jos sinulla on 3 oikeaa kohdetta, saat ilmoituksen, että olet \"yhden päässä\".\n• Sinulla on 6 virhettä aikaa ratkaista koko pulma.\n• Jokaisella kategorialla on vaikeustaso, joka paljastuu sen värin perusteella, kun se on ratkaistu: Keltainen (Helppo), Vihreä (Keskitaso), Sininen (Vaikea) ja Violetti (Asiantuntija)."
     },
     "euroguess": {
       "title": "EuroGuess",

@@ -6,7 +6,9 @@ export default {
     "viewGallery": "Voir la galerie",
     "packsEarnedToday": "BOOSTERS GAGNÉS AUJOURD'HUI",
     "dailyLimitReached": "Limite quotidienne atteinte. Revenez demain !",
-    "playMoreGames": "Jouez à d'autres jeux pour gagner des boosters.",
+    "playMoreGames": "Vous pouvez gagner 1 booster pour chaque victoire quotidienne et 1 booster tous les 5 succès d'affilée en mode Encore !",
+    "packEarnedStamp": "+1 BOOSTER GAGNÉ !",
+    "tapToOpen": "APPUYEZ POUR OUVRIR ➔",
     "yourPacks": "Vos boosters",
     "packsDescription1": "Jouez aux jeux quotidiens pour gagner jusqu'à",
     "packsDescription2": "boosters chaque jour",
@@ -15,6 +17,7 @@ export default {
     "opening": "Ouverture...",
     "openPack": "Ouvrir un booster",
     "open6Packs": "Ouvrir 6 boosters",
+    "openXPacks": "Ouvrir {count} boosters",
     "newCards": "Nouvelles cartes !",
     "collectAll": "Tout récupérer",
     "flipAll": "Tout retourner",
@@ -35,6 +38,9 @@ export default {
     "group": "Groupe :",
     "sort": "Trier :",
     "showUnowned": "Afficher les manquantes",
-    "cards": "Cartes"
+    "cards": "Cartes",
+    "searchPlaceholder": "Rechercher par titre, artiste, pays, année...",
+    "noSearchResults": "Aucune carte ne correspond à votre recherche.",
+    "clearSearch": "Effacer la recherche"
   }
 };

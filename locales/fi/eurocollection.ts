@@ -6,7 +6,9 @@ export default {
     "viewGallery": "Näytä galleria",
     "packsEarnedToday": "TÄNÄÄN ANSAITUT PAKETIT",
     "dailyLimitReached": "Päivittäinen raja saavutettu. Tule takaisin huomenna!",
-    "playMoreGames": "Pelaa lisää pelejä ansaitaksesi paketteja.",
+    "playMoreGames": "Voit ansaita 1 paketin jokaisesta päivittäisestä voitosta ja 1 paketin jokaisesta 5 voiton putkesta Encore-tilassa!",
+    "packEarnedStamp": "+1 PAKETTI ANSAITTU!",
+    "tapToOpen": "PAINA AVATAKSESI ➔",
     "yourPacks": "Sinun pakettisi",
     "packsDescription1": "Pelaa päivittäisiä pelejä ansaitaksesi jopa",
     "packsDescription2": "pakettia joka päivä",
@@ -15,6 +17,7 @@ export default {
     "opening": "Avataan...",
     "openPack": "Avaa paketti",
     "open6Packs": "Avaa 6 pakettia",
+    "openXPacks": "Avaa {count} pakettia",
     "newCards": "Uusia kortteja!",
     "collectAll": "Kerää kaikki",
     "flipAll": "Käännä kaikki",
@@ -35,6 +38,9 @@ export default {
     "group": "Ryhmä:",
     "sort": "Järjestä:",
     "showUnowned": "Näytä puuttuvat",
-    "cards": "Kortit"
+    "cards": "Kortit",
+    "searchPlaceholder": "Hae kappaleen, artistin, maan, vuoden mukaan...",
+    "noSearchResults": "Hakua vastaavia kortteja ei löytynyt.",
+    "clearSearch": "Tyhjennä haku"
   }
 };

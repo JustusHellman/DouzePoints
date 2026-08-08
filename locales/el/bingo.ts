@@ -87,6 +87,8 @@ export default {
       roomSupport: "Τα δωμάτια υποστηρίζουν έως και 10 παίκτες.",
       liveMultiplayer: "Ζωντανό Multiplayer",
       joiningRoom: "Είσοδος στο δωμάτιο...",
+      myBoard: "Το ταμπλό σας",
+      view: "Προβολή",
       noActivity: "Καμία δραστηριότητα ακόμα. Σημειώστε ένα τετράγωνο για να ξεκινήσετε!",
       gotABingo: "ΕΚΑΝΕ BINGO!",
       gotAFullHouse: "ΕΚΑΝΕ FULL HOUSE!",
