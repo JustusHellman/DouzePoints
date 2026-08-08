@@ -6,7 +6,9 @@ export default {
     "viewGallery": "Visa galleri",
     "packsEarnedToday": "PAKET INTJÄNADE IDAG",
     "dailyLimitReached": "Dagsgränsen nådd. Kom tillbaka imorgon!",
-    "playMoreGames": "Spela fler spel för att tjäna paket.",
+    "playMoreGames": "Du kan tjäna 1 paket för varje daglig vinst och 1 paket för varje 5 i rad i Encore-läget!",
+    "packEarnedStamp": "+1 PAKET INTJÄNAT!",
+    "tapToOpen": "TRYCK FÖR ATT ÖPPNA ➔",
     "yourPacks": "Dina paket",
     "packsDescription1": "Spela dagliga spel för att tjäna upp till",
     "packsDescription2": "paket varje dag",
@@ -15,6 +17,7 @@ export default {
     "opening": "Öppnar...",
     "openPack": "Öppna paket",
     "open6Packs": "Öppna 6 paket",
+    "openXPacks": "Öppna {count} paket",
     "newCards": "Nya kort!",
     "collectAll": "Samla alla",
     "flipAll": "Vänd alla",
@@ -35,6 +38,9 @@ export default {
     "group": "Grupp:",
     "sort": "Sortera:",
     "showUnowned": "Visa ej ägda",
-    "cards": "Kort"
+    "cards": "Kort",
+    "searchPlaceholder": "Sök på låt, artist, land, år...",
+    "noSearchResults": "Inga kort hittades som matchar din sökning.",
+    "clearSearch": "Rensa sökning"
   }
 };

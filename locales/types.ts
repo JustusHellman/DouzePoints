@@ -15,6 +15,7 @@ export interface TranslationSchema {
     opening: string;
     openPack: string;
     open6Packs: string;
+    openXPacks: string;
     newCards: string;
     collectAll: string;
     flipAll: string;

@@ -22,7 +22,7 @@ export default {
       "title": "EuroLinks",
       "desc": "Koppla ihop 4 relaterade Eurovision-element.",
       "rulesShort": "Gruppera 16 Eurovision-element i fyra kategorier om fyra baserat på en gemensam koppling. 6 fel tillåtna.",
-      "rulesLong": "EuroLinks är ett spel om logik och Eurovision-kunskap. Du måste hitta de dolda kopplingarna mellan 16 olika element relaterade till tävlingen.\n\nHur man spelar:\n• Rutnätet innehåller 16 element som kan grupperas i fyra kategorier med fyra element i varje.\n• Kategorier kan variera från '90-talsvinnare' till 'Länder som aldrig vunnit' eller 'Artister som tävlat flera gånger'.\n• Välj fyra element och tryck på 'Skicka' för att se om de delar en kategori.\n• Du har 6 fel på dig att lösa hela pusslet.\n• Varje kategori har en svårighetsgrad, från enkla till expertfakta!"
+      "rulesLong": "EuroLinks är ett spel om logik och Eurovision-kunskap. Du måste hitta de dolda kopplingarna mellan 16 olika element relaterade till tävlingen.\n\nHur man spelar:\n• Rutnätet innehåller 16 element som kan grupperas i fyra kategorier med fyra element i varje.\n• Välj fyra element och tryck på 'Skicka' för att se om de delar en kategori.\n• Om din gissning är rätt, avslöjas kategorin.\n• Om den är fel, räknas det som ett fel. Om du har 3 rätta element kommer du att få veta att du är \"en ifrån\".\n• Du har 6 fel på dig att lösa hela pusslet.\n• Varje kategori har en svårighetsgrad som avslöjas av dess färg när den lösts: Gul (Lätt), Grön (Medel), Blå (Svår) och Lila (Expert)."
     },
     "euroguess": {
       "title": "EuroGuess",
