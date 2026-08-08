@@ -600,5 +600,11 @@ export const PUZZLES: ConnectionsGroup[][] = [
     { category: "Countries with land in their English name", items: ["FINLAND", "ICELAND", "IRELAND", "THE NETHERLANDS"], difficulty: "medium" },
     { category: "Host cities beginning with L", items: ["LISBON", "LONDON", "LAUSANNE", "LUGANO"], difficulty: "hard" },
     { category: "Televote winners who didn't win overall", items: ["GRANDE AMORE", "YOU ARE THE ONLY ONE", "SPIRIT IN THE SKY", "RIM TIM TAGI DIM"], difficulty: "expert" }
+  ],
+  [
+    { category: "Names in song titles", items: ["STEFANIA", "CLEOPATRA", "MATA HARI", "JAN JAN"], difficulty: "easy" },
+    { category: "Animals in song titles", items: ["GIVE THAT WOLF A BANANA", "RUN WITH THE LIONS", "BIRDS", "CHAMELEON"], difficulty: "medium" },
+    { category: "Color words in song titles", items: ["BLACKBIRD", "BLUE AND RED", "GOLDEN BOY", "L'AMOUR EST BLEU"], difficulty: "hard" },
+    { category: "Greetings and goodbyes in song titles", items: ["GOODBYE TO YESTERDAY", "HALLO HALLO", "BYE BYE BABY", "WELCOME TO THE PARTY"], difficulty: "expert" }
   ]
 ];

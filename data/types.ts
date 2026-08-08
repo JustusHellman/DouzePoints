@@ -14,6 +14,7 @@ export interface DailyCompletion {
   isPerfect: boolean;
   guesses?: string[];
   mistakes?: number;
+  packAwarded?: boolean;
 }
 
 export interface DetailedStats {

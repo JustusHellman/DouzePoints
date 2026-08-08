@@ -142,13 +142,13 @@ export const EuroCollectionGame: React.FC<{ onReturn: () => void }> = () => {
       setFrozenConfetti(initialConfetti);
       setPendingPack(cards);
       
-      let duration = packCount >= 6 ? 2500 : 1000;
+      let duration = packCount > 1 ? 2500 : 1000;
       if (cards.some(c => songMap.get(c.songId)?.rarity === CardRarity.LEGENDARY)) {
-        duration = packCount >= 6 ? 3000 : 2000;
+        duration = packCount > 1 ? 3000 : 2000;
       } else if (cards.some(c => songMap.get(c.songId)?.rarity === CardRarity.RARE)) {
-        duration = packCount >= 6 ? 2800 : 1500;
+        duration = packCount > 1 ? 2800 : 1500;
       } else if (cards.some(c => songMap.get(c.songId)?.rarity === CardRarity.UNCOMMON)) {
-        duration = packCount >= 6 ? 2600 : 1200;
+        duration = packCount > 1 ? 2600 : 1200;
       }
       
       const startTime = Date.now();

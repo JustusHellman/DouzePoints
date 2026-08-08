@@ -1,4 +1,4 @@
-import { doc, setDoc, increment, serverTimestamp, DocumentData } from 'firebase/firestore';
+import { doc, setDoc, increment, serverTimestamp, DocumentData, collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase.ts';
 import { GameType } from '../data/types.ts';
 import { logAnalyticsEvent } from './analytics';
@@ -78,11 +78,11 @@ export const reportGameScore = async (gameType: GameType, points: number) => {
     await setDoc(docRef, {
       gameType,
       date,
-      [`distribution.${points}`]: increment(1),
       totalPlayed: increment(1),
+      [`distribution.${points}`]: increment(1),
       lastUpdated: serverTimestamp()
     }, { merge: true });
-    
+
     if (import.meta.env.DEV) {
       console.log(`Reported ${points} points for ${gameType} on ${date}`);
     }
@@ -107,7 +107,7 @@ export const reportSupportClick = async (source: string = 'unknown') => {
       [`sources.${source}`]: increment(1),
       lastUpdated: serverTimestamp()
     }, { merge: true });
-    
+
     if (import.meta.env.DEV) {
       console.log(`Reported support click on ${date} from ${source}`);
     }
@@ -133,7 +133,7 @@ export const reportShareClick = async (source: string = 'unknown') => {
       [`sources.${source}`]: increment(1),
       lastUpdated: serverTimestamp()
     }, { merge: true });
-    
+
     if (import.meta.env.DEV) {
       console.log(`Reported share click on ${date} from ${source}`);
     }
@@ -143,29 +143,8 @@ export const reportShareClick = async (source: string = 'unknown') => {
 };
 
 export const reportDailyLanguage = async (language: string) => {
-  const date = new Date().toISOString().split('T')[0];
-  const storageKey = `last_language_reported_${date}_${language}`;
-  
-  if (localStorage.getItem(storageKey) === 'true') {
-    return;
-  }
-
-  try {
-    const docRef = doc(db, 'language_stats', date);
-    await setDoc(docRef, {
-      date,
-      total: increment(1),
-      [`languages.${language}`]: increment(1),
-      lastUpdated: serverTimestamp()
-    }, { merge: true });
-    
-    localStorage.setItem(storageKey, 'true');
-    if (import.meta.env.DEV) {
-      console.log(`Reported language ${language} on ${date}`);
-    }
-  } catch (error) {
-    console.error('Failed to report language to Firebase:', error instanceof Error ? error.message : String(error));
-  }
+  // Disabled language tracking
+  return;
 };
 
 export const reportDailyCompletion = async (totalScore: number) => {
@@ -187,11 +166,14 @@ export const reportDailyCompletion = async (totalScore: number) => {
     await setDoc(docRef, {
       date,
       totalCompleted: increment(1),
-      [`distribution.${totalScore}`]: increment(1),
+      distribution: {
+        [totalScore]: increment(1)
+      },
       lastUpdated: serverTimestamp()
     }, { merge: true });
     
     localStorage.setItem(storageKey, date);
+
     if (import.meta.env.DEV) {
       console.log(`Reported daily completion with score ${totalScore} on ${date}`);
     }
@@ -201,46 +183,8 @@ export const reportDailyCompletion = async (totalScore: number) => {
 };
 
 export const reportPlaytime = async (counters: Record<string, number>) => {
-  const date = new Date().toISOString().split('T')[0];
-
-  try {
-    const docRef = doc(db, 'playtime_stats', date);
-
-    let totalSeconds = 0;
-    let dailySeconds = 0;
-    let infiniteSeconds = 0;
-    let navigationSeconds = 0;
-
-    const atomicUpdates: DocumentData = {
-      date,
-      lastUpdated: serverTimestamp()
-    };
-
-    for (const [key, seconds] of Object.entries(counters)) {
-      if (seconds <= 0) continue;
-      atomicUpdates[key] = increment(seconds);
-      totalSeconds += seconds;
-      
-      if (key.endsWith('_daily')) {
-        dailySeconds += seconds;
-      } else if (key.endsWith('_infinite')) {
-        infiniteSeconds += seconds;
-      } else {
-        navigationSeconds += seconds;
-      }
-    }
-
-    if (totalSeconds === 0) return;
-
-    atomicUpdates['totalSeconds'] = increment(totalSeconds);
-    atomicUpdates['dailySeconds'] = increment(dailySeconds);
-    atomicUpdates['infiniteSeconds'] = increment(infiniteSeconds);
-    atomicUpdates['navigationSeconds'] = increment(navigationSeconds);
-
-    await setDoc(docRef, atomicUpdates, { merge: true });
-  } catch (error) {
-    console.error('Failed to report playtime:', error);
-  }
+  // Disabled playtime tracking
+  return;
 };
 
 export const reportNewPlayerDiscovery = async (source: string = 'unknown') => {
@@ -260,7 +204,7 @@ export const reportNewPlayerDiscovery = async (source: string = 'unknown') => {
       [`sources.${source}`]: increment(1),
       lastUpdated: serverTimestamp()
     }, { merge: true });
-    
+
     if (import.meta.env.DEV) {
       console.log(`Reported new player discovery on ${date} from ${source}`);
     }

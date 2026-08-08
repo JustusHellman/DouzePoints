@@ -9,6 +9,7 @@ import { CountdownTimer } from './CountdownTimer.tsx';
 import { PointsDistribution } from './PointsDistribution.tsx';
 import { getPlacingLabel } from '../data/constants.tsx';
 import { soundManager } from '../utils/sounds.ts';
+import { isDailyPackCapReached } from '../utils/cards.ts';
 
 interface GameScoreCardProps {
   won: boolean;
@@ -32,6 +33,7 @@ interface GameScoreCardProps {
   onContinue?: () => void;
   onTryAgain?: () => void;
   hideShare?: boolean;
+  packEarned?: boolean;
 }
 
 const PerformanceLogRenderer: React.FC<{ 
@@ -135,7 +137,8 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
   runStreak,
   onContinue,
   onTryAgain,
-  hideShare = false
+  hideShare = false,
+  packEarned
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -218,6 +221,38 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
     return `https://www.youtube.com/results?search_query=${query}`;
   };
 
+  const isPackEarned = useMemo(() => {
+    if (typeof packEarned === 'boolean') {
+      return packEarned;
+    }
+
+    if (mode === 'infinite') {
+      const isStreakMultiple = won && (runStreak ?? streak ?? 0) > 0 && (runStreak ?? streak ?? 0) % 5 === 0;
+      return isStreakMultiple && !isDailyPackCapReached();
+    }
+
+    if (gameType) {
+      const stats = getStoredStats();
+      let key: 'word_game' | 'artists' | 'links' | 'guesser' | 'arena' | 'refrain' | null = null;
+      switch(gameType) {
+        case GameType.WORD_GAME: key = 'word_game'; break;
+        case GameType.ARTIST_WORD_GAME: key = 'artists'; break;
+        case GameType.LINKS_GAME: key = 'links'; break;
+        case GameType.GUESSER: key = 'guesser'; break;
+        case GameType.ARENA: key = 'arena'; break;
+        case GameType.REFRAIN_GAME: key = 'refrain'; break;
+        default: key = null;
+      }
+      if (key && stats[key]?.dailyCompletion) {
+        if (typeof stats[key].dailyCompletion?.packAwarded === 'boolean') {
+          return stats[key].dailyCompletion!.packAwarded!;
+        }
+      }
+    }
+
+    return !isDailyPackCapReached();
+  }, [packEarned, mode, won, runStreak, streak, gameType]);
+
   return (
     <div className="w-full max-w-md mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out py-1 flex justify-center">
       <div className={`bg-[#0b0b18] border border-white/10 rounded-[2rem] w-fit min-w-[280px] relative flex flex-col overflow-hidden ${theme.card}`}>
@@ -232,7 +267,40 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
           </svg>
         </button>
 
-        <div className={`px-6 pt-6 pb-4 text-center border-b border-white/5 bg-gradient-to-b ${theme.header}`}>
+        <div className={`px-6 pt-6 pb-5 text-center border-b border-white/5 bg-gradient-to-b ${theme.header} rounded-t-[2rem] relative`}>
+          {/* Tilted Stamp Straddling the Dividing Line */}
+          {isPackEarned && (
+            <button 
+              onClick={() => {
+                soundManager.play('click');
+                navigate('/euro-collection', { state: { tab: 'packs' } });
+              }}
+              className="absolute -bottom-7 left-4 sm:left-6 z-30 transform -rotate-10 hover:-rotate-3 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus-visible:outline-none group"
+            >
+              <div className="bg-gradient-to-r from-amber-400 via-pink-500 to-indigo-500 p-[1.5px] rounded-xl shadow-[0_4px_15px_rgba(251,191,36,0.4)]">
+                <div className="bg-[#0e0c24] px-2.5 py-1 rounded-[10.5px] flex items-center gap-2 border border-amber-300/40">
+                  {/* Exact micro replica of EuroCollection Foil Pack */}
+                  <div className="relative w-4 h-5.5 rounded-[3.5px] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-[1px] shadow-sm shrink-0">
+                    <div className="w-full h-full bg-[#0b0b18] rounded-[2.5px] flex items-center justify-center relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/30 to-transparent pointer-events-none" />
+                      <span className="text-[8px] font-sans font-black italic text-transparent bg-clip-text bg-gradient-to-br from-indigo-400 via-purple-300 to-pink-400 -rotate-12 leading-none">
+                        12
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col text-left pr-0.5">
+                    <span className="text-[8px] font-black text-amber-300 uppercase tracking-wider leading-none">
+                      {t('eurocollection.packEarnedStamp') || "+1 PACK EARNED!"}
+                    </span>
+                    <span className="text-[6.5px] font-bold text-gray-400 group-hover:text-white uppercase tracking-tight leading-none mt-0.5">
+                      {t('eurocollection.tapToOpen') || "TAP TO OPEN ➔"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </button>
+          )}
+
           <div className="flex justify-center mb-1.5">
             <span className={`px-2 py-0.5 rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] ${theme.badge}`}>
               {t('scorecard.performanceVerdict')}
@@ -244,6 +312,7 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
           <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.4em] text-gray-500">
             {gameTitle} • {mode === 'infinite' ? t('infinite.title') : t('scorecard.dailyResult')}
           </p>
+
           {mode === 'infinite' && (
             <div className="mt-4 flex flex-col items-center gap-3">
               {won && (
@@ -355,30 +424,7 @@ export const GameScoreCard: React.FC<GameScoreCardProps> = ({
               </button>
             )}
 
-            {mode !== 'infinite' && (
-              <button 
-                onClick={() => navigate('/euro-collection', { state: { tab: 'packs' } })}
-                className="mt-5 w-full bg-gradient-to-br from-indigo-600/20 to-indigo-900/40 border-2 border-indigo-500/30 hover:border-indigo-400/50 hover:from-indigo-500/20 hover:to-indigo-800/40 hover:scale-[1.01] active:scale-95 transition-all duration-300 rounded-xl p-4 sm:p-5 flex items-center justify-between shadow-lg relative overflow-hidden group text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-500/20"
-              >
-                <div className="absolute -top-12 -right-12 w-32 h-32 bg-indigo-500 rounded-full blur-[40px] opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 mix-blend-overlay pointer-events-none"></div>
-                
-                <div className="relative z-10 pr-2">
-                  <span className="text-[9px] sm:text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-1 block">
-                    +1 Card Pack Earned
-                  </span>
-                  <h2 className="text-sm sm:text-base font-black italic uppercase tracking-tighter text-white leading-tight">
-                    Open in EuroCollection
-                  </h2>
-                </div>
 
-                <div className="relative z-10 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-indigo-500/20 flex items-center justify-center shrink-0 group-hover:bg-indigo-500/40 transition-colors">
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400 ml-0.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </button>
-            )}
           </div>
 
           {extraInfo && (

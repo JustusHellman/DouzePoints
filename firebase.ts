@@ -23,14 +23,16 @@ const app = initializeApp(config);
 export const analytics = (async () => {
   try {
     if (!config.measurementId) {
+      console.warn("Firebase Analytics is disabled: measurementId is missing from config (Check your VITE_FIREBASE_MEASUREMENT_ID secret)");
       return null;
     }
     const yes = await isSupported();
     if (yes) {
       return getAnalytics(app);
     }
-  } catch {
+  } catch (err) {
     // Fail silently if network/analytics is blocked or unavailable
+    console.warn("Firebase Analytics failed to initialize:", err);
   }
   return null;
 })();

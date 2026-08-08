@@ -72,5 +72,11 @@ export const PATCH_NOTES: PatchNote[] = [
     date: "2026-07-30",
     title: "EuroCollection and sound effects",
     description: "Today we're releasing the next game on our site - It's a card collecting game which ties together with our other games! In EuroCollection, you earn a card pack containing 6 cards every time you finish any of the daily games. These card represent one Eurovision Content entry each! You can view them in sets and if you get duplicates you'll be awarded with conteffi with which you can craft cards you don't already own! Fancy, huh? And right, I've also added some sound effects! Don't like it? Well you can turn them off in the new profile settings in the top right!\n\nThank you so much for sicking around, I love the continued support! More updates coming soon!",
+  },
+  {
+    id: "12",
+    date: "2026-08-08",
+    title: "EuroLinks and earn packs through encore mode",
+    description: "EuroLinks has been like a little problem child. Never feeling truly fair, having incorrect answers or overlapping categories. Now we're changing that! From now on you'll only see song titles and I've made sure (I really hope) that there's no overlaps or false info! It might feel harder, but it should for sure feel a lot more fair! I'd love to hear what you all think of it!\n\nSecondly, I've increased the cap of packs you can earn from 6 to 10. Why? Cause now you can earn packs through playing Encore! Every 5:th streak you can earn a pack! So now all encore enjoyers can also join in in the card collection extatic!\n\Take care out there!",
   }
 ];

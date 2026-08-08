@@ -4,6 +4,7 @@ import { auth, db } from '../firebase';
 import { doc, deleteField } from 'firebase/firestore';
 import { reportGameScore, reportNewPlayerDiscovery } from './firebaseService.ts';
 import { syncGameResultToFirestore, safeUpdateUserDoc } from './syncService.ts';
+import { awardDailyPack, getDailyPacksEarned } from './cards.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getDailyGameState = (config: any, today: string) => {
@@ -223,12 +224,16 @@ export const updateGameStats = (gameType: GameType, won: boolean, performanceMet
       mistakes = performanceMetrics.mistakes || 0;
   }
   
+  const packsEarnedBefore = getDailyPacksEarned();
+  const willAwardPack = packsEarnedBefore < 10;
+
   stats[gameKey].dailyCompletion = {
     won,
     points: pointsEarned,
     isPerfect,
     guesses,
-    mistakes
+    mistakes,
+    packAwarded: willAwardPack
   };
   
   if (isPerfect) {
@@ -263,7 +268,8 @@ export const updateGameStats = (gameType: GameType, won: boolean, performanceMet
     console.error("Failed to save stats", err);
   }
   
-  syncGameResultToFirestore(stats, true).catch(err => console.error("Failed to sync stats with pack reward", err));
+  awardDailyPack().catch(err => console.error("Failed to award daily pack", err));
+  syncGameResultToFirestore(stats, false).catch(err => console.error("Failed to sync stats", err));
   return stats;
 };
 

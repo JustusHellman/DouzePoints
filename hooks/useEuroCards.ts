@@ -3,10 +3,10 @@ import { UserCollection, OpenedCard, CardRarity } from '../data/types';
 import { doc, onSnapshot, increment, DocumentData } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { db, auth } from '../firebase';
-import { extractEuroCollectionData } from '../utils/cards';
+import { extractEuroCollectionData, awardDailyPack } from '../utils/cards';
 import { safeUpdateUserDoc } from '../utils/syncService';
 
-const DAILY_PACK_LIMIT = 6;
+const DAILY_PACK_LIMIT = 10;
 
 export const SCRAP_VALUES: Record<string, number> = {
   [CardRarity.COMMON]: 1,
@@ -93,15 +93,7 @@ export const useEuroCards = () => {
   }, []);
 
   const addPack = async () => {
-    if (!auth.currentUser) return;
-    if (collection.dailyPacksEarned >= DAILY_PACK_LIMIT) return;
-    
-    const userRef = doc(db, 'users', auth.currentUser.uid);
-    await safeUpdateUserDoc(userRef, {
-      'collection.availablePacks': increment(1),
-      'collection.dailyPacksEarned': increment(1),
-      'collection.lastDailyReset': Date.now()
-    });
+    await awardDailyPack();
   };
 
   const addCardsToCollection = async (newCards: OpenedCard[], earnedConfetti: number = 0, packCount: number = 1) => {

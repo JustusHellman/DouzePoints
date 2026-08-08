@@ -211,7 +211,6 @@ export const CollectionGallery: React.FC<CollectionGalleryProps> = ({
               <button 
                 onClick={handleClearSearch}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
-                title="Clear search"
               >
                 <X className="w-3.5 h-3.5" />
               </button>

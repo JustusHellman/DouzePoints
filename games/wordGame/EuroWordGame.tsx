@@ -10,6 +10,7 @@ import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
 import { CategoryMasteredScreen } from '../../components/CategoryMasteredScreen.tsx';
 import { reportInfiniteRun } from '../../utils/firebaseService.ts';
+import { awardDailyPack, getDailyPacksEarned } from '../../utils/cards.ts';
 import { soundManager } from '../../utils/sounds.ts';
 import { 
   getInfiniteGameState, 
@@ -165,6 +166,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
     return false;
   });
 
+  const [packEarned, setPackEarned] = useState<boolean | undefined>(undefined);
   const [showModal, setShowModal] = useState(() => {
     if (mode === 'infinite') {
       const saved = getInfiniteGameState(gameId, difficulty);
@@ -514,7 +516,9 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
         if (newGuess === finalCheckTarget) {
           if (mode !== 'infinite') {
             const safeGameType = gameId === 'eurosong' ? GameType.WORD_GAME : (gameId === 'euroartist' ? GameType.ARTIST_WORD_GAME : gameType);
+            const packsBefore = getDailyPacksEarned();
             updateGameStats(safeGameType, true, { attempts: newGuesses.length, guesses: newGuesses });
+            setPackEarned(packsBefore < 10);
           }
           setTimeout(() => {
             setIsGameOver(true);
@@ -527,18 +531,34 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
               soundManager.play('success');
             }
             if (mode === 'infinite' && infiniteState) {
+              const newStreak = infiniteState.currentStreak + 1;
               const nextState = { ...infiniteState, guesses: newGuesses, isGameOver: true, won: true, lastResult: { won: true, points: pts } };
               saveInfiniteGameState(gameId, difficulty, nextState);
               const isExhausted = infiniteState.currentIndex + 1 >= infiniteState.shuffledIds.length;
-              saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore + pts, infiniteState.currentStreak + 1, false, isExhausted);
+              saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore + pts, newStreak, false, isExhausted);
               setInfiniteState(nextState);
+
+              if (newStreak % 5 === 0) {
+                awardDailyPack().then(awarded => {
+                  setPackEarned(awarded);
+                  if (awarded) {
+                    setTimeout(() => {
+                      soundManager.play('celebration');
+                    }, 800);
+                  }
+                });
+              } else {
+                setPackEarned(false);
+              }
+
               if (isExhausted) {
-                reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore + pts, infiniteState.currentStreak + 1, true);
+                reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore + pts, newStreak, true);
               }
             }
             setShowModal(true);
           }, target.length * animationDelay + 500);
         } else if (newGuesses.length >= MAX_ATTEMPTS) {
+          setPackEarned(false);
           if (mode !== 'infinite') {
             const safeGameType = gameId === 'eurosong' ? GameType.WORD_GAME : (gameId === 'euroartist' ? GameType.ARTIST_WORD_GAME : gameType);
             updateGameStats(safeGameType, false, { attempts: newGuesses.length, guesses: newGuesses });
@@ -686,6 +706,7 @@ const EuroWordGame: React.FC<EuroWordGameProps> = ({ onReturn, data = [], gameTy
           runStreak={infiniteState ? (infiniteState.currentStreak + (won ? 1 : 0)) : undefined}
           onContinue={handleContinue}
           onTryAgain={handleTryAgain}
+          packEarned={packEarned}
           hideShare={mode === 'infinite' && won && !!infiniteState && infiniteState.currentIndex + 1 < infiniteState.shuffledIds.length}
         />
       ) : (

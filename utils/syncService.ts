@@ -193,7 +193,7 @@ export const syncGameResultToFirestore = async (newStats: GlobalStats, shouldAwa
         dailyPacksEarned = 0;
       }
       
-      if (dailyPacksEarned < 6) {
+      if (dailyPacksEarned < 10) {
         updates['collection.availablePacks'] = increment(1);
         updates['collection.dailyPacksEarned'] = dailyPacksEarned + 1;
         updates['collection.lastDailyReset'] = Date.now();

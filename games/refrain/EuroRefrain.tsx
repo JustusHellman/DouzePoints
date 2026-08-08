@@ -4,6 +4,7 @@ import { getDayString } from '../../utils/daily.ts';
 import { syncDailyStateToFirestore } from '../../utils/syncService.ts';
 
 import { updateGameStats } from '../../utils/stats.ts';
+import { getDailyPacksEarned } from '../../utils/cards.ts';
 import { GameType, LyricSnippet } from '../../data/types.ts';
 import { getActiveRefrainData } from '../../data/activeData.ts';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
@@ -213,6 +214,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
   const [message, setMessage] = useState<string | null>(null);
   const [shaking, setShaking] = useState(false);
   const [showWrongFlash, setShowWrongFlash] = useState(false);
+  const [packEarned, setPackEarned] = useState<boolean | undefined>(undefined);
   const [showModal, setShowModal] = useState(() => {
     const saved = localStorage.getItem(`eurorefrain-${getDayString()}`);
     if (saved) {
@@ -327,7 +329,9 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
         setWon(true); 
         setIsGameOver(true); 
         
+        const packsBefore = getDailyPacksEarned();
         updateGameStats(GameType.REFRAIN_GAME, true, { mistakes });
+        setPackEarned(packsBefore < 10);
         
         confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         setShowModal(true); 
@@ -349,6 +353,8 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
         soundManager.play('fail');
         setIsGameOver(true);
         setWon(false);
+        setPackEarned(false);
+        updateGameStats(GameType.REFRAIN_GAME, false, { mistakes: 6 });
         setTimeout(() => { 
           revealRemainingGroups();
         }, 800); 
@@ -404,7 +410,7 @@ const EuroRefrain: React.FC<EuroRefrainProps> = ({ onReturn }) => {
           won={won} points={getPointsInfo.points} pointsLabel={getPointsInfo.label} pointsColor={getPointsInfo.color}
           historyEmoji={historyEmoji} gameTitle="EuroRefrain" attempts={mistakes} maxAttempts={6}
           onClose={() => setShowModal(false)} onReturn={onReturn} onShare={handleShare} gameType={GameType.REFRAIN_GAME}
-          onContinue={handleContinue} onTryAgain={handleTryAgain}
+          onContinue={handleContinue} onTryAgain={handleTryAgain} packEarned={packEarned}
           extraInfo={
             <div className="space-y-4">
               <p className="text-[10px] text-gray-600 font-black uppercase tracking-[0.4em] text-center mb-1">{t('links.lyricsDiscovered')}</p>

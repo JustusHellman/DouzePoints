@@ -55,8 +55,33 @@ export const useUserData = (user: User | null) => {
       const freshLocal = getStoredStats();
       setStats(prev => mergeGlobalStats(prev, freshLocal));
     };
+    const handleCollectionUpdated = () => {
+      const cached = localStorage.getItem('douzepoints_eurocards_collection');
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          setCollectionData({
+            availablePacks: parsed.availablePacks || 0,
+            packsOpened: parsed.packsOpened || 0,
+            dailyPacksEarned: parsed.dailyPacksEarned || 0,
+            lastDailyReset: parsed.lastDailyReset || Date.now(),
+            confetti: parsed.confetti || 0
+          });
+          if (parsed.cards) {
+            setCards(parsed.cards);
+          }
+        } catch {
+          // ignore
+        }
+      }
+    };
+
     window.addEventListener('euro-stats-updated', handleStatsUpdated);
-    return () => window.removeEventListener('euro-stats-updated', handleStatsUpdated);
+    window.addEventListener('euro-collection-updated', handleCollectionUpdated);
+    return () => {
+      window.removeEventListener('euro-stats-updated', handleStatsUpdated);
+      window.removeEventListener('euro-collection-updated', handleCollectionUpdated);
+    };
   }, []);
 
   const [collectionData, setCollectionData] = useState<{availablePacks: number, packsOpened: number, dailyPacksEarned: number, lastDailyReset: number, confetti: number}>(() => {

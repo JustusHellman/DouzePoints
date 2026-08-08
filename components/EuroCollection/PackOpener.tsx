@@ -16,7 +16,8 @@ interface PackOpenerProps {
   handleOpenPack: (packCount?: number) => void;
   handleClosePack: () => void;
   setRevealedIndices: React.Dispatch<React.SetStateAction<number[]>>;
-  t: (key: string) => string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  t: (key: string, params?: Record<string, any>) => string;
 }
 
 export const PackOpener: React.FC<PackOpenerProps> = ({
@@ -32,7 +33,8 @@ export const PackOpener: React.FC<PackOpenerProps> = ({
   setRevealedIndices,
   t,
 }) => {
-  const canOpen6 = collection.availablePacks >= 6;
+  const multiPackCount = Math.min(collection.availablePacks, 10);
+  const canOpenMulti = collection.availablePacks > 1;
 
   useEffect(() => {
     if (currentPack.length > 0) {
@@ -42,7 +44,7 @@ export const PackOpener: React.FC<PackOpenerProps> = ({
       }, 50);
       return () => clearTimeout(timer);
     }
-  }, [currentPack.length]);
+  }, [currentPack]);
 
   return (
     <div className={`flex flex-col items-center flex-1 space-y-4 py-2 w-full ${currentPack.length === 0 ? 'justify-center' : 'justify-start'}`}>
@@ -55,14 +57,20 @@ export const PackOpener: React.FC<PackOpenerProps> = ({
             exit={{ opacity: 0, y: -20 }}
             className="flex flex-col items-center w-full"
           >
-          <div className="text-center space-y-3 max-w-md px-4 mb-8">
+          <div className="text-center space-y-3 max-w-md px-4 mb-4">
             <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-white">{t('eurocollection.yourPacks')}</h2>
             <p className="text-slate-400 font-medium text-sm md:text-base leading-relaxed">
-              {t('eurocollection.packsDescription1')} <strong className="text-indigo-400">6 {t('eurocollection.packsDescription2')}</strong>. {t('eurocollection.packsDescription3')}
+              {t('eurocollection.packsDescription1')} <strong className="text-indigo-400">10 {t('eurocollection.packsDescription2')}</strong>. {t('eurocollection.packsDescription3')}
             </p>
           </div>
 
-          <div className="relative group cursor-pointer" onClick={() => handleOpenPack(1)}>
+          <div className="flex flex-col items-center mb-6">
+            <span className="text-[11px] font-black uppercase tracking-[0.15em] bg-black/40 shadow-[inset_0_2px_5px_rgba(0,0,0,0.8),0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-md text-amber-400 border border-amber-500/20 px-4 py-2 rounded-xl flex items-center gap-1.5">
+              {collection.dailyPacksEarned || 0} / 10 {t('eurocollection.packsEarnedToday')}
+            </span>
+          </div>
+
+          <div className="relative group cursor-pointer" onClick={() => handleOpenPack(canOpenMulti ? multiPackCount : 1)}>
             <div className="absolute inset-0 bg-indigo-500/20 blur-[100px] rounded-full transition-all group-hover:bg-indigo-500/40" />
             <motion.div 
               animate={opening && currentPack.length === 0 ? { 
@@ -118,45 +126,42 @@ export const PackOpener: React.FC<PackOpenerProps> = ({
             </motion.div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mt-8 w-full max-w-xl px-4">
+          <div className="flex flex-col items-center justify-center gap-3 sm:gap-4 mt-8 w-full max-w-sm px-4">
+            {canOpenMulti && (
+              <button 
+                onClick={() => handleOpenPack(multiPackCount)}
+                disabled={opening}
+                className={`
+                  w-full relative overflow-hidden px-8 py-4 rounded-full font-black text-base md:text-lg uppercase tracking-widest transition-all flex items-center justify-center text-white
+                  ${!opening 
+                    ? 'bg-gradient-to-r from-amber-500 via-pink-600 to-purple-600 hover:scale-[1.05] active:scale-95 border-2 border-amber-300 ring-4 ring-amber-500/30 shadow-[0_0_30px_rgba(245,158,11,0.5)] hover:shadow-[0_0_45px_rgba(245,158,11,0.8)] hover:border-amber-200 cursor-pointer' 
+                    : 'bg-white/5 text-white/20 cursor-not-allowed border border-white/10'}
+                `}
+              >
+                <span>{opening && currentPack.length === 0 ? t('eurocollection.opening') : (t('eurocollection.openXPacks', { count: multiPackCount }) || `Open ${multiPackCount} Packs`)}</span>
+              </button>
+            )}
+
             <button 
               onClick={() => handleOpenPack(1)}
               disabled={collection.availablePacks <= 0 || opening}
               className={`
-                w-full sm:w-auto relative overflow-hidden px-8 py-4 rounded-full font-black text-base md:text-lg uppercase tracking-widest transition-all shadow-xl
+                w-full relative overflow-hidden px-8 py-3.5 rounded-full font-black text-sm md:text-base uppercase tracking-widest transition-all shadow-xl cursor-pointer
                 ${collection.availablePacks > 0 && !opening 
-                  ? 'bg-gradient-to-r from-indigo-600 to-pink-600 hover:scale-105 hover:shadow-pink-500/30 text-white border border-pink-400/30' 
+                  ? canOpenMulti
+                    ? 'bg-gradient-to-r from-indigo-700/80 to-purple-700/80 hover:from-indigo-600 hover:to-purple-600 text-indigo-50 hover:text-white border border-indigo-400/50 hover:border-indigo-300 hover:scale-[1.03] shadow-[0_0_20px_rgba(79,70,229,0.3)]'
+                    : 'bg-gradient-to-r from-indigo-600 to-pink-600 hover:scale-105 hover:shadow-pink-500/30 text-white border border-pink-400/30 py-4 text-base md:text-lg' 
                   : 'bg-white/5 text-white/20 cursor-not-allowed border border-white/10'}
               `}
             >
               {opening && currentPack.length === 0 ? t('eurocollection.opening') : t('eurocollection.openPack')}
             </button>
-
-            {canOpen6 && (
-              <button 
-                onClick={() => handleOpenPack(6)}
-                disabled={opening}
-                className={`
-                  w-full sm:w-auto relative overflow-hidden px-9 py-4.5 rounded-full font-black text-base md:text-lg uppercase tracking-widest transition-all flex items-center justify-center text-white
-                  ${!opening 
-                    ? 'bg-gradient-to-r from-amber-500 via-pink-600 to-purple-600 hover:scale-[1.07] active:scale-95 border-2 border-amber-300 ring-4 ring-amber-500/30 shadow-[0_0_30px_rgba(245,158,11,0.5)] hover:shadow-[0_0_45px_rgba(245,158,11,0.8)] hover:border-amber-200' 
-                    : 'bg-white/5 text-white/20 cursor-not-allowed border border-white/10'}
-                `}
-              >
-                <span>{opening && currentPack.length === 0 ? t('eurocollection.opening') : t('eurocollection.open6Packs')}</span>
-              </button>
-            )}
           </div>
 
-          <div className="flex flex-col items-center text-amber-400/80 mt-4 gap-2">
-            <span className="text-[11px] font-black uppercase tracking-[0.15em] bg-black/40 shadow-[inset_0_2px_5px_rgba(0,0,0,0.8),0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-md text-amber-400 border border-amber-500/20 px-4 py-2 rounded-xl hidden items-center gap-1.5">
-              {collection.dailyPacksEarned || 0} / 6 {t('eurocollection.packsEarnedToday')}
+          <div className="flex flex-col items-center mt-6 gap-2">
+            <span className="text-xs md:text-sm font-semibold text-indigo-200/80 text-center max-w-sm px-4">
+              {t('eurocollection.playMoreGames')}
             </span>
-            {collection.availablePacks <= 0 && !opening && (
-              <span className="text-sm font-medium">
-                {t('eurocollection.playMoreGames')}
-              </span>
-            )}
           </div>
         </motion.div>
         ) : (
@@ -186,14 +191,14 @@ export const PackOpener: React.FC<PackOpenerProps> = ({
                     initial={{ opacity: 0, scale: 0.5, y: 50 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     transition={{ 
-                      delay: Math.min(i * 0.03, 1.2), 
+                      delay: Math.min(i * 0.02, 0.8), 
                       type: "spring", 
                       stiffness: 150, 
                       damping: 20 
                     }}
                   >
                     <EuroCollectionCard 
-                      layoutIdPrefix="pack" 
+                      layoutIdPrefix={`pack-${i}`} 
                       card={card} 
                       song={song} 
                       isNew={false}
@@ -208,7 +213,7 @@ export const PackOpener: React.FC<PackOpenerProps> = ({
                 );
               })}
             </div>
-            
+
             <motion.button 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -223,7 +228,7 @@ export const PackOpener: React.FC<PackOpenerProps> = ({
                   handleClosePack();
                 }
               }}
-              className="mt-12 px-12 py-4 bg-white text-[#0b0b18] font-black text-lg uppercase tracking-widest rounded-full hover:bg-slate-200 hover:scale-105 transition-all shadow-[0_0_30px_rgba(255,255,255,0.3)]"
+              className="mt-12 px-12 py-4 bg-white text-[#0b0b18] font-black text-lg uppercase tracking-widest rounded-full hover:bg-slate-200 hover:scale-105 transition-all shadow-[0_0_30px_rgba(255,255,255,0.3)] cursor-pointer"
             >
               {revealedIndices.length < currentPack.length ? t('eurocollection.flipAll') : t('eurocollection.collectAll')}
             </motion.button>

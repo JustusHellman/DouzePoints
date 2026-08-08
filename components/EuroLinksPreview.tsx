@@ -76,6 +76,17 @@ const EuroLinksPreview: React.FC<EuroLinksPreviewProps> = ({ puzzleData }) => {
   const [showWrongFlash, setShowWrongFlash] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
+  const pointsInfo = useMemo(() => {
+    if (!won) return { points: 0, label: 'NUL POINTS', color: 'text-red-500' };
+    const pointsMap = [12, 10, 8, 6, 4, 2];
+    const pts = pointsMap[mistakes] || 2;
+    return {
+      points: pts,
+      label: pts === 12 ? 'DOUZE POINTS!' : `${pts} POINTS!`,
+      color: pts === 12 ? 'text-yellow-500' : 'text-pink-400'
+    };
+  }, [won, mistakes]);
+
   // Removed useEffect reset in favor of key reset in parent
 
   const handleSelect = (id: string) => {
@@ -193,6 +204,31 @@ const EuroLinksPreview: React.FC<EuroLinksPreviewProps> = ({ puzzleData }) => {
     }
   };
 
+  const getTileTextClass = (text: string) => {
+    const words = text.trim().split(/\s+/);
+    const maxWordLen = Math.max(...words.map(w => w.length));
+    const len = text.length;
+
+    if (maxWordLen > 14) {
+      if (len > 22) return 'text-[7.5px] sm:text-[9.5px] md:text-[10.5px]';
+      return 'text-[8.5px] sm:text-[10.5px] md:text-[11.5px]';
+    }
+    if (maxWordLen > 10) {
+      if (len > 20) return 'text-[8.5px] sm:text-[11px] md:text-[12px]';
+      return 'text-[9.5px] sm:text-[12px] md:text-[13px]';
+    }
+    if (len <= 8) {
+      return 'text-[12px] sm:text-[16px] md:text-[18px]';
+    }
+    if (len <= 14) {
+      return 'text-[11px] sm:text-[14.5px] md:text-[16px]';
+    }
+    if (len <= 22) {
+      return 'text-[10px] sm:text-[13px] md:text-[14px]';
+    }
+    return 'text-[9px] sm:text-[11.5px] md:text-[12.5px]';
+  };
+
   return (
     <div className="flex flex-col items-center pt-4 pb-24 px-4 w-full max-w-3xl mx-auto relative">
       <div className="flex items-center gap-3 mb-4">
@@ -230,13 +266,7 @@ const EuroLinksPreview: React.FC<EuroLinksPreviewProps> = ({ puzzleData }) => {
                 'bg-gray-900 border-white/5 text-white hover:border-white/20'
               } ${isSelected && shaking ? 'animate-shake' : ''}`}
             >
-              <span className={`text-center w-full px-1.5 leading-tight flex items-center justify-center break-words hyphens-auto ${
-                tile.text.length > 18 ? 'text-[7px] sm:text-[10px]' :
-                tile.text.length > 14 ? 'text-[8px] sm:text-[11px]' :
-                tile.text.length > 10 ? 'text-[9px] sm:text-[13px]' : 
-                tile.text.length > 7 ? 'text-[10px] sm:text-[15px]' :
-                'text-[11px] sm:text-[17px]'
-              }`}>
+              <span className={`text-center w-full px-1 py-0.5 leading-snug flex items-center justify-center break-words uppercase font-black ${getTileTextClass(tile.text)}`}>
                 {tile.text}
               </span>
             </button>
@@ -268,11 +298,11 @@ const EuroLinksPreview: React.FC<EuroLinksPreviewProps> = ({ puzzleData }) => {
       
       {isGameOver && showModal && (
         <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 w-full max-w-md text-center animate-in zoom-in-95 duration-300">
-          <h2 className={`text-4xl font-black uppercase italic mb-2 ${won ? 'text-yellow-500' : 'text-red-500'}`}>
-            {won ? 'DOUZE POINTS!' : 'NUL POINTS'}
+          <h2 className={`text-4xl font-black uppercase italic mb-2 ${pointsInfo.color}`}>
+            {pointsInfo.label}
           </h2>
           <p className="text-gray-400 font-bold uppercase tracking-widest text-xs mb-4">
-            {won ? 'You found all categories!' : 'Game Over'}
+            {won ? `You found all categories (${mistakes} mistake${mistakes === 1 ? '' : 's'})!` : 'Game Over'}
           </p>
           
           <div className="mb-8 font-mono text-lg leading-tight whitespace-pre flex justify-center">

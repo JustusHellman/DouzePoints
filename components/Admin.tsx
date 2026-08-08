@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, query, getDocs, orderBy, where } from 'firebase/firestore';
-import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, User } from 'firebase/auth';
+import { signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { db, auth } from '../firebase.ts';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import WeightSimulator from './WeightSimulator.tsx';
@@ -109,6 +109,15 @@ const CustomDiscoveryTooltip = ({ active, payload, label }: { active?: boolean, 
 
 const LANG_COLORS = ['#EC4899','#8B5CF6','#3B82F6','#10B981','#F59E0B','#EF4444','#06B6D4','#F97316','#84CC16','#A855F7','#14B8A6','#E11D48','#6366F1','#D946EF','#0EA5E9','#22C55E','#FBBF24','#FB7185','#2DD4BF','#C084FC','#38BDF8','#4ADE80','#FACC15','#F87171','#818CF8','#E879F9','#7DD3FC','#86EFAC','#FDE047','#FCA5A5'];
 const COLORS = ['#EC4899', '#8B5CF6', '#3B82F6', '#10B981', '#F59E0B', '#EF4444'];
+const ALL_GAME_TYPES = ['WORD_GAME', 'ARTIST_WORD_GAME', 'LINKS_GAME', 'GUESSER', 'ARENA', 'REFRAIN_GAME'];
+const GAME_COLORS: Record<string, string> = {
+  'WORD_GAME': '#EF4444',        // EuroSong (Red)
+  'ARTIST_WORD_GAME': '#8B5CF6', // EuroArtist (Purple)
+  'GUESSER': '#3B82F6',          // EuroGuess (Blue)
+  'LINKS_GAME': '#10B981',       // EuroLinks (Green)
+  'REFRAIN_GAME': '#EAB308',     // EuroRefrain (Yellow)
+  'ARENA': '#EC4899'             // EuroArena (Pink)
+};
 
 const Admin: React.FC = () => {
   const navigate = useNavigate();
@@ -118,31 +127,22 @@ const Admin: React.FC = () => {
   const [stats, setStats] = useState<DailyStats[]>([]);
   const [supportClicks, setSupportClicks] = useState<SupportClick[]>([]);
   const [shareClicks, setShareClicks] = useState<ShareClick[]>([]);
-  const [languageStats, setLanguageStats] = useState<LanguageStats[]>([]);
   const [completionStats, setCompletionStats] = useState<CompletionStats[]>([]);
   const [discoveryStats, setDiscoveryStats] = useState<DiscoveryStats[]>([]);
   const [infiniteStats, setInfiniteStats] = useState<InfiniteDailyStats[]>([]);
-  const [infiniteRuns, setInfiniteRuns] = useState<InfiniteRun[]>([]);
-  const [playtimeStats, setPlaytimeStats] = useState<PlaytimeStats[]>([]);
-  const [playtimeMode, setPlaytimeMode] = useState<'summed' | 'individual'>('summed');
-  const [playtimeUnit, setPlaytimeUnit] = useState<'minutes' | 'hours'>('minutes');
   const [daysSpan, setDaysSpan] = useState(30);
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
   const [activeTab, setActiveTab] = useState<'stats' | 'grant-confetti' | 'weights' | 'links-preview' | 'bingo-admin' | 'data-import'>('stats');
   const [linksPuzzle, setLinksPuzzle] = useState<ConnectionsGroup[]>([]);
-  const [detailDate, setDetailDate] = useState<string>(new Date().toISOString().split('T')[0]);
-  const [detailMode, setDetailMode] = useState<'day' | 'period'>('day');
-  const [detailGame, setDetailGame] = useState<string>('ALL');
   const [completionMode, setCompletionMode] = useState<'period' | 'day'>('day');
   const [completionDate, setCompletionDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [devBypass, setDevBypass] = useState<boolean>(false);
   const [infiniteMode, setInfiniteMode] = useState<'period' | 'day'>('day');
   const [infiniteDate, setInfiniteDate] = useState<string>(new Date().toISOString().split('T')[0]);
-
-  const dailyAnswer = useMemo(() => {
-    if (detailGame === 'ALL') return null;
-    return getDailyAnswer(detailGame, detailDate);
-  }, [detailGame, detailDate]);
+  const [gameScoreGame, setGameScoreGame] = useState<string>('ALL');
+  const [gameScoreMode, setGameScoreMode] = useState<'period' | 'day'>('day');
+  const [gameScoreDate, setGameScoreDate] = useState<string>(new Date().toISOString().split('T')[0]);
 
   const gameNameMap: Record<string, string> = { 'WORD_GAME': 'EuroSong', 'ARTIST_WORD_GAME': 'EuroArtist', 'LINKS_GAME': 'EuroLinks', 'GUESSER': 'EuroGuess', 'ARENA': 'EuroArena', 'REFRAIN_GAME': 'EuroRefrain' };
   const getGameName = (type: string) => gameNameMap[type] || type;
@@ -165,29 +165,35 @@ const Admin: React.FC = () => {
           return [];
         }
       };
-      const [gs, sc, sh, ls, cs, ds, is, irSnap, ps] = await Promise.all([
+      const [gs, sc, sh, cs, ds, is] = await Promise.all([
         safeFetch<DailyStats>('game_stats'),
         safeFetch<SupportClick>('support_clicks'),
         safeFetch<ShareClick>('share_clicks'),
-        safeFetch<LanguageStats>('language_stats'),
         safeFetch<CompletionStats>('completion_stats'),
         safeFetch<DiscoveryStats>('discoveries'),
-        safeFetch<InfiniteDailyStats>('infinite_daily_stats'),
-        getDocs(query(collection(db, 'infinite_runs'), where('timestamp', '>=', startDate), orderBy('timestamp', 'desc'))).catch(e => { console.warn('Failed to fetch infinite_runs:', e); return { docs: [] }; }),
-        safeFetch<PlaytimeStats>('playtime_stats')
+        safeFetch<InfiniteDailyStats>('infinite_daily_stats')
       ]);
-      setStats(gs);
+
+      const normalizeDistribution = (item: any) => {
+        if (!item) return item;
+        const normalized = { ...item };
+        normalized.distribution = normalized.distribution || {};
+        
+        Object.keys(normalized).forEach(key => {
+          if (key.startsWith('distribution.')) {
+            const score = key.split('.')[1];
+            normalized.distribution[score] = normalized[key];
+          }
+        });
+        return normalized;
+      };
+
+      setStats(gs.map(normalizeDistribution));
       setSupportClicks(sc);
       setShareClicks(sh);
-      setLanguageStats(ls);
-      setCompletionStats(cs);
+      setCompletionStats(cs.map(normalizeDistribution));
       setDiscoveryStats(ds);
       setInfiniteStats(is);
-      setPlaytimeStats(ps);
-
-      const ir: InfiniteRun[] = [];
-      irSnap.docs.forEach((doc) => ir.push(doc.data() as InfiniteRun));
-      setInfiniteRuns(ir);
 
       setLastRefreshed(new Date());
     } catch (err) {
@@ -197,8 +203,12 @@ const Admin: React.FC = () => {
     finally { setRefreshing(false); }
   }, [daysSpan]);
 
-  useEffect(() => { const u = onAuthStateChanged(auth, (cu) => { setUser(cu); setLoading(false); }); return () => u(); }, []);
-  useEffect(() => { if (user && ADMIN_EMAILS.includes(user.email || '')) fetchData(); }, [user, fetchData]);
+  useEffect(() => {
+    getRedirectResult(auth).catch((e) => console.error("Redirect auth error:", e));
+    const u = onAuthStateChanged(auth, (cu) => { setUser(cu); setLoading(false); });
+    return () => u();
+  }, []);
+  useEffect(() => { if (devBypass || (user && ADMIN_EMAILS.includes(user.email || ''))) fetchData(); }, [user, devBypass, fetchData]);
 
   const handleGenerateLinks = () => {
     setLinksPuzzle(generateRandomEuroLinksPuzzle());
@@ -210,8 +220,35 @@ const Admin: React.FC = () => {
     }
   }, [activeTab, linksPuzzle.length]);
   const handleLogin = async () => {
-    const provider = new GoogleAuthProvider(); provider.setCustomParameters({ prompt: 'select_account' });
-    try { await signInWithPopup(auth, provider); } catch (e) { console.error("Error signing in", e); alert("If the login window didn't open, please check if your browser is blocking popups."); }
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (e: any) {
+      console.error("Popup sign-in error:", e);
+      if (e?.code === 'auth/unauthorized-domain') {
+        alert("Domain Not Authorized!\n\nPlease add your production domain to Firebase Console:\nFirebase Console -> Authentication -> Settings -> Authorized Domains.");
+      } else {
+        // Fallback to redirect if popup is blocked or closed by browser security
+        try {
+          await signInWithRedirect(auth, provider);
+        } catch (err: any) {
+          console.error("Redirect sign-in error:", err);
+          alert(`Sign-in failed: ${err?.message || err}`);
+        }
+      }
+    }
+  };
+
+  const handleRedirectLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    try {
+      await signInWithRedirect(auth, provider);
+    } catch (e: any) {
+      console.error("Redirect sign-in error:", e);
+      alert(`Sign-in error: ${e?.message || e}`);
+    }
   };
 
   const handleLogout = async () => {
@@ -243,35 +280,116 @@ const Admin: React.FC = () => {
     return d;
   });
 
-  const possibleScores = ['12', '10', '8', '6', '4', '2', '0'];
-
-  const allLanguages = Array.from(new Set(languageStats.flatMap(ls => Object.keys(ls.languages || {}))));
-  const languageLineData = languageStats.map(ls => {
-    const total = Object.values(ls.languages || {}).reduce((sum, count) => sum + count, 0);
-    const point: Record<string, string | number> = { date: ls.date, _total: total };
-    allLanguages.forEach(lang => {
-      const count = ls.languages?.[lang] || 0;
-      point[lang] = total > 0 ? Math.round((count / total) * 1000) / 10 : 0;
-      point[`_raw_${lang}`] = count;
-    });
-    return point;
-  });
-
   const completionSource = completionMode === 'day'
     ? completionStats.filter(c => c.date === completionDate)
     : completionStats;
-  const completionDistribution = completionSource.reduce((acc, c) => {
-    if (c.distribution) Object.entries(c.distribution).forEach(([sc, ct]) => { acc[sc] = (acc[sc] || 0) + ct; });
-    return acc;
-  }, {} as Record<string, number>);
-  const completionChartData = (() => {
-    const maxScore = 72;
-    const data: { score: number; count: number }[] = [];
-    for (let i = 0; i <= maxScore; i += 2) {
-      data.push({ score: i, count: completionDistribution[String(i)] || 0 });
-    }
-    return data;
-  })();
+
+  const completionDistribution = useMemo(() => {
+    return completionSource.reduce((acc, c) => {
+      if (c.distribution) {
+        Object.entries(c.distribution).forEach(([sc, ct]) => {
+          acc[sc] = (acc[sc] || 0) + Number(ct);
+        });
+      }
+      return acc;
+    }, {} as Record<string, number>);
+  }, [completionSource]);
+
+  const completionChartData = useMemo(() => {
+    return Object.entries(completionDistribution)
+      .map(([sc, count]) => ({
+        score: Number(sc),
+        count
+      }))
+      .filter(item => !isNaN(item.score))
+      .sort((a, b) => a.score - b.score);
+  }, [completionDistribution]);
+
+  const gameScoreSource = useMemo(() => {
+    return stats.filter(s => {
+      const matchDate = gameScoreMode === 'day' ? s.date === gameScoreDate : true;
+      const matchGame = gameScoreGame === 'ALL' ? true : s.gameType === gameScoreGame;
+      return matchDate && matchGame;
+    });
+  }, [stats, gameScoreMode, gameScoreDate, gameScoreGame]);
+
+  const gameScoreSummary = useMemo(() => {
+    let totalPlayedSum = 0;
+    let totalWithDistribution = 0;
+
+    // scoreMap: score -> gameType -> count
+    const scoreMap: Record<number, Record<string, number>> = {};
+    const standardScores = [12, 10, 8, 6, 4, 2, 0];
+    standardScores.forEach(sc => {
+      scoreMap[sc] = {};
+    });
+
+    gameScoreSource.forEach(s => {
+      totalPlayedSum += s.totalPlayed || 0;
+      if (s.distribution && Object.keys(s.distribution).length > 0) {
+        Object.entries(s.distribution).forEach(([ptsStr, count]) => {
+          const numPts = Number(ptsStr);
+          const numCount = Number(count);
+          if (!isNaN(numPts) && !isNaN(numCount) && numCount > 0) {
+            if (!scoreMap[numPts]) {
+              scoreMap[numPts] = {};
+            }
+            scoreMap[numPts][s.gameType] = (scoreMap[numPts][s.gameType] || 0) + numCount;
+            totalWithDistribution += numCount;
+          }
+        });
+      }
+    });
+
+    const activeGameTypes = gameScoreGame === 'ALL'
+      ? ALL_GAME_TYPES
+      : [gameScoreGame];
+
+    const chartData = Object.keys(scoreMap)
+      .map(Number)
+      .sort((a, b) => b - a) // Left to right: 12 down to 0
+      .map(score => {
+        const row: Record<string, any> = { score };
+        let totalForScore = 0;
+        activeGameTypes.forEach(gType => {
+          const cnt = scoreMap[score]?.[gType] || 0;
+          row[gType] = cnt;
+          totalForScore += cnt;
+        });
+        row.totalPlays = totalForScore;
+        return row;
+      });
+
+    return { chartData, totalPlayedSum, totalWithDistribution, activeGameTypes };
+  }, [gameScoreSource, gameScoreGame]);
+
+  const CustomGameScoreTooltip = ({ active, payload, label }: { active?: boolean, payload?: any[], label?: string }) => {
+    if (!active || !payload?.length) return null;
+    const data = payload[0]?.payload;
+    const scoreVal = data?.score !== undefined ? data.score : label;
+    const nonZeroPayload = payload.filter(e => (e.value || 0) > 0);
+    const total = payload.reduce((sum: number, e: any) => sum + (e.value || 0), 0);
+
+    return (
+      <div className="bg-[#1a1a2e] border border-white/20 rounded-lg p-3 shadow-xl min-w-[160px]">
+        <p className="text-white font-bold mb-2 border-b border-white/10 pb-1">{scoreVal} pts</p>
+        {nonZeroPayload.length > 0 ? (
+          nonZeroPayload.map((e: any, i: number) => (
+            <div key={i} className="flex items-center justify-between gap-4 text-sm mb-1">
+              <span style={{ color: e.color }} className="font-bold">{e.name}:</span>
+              <span className="text-white font-bold">{e.value} play{e.value !== 1 ? 's' : ''}</span>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-400 text-xs italic">No plays recorded</p>
+        )}
+        <div className="flex items-center justify-between gap-4 text-sm mt-2 pt-2 border-t border-white/10">
+          <span className="text-gray-400 font-bold uppercase tracking-wider text-xs">Total:</span>
+          <span className="text-white font-black">{total} play{total !== 1 ? 's' : ''}</span>
+        </div>
+      </div>
+    );
+  };
 
   const CustomGamesTooltip = ({ active, payload, label }: { active?: boolean, payload?: { color?: string, name?: string, value?: number }[], label?: string }) => {
     if (!active || !payload?.length) return null;
@@ -284,41 +402,6 @@ const Admin: React.FC = () => {
       </div>
     );
   };
-
-  const dailyDetailSourceStats = (() => {
-    if (detailMode === 'day') {
-      if (detailGame === 'ALL') return stats.filter(s => s.date === detailDate);
-      return stats.filter(s => s.date === detailDate && s.gameType === detailGame);
-    } else {
-      if (detailGame === 'ALL') return stats;
-      return stats.filter(s => s.gameType === detailGame);
-    }
-  })();
-  const dailyDetailTotalPlayed = dailyDetailSourceStats.reduce((sum, s) => sum + s.totalPlayed, 0);
-  const dailyDetailDistribution = (() => {
-    if (detailGame === 'ALL') {
-      return possibleScores.map(score => {
-        const row: Record<string, string | number> = { score: `${score} pts` };
-        gameTypes.forEach(type => {
-          const relevantStats = detailMode === 'day'
-            ? stats.filter(s => s.date === detailDate && s.gameType === type)
-            : stats.filter(s => s.gameType === type);
-          const total = relevantStats.reduce((sum, s) => sum + (s.distribution?.[score] || 0), 0);
-          row[type] = total;
-        });
-        return row;
-      });
-    } else {
-      const relevantStats = detailMode === 'day'
-        ? stats.filter(s => s.date === detailDate && s.gameType === detailGame)
-        : stats.filter(s => s.gameType === detailGame);
-      const aggregated = relevantStats.reduce((acc, s) => {
-        if (s.distribution) Object.entries(s.distribution).forEach(([sc, ct]) => { acc[sc] = (acc[sc] || 0) + ct; });
-        return acc;
-      }, {} as Record<string, number>);
-      return possibleScores.map(score => ({ score: `${score} pts`, count: aggregated[score] || 0 }));
-    }
-  })();
 
   // Infinite mode computed data
   const infiniteVolumeChartData = useMemo(() => {
@@ -358,109 +441,9 @@ const Admin: React.FC = () => {
     return t;
   }, [infiniteVolumeChartData]);
 
-  const infiniteScoreHistogram = useMemo(() => {
-    const source = infiniteMode === 'day'
-      ? infiniteRuns.filter(r => r.timestamp?.toDate && r.timestamp.toDate().toISOString().split('T')[0] === infiniteDate)
-      : infiniteRuns;
-
-    const buckets = [
-      { label: '0', min: 0, max: 0 },
-      { label: '1–5', min: 1, max: 5 },
-      { label: '6–10', min: 6, max: 10 },
-      { label: '11–20', min: 11, max: 20 },
-      { label: '21–30', min: 21, max: 30 },
-      { label: '31–50', min: 31, max: 50 },
-      { label: '51+', min: 51, max: Infinity },
-    ];
-
-    return buckets.map(b => {
-      const inBucket = source.filter(r => r.score >= b.min && r.score <= b.max);
-      const wins = inBucket.filter(r => r.wasCompleted);
-      const losses = inBucket.filter(r => !r.wasCompleted);
-      const breakdown: Record<string, number> = {};
-      inBucket.forEach(r => {
-        const key = `${r.gameId.replace('euro', '')} (${r.difficulty})`;
-        breakdown[key] = (breakdown[key] || 0) + 1;
-      });
-      return { bucket: b.label, wins: wins.length, losses: losses.length, total: inBucket.length, breakdown };
-    });
-  }, [infiniteRuns, infiniteMode, infiniteDate]);
-
-  const infiniteStreakHistogram = useMemo(() => {
-    const source = infiniteMode === 'day'
-      ? infiniteRuns.filter(r => r.timestamp?.toDate && r.timestamp.toDate().toISOString().split('T')[0] === infiniteDate)
-      : infiniteRuns;
-
-    const maxStreak = source.reduce((max, r) => Math.max(max, r.streak), 0);
-    const cap = Math.max(8, maxStreak);
-
-    const data: { streak: string; wins: number; losses: number; total: number; breakdown: Record<string, number> }[] = [];
-    for (let i = 0; i <= cap; i++) {
-      const label = i === cap && cap >= 8 ? `${i}+` : `${i}`;
-      const inBucket = i === cap && cap >= 8
-        ? source.filter(r => r.streak >= i)
-        : source.filter(r => r.streak === i);
-      const wins = inBucket.filter(r => r.wasCompleted);
-      const losses = inBucket.filter(r => !r.wasCompleted);
-      const breakdown: Record<string, number> = {};
-      inBucket.forEach(r => {
-        const key = `${r.gameId.replace('euro', '')} (${r.difficulty})`;
-        breakdown[key] = (breakdown[key] || 0) + 1;
-      });
-      data.push({ streak: label, wins: wins.length, losses: losses.length, total: inBucket.length, breakdown });
-    }
-    return data;
-  }, [infiniteRuns, infiniteMode, infiniteDate]);
-
-  const infiniteMedianScore = useMemo(() => {
-    const scores = infiniteRuns.map(r => r.score).sort((a, b) => a - b);
-    if (scores.length === 0) return 0;
-    const mid = Math.floor(scores.length / 2);
-    return scores.length % 2 !== 0 ? scores[mid] : (scores[mid - 1] + scores[mid]) / 2;
-  }, [infiniteRuns]);
-
-  const infiniteMedianStreak = useMemo(() => {
-    const streaks = infiniteRuns.map(r => r.streak).sort((a, b) => a - b);
-    if (streaks.length === 0) return 0;
-    const mid = Math.floor(streaks.length / 2);
-    return streaks.length % 2 !== 0 ? streaks[mid] : (streaks[mid - 1] + streaks[mid]) / 2;
-  }, [infiniteRuns]);
-
-  const playtimeChartData = useMemo(() => {
-    return playtimeStats.map(stat => {
-      const divisor = playtimeUnit === 'hours' ? 3600 : 60;
-      const data: Record<string, number | string> = { date: stat.date };
-      
-      if (playtimeMode === 'summed') {
-        data.Total = Math.round(((stat.totalSeconds || 0) / divisor) * 10) / 10;
-        data.Daily = Math.round(((stat.dailySeconds || 0) / divisor) * 10) / 10;
-        data.Infinite = Math.round(((stat.infiniteSeconds || 0) / divisor) * 10) / 10;
-        data.Navigation = Math.round(((stat.navigationSeconds || 0) / divisor) * 10) / 10;
-      } else {
-        Object.entries(stat).forEach(([key, value]) => {
-          if (key !== 'date' && key !== 'lastUpdated' && !key.endsWith('Seconds')) {
-            data[key] = Math.round(((value as number) / divisor) * 10) / 10;
-          }
-        });
-      }
-      return data;
-    });
-  }, [playtimeStats, playtimeMode, playtimeUnit]);
-
-  const playtimeKeys = useMemo(() => {
-    if (playtimeChartData.length === 0) return [];
-    const keys = new Set<string>();
-    playtimeChartData.forEach(d => {
-      Object.keys(d).forEach(k => {
-        if (k !== 'date') keys.add(k);
-      });
-    });
-    return Array.from(keys);
-  }, [playtimeChartData]);
-
   if (loading) return <div className="min-h-screen flex items-center justify-center text-white bg-[#050510]">Loading...</div>;
 
-  if (!user || !ADMIN_EMAILS.includes(user.email || '')) {
+  if (!devBypass && (!user || !ADMIN_EMAILS.includes(user.email || ''))) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center text-white bg-[#050510] page-fade px-6">
         <div className="max-w-md w-full text-center space-y-8">
@@ -474,6 +457,15 @@ const Admin: React.FC = () => {
             </p>
           </div>
           <div className="flex flex-col gap-4">
+            <button 
+              onClick={() => {
+                setDevBypass(true);
+                fetchData();
+              }} 
+              className="w-full px-8 py-4 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 rounded-2xl font-bold uppercase tracking-widest text-xs text-amber-300 transition-all shadow-lg shadow-amber-500/10 cursor-pointer"
+            >
+              ⚡ Bypass Auth (Dev / Preview Mode)
+            </button>
             <button onClick={() => navigate('/')} className="w-full px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 rounded-2xl font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-pink-500/20 text-sm">
               Return to Greenroom
             </button>
@@ -493,7 +485,7 @@ const Admin: React.FC = () => {
           <div className="flex items-center gap-4 mb-2">
             <h1 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter text-white glow-text leading-none">Admin Dashboard</h1>
             <span className="text-xs bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-mono px-3 py-1 rounded-full">
-              {user.email}
+              {user?.email || 'Dev Mode'}
             </span>
             <button onClick={handleLogout} className="text-xs text-gray-400 hover:text-white underline font-semibold">
               Sign Out
@@ -539,125 +531,87 @@ const Admin: React.FC = () => {
             <h2 className="text-xl font-black uppercase tracking-widest text-white mb-6">Games Breakdown</h2>
             <div className="h-[400px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={gameData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }} onClick={(state) => { if (state?.activeLabel) setDetailDate(String(state.activeLabel)); }} className="cursor-pointer">
+                <BarChart data={gameData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
                   <XAxis dataKey="date" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
                   <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
                   <Tooltip content={<CustomGamesTooltip />} cursor={{ fill: '#ffffff10' }} />
                   <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                  {gameTypes.map((type, index) => (<Bar key={type} dataKey={type} name={getGameName(type)} stackId="a" fill={COLORS[index % COLORS.length]} />))}
+                  {gameTypes.map((type, index) => (<Bar key={type} dataKey={type} name={getGameName(type)} stackId="a" fill={GAME_COLORS[type] || COLORS[index % COLORS.length]} />))}
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </section>
 
-          {/* 2. Score Distribution / Daily Game Details */}
-          <section id="daily-details" className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
-            <h2 className="text-xl font-black uppercase tracking-widest text-white mb-6">Score Distribution</h2>
-            <div className="flex flex-col sm:flex-row sm:items-center flex-wrap gap-4 mb-8">
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-bold uppercase tracking-widest text-gray-500">View:</span>
-                <select value={detailMode} onChange={(e) => setDetailMode(e.target.value as 'day' | 'period')} className="bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-white text-sm font-bold outline-none focus:border-pink-500 appearance-none cursor-pointer">
-                  <option value="day" className="bg-[#1a1a2e] text-white">Specific Day</option>
-                  <option value="period" className="bg-[#1a1a2e] text-white">Entire Period</option>
-                </select>
-              </div>
-              {detailMode === 'day' && (
+          {/* Per-Game Score Distribution */}
+          <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-2">
+              <h2 className="text-xl font-black uppercase tracking-widest text-white mb-2 lg:mb-0">Per-Game Score Distribution</h2>
+              <div className="flex flex-col sm:flex-row sm:items-center flex-wrap gap-4">
                 <div className="flex items-center gap-3">
-                  <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Date:</span>
-                  <input type="date" value={detailDate} onChange={(e) => setDetailDate(e.target.value)} className="bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-white text-sm font-bold outline-none focus:border-pink-500" />
+                  <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Game:</span>
+                  <select value={gameScoreGame} onChange={(e) => setGameScoreGame(e.target.value)} className="bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-white text-sm font-bold outline-none focus:border-pink-500 appearance-none cursor-pointer">
+                    <option value="ALL" className="bg-[#1a1a2e] text-white">All Games</option>
+                    <option value="WORD_GAME" className="bg-[#1a1a2e] text-white">EuroSong</option>
+                    <option value="ARTIST_WORD_GAME" className="bg-[#1a1a2e] text-white">EuroArtist</option>
+                    <option value="LINKS_GAME" className="bg-[#1a1a2e] text-white">EuroLinks</option>
+                    <option value="GUESSER" className="bg-[#1a1a2e] text-white">EuroGuess</option>
+                    <option value="ARENA" className="bg-[#1a1a2e] text-white">EuroArena</option>
+                    <option value="REFRAIN_GAME" className="bg-[#1a1a2e] text-white">EuroRefrain</option>
+                  </select>
                 </div>
-              )}
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Game:</span>
-                <select value={detailGame} onChange={(e) => setDetailGame(e.target.value)} className="bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-white text-sm font-bold outline-none focus:border-pink-500 appearance-none cursor-pointer">
-                  <option value="ALL" className="bg-[#1a1a2e] text-white">All Games</option>
-                  {Object.keys(gameNameMap).map(type => (<option key={type} value={type} className="bg-[#1a1a2e] text-white">{getGameName(type)}</option>))}
-                </select>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-bold uppercase tracking-widest text-gray-500">View:</span>
+                  <select value={gameScoreMode} onChange={(e) => setGameScoreMode(e.target.value as 'period' | 'day')} className="bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-white text-sm font-bold outline-none focus:border-pink-500 appearance-none cursor-pointer">
+                    <option value="day" className="bg-[#1a1a2e] text-white">Specific Day</option>
+                    <option value="period" className="bg-[#1a1a2e] text-white">Entire Period</option>
+                  </select>
+                </div>
+                {gameScoreMode === 'day' && (
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Date:</span>
+                    <input type="date" value={gameScoreDate} onChange={(e) => setGameScoreDate(e.target.value)} className="bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-white text-sm font-bold outline-none focus:border-pink-500 text-white" />
+                  </div>
+                )}
               </div>
             </div>
             <p className="text-xs text-gray-400 mb-6 uppercase tracking-widest">
-              {detailMode === 'day' ? `Showing ${detailDate}` : `Aggregate over last ${daysSpan} days`} — {detailGame === 'ALL' ? 'All Games' : getGameName(detailGame)} — {dailyDetailTotalPlayed} plays
+              {gameScoreMode === 'period'
+                ? `Score breakdown across ${gameScoreGame === 'ALL' ? 'all games' : getGameName(gameScoreGame)} over period — ${gameScoreSummary.totalWithDistribution} score entries logged (${gameScoreSummary.totalPlayedSum} total plays)`
+                : `Score breakdown for ${gameScoreGame === 'ALL' ? 'all games' : getGameName(gameScoreGame)} on ${gameScoreDate} — ${gameScoreSummary.totalWithDistribution} score entries logged (${gameScoreSummary.totalPlayedSum} total plays)`}
             </p>
-            {detailGame === 'ALL' ? (
-              <div>
-                <div className="h-[400px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={dailyDetailDistribution} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
-                      <XAxis dataKey="score" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
-                      <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
-                      <Tooltip content={<CustomGamesTooltip />} cursor={{ fill: '#ffffff10' }} />
-                      <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                      {gameTypes.map((type, index) => (<Bar key={type} dataKey={type} name={getGameName(type)} stackId="a" fill={COLORS[index % COLORS.length]} />))}
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {detailMode === 'day' && (
-                  <div className="lg:col-span-1 bg-white/5 border border-white/10 rounded-xl p-6 flex flex-col justify-center">
-                    <h3 className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">Correct Answer</h3>
-                    {dailyAnswer ? (
-                      <div className="space-y-4">
-                        {detailGame === 'REFRAIN_GAME' ? (
-                          <div className="space-y-2">
-                            {['easy', 'medium', 'hard', 'expert'].map(tier => (
-                              <div key={tier} className="bg-white/5 p-3 rounded-lg">
-                                <div className="text-[10px] font-bold uppercase text-gray-400 mb-1">{tier}</div>
-                                <div className="text-sm font-bold text-white">{(dailyAnswer as unknown as Record<string, { title: string, artist?: string }>)[tier]?.title}</div>
-                                <div className="text-xs text-gray-400">{(dailyAnswer as unknown as Record<string, { title: string, artist?: string }>)[tier]?.artist}</div>
-                              </div>
-                            ))}
-                          </div>
-                        ) : detailGame === 'LINKS_GAME' ? (
-                          <div className="space-y-2">
-                            {(dailyAnswer as { difficulty: string, category: string, items: string[] }[]).map((g, i: number) => (
-                              <div key={i} className="bg-white/5 p-3 rounded-lg">
-                                <div className="text-[10px] font-bold uppercase text-gray-400 mb-1">{g.difficulty}</div>
-                                <div className="text-sm font-bold text-white mb-1">{g.category}</div>
-                                <div className="text-xs text-gray-400">{g.items.join(', ')}</div>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <>
-                            <div>
-                              <div className="text-2xl font-black text-white">{(dailyAnswer as MasterSong).title}</div>
-                              <div className="text-sm font-bold text-gray-400">{(dailyAnswer as MasterSong).artist}</div>
-                              <div className="text-xs text-gray-500 mt-1">{(dailyAnswer as MasterSong).country} {(dailyAnswer as MasterSong).year}</div>
-                            </div>
-                            <div className="pt-4 border-t border-white/10">
-                              <div className="text-[10px] font-bold uppercase text-gray-500 mb-1">Weight Score</div>
-                              <div className="text-xl font-black text-pink-400">{(dailyAnswer as MasterSong).weight || 0}</div>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="text-gray-500 italic">No answer data available</div>
-                    )}
-                  </div>
-                )}
-                <div className={detailMode === 'day' ? 'lg:col-span-2' : 'lg:col-span-3'}>
-                  <div className="h-[400px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={dailyDetailDistribution} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
-                        <XAxis dataKey="score" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
-                        <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
-                        <Tooltip contentStyle={{ backgroundColor: '#1a1a2e', border: '1px solid #ffffff20', borderRadius: '8px' }} itemStyle={{ color: '#fff', fontWeight: 'bold' }} />
-                        <Bar dataKey="count" name="Number of Players" fill="#10B981" radius={[4, 4, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </div>
-            )}
+            <div className="h-[400px] w-full">
+              {gameScoreSummary.chartData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={gameScoreSummary.chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
+                    <XAxis
+                      dataKey="score"
+                      stroke="#ffffff60"
+                      tick={{ fill: '#ffffff60', fontSize: 11 }}
+                      tickFormatter={(v: number) => `${v} pts`}
+                    />
+                    <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
+                    <Tooltip content={<CustomGameScoreTooltip />} cursor={{ fill: '#ffffff10' }} />
+                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                    {gameScoreSummary.activeGameTypes.map((type) => (
+                      <Bar
+                        key={type}
+                        dataKey={type}
+                        name={getGameName(type)}
+                        stackId="a"
+                        fill={GAME_COLORS[type] || '#EC4899'}
+                      />
+                    ))}
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-500 italic">No per-game score distribution data available for this selection</div>
+              )}
+            </div>
           </section>
 
-          {/* 3. Daily Completion Scores */}
+          {/* 2. Daily Completion Scores */}
           <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
               <h2 className="text-xl font-black uppercase tracking-widest text-white mb-6">Daily Completion Scores</h2>
@@ -689,12 +643,9 @@ const Admin: React.FC = () => {
                     <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
                     <XAxis
                       dataKey="score"
-                      type="number"
-                      domain={[0, 72]}
-                      ticks={Array.from({ length: 13 }, (_, i) => i * 6)}
                       stroke="#ffffff60"
                       tick={{ fill: '#ffffff60', fontSize: 11 }}
-                      tickFormatter={(v: number) => `${v}`}
+                      tickFormatter={(v: number) => `${v} pts`}
                     />
                     <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
                     <Tooltip
@@ -719,7 +670,7 @@ const Admin: React.FC = () => {
             </div>
           </section>
 
-          {/* 4. Infinite Mode Stats */}
+          {/* 3. Infinite Mode Stats */}
           <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
             {/* Header + Controls */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
@@ -766,7 +717,7 @@ const Admin: React.FC = () => {
             </div>
 
             {/* Panel 1: Volume Chart */}
-            <div className="mb-12">
+            <div>
               <h3 className="text-sm font-black uppercase tracking-widest text-gray-400 mb-1">
                 {infiniteMode === 'period' ? 'Daily Volume' : `Volume by Game — ${infiniteDate}`}
               </h3>
@@ -854,126 +805,9 @@ const Admin: React.FC = () => {
                 )}
               </div>
             </div>
-
-            {/* Panel 2: Score Distribution */}
-            <div className="mb-12">
-              <div className="flex items-baseline justify-between mb-1">
-                <h3 className="text-sm font-black uppercase tracking-widest text-gray-400">Score Distribution</h3>
-                <span className="text-xs text-gray-500">
-                  Median: <span className="text-yellow-400 font-bold">{infiniteMedianScore}</span>
-                  {' · '}{infiniteRuns.length} runs
-                </span>
-              </div>
-              <p className="text-xs text-gray-500 mb-6">Final score of each run — green = completed, red = lost</p>
-              <div className="h-[300px] w-full">
-                {infiniteScoreHistogram.some(d => d.total > 0) ? (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={infiniteScoreHistogram} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
-                      <XAxis dataKey="bucket" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
-                      <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
-                      <Tooltip
-                        content={({ active, payload, label }) => {
-                          if (!active || !payload?.length) return null;
-                          const d = payload[0]?.payload;
-                          const breakdown = d.breakdown || {};
-                          return (
-                            <div className="bg-[#1a1a2e] border border-white/20 p-4 rounded-xl shadow-xl min-w-[180px] max-h-[300px] overflow-y-auto">
-                              <p className="text-white font-bold mb-2">Score: {label}</p>
-                              <div className="space-y-1 text-sm mb-2">
-                                <div className="flex justify-between gap-4"><span className="text-white">Total</span><span className="text-white font-bold">{d.total}</span></div>
-                                <div className="flex justify-between gap-4"><span className="text-red-400">Losses</span><span className="text-white font-bold">{d.losses}</span></div>
-                                <div className="flex justify-between gap-4"><span className="text-green-400">Wins</span><span className="text-white font-bold">{d.wins}</span></div>
-                              </div>
-                              {Object.keys(breakdown).length > 0 && (
-                                <div className="border-t border-white/10 pt-2 space-y-1">
-                                  <div className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-1">Breakdown</div>
-                                  {Object.entries(breakdown)
-                                    .sort(([, a], [, b]) => (b as number) - (a as number))
-                                    .map(([key, count]) => (
-                                      <div key={key} className="flex justify-between text-xs gap-4">
-                                        <span className="text-gray-400">{key}</span>
-                                        <span className="text-white font-bold">{count as number}</span>
-                                      </div>
-                                    ))}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        }}
-                        cursor={{ fill: '#ffffff10' }}
-                      />
-                      <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                      <Bar dataKey="losses" name="Losses" stackId="a" fill="#EF4444" />
-                      <Bar dataKey="wins" name="Wins" stackId="a" fill="#10B981" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <div className="flex items-center justify-center h-full text-gray-500 italic">No run data available</div>
-                )}
-              </div>
-            </div>
-
-            {/* Panel 3: Streak Distribution */}
-            <div>
-              <div className="flex items-baseline justify-between mb-1">
-                <h3 className="text-sm font-black uppercase tracking-widest text-gray-400">Streak Distribution</h3>
-                <span className="text-xs text-gray-500">
-                  Median: <span className="text-purple-400 font-bold">{infiniteMedianStreak}</span>
-                </span>
-              </div>
-              <p className="text-xs text-gray-500 mb-6">Final streak when each run ended — where do players die?</p>
-              <div className="h-[300px] w-full">
-                {infiniteStreakHistogram.some(d => d.total > 0) ? (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={infiniteStreakHistogram} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
-                      <XAxis dataKey="streak" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
-                      <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
-                      <Tooltip
-                        content={({ active, payload, label }) => {
-                          if (!active || !payload?.length) return null;
-                          const d = payload[0]?.payload;
-                          const breakdown = d.breakdown || {};
-                          return (
-                            <div className="bg-[#1a1a2e] border border-white/20 p-4 rounded-xl shadow-xl min-w-[180px] max-h-[300px] overflow-y-auto">
-                              <p className="text-white font-bold mb-2">Streak: {label}</p>
-                              <div className="space-y-1 text-sm mb-2">
-                                <div className="flex justify-between gap-4"><span className="text-white">Total</span><span className="text-white font-bold">{d.total}</span></div>
-                                <div className="flex justify-between gap-4"><span className="text-red-400">Losses</span><span className="text-white font-bold">{d.losses}</span></div>
-                                <div className="flex justify-between gap-4"><span className="text-green-400">Wins</span><span className="text-white font-bold">{d.wins}</span></div>
-                              </div>
-                              {Object.keys(breakdown).length > 0 && (
-                                <div className="border-t border-white/10 pt-2 space-y-1">
-                                  <div className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-1">Breakdown</div>
-                                  {Object.entries(breakdown)
-                                    .sort(([, a], [, b]) => (b as number) - (a as number))
-                                    .map(([key, count]) => (
-                                      <div key={key} className="flex justify-between text-xs gap-4">
-                                        <span className="text-gray-400">{key}</span>
-                                        <span className="text-white font-bold">{count as number}</span>
-                                      </div>
-                                    ))}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        }}
-                        cursor={{ fill: '#ffffff10' }}
-                      />
-                      <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                      <Bar dataKey="losses" name="Losses" stackId="a" fill="#EF4444" />
-                      <Bar dataKey="wins" name="Wins" stackId="a" fill="#10B981" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <div className="flex items-center justify-center h-full text-gray-500 italic">No run data available</div>
-                )}
-              </div>
-            </div>
           </section>
 
-          {/* 5. New Players Discovery */}
+          {/* 4. New Players Discovery */}
           <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
             <h2 className="text-xl font-black uppercase tracking-widest text-white mb-6">New Players Discovery</h2>
             <div className="h-[400px] w-full">
@@ -990,55 +824,7 @@ const Admin: React.FC = () => {
             </div>
           </section>
 
-          {/* 6. Active Users by Language */}
-          <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
-            <h2 className="text-xl font-black uppercase tracking-widest text-white mb-2">Active Users by Language</h2>
-            <p className="text-xs text-gray-400 mb-6 uppercase tracking-widest">One line per language over the selected period</p>
-            <div className="h-[400px] w-full">
-              {languageLineData.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={languageLineData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
-                    <XAxis dataKey="date" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
-                    <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} tickFormatter={(v: number) => `${v}%`} />
-                    <Tooltip
-                      content={({ active, payload, label }) => {
-                        if (!active || !payload?.length) return null;
-                        const data = payload[0]?.payload;
-                        const totalUsers = data?._total || 0;
-                        const sorted = [...payload].sort((a, b) => ((b.value as number) || 0) - ((a.value as number) || 0));
-                        return (
-                          <div className="bg-[#1a1a2e] border border-white/20 p-4 rounded-xl shadow-xl max-h-[300px] overflow-y-auto">
-                            <p className="text-white font-bold mb-1">{label}</p>
-                            <p className="text-gray-400 text-xs mb-2">Total: {totalUsers} users</p>
-                            <div className="space-y-1 border-t border-white/10 pt-2">
-                              {sorted.map((entry: { dataKey?: string | number | ((obj: unknown) => unknown), color?: string, name?: string | number, value?: unknown }, i: number) => {
-                                const rawCount = data?.[`_raw_${entry.dataKey as string}`] || 0;
-                                return (
-                                  <div key={i} className="flex items-center justify-between gap-4 text-xs">
-                                    <span style={{ color: entry.color }} className="font-bold">{entry.name}</span>
-                                    <span className="text-white font-bold">{entry.value as number}% <span className="text-gray-400 font-normal">({rawCount})</span></span>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        );
-                      }}
-                    />
-                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                    {allLanguages.map((lang, index) => (
-                      <Line key={lang} type="monotone" dataKey={lang} name={lang} stroke={LANG_COLORS[index % LANG_COLORS.length]} strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 6 }} />
-                    ))}
-                  </LineChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="flex items-center justify-center h-full text-gray-500 italic">No language data available</div>
-              )}
-            </div>
-          </section>
-
-          {/* 7. Share Clicks */}
+          {/* 5. Share Clicks */}
           <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
             <h2 className="text-xl font-black uppercase tracking-widest text-white mb-6">Share Clicks</h2>
             <div className="h-[400px] w-full">
@@ -1055,7 +841,7 @@ const Admin: React.FC = () => {
             </div>
           </section>
 
-          {/* 8. Support Clicks */}
+          {/* 6. Support Clicks */}
           <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
             <h2 className="text-xl font-black uppercase tracking-widest text-white mb-6">Support Clicks</h2>
             <div className="h-[400px] w-full">
@@ -1069,59 +855,6 @@ const Admin: React.FC = () => {
                   <Line type="monotone" dataKey="supportClicks" name="Support Clicks" stroke="#FFDD00" strokeWidth={3} dot={{ r: 6, fill: '#FFDD00', strokeWidth: 2, stroke: '#000' }} activeDot={{ r: 8 }} />
                 </LineChart>
               </ResponsiveContainer>
-            </div>
-          </section>
-
-          {/* 9. Playtime Tracking */}
-          <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-              <h2 className="text-xl font-black uppercase tracking-widest text-white">Playtime Tracking</h2>
-              <div className="flex flex-col sm:flex-row sm:items-center flex-wrap gap-4">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-bold uppercase tracking-widest text-gray-500">View:</span>
-                  <select value={playtimeMode} onChange={(e) => setPlaytimeMode(e.target.value as 'summed' | 'individual')} className="bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-white text-sm font-bold outline-none focus:border-pink-500 appearance-none cursor-pointer">
-                    <option value="summed" className="bg-[#1a1a2e] text-white">Summed</option>
-                    <option value="individual" className="bg-[#1a1a2e] text-white">Individual Pages</option>
-                  </select>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Unit:</span>
-                  <select value={playtimeUnit} onChange={(e) => setPlaytimeUnit(e.target.value as 'minutes' | 'hours')} className="bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-white text-sm font-bold outline-none focus:border-pink-500 appearance-none cursor-pointer">
-                    <option value="minutes" className="bg-[#1a1a2e] text-white">Minutes</option>
-                    <option value="hours" className="bg-[#1a1a2e] text-white">Hours</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div className="h-[400px] w-full">
-              {playtimeChartData.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={playtimeChartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#ffffff20" vertical={false} />
-                    <XAxis dataKey="date" stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
-                    <YAxis stroke="#ffffff60" tick={{ fill: '#ffffff60', fontSize: 12 }} />
-                    <Tooltip
-                      contentStyle={{ backgroundColor: '#1a1a2e', border: '1px solid #ffffff20', borderRadius: '8px' }}
-                      itemStyle={{ color: '#fff', fontWeight: 'bold' }}
-                    />
-                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                    {playtimeKeys.map((key, index) => (
-                      <Line
-                        key={key}
-                        type="monotone"
-                        dataKey={key}
-                        name={key}
-                        stroke={LANG_COLORS[index % LANG_COLORS.length]}
-                        strokeWidth={key === 'Total' ? 4 : 2}
-                        dot={{ r: key === 'Total' ? 4 : 2 }}
-                        activeDot={{ r: key === 'Total' ? 6 : 4 }}
-                      />
-                    ))}
-                  </LineChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="flex items-center justify-center h-full text-gray-500 italic">No playtime data available</div>
-              )}
             </div>
           </section>
         </div>

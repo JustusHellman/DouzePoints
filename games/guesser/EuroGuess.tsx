@@ -12,6 +12,7 @@ import { useLocation } from 'react-router-dom';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
 import { CategoryMasteredScreen } from '../../components/CategoryMasteredScreen.tsx';
 import { reportInfiniteRun } from '../../utils/firebaseService.ts';
+import { awardDailyPack, getDailyPacksEarned } from '../../utils/cards.ts';
 import { soundManager } from '../../utils/sounds.ts';
 import { 
   getInfiniteGameState, 
@@ -39,11 +40,19 @@ interface HintBoxProps {
   idx: number;
   isActive?: boolean;
   songTitle: string;
+  songId: string | number;
   isGameOver?: boolean;
+  allSongs: MasterSong[];
 }
 
-const HintBox: React.FC<HintBoxProps> = ({ hint, attempt, idx, isActive, songTitle, isGameOver }) => {
-  const isCorrect = attempt?.toLowerCase() === songTitle.toLowerCase();
+const HintBox: React.FC<HintBoxProps> = ({ hint, attempt, idx, isActive, songTitle, songId, isGameOver, allSongs }) => {
+  const attemptedSong = useMemo(() => {
+    if (!attempt) return null;
+    return allSongs.find(s => String(s.id) === String(attempt) || s.title.toLowerCase() === attempt.toLowerCase());
+  }, [attempt, allSongs]);
+
+  const isCorrect = attemptedSong ? String(attemptedSong.id) === String(songId) : attempt?.toLowerCase() === songTitle.toLowerCase();
+  const displayTitle = attemptedSong ? attemptedSong.title : attempt;
   const displayIdx = idx + 1;
   
   return (
@@ -70,7 +79,7 @@ const HintBox: React.FC<HintBoxProps> = ({ hint, attempt, idx, isActive, songTit
         {attempt ? (
           <div className="flex items-center gap-1 bg-black/20 px-1.5 py-0.5 rounded-full border border-white/5">
             <span className="text-[6px] md:text-[8px] font-black text-gray-500 uppercase tracking-widest truncate max-w-[60px] sm:max-w-[100px] md:max-w-[180px]">
-              {attempt}
+              {displayTitle}
             </span>
             <div className={`shrink-0 w-2.5 h-2.5 md:w-3.5 md:h-3.5 rounded-full flex items-center justify-center text-[5px] md:text-[7px] font-black text-white ${
               isCorrect ? 'bg-green-600' : 'bg-red-600'
@@ -116,6 +125,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
     return startNewInfiniteGame(gameId, difficulty, pool);
   });
 
+  const [packEarned, setPackEarned] = useState<boolean | undefined>(undefined);
   const [showHowToPlay, setShowHowToPlay] = useState(() => {
     const seenKey = 'hasSeenRules-euroguess';
     const hasSeen = localStorage.getItem(seenKey);
@@ -288,9 +298,11 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
       .map(item => item.song);
   }, [query, data, song, isInfinite, validPoolIds]);
 
-  const submitGuess = useCallback((selectedTitle: string) => {
-    const isCorrect = selectedTitle.toLowerCase() === song.title.toLowerCase();
-    const newAttempts = [...attempts, selectedTitle];
+  const submitGuess = useCallback((selectedSong: MasterSong) => {
+    const guessId = String(selectedSong.id);
+    if (attempts.some(a => String(a) === guessId)) return;
+    const isCorrect = String(selectedSong.id) === String(song.id);
+    const newAttempts = [...attempts, guessId];
     setAttempts(newAttempts); 
     
     if (isCorrect) {
@@ -307,19 +319,36 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
       }
 
       if (!isInfinite) {
+        const packsBefore = getDailyPacksEarned();
         updateGameStats(GameType.GUESSER, true, { attempts: newAttempts.length, guesses: newAttempts });
+        setPackEarned(packsBefore < 10);
         localStorage.setItem(`euroguess-${getDayString()}`, JSON.stringify({ attempts: newAttempts, isGameOver: true, revealedHints, won: true }));
         if (mode === 'daily') {
           syncDailyStateToFirestore('euroguess', { attempts: newAttempts, isGameOver: true, revealedHints, won: true }).catch(console.error);
         }
       } else if (infiniteState) {
+        const newStreak = infiniteState.currentStreak + 1;
         const nextState = { ...infiniteState, guesses: newAttempts, isGameOver: true, lastResult: { won: true, points: pts } };
         setInfiniteState(nextState);
         saveInfiniteGameState(gameId, difficulty, nextState);
         const isExhausted = infiniteState.currentIndex + 1 >= infiniteState.shuffledIds.length;
-        saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore + pts, infiniteState.currentStreak + 1, false, isExhausted);
+        saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore + pts, newStreak, false, isExhausted);
+        
+        if (newStreak % 5 === 0) {
+          awardDailyPack().then(awarded => {
+            setPackEarned(awarded);
+            if (awarded) {
+              setTimeout(() => {
+                soundManager.play('celebration');
+              }, 800);
+            }
+          });
+        } else {
+          setPackEarned(false);
+        }
+
         if (isExhausted) {
-          reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore + pts, infiniteState.currentStreak + 1, true);
+          reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore + pts, newStreak, true);
         }
       }
       
@@ -336,6 +365,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
         soundManager.play('fail');
         setIsGameOver(true); 
         setWon(false);
+        setPackEarned(false);
         setRevealedHints(6);
         if (!isInfinite) {
           updateGameStats(GameType.GUESSER, false, { attempts: newAttempts.length, guesses: newAttempts });
@@ -366,7 +396,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
   const handleSelectSong = (selected: MasterSong) => {
     setQuery(selected.title);
     setShowResults(false);
-    submitGuess(selected.title);
+    submitGuess(selected);
   };
 
   const handleContinue = useCallback(() => {
@@ -501,6 +531,7 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
           onShare={handleShare}
           runScore={infiniteState ? (infiniteState.currentScore + (won ? getPointsInfo.points : 0)) : undefined}
           runStreak={infiniteState ? (infiniteState.currentStreak + (won ? 1 : 0)) : undefined}
+          packEarned={packEarned}
           hideShare={mode === 'infinite' && won && !!infiniteState && infiniteState.currentIndex + 1 < infiniteState.shuffledIds.length}
         />
       ) : (
@@ -554,13 +585,13 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
 
           <div className="w-full space-y-3 md:space-y-4">
             {!isGameOver && (
-              <HintBox key={`active-${activeHintIndex}`} hint={hints[activeHintIndex]} idx={activeHintIndex} isActive={true} songTitle={song.title} />
+              <HintBox key={`active-${activeHintIndex}`} hint={hints[activeHintIndex]} idx={activeHintIndex} isActive={true} songTitle={song.title} songId={song.id} allSongs={data} />
             )}
             {isGameOver && hints.slice(attempts.length).map((hint, idx) => (
-              <HintBox key={`unused-${attempts.length + idx}`} hint={hint} idx={attempts.length + idx} songTitle={song.title} isGameOver={true} />
+              <HintBox key={`unused-${attempts.length + idx}`} hint={hint} idx={attempts.length + idx} songTitle={song.title} songId={song.id} isGameOver={true} allSongs={data} />
             )).reverse()}
             {attempts.map((attempt, idx) => (
-              <HintBox key={idx} hint={hints[idx]} attempt={attempt} idx={idx} songTitle={song.title} isGameOver={isGameOver} />
+              <HintBox key={idx} hint={hints[idx]} attempt={attempt} idx={idx} songTitle={song.title} songId={song.id} isGameOver={isGameOver} allSongs={data} />
             )).reverse()}
           </div>
           

@@ -106,43 +106,89 @@ export const openMultiplePacks = (count: number = 1): OpenedCard[] => {
 
 export const awardDailyPack = async (): Promise<boolean> => {
   const DAILY_PACK_LIMIT = 10;
-  if (!auth.currentUser) return false;
   
-  const userRef = doc(db, 'users', auth.currentUser.uid);
-  const userDoc = await getDoc(userRef);
-  
-  let dailyPacksEarned = 0;
-  let lastDailyReset = 0;
-  
-  if (userDoc.exists()) {
-    const extracted = extractEuroCollectionData(userDoc.data());
-    dailyPacksEarned = extracted.dailyPacksEarned;
-    lastDailyReset = extracted.lastDailyReset;
+  const cachedStr = localStorage.getItem('douzepoints_eurocards_collection');
+  let localCol = {
+    availablePacks: 0,
+    packsOpened: 0,
+    dailyPacksEarned: 0,
+    lastDailyReset: Date.now(),
+    confetti: 0,
+    cards: {}
+  };
+
+  if (cachedStr) {
+    try {
+      const parsed = JSON.parse(cachedStr);
+      localCol = { ...localCol, ...parsed };
+    } catch {
+      // ignore JSON parse errors
+    }
   }
-  
+
   const now = new Date();
-  const lastReset = new Date(lastDailyReset);
-  
-  if (now.getUTCFullYear() !== lastReset.getUTCFullYear() ||
-      now.getUTCMonth() !== lastReset.getUTCMonth() ||
-      now.getUTCDate() !== lastReset.getUTCDate()) {
-    dailyPacksEarned = 0;
+  const lastReset = new Date(localCol.lastDailyReset || 0);
+  const isDifferentDay = now.getUTCFullYear() !== lastReset.getUTCFullYear() ||
+                         now.getUTCMonth() !== lastReset.getUTCMonth() ||
+                         now.getUTCDate() !== lastReset.getUTCDate();
+
+  if (isDifferentDay) {
+    localCol.dailyPacksEarned = 0;
+    localCol.lastDailyReset = Date.now();
   }
-  
-  if (dailyPacksEarned >= DAILY_PACK_LIMIT) {
+
+  if (localCol.dailyPacksEarned >= DAILY_PACK_LIMIT) {
+    if (isDifferentDay) {
+      localStorage.setItem('douzepoints_eurocards_collection', JSON.stringify(localCol));
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('euro-collection-updated'));
+      }
+    }
     return false;
   }
-  
+
+  localCol.availablePacks = (localCol.availablePacks || 0) + 1;
+  localCol.dailyPacksEarned = (localCol.dailyPacksEarned || 0) + 1;
+  localCol.lastDailyReset = Date.now();
+
+  localStorage.setItem('douzepoints_eurocards_collection', JSON.stringify(localCol));
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('euro-collection-updated'));
+  }
+
+  if (auth.currentUser) {
+    const userRef = doc(db, 'users', auth.currentUser.uid);
+    try {
+      await safeUpdateUserDoc(userRef, {
+        'collection.availablePacks': increment(1),
+        'collection.dailyPacksEarned': localCol.dailyPacksEarned,
+        'collection.lastDailyReset': localCol.lastDailyReset
+      });
+    } catch (error) {
+      console.error("Failed to sync awarded pack to Firestore:", error);
+    }
+  }
+
+  return true;
+};
+
+export const getDailyPacksEarned = (): number => {
+  const cachedStr = localStorage.getItem('douzepoints_eurocards_collection');
+  if (!cachedStr) return 0;
   try {
-    const updates: DocumentData = {
-      'collection.availablePacks': increment(1),
-      'collection.dailyPacksEarned': dailyPacksEarned + 1,
-      'collection.lastDailyReset': Date.now()
-    };
-    await safeUpdateUserDoc(userRef, updates);
-    return true;
-  } catch (error) {
-    console.error("Failed to award pack:", error);
-    return false;
+    const localCol = JSON.parse(cachedStr);
+    const now = new Date();
+    const lastReset = new Date(localCol.lastDailyReset || 0);
+    const isDifferentDay = now.getUTCFullYear() !== lastReset.getUTCFullYear() ||
+                           now.getUTCMonth() !== lastReset.getUTCMonth() ||
+                           now.getUTCDate() !== lastReset.getUTCDate();
+    if (isDifferentDay) return 0;
+    return Number(localCol.dailyPacksEarned || 0);
+  } catch {
+    return 0;
   }
+};
+
+export const isDailyPackCapReached = (): boolean => {
+  return getDailyPacksEarned() >= 10;
 };

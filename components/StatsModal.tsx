@@ -156,7 +156,6 @@ export const StatsModal: React.FC<StatsModalProps> = ({ stats, onClose, initialT
           <button 
             onClick={() => setShowHelp(!showHelp)} 
             className={`w-6 h-6 shrink-0 rounded-full border text-[10px] flex items-center justify-center font-bold transition-colors ${showHelp ? 'bg-white text-black border-white' : 'border-white/20 text-gray-500 hover:text-white hover:border-white'}`}
-            title="Help"
           >
             ?
           </button>

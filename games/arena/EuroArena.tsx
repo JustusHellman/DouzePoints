@@ -12,6 +12,7 @@ import { useTranslation } from '../../context/LanguageContext.tsx';
 import { HowToPlayModal } from '../../components/HowToPlayModal.tsx';
 import { CategoryMasteredScreen } from '../../components/CategoryMasteredScreen.tsx';
 import { reportInfiniteRun } from '../../utils/firebaseService.ts';
+import { awardDailyPack, getDailyPacksEarned } from '../../utils/cards.ts';
 import { soundManager } from '../../utils/sounds.ts';
 
 import { 
@@ -64,6 +65,7 @@ import { SEARCH_WEIGHT_THRESHOLD } from '../../data/activeData.ts';
 const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', gameId = 'euroarena' }) => {
   const { t } = useTranslation();
   const location = useLocation();
+  const [packEarned, setPackEarned] = useState<boolean | undefined>(undefined);
   const [showHowToPlay, setShowHowToPlay] = useState(() => {
     const seenKey = 'hasSeenRules-euroarena';
     const hasSeen = localStorage.getItem(seenKey);
@@ -269,16 +271,33 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
       }
 
       if (mode === 'infinite' && infiniteState) {
+        const newStreak = infiniteState.currentStreak + 1;
         const nextState = { ...infiniteState, guesses: newGuesses.map(g => String(g.id)), isGameOver: true, lastResult: { won: true, points: pts } };
         saveInfiniteGameState(gameId, difficulty, nextState);
         const isExhausted = infiniteState.currentIndex + 1 >= infiniteState.shuffledIds.length;
-        saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore + pts, infiniteState.currentStreak + 1, false, isExhausted);
+        saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore + pts, newStreak, false, isExhausted);
         setInfiniteState(nextState);
+
+        if (newStreak % 5 === 0) {
+          awardDailyPack().then(awarded => {
+            setPackEarned(awarded);
+            if (awarded) {
+              setTimeout(() => {
+                soundManager.play('celebration');
+              }, 800);
+            }
+          });
+        } else {
+          setPackEarned(false);
+        }
+
         if (isExhausted) {
-          reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore + pts, infiniteState.currentStreak + 1, true);
+          reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore + pts, newStreak, true);
         }
       } else {
-        updateGameStats(GameType.ARENA, true, { attempts: newGuesses.length, guesses: newGuesses.map(g => g.country) });
+        const packsBefore = getDailyPacksEarned();
+        updateGameStats(GameType.ARENA, true, { attempts: newGuesses.length, guesses: newGuesses.map(g => String(g.id)) });
+        setPackEarned(packsBefore < 10);
       }
       setTimeout(() => setShowModal(true), 1500); 
     }
@@ -286,6 +305,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
       soundManager.play('fail');
       setIsGameOver(true); 
       setWon(false);
+      setPackEarned(false);
       if (mode === 'infinite' && infiniteState) {
         saveInfiniteRecord(gameId, difficulty, infiniteState.currentScore, infiniteState.currentStreak, false, true);
         const nextState = { ...infiniteState, guesses: newGuesses.map(g => String(g.id)), isGameOver: true, lastResult: { won: false, points: 0 } };
@@ -293,7 +313,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
         setInfiniteState(nextState);
         reportInfiniteRun(gameId, serializeDifficulty(difficulty), infiniteState.currentScore, infiniteState.currentStreak, false);
       } else {
-        updateGameStats(GameType.ARENA, false, { attempts: newGuesses.length, guesses: newGuesses.map(g => g.country) });
+        updateGameStats(GameType.ARENA, false, { attempts: newGuesses.length, guesses: newGuesses.map(g => String(g.id)) });
       }
       setTimeout(() => setShowModal(true), 1500); 
     }
@@ -475,6 +495,7 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
           runStreak={infiniteState ? (infiniteState.currentStreak + (won ? 1 : 0)) : undefined}
           onContinue={handleContinue}
           onTryAgain={handleTryAgain}
+          packEarned={packEarned}
           hideShare={mode === 'infinite' && won && !!infiniteState && infiniteState.currentIndex + 1 < infiniteState.shuffledIds.length}
         />
       ) : (

@@ -5,6 +5,7 @@ import { syncDailyStateToFirestore } from '../../utils/syncService.ts';
 
 import { getEuroLinksPuzzle } from '../../utils/linksGenerator.ts';
 import { updateGameStats } from '../../utils/stats.ts';
+import { getDailyPacksEarned } from '../../utils/cards.ts';
 import { GameType, ConnectionsGroup } from '../../data/types.ts';
 import { GameScoreCard } from '../../components/GameScoreCard.tsx';
 import { useTranslation } from '../../context/LanguageContext.tsx';
@@ -158,6 +159,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
   const [message, setMessage] = useState<string | null>(null);
   const [shaking, setShaking] = useState(false);
   const [showWrongFlash, setShowWrongFlash] = useState(false);
+  const [packEarned, setPackEarned] = useState<boolean | undefined>(undefined);
   const [showModal, setShowModal] = useState(() => {
     const saved = localStorage.getItem(`eurolinks-${getDayString()}`);
     if (saved) {
@@ -293,7 +295,9 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
           }
           setWon(true); 
           setIsGameOver(true); 
+          const packsBefore = getDailyPacksEarned();
           updateGameStats(GameType.LINKS_GAME, true, { mistakes });
+          setPackEarned(packsBefore < 10);
           setShowModal(true); 
         } else {
           soundManager.play('success');
@@ -321,6 +325,8 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
         soundManager.play('fail');
         setIsGameOver(true);
         setWon(false);
+        setPackEarned(false);
+        updateGameStats(GameType.LINKS_GAME, false, { mistakes: 6 });
         setTimeout(() => { 
           revealRemainingGroups();
         }, 800); 
@@ -374,6 +380,31 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
     // Not applicable for daily mode
   };
 
+  const getTileTextClass = (text: string) => {
+    const words = text.trim().split(/\s+/);
+    const maxWordLen = Math.max(...words.map(w => w.length));
+    const len = text.length;
+
+    if (maxWordLen > 14) {
+      if (len > 22) return 'text-[7.5px] sm:text-[9.5px] md:text-[10.5px]';
+      return 'text-[8.5px] sm:text-[10.5px] md:text-[11.5px]';
+    }
+    if (maxWordLen > 10) {
+      if (len > 20) return 'text-[8.5px] sm:text-[11px] md:text-[12px]';
+      return 'text-[9.5px] sm:text-[12px] md:text-[13px]';
+    }
+    if (len <= 8) {
+      return 'text-[12px] sm:text-[16px] md:text-[18px]';
+    }
+    if (len <= 14) {
+      return 'text-[11px] sm:text-[14.5px] md:text-[16px]';
+    }
+    if (len <= 22) {
+      return 'text-[10px] sm:text-[13px] md:text-[14px]';
+    }
+    return 'text-[9px] sm:text-[11.5px] md:text-[12.5px]';
+  };
+
   return (
     <div className="flex flex-col items-center pt-1 sm:pt-4 pb-24 md:pb-32 px-0.5 sm:px-4 w-full max-w-3xl mx-auto relative">
       {isGameOver && showModal ? (
@@ -383,6 +414,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
           onClose={() => setShowModal(false)} onReturn={onReturn} onShare={handleShare} gameType={GameType.LINKS_GAME}
           onContinue={handleContinue}
           onTryAgain={handleTryAgain}
+          packEarned={packEarned}
           extraInfo={
             <div className="space-y-4">
               <p className="text-[10px] text-gray-600 font-black uppercase tracking-[0.4em] text-center mb-1">{t('links.categoriesDiscovered')}</p>
@@ -444,13 +476,7 @@ const EuroLinks: React.FC<EuroLinksProps> = ({ onReturn }) => {
                     'bg-gray-900 border-white/5 text-white hover:border-white/20'
                   } ${isSelected && shaking ? 'animate-shake' : ''}`}
                 >
-                  <span className={`text-center w-full px-1.5 leading-tight flex items-center justify-center break-words hyphens-auto ${
-                    tile.text.length > 18 ? 'text-[7px] sm:text-[10px]' :
-                    tile.text.length > 14 ? 'text-[8px] sm:text-[11px]' :
-                    tile.text.length > 10 ? 'text-[9px] sm:text-[13px]' : 
-                    tile.text.length > 7 ? 'text-[10px] sm:text-[15px]' :
-                    'text-[11px] sm:text-[17px]'
-                  }`}>
+                  <span className={`text-center w-full px-1 py-0.5 leading-snug flex items-center justify-center break-words uppercase font-black ${getTileTextClass(tile.text)}`}>
                     {tile.text}
                   </span>
                 </button>
