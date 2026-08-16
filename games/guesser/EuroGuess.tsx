@@ -149,7 +149,10 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
 
   const [query, setQuery] = useState("");
   const [attempts, setAttempts] = useState<string[]>(() => {
-    if (isInfinite && infiniteState) return infiniteState.guesses || [];
+    if (isInfinite) {
+      const saved = getInfiniteGameState(gameId, difficulty);
+      return saved?.guesses || [];
+    }
     const saved = localStorage.getItem(`euroguess-${getDayString()}`);
     if (saved) {
       try {
@@ -160,7 +163,10 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
     return [];
   });
   const [isGameOver, setIsGameOver] = useState(() => {
-    if (isInfinite && infiniteState) return infiniteState.isGameOver;
+    if (isInfinite) {
+      const saved = getInfiniteGameState(gameId, difficulty);
+      return saved?.isGameOver || false;
+    }
     const saved = localStorage.getItem(`euroguess-${getDayString()}`);
     if (saved) {
       try {
@@ -171,7 +177,10 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
     return false;
   });
   const [revealedHints, setRevealedHints] = useState(() => {
-    if (isInfinite && infiniteState) return Math.min((infiniteState.guesses?.length || 0) + 1, 6);
+    if (isInfinite) {
+      const saved = getInfiniteGameState(gameId, difficulty);
+      return Math.min((saved?.guesses?.length || 0) + 1, 6);
+    }
     const saved = localStorage.getItem(`euroguess-${getDayString()}`);
     if (saved) {
       try {
@@ -182,7 +191,10 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
     return 1;
   });
   const [won, setWon] = useState(() => {
-    if (isInfinite && infiniteState) return infiniteState.lastResult?.won || false;
+    if (isInfinite) {
+      const saved = getInfiniteGameState(gameId, difficulty);
+      return saved?.lastResult?.won || false;
+    }
     const saved = localStorage.getItem(`euroguess-${getDayString()}`);
     if (saved) {
       try {
@@ -193,7 +205,10 @@ const EuroGuess: React.FC<EuroGuessProps> = ({ onReturn, data, mode = 'daily', g
     return false;
   });
   const [showModal, setShowModal] = useState(() => {
-    if (isInfinite && infiniteState) return infiniteState.isGameOver;
+    if (isInfinite) {
+      const saved = getInfiniteGameState(gameId, difficulty);
+      return saved?.isGameOver || false;
+    }
     const saved = localStorage.getItem(`euroguess-${getDayString()}`);
     if (saved) {
       try {
