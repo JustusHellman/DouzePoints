@@ -101,8 +101,9 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
 
   const [query, setQuery] = useState("");
   const [guesses, setGuesses] = useState<MasterSong[]>(() => {
-    if (mode === 'infinite' && infiniteState) {
-      return (infiniteState.guesses || []).map(id => data.find(s => String(s.id) === String(id))).filter(Boolean) as MasterSong[];
+    if (mode === 'infinite') {
+      const saved = getInfiniteGameState(gameId, difficulty);
+      return (saved?.guesses || []).map(id => data.find(s => String(s.id) === String(id))).filter(Boolean) as MasterSong[];
     }
     const saved = localStorage.getItem(`euroarena-${getDayString()}`);
     if (saved) {
@@ -114,8 +115,9 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
     return [];
   });
   const [isGameOver, setIsGameOver] = useState(() => {
-    if (mode === 'infinite' && infiniteState && infiniteState.isGameOver) {
-      return true;
+    if (mode === 'infinite') {
+      const saved = getInfiniteGameState(gameId, difficulty);
+      return saved?.isGameOver || false;
     }
     const saved = localStorage.getItem(`euroarena-${getDayString()}`);
     if (saved) {
@@ -127,8 +129,9 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
     return false;
   });
   const [won, setWon] = useState(() => {
-    if (mode === 'infinite' && infiniteState && infiniteState.isGameOver) {
-      return infiniteState.lastResult?.won || false;
+    if (mode === 'infinite') {
+      const saved = getInfiniteGameState(gameId, difficulty);
+      return saved?.lastResult?.won || false;
     }
     const saved = localStorage.getItem(`euroarena-${getDayString()}`);
     if (saved) {
@@ -140,8 +143,9 @@ const EuroArena: React.FC<EuroArenaProps> = ({ onReturn, data, mode = 'daily', g
     return false;
   });
   const [showModal, setShowModal] = useState(() => {
-    if (mode === 'infinite' && infiniteState && infiniteState.isGameOver) {
-      return true;
+    if (mode === 'infinite') {
+      const saved = getInfiniteGameState(gameId, difficulty);
+      return saved?.isGameOver || false;
     }
     const saved = localStorage.getItem(`euroarena-${getDayString()}`);
     if (saved) {
