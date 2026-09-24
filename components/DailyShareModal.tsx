@@ -1,0 +1,361 @@
+import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { useTranslation } from '../context/LanguageContext.tsx';
+import { getDayString } from '../utils/daily.ts';
+import { getCurrentRank } from '../utils/stats.ts';
+import { reportShareClick } from '../utils/firebaseService.ts';
+
+interface GameInstance {
+  id: string;
+  path: string;
+  title: string;
+  desc: string;
+  type: string;
+  done: boolean;
+  points: number;
+  stat: number;
+  styles: {
+    bg: string;
+    text: string;
+    glow: string;
+  };
+}
+
+interface DailyShareModalProps {
+  games: GameInstance[];
+  onClose: () => void;
+  totalPoints?: number;
+}
+
+export const DailyShareModal: React.FC<DailyShareModalProps> = ({ games, onClose, totalPoints = 0 }) => {
+  const { t } = useTranslation();
+  const [showCopied, setShowCopied] = useState(false);
+  const [showImageCopied, setShowImageCopied] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const today = getDayString();
+  const currentRank = getCurrentRank(totalPoints);
+
+  const completedCount = games.filter(g => g.done).length;
+  const totalCount = games.length;
+  const totalDailyPoints = games.reduce((acc, g) => acc + g.points, 0);
+  
+  const [confetti, setConfetti] = useState<{ color: string; alpha: number; size: number; isCircle: boolean; x: number; y: number }[]>([]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  useEffect(() => {
+    const generatedConfetti = Array.from({ length: 50 }).map(() => ({
+      color: ['#ec4899', '#3b82f6', '#8b5cf6', '#eab308', '#ffffff'][Math.floor(Math.random() * 5)],
+      alpha: Math.random() * 0.5,
+      size: Math.random() * 10 + 2,
+      isCircle: Math.random() > 0.5,
+      x: Math.random(),
+      y: Math.random()
+    }));
+    setTimeout(() => setConfetti(generatedConfetti), 0);
+  }, []);
+
+  const shareText = useMemo(() => {
+    let text = `✨ DOUZE POINTS ✨\nDaily Progress • ${today}\n\n`;
+    
+    games.forEach(game => {
+      const status = game.done ? '🟩' : '⬛';
+      const points = game.done ? ` (+${game.points}pts)` : '';
+      text += `${status} ${game.title}${points}\n`;
+    });
+
+    text += `\nDaily Score: ${totalDailyPoints} pts\n`;
+    text += `Progress: ${completedCount}/${totalCount}\n`;
+    if (completedCount === totalCount) {
+      text += `✨ Grand Final Qualified ✨\n`;
+    }
+    
+    text += `\n${window.location.origin}`;
+    return text;
+  }, [games, today, completedCount, totalCount, totalDailyPoints]);
+
+  const roundRect = useCallback((ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number, fill: boolean, stroke: boolean) => {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+    if (fill) ctx.fill();
+    if (stroke) ctx.stroke();
+  }, []);
+
+  const generateCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Set dimensions
+    canvas.width = 1080;
+    canvas.height = 1350;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // 1. Vibrant Party Background (Gradient Mesh style)
+    const bgGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    bgGrad.addColorStop(0, '#0f0c29');
+    bgGrad.addColorStop(0.5, '#302b63');
+    bgGrad.addColorStop(1, '#24243e');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // 2. Colorful Stage Lights / Glows
+    const drawGlow = (x: number, y: number, radius: number, color: string) => {
+      ctx.save();
+      ctx.globalAlpha = 0.4;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, radius);
+      g.addColorStop(0, color);
+      g.addColorStop(1, 'transparent');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.restore();
+    };
+
+    drawGlow(0, 0, 800, '#ec4899'); // Pink top-left
+    drawGlow(canvas.width, canvas.height, 800, '#3b82f6'); // Blue bottom-right
+    drawGlow(canvas.width / 2, canvas.height / 2, 600, '#8b5cf6'); // Purple center
+
+    // 3. Confetti / Sparkles
+    confetti.forEach(c => {
+      ctx.fillStyle = c.color;
+      ctx.globalAlpha = c.alpha;
+      ctx.beginPath();
+      if (c.isCircle) {
+        ctx.arc(c.x * canvas.width, c.y * canvas.height, c.size, 0, Math.PI * 2);
+      } else {
+        ctx.fillRect(c.x * canvas.width, c.y * canvas.height, c.size, c.size);
+      }
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1.0;
+
+    // 4. Header Section
+    ctx.shadowColor = 'rgba(236, 72, 153, 0.5)';
+    ctx.shadowBlur = 30;
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'italic 900 110px Montserrat, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('DOUZE POINTS', canvas.width / 2, 220);
+    ctx.shadowBlur = 0;
+
+    // Date Badge
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+    roundRect(ctx, canvas.width / 2 - 200, 260, 400, 60, 30, true, false);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '700 28px Montserrat, sans-serif';
+    ctx.fillText(today.toUpperCase(), canvas.width / 2, 300);
+
+    // 5. Main Stats Card (Glassmorphism)
+    const cardX = 80;
+    const cardY = 380;
+    const cardW = canvas.width - 160;
+    const cardH = 820;
+    
+    ctx.save();
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.07)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.lineWidth = 3;
+    roundRect(ctx, cardX, cardY, cardW, cardH, 80, true, true);
+    ctx.restore();
+
+    // Large Stats
+    ctx.textAlign = 'center';
+    // Left Stat: Progress
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'italic 900 140px Montserrat, sans-serif';
+    ctx.fillText(`${completedCount}/${totalCount}`, cardX + cardW * 0.25 + 30, cardY + 180);
+    ctx.font = '700 30px Montserrat, sans-serif';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.fillText('QUALIFIED', cardX + cardW * 0.25 + 30, cardY + 230);
+
+    // Right Stat: Score
+    ctx.fillStyle = '#eab308';
+    ctx.font = 'italic 900 140px Montserrat, sans-serif';
+    ctx.fillText(totalDailyPoints.toString(), cardX + cardW * 0.75 - 30, cardY + 180);
+    ctx.font = '700 30px Montserrat, sans-serif';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.fillText('DAILY POINTS', cardX + cardW * 0.75 - 30, cardY + 230);
+
+    // Rank Section (Moved to central edge between score and games)
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(236, 72, 153, 0.2)';
+    roundRect(ctx, canvas.width / 2 - 250, cardY + 300, 500, 60, 30, true, false);
+    ctx.fillStyle = '#ec4899';
+    ctx.font = '900 28px Montserrat, sans-serif';
+    ctx.fillText(`🏆 ${currentRank.title.toUpperCase()}`, canvas.width / 2, cardY + 340);
+
+    // 6. Game List (Tighter Layout)
+    const startY = cardY + 420;
+    const rowH = 65;
+    
+    games.forEach((game, i) => {
+      const y = startY + (i * rowH);
+      
+      // Row Background (Subtle)
+      ctx.fillStyle = game.done ? 'rgba(34, 197, 94, 0.15)' : 'rgba(255, 255, 255, 0.03)';
+      roundRect(ctx, cardX + 40, y - 25, cardW - 80, 50, 15, true, false);
+
+      // Status Dot
+      ctx.fillStyle = game.done ? '#22c55e' : 'rgba(255, 255, 255, 0.1)';
+      ctx.beginPath();
+      ctx.arc(cardX + 80, y, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Game Title
+      ctx.textAlign = 'left';
+      ctx.fillStyle = game.done ? '#ffffff' : 'rgba(255, 255, 255, 0.3)';
+      ctx.font = '900 26px Montserrat, sans-serif';
+      ctx.fillText(game.title.toUpperCase(), cardX + 110, y + 10);
+
+      // Game Points
+      if (game.done) {
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#eab308';
+        ctx.font = '900 26px Montserrat, sans-serif';
+        ctx.fillText(`+${game.points} PTS`, cardX + cardW - 80, y + 10);
+      }
+    });
+
+    // 8. Footer
+    ctx.save();
+    ctx.shadowBlur = 0;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+    ctx.font = '900 35px Montserrat, sans-serif';
+    ctx.fillText('HTTPS://WWW.DOUZEPOINTS.NET', canvas.width / 2, 1280);
+    ctx.restore();
+  }, [games, confetti, today, completedCount, totalCount, totalDailyPoints, currentRank, roundRect]);
+
+  useEffect(() => {
+    const timer = setTimeout(generateCanvas, 150);
+    return () => clearTimeout(timer);
+  }, [generateCanvas]);
+
+  const handleShareText = () => {
+    reportShareClick('DailyShare_Text');
+    navigator.clipboard.writeText(shareText).then(() => {
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 2000);
+    });
+  };
+
+  const handleSaveImage = () => {
+    reportShareClick('DailyShare_SaveImage');
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const link = document.createElement('a');
+    link.download = `douze-points-${today}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  };
+
+  const handleShareImage = async () => {
+    reportShareClick('DailyShare_ShareImage');
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    try {
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
+        const item = new ClipboardItem({ 'image/png': blob });
+        await navigator.clipboard.write([item]);
+        setShowImageCopied(true);
+        setTimeout(() => setShowImageCopied(false), 2000);
+      });
+    } catch (err) {
+      console.error('Failed to copy image:', err);
+      const link = document.createElement('a');
+      link.download = `douze-points-${today}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+    }
+  };
+
+  return (
+    <div 
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      className="fixed inset-0 top-12 md:top-16 z-[500] flex items-center justify-center p-4 md:p-6 bg-black/90 backdrop-blur-2xl animate-in fade-in duration-300 overflow-y-auto"
+    >
+      <div className="max-w-md w-full relative flex flex-col gap-6 my-auto">
+        
+        {/* Close Button */}
+        <button 
+          onClick={onClose} 
+          className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors p-3 z-[100] hover:bg-white/10 rounded-full bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+
+        {/* The Scorecard Hero */}
+        <div className="relative aspect-[4/5] w-full bg-[#0b0b18] rounded-[2.5rem] border border-white/10 overflow-hidden shadow-[0_0_80px_rgba(236,72,153,0.2)]">
+          <canvas 
+            ref={canvasRef} 
+            className="w-full h-full object-contain"
+            style={{ display: 'block' }}
+          />
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col gap-3 px-2">
+          <div className="flex gap-3">
+            <button 
+              onClick={handleShareImage}
+              className={`flex-1 py-5 rounded-3xl font-black uppercase text-[11px] tracking-[0.1em] transition-all active:scale-95 shadow-2xl flex items-center justify-center gap-2 ${
+                showImageCopied 
+                  ? 'bg-green-500 text-black' 
+                  : 'bg-white text-black hover:bg-pink-500 hover:text-white'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+              </svg>
+              {showImageCopied ? t('scorecard.resultsCopied') : t('scorecard.copyImage')}
+            </button>
+
+            <button 
+              onClick={handleSaveImage}
+              className="flex-1 py-5 rounded-3xl font-black uppercase text-[11px] tracking-[0.1em] transition-all active:scale-95 shadow-2xl flex items-center justify-center gap-2 bg-indigo-600 text-white hover:bg-indigo-500"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+              </svg>
+              {t('scorecard.saveImage')}
+            </button>
+          </div>
+
+          <button 
+            onClick={handleShareText}
+            className={`w-full py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] transition-all active:scale-95 ${
+              showCopied 
+                ? 'bg-green-500 text-black' 
+                : 'bg-white/5 text-white/50 hover:bg-white/10 hover:text-white'
+            }`}
+          >
+            {showCopied ? t('scorecard.resultsCopied') : t('scorecard.shareResult')}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};

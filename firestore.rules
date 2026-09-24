@@ -1,0 +1,252 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: game_stats
+    // Document ID: {date}_{gameType} (e.g., 2026-03-12_word_game)
+    // Fields:
+    //   - gameType: string (required)
+    //   - date: string (required, YYYY-MM-DD)
+    //   - distribution: map (required)
+    //       - "12": number
+    //       - "10": number
+    //       - "8": number
+    //       - "6": number
+    //       - "4": number
+    //       - "2": number
+    //       - "0": number
+    //   - totalPlayed: number (required)
+    //   - lastUpdated: timestamp (required)
+    //
+    // Collection: support_clicks
+    // Document ID: {date} (e.g., 2026-03-12)
+    // Fields:
+    //   - date: string (required, YYYY-MM-DD)
+    //   - count: number (required)
+    //   - lastUpdated: timestamp (required)
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.email_verified == true &&
+        (request.auth.token.email == "justusmhellman@gmail.com" ||
+         request.auth.token.email == "justus.jo.li@gmail.com" ||
+         request.auth.token.email == "douzepointsgame@gmail.com");
+    }
+
+    function isValidStatsDoc(data) {
+      return data.gameType is string &&
+             data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.distribution is map &&
+             data.totalPlayed is number &&
+             data.lastUpdated is timestamp;
+    }
+
+    function isValidSupportClicksDoc(data) {
+      return data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.count is number &&
+             (!('sources' in data) || data.sources is map) &&
+             data.lastUpdated is timestamp;
+    }
+
+    function isValidShareClicksDoc(data) {
+      return data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.count is number &&
+             (!('sources' in data) || data.sources is map) &&
+             data.lastUpdated is timestamp;
+    }
+
+    function isValidLanguageStatsDoc(data) {
+      return data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.total is number &&
+             (!('languages' in data) || data.languages is map) &&
+             data.lastUpdated is timestamp;
+    }
+
+    function isValidCompletionStatsDoc(data) {
+      return data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.totalCompleted is number &&
+             (!('distribution' in data) || data.distribution is map) &&
+             data.lastUpdated is timestamp;
+    }
+
+    function isValidDiscoveryStatsDoc(data) {
+      return data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             (!('count' in data) || data.count is number) &&
+             (!('sources' in data) || data.sources is map) &&
+             data.lastUpdated is timestamp;
+    }
+
+    function isValidInfiniteDailyStatsDoc(data) {
+      return data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.gameId is string &&
+             data.difficulty is string &&
+             (!('totalStarts' in data) || data.totalStarts is number) &&
+             (!('totalCompletions' in data) || data.totalCompletions is number) &&
+             (!('totalLosses' in data) || data.totalLosses is number) &&
+             (!('totalScore' in data) || data.totalScore is number) &&
+             (!('totalStreak' in data) || data.totalStreak is number) &&
+             data.lastUpdated is timestamp;
+    }
+
+    function isValidInfiniteRunDoc(data) {
+      return data.gameId is string &&
+             data.difficulty is string &&
+             data.score is number &&
+             data.streak is number &&
+             data.wasCompleted is bool &&
+             data.timestamp is timestamp;
+    }
+
+    function isValidPlaytimeStatsDoc(data) {
+      return data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             (!('totalSeconds' in data) || data.totalSeconds is number) &&
+             (!('dailySeconds' in data) || data.dailySeconds is number) &&
+             (!('infiniteSeconds' in data) || data.infiniteSeconds is number) &&
+             (!('navigationSeconds' in data) || data.navigationSeconds is number) &&
+             data.lastUpdated is timestamp;
+    }
+
+    match /game_stats/{statsId} {
+      // Only the admin can see the global stats
+      allow read: if isAdmin();
+      // Anyone can report a score (create or update)
+      allow create, update: if true;
+    }
+
+    match /support_clicks/{dateId} {
+      allow read: if isAdmin();
+      allow create, update: if true;
+    }
+
+    match /share_clicks/{dateId} {
+      allow read: if isAdmin();
+      allow create, update: if true;
+    }
+
+    match /language_stats/{dateId} {
+      allow read: if isAdmin();
+      allow create, update: if true;
+    }
+
+    match /completion_stats/{dateId} {
+      allow read: if isAdmin();
+      allow create, update: if true;
+    }
+
+    match /discoveries/{dateId} {
+      allow read: if isAdmin();
+      allow create, update: if true;
+    }
+
+    match /infinite_daily_stats/{statsId} {
+      allow read: if isAdmin();
+      allow create, update: if true;
+    }
+
+    match /infinite_runs/{runId} {
+      allow read: if isAdmin();
+      allow create: if true;
+      allow update, delete: if false;
+    }
+
+    match /playtime_stats/{dateId} {
+      allow read: if isAdmin();
+      allow create, update: if true;
+    }
+
+    function isValidBingoRoomDoc(data) {
+      return (!('createdAt' in data) || data.createdAt is timestamp) &&
+             (!('createdBy' in data) || data.createdBy is string) &&
+             (!('status' in data) || data.status in ['active', 'finished']) &&
+             (!('expiresAt' in data) || data.expiresAt is timestamp) &&
+             data.playerCount is number;
+    }
+
+    function isValidBingoPlayerDoc(data) {
+      return data.name is string &&
+             data.name.size() > 0 &&
+             data.name.size() <= 20 &&
+             data.color is string &&
+             data.score is number &&
+             data.squares is list &&
+             data.squares.size() == 25 &&
+             (!('boardIds' in data) || data.boardIds is list) &&
+             (!('joinedAt' in data) || data.joinedAt is timestamp) &&
+             (!('lastActive' in data) || data.lastActive is timestamp);
+    }
+
+    function isValidBingoEventDoc(data) {
+      return data.playerName is string &&
+             data.playerColor is string &&
+             data.eventId is string &&
+             data.timestamp is timestamp;
+    }
+
+    function isValidSystemLogDoc(data) {
+      return data.event is string &&
+             (!('roomId' in data) || data.roomId is string) &&
+             data.timestamp is timestamp;
+    }
+
+    match /rooms/{roomId} {
+      allow read: if true; // Anyone can read room details to join
+      allow create: if isValidBingoRoomDoc(request.resource.data);
+      allow update: if isValidBingoRoomDoc(request.resource.data) &&
+                      (!('createdAt' in resource.data) || request.resource.data.createdAt == resource.data.createdAt) &&
+                      (!('createdBy' in resource.data) || request.resource.data.createdBy == resource.data.createdBy);
+      
+      match /players/{playerId} {
+        allow read: if true; // Anyone in the room can read players
+        allow create: if isValidBingoPlayerDoc(request.resource.data) &&
+                        getAfter(/databases/$(database)/documents/rooms/$(roomId)).data.playerCount <= 10; // Enforce 10 player limit
+        allow update: if isValidBingoPlayerDoc(request.resource.data) &&
+                        (!('joinedAt' in resource.data) || request.resource.data.joinedAt == resource.data.joinedAt);
+        allow delete: if (isAuthenticated() && request.auth.uid == playerId) || (!isAuthenticated() && playerId.matches('^guest_.*'));
+      }
+      
+      match /events/{eventId} {
+        allow read: if true; // Anyone in the room can read events
+        allow create: if isValidBingoEventDoc(request.resource.data);
+      }
+    }
+
+    match /system_logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isValidSystemLogDoc(request.resource.data);
+    }
+
+    match /global_state/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /users/{userId} {
+      allow read: if (request.auth != null && request.auth.uid == userId) || isAdmin();
+      allow create: if (request.auth != null && request.auth.uid == userId) || isAdmin();
+      allow update: if (request.auth != null && request.auth.uid == userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

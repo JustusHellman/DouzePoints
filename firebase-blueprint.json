@@ -1,0 +1,365 @@
+{
+  "entities": {
+    "DailyGameStats": {
+      "title": "Daily Game Stats",
+      "description": "Aggregated statistics for a specific game on a specific day.",
+      "type": "object",
+      "properties": {
+        "gameType": {
+          "type": "string",
+          "description": "The type of game (e.g., word_game, artists, links)."
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date in YYYY-MM-DD format."
+        },
+        "distribution": {
+          "type": "object",
+          "description": "Count of each score achieved.",
+          "properties": {
+            "12": { "type": "integer" },
+            "10": { "type": "integer" },
+            "8": { "type": "integer" },
+            "6": { "type": "integer" },
+            "4": { "type": "integer" },
+            "2": { "type": "integer" },
+            "0": { "type": "integer" }
+          }
+        },
+        "totalPlayed": {
+          "type": "integer",
+          "description": "Total number of games played for this type on this day."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time this record was updated."
+        }
+      },
+      "required": ["gameType", "date", "distribution", "totalPlayed", "lastUpdated"]
+    },
+    "SupportClicks": {
+      "title": "Support Clicks",
+      "description": "Daily count of clicks on the 'Buy me a coffee' link.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date in YYYY-MM-DD format."
+        },
+        "count": {
+          "type": "integer",
+          "description": "Total number of clicks on this day."
+        },
+        "sources": {
+          "type": "object",
+          "description": "Breakdown of clicks by source button."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time this record was updated."
+        }
+      },
+      "required": ["date", "count", "lastUpdated"]
+    },
+    "ShareClicks": {
+      "title": "Share Clicks",
+      "description": "Daily count of clicks on the share buttons.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date in YYYY-MM-DD format."
+        },
+        "count": {
+          "type": "integer",
+          "description": "Total number of share clicks on this day."
+        },
+        "sources": {
+          "type": "object",
+          "description": "Breakdown of share clicks by source button."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time this record was updated."
+        }
+      },
+      "required": ["date", "count", "lastUpdated"]
+    },
+    "DailyLanguageStats": {
+      "title": "Daily Language Stats",
+      "description": "Daily count of active users by language.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date in YYYY-MM-DD format."
+        },
+        "total": {
+          "type": "integer",
+          "description": "Total number of active users on this day."
+        },
+        "languages": {
+          "type": "object",
+          "description": "Breakdown of active users by language."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time this record was updated."
+        }
+      },
+      "required": ["date", "total", "lastUpdated"]
+    },
+    "DailyCompletionStats": {
+      "title": "Daily Completion Stats",
+      "description": "Daily count of users who completed all games and their total scores.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date in YYYY-MM-DD format."
+        },
+        "totalCompleted": {
+          "type": "integer",
+          "description": "Total number of users who completed all games on this day."
+        },
+        "distribution": {
+          "type": "object",
+          "description": "Count of each total score achieved."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time this record was updated."
+        }
+      },
+      "required": ["date", "totalCompleted", "lastUpdated"]
+    },
+    "DailyDiscoveryStats": {
+      "title": "Daily Discovery Stats",
+      "description": "Daily count of new players who finished their first game.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date in YYYY-MM-DD format."
+        },
+        "count": {
+          "type": "integer",
+          "description": "Total number of new players discovered on this day."
+        },
+        "sources": {
+          "type": "object",
+          "description": "Breakdown of new players by the game they first played."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time this record was updated."
+        }
+      },
+      "required": ["date", "count", "lastUpdated"]
+    },
+    "PlaytimeStats": {
+      "title": "Playtime Stats",
+      "description": "Daily aggregated playtime statistics.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date in YYYY-MM-DD format."
+        },
+        "totalSeconds": {
+          "type": "integer",
+          "description": "Total seconds spent across the app."
+        },
+        "dailySeconds": {
+          "type": "integer",
+          "description": "Total seconds spent in daily games."
+        },
+        "infiniteSeconds": {
+          "type": "integer",
+          "description": "Total seconds spent in infinite games."
+        },
+        "navigationSeconds": {
+          "type": "integer",
+          "description": "Total seconds spent in navigation pages."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time this record was updated."
+        }
+      },
+      "required": ["date", "lastUpdated"]
+    },
+    "BingoRoom": {
+      "title": "Bingo Room",
+      "description": "A multiplayer room for EuroBingo.",
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "finished"]
+        },
+        "playerCount": {
+          "type": "integer"
+        }
+      },
+      "required": ["createdAt", "createdBy", "status", "playerCount"]
+    },
+    "BingoPlayer": {
+      "title": "Bingo Player",
+      "description": "A player in a Bingo room.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "score": {
+          "type": "integer"
+        },
+        "squares": {
+          "type": "array",
+          "items": { "type": "boolean" }
+        },
+        "joinedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastActive": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["name", "color", "score", "squares", "joinedAt", "lastActive"]
+    },
+    "BingoEvent": {
+      "title": "Bingo Event",
+      "description": "A live activity feed event in a Bingo room.",
+      "type": "object",
+      "properties": {
+        "playerName": {
+          "type": "string"
+        },
+        "playerColor": {
+          "type": "string"
+        },
+        "eventId": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["playerName", "playerColor", "eventId", "timestamp"]
+    },
+    "SystemLog": {
+      "title": "System Log",
+      "description": "System logs for errors and events.",
+      "type": "object",
+      "properties": {
+        "event": { "type": "string" },
+        "roomId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["event", "timestamp"]
+    },
+    "User": {
+      "title": "User Profile",
+      "description": "User profile containing game stats, eurocards collection, confetti, and packs.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "avatarId": { "type": "string" },
+        "totalPoints": { "type": "integer" },
+        "totalDouzePoints": { "type": "integer" },
+        "collection": {
+          "type": "object",
+          "properties": {
+            "availablePacks": { "type": "integer" },
+            "packsOpened": { "type": "integer" },
+            "dailyPacksEarned": { "type": "integer" },
+            "lastDailyReset": { "type": "integer" },
+            "confetti": { "type": "integer" },
+            "cards": { "type": "object" }
+          }
+        },
+        "stats": { "type": "object" },
+        "lastUpdated": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection of user profiles and EuroCollection items."
+    },
+    "/game_stats/{statsId}": {
+      "schema": "DailyGameStats",
+      "description": "Collection of daily aggregated game statistics."
+    },
+    "/support_clicks/{dateId}": {
+      "schema": "SupportClicks",
+      "description": "Collection of daily support click counts."
+    },
+    "/share_clicks/{dateId}": {
+      "schema": "ShareClicks",
+      "description": "Collection of daily share click counts."
+    },
+    "/language_stats/{dateId}": {
+      "schema": "DailyLanguageStats",
+      "description": "Collection of daily active users by language."
+    },
+    "/completion_stats/{dateId}": {
+      "schema": "DailyCompletionStats",
+      "description": "Collection of daily completion stats and scores."
+    },
+    "/discoveries/{dateId}": {
+      "schema": "DailyDiscoveryStats",
+      "description": "Collection of daily new player discovery counts."
+    },
+    "/playtime_stats/{dateId}": {
+      "schema": "PlaytimeStats",
+      "description": "Collection of daily playtime tracking."
+    },
+    "/rooms/{roomId}": {
+      "schema": "BingoRoom",
+      "description": "Collection of multiplayer Bingo rooms."
+    },
+    "/rooms/{roomId}/players/{playerId}": {
+      "schema": "BingoPlayer",
+      "description": "Collection of players in a Bingo room."
+    },
+    "/rooms/{roomId}/events/{eventId}": {
+      "schema": "BingoEvent",
+      "description": "Collection of live activity events in a Bingo room."
+    },
+    "/system_logs/{logId}": {
+      "schema": "SystemLog",
+      "description": "System logs for errors and events."
+    }
+  }
+}

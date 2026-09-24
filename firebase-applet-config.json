@@ -1,0 +1,10 @@
+{
+  "projectId": "douzepoints-game-dev",
+  "appId": "1:354223347343:web:ec0db506b5445f1320c2fa",
+  "apiKey": "AIzaSyCR8wj41EDRG4Ta_VYbdR8zDknzyJevH0o",
+  "authDomain": "douzepoints-game-dev.firebaseapp.com",
+  "storageBucket": "douzepoints-game-dev.firebasestorage.app",
+  "messagingSenderId": "354223347343",
+  "firestoreDatabaseId": "(default)",
+  "measurementId": "G-XXXXXXXXXX"
+}

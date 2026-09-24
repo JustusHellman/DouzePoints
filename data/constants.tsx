@@ -1,0 +1,281 @@
+// Social URLs
+export const REDDIT_URL = "https://www.reddit.com/r/douzepoints/";
+export const DISCORD_URL = "https://discord.gg/XQWuCThQkt";
+export const BUY_ME_A_COFFEE_URL = "https://buymeacoffee.com/douzepointsgame";
+
+// Region arrays
+export const REGIONS = {
+  "Nordics": [
+    "Sweden", "Norway", "Finland", "Denmark", "Iceland"
+  ],
+  "Baltics": [
+    "Estonia", "Latvia", "Lithuania"
+  ],
+  "Benelux & Isles": [
+    "United Kingdom", "Ireland", "The Netherlands", "Belgium", "Luxembourg"
+  ],
+  "France & Iberia": [
+    "France", "Spain", "Portugal", "Andorra", "Monaco", "Morocco"
+  ],
+  "Central Europe": [
+    "Germany", "Austria", "Switzerland", "Poland", "Czechia", "Slovakia", "Hungary"
+  ],
+  "Mediterranean": [
+    "Italy", "San Marino", "Malta", "Greece", "Cyprus", "Israel", "Turkey"
+  ],
+  "Balkans": [
+    "Albania", "Bosnia & Herzegovina", "Bulgaria", "Croatia",
+    "Montenegro", "North Macedonia", "Serbia", "Slovenia", "Serbia & Montenegro", "Yugoslavia"
+  ],
+  "Eastern Europe": [
+    "Ukraine", "Belarus", "Moldova", "Romania", "Russia"
+  ],
+  "Caucasus": [
+    "Georgia", "Armenia", "Azerbaijan"
+  ],
+  "Oceania": [
+    "Australia"
+  ]
+} as const;
+
+export type Region = keyof typeof REGIONS;
+
+// Build a country -> region map
+export const REGION_MAP: Record<string, string> = {
+  ...Object.fromEntries(
+    Object.entries(REGIONS).flatMap(([region, countries]) =>
+      (countries as readonly string[]).map((country) => [country, region])
+    )
+  ),
+  "UK": "Benelux & Isles" // Alias for United Kingdom
+};
+
+export const GENRE_PARENT_MAP: Record<string, string> = {
+  "A Cappella": "Classical & Theatrical",
+  "Acoustic": "Other",
+  "Acoustic Ballad": "Ballad",
+  "Acoustic Pop": "Pop",
+  "Afrobeats": "R&B & Hip Hop",
+  "Afropop": "R&B & Hip Hop",
+  "Alpine Folk": "Folk & Ethnic",
+  "Alternative Pop": "Pop",
+  "Alternative Rock": "Rock & Metal",
+  "Alternative Soul": "Jazz, Blues & Soul",
+  "Antillean Creole": "Other",
+  "Arabic Pop": "Pop",
+  "Art Pop": "Pop",
+  "Avant-Garde": "Other",
+  "Avant-Garde Jazz": "Jazz, Blues & Soul",
+  "Avant-Garde Metal": "Rock & Metal",
+  "Avant-Garde Pop": "Pop",
+  "Avant-Garde Rock": "Rock & Metal",
+  "Balkan Ballad": "Ballad",
+  "Balkan Pop": "Pop",
+  "Ballad": "Ballad",
+  "Blues": "Jazz, Blues & Soul",
+  "Blues Pop": "Jazz, Blues & Soul",
+  "Blues Rock": "Rock & Metal",
+  "Boy Band": "Pop",
+  "Boy Band Pop": "Pop",
+  "Britpop": "Rock & Metal",
+  "Bubblegum Pop": "Pop",
+  "Calypso": "Folk & Ethnic",
+  "Canzone": "Classical & Theatrical",
+  "Celtic Folk": "Folk & Ethnic",
+  "Celtic Pop": "Folk & Ethnic",
+  "Celtic Rock": "Rock & Metal",
+  "Chamber Pop": "Pop",
+  "Chanson": "Schlager & Chanson",
+  "Choral": "Classical & Theatrical",
+  "Classical Crossover": "Classical & Theatrical",
+  "Comedy": "Comedy & Novelty",
+  "Comedy Pop": "Pop",
+  "Comedy Rock": "Rock & Metal",
+  "Contemporary Pop": "Pop",
+  "Country": "Folk & Ethnic",
+  "Country Pop": "Folk & Ethnic",
+  "Country Rock": "Rock & Metal",
+  "Cumbia": "Folk & Ethnic",
+  "Dalmatian Pop": "Pop",
+  "Dance": "Electronic & Dance",
+  "Dance Industrial": "Electronic & Dance",
+  "Dance Pop": "Pop",
+  "Dance-Pop": "Pop",
+  "Dansband": "Schlager & Chanson",
+  "Dark Pop": "Pop",
+  "Deep House": "Electronic & Dance",
+  "Disco": "Electronic & Dance",
+  "Disco Pop": "Electronic & Dance",
+  "Dramatic Ballad": "Ballad",
+  "Dramatic Pop": "Pop",
+  "Dream Pop": "Pop",
+  "Drum & Bass": "Electronic & Dance",
+  "Drum & Bass Pop": "Electronic & Dance",
+  "Dubstep Ballad": "Ballad",
+  "EDM": "Electronic & Dance",
+  "EDM Pop": "Electronic & Dance",
+  "Electro-Folk": "Folk & Ethnic",
+  "Electro-Swing": "Electronic & Dance",
+  "Electronic": "Electronic & Dance",
+  "Electronic Dance": "Electronic & Dance",
+  "Electronic Pop": "Electronic & Dance",
+  "Electronic Rock": "Rock & Metal",
+  "Electropop": "Pop",
+  "Epic Pop": "Pop",
+  "Ethnic Pop": "Folk & Ethnic",
+  "Ethno-Ballad": "Ballad",
+  "Ethno-Drum": "Folk & Ethnic",
+  "Ethno-Folk": "Folk & Ethnic",
+  "Ethno-Hip Hop": "R&B & Hip Hop",
+  "Ethno-Jazz": "Folk & Ethnic",
+  "Ethno-Pop": "Folk & Ethnic",
+  "Ethno-Rock": "Rock & Metal",
+  "Ethno-Techno": "Folk & Ethnic",
+  "Eurodance": "Electronic & Dance",
+  "Europop": "Pop",
+  "Experimental": "Other",
+  "Experimental Pop": "Pop",
+  "Experimental Rock": "Rock & Metal",
+  "Fado": "Folk & Ethnic",
+  "Fado Pop": "Folk & Ethnic",
+  "Flamenco": "Folk & Ethnic",
+  "Flamenco Pop": "Folk & Ethnic",
+  "Folk": "Folk & Ethnic",
+  "Folk Ballad": "Ballad",
+  "Folk Hip Hop": "R&B & Hip Hop",
+  "Folk Jazz": "Folk & Ethnic",
+  "Folk Metal": "Rock & Metal",
+  "Folk Pop": "Folk & Ethnic",
+  "Folk Punk": "Rock & Metal",
+  "Folk Rock": "Rock & Metal",
+  "Folk-Rock": "Rock & Metal",
+  "Folktronica": "Folk & Ethnic",
+  "Funk": "Jazz, Blues & Soul",
+  "Funk Pop": "Jazz, Blues & Soul",
+  "Gabberpop": "Electronic & Dance",
+  "Girl Group": "Pop",
+  "Glam Metal": "Rock & Metal",
+  "Glam Pop": "Pop",
+  "Glam Rock": "Rock & Metal",
+  "Gospel": "Pop",
+  "Gospel Ballad": "Ballad",
+  "Gospel Pop": "Pop",
+  "Gothic Rock": "Rock & Metal",
+  "Gypsy Pop": "Pop",
+  "Hard Rock": "Rock & Metal",
+  "Heavy Metal": "Rock & Metal",
+  "Hip Hop": "R&B & Hip Hop",
+  "Hip Hop Pop": "R&B & Hip Hop",
+  "House": "Electronic & Dance",
+  "Hyperpop": "Electronic & Dance",
+  "Indie Folk": "Folk & Ethnic",
+  "Indie Pop": "Pop",
+  "Indie-Pop": "Pop",
+  "Indie Rock": "Rock & Metal",
+  "Industrial Metal": "Rock & Metal",
+  "Industrial Pop": "Pop",
+  "Industrial Techno": "Electronic & Dance",
+  "Italian Pop": "Pop",
+  "Italo Pop": "Pop",
+  "Jazz": "Jazz, Blues & Soul",
+  "Jazz Ballad": "Ballad",
+  "Jazz Pop": "Jazz, Blues & Soul",
+  "Jazz Rock": "Rock & Metal",
+  "Jazz Waltz": "Jazz, Blues & Soul",
+  "Klapa": "Folk & Ethnic",
+  "Latin Pop": "Pop",
+  "Laïko": "Folk & Ethnic",
+  "Laïko Pop": "Folk & Ethnic",
+  "Metalcore": "Rock & Metal",
+  "Multilingual Pop": "Pop",
+  "Musical Theater": "Classical & Theatrical",
+  "Neo-Folk": "Folk & Ethnic",
+  "New Age": "Other",
+  "New Wave": "Other",
+  "None": "Other",
+  "Nordic Folk": "Folk & Ethnic",
+  "Novelty": "Comedy & Novelty",
+  "Novelty Pop": "Pop",
+  "Nu Metal": "Rock & Metal",
+  "Opera": "Classical & Theatrical",
+  "Operatic Pop": "Classical & Theatrical",
+  "Operatic Rock": "Rock & Metal",
+  "Operetta": "Other",
+  "Orchestral Pop": "Classical & Theatrical",
+  "Paso Doble": "Folk & Ethnic",
+  "Piano Ballad": "Ballad",
+  "Pimba": "Folk & Ethnic",
+  "Pop": "Pop",
+  "Pop Ballad": "Ballad",
+  "Pop Folk": "Folk & Ethnic",
+  "Pop Punk": "Rock & Metal",
+  "Pop Rap": "R&B & Hip Hop",
+  "Pop Rock": "Rock & Metal",
+  "Pop-Rock": "Rock & Metal",
+  "Power Ballad": "Ballad",
+  "Progressive Metal": "Rock & Metal",
+  "Progressive Rock": "Rock & Metal",
+  "Punk Folk": "Rock & Metal",
+  "Punk Rock": "Rock & Metal",
+  "R&B": "R&B & Hip Hop",
+  "R&B Pop": "R&B & Hip Hop",
+  "Rap": "R&B & Hip Hop",
+  "Rave Pop": "Electronic & Dance",
+  "Reggae": "Other",
+  "Retro Pop": "Pop",
+  "Rock": "Rock & Metal",
+  "Rock Ballad": "Rock & Metal",
+  "Rockabilly": "Rock & Metal",
+  "Romantic Ballad": "Ballad",
+  "Rumba Catalana": "Folk & Ethnic",
+  "Satirical Pop": "Pop",
+  "Schlager": "Schlager & Chanson",
+  "Ska Folk": "Folk & Ethnic",
+  "Ska Pop": "Pop",
+  "Ska Punk": "Rock & Metal",
+  "Soft Rock": "Rock & Metal",
+  "Soul": "Jazz, Blues & Soul",
+  "Soul Ballad": "Ballad",
+  "Soul Pop": "Jazz, Blues & Soul",
+  "Spaghetti Western Pop": "Pop",
+  "Swing": "Jazz, Blues & Soul",
+  "Symphonic Rock": "Rock & Metal",
+  "Synthpop": "Pop",
+  "Synth-Pop": "Pop",
+  "Tango Pop": "Pop",
+  "Techno": "Electronic & Dance",
+  "Techno Pop": "Electronic & Dance",
+  "Teen Pop": "Pop",
+  "Traditional Folk": "Folk & Ethnic",
+  "Trance": "Electronic & Dance",
+  "Trap": "R&B & Hip Hop",
+  "Trap Pop": "R&B & Hip Hop",
+  "Trip Hop": "Electronic & Dance",
+  "Turbo-Folk": "Folk & Ethnic",
+  "Vocal Group": "Classical & Theatrical",
+  "Waltz Pop": "Pop",
+  "Yodel Rap Rock": "Rock & Metal",
+  "Zeibekiko Hip Hop": "R&B & Hip Hop",
+  "Zouk": "Folk & Ethnic"
+};
+
+export const getMemberLabel = (count: number) => {
+  if (count === 1) return "Solo";
+  if (count === 2) return "Duo";
+  return count.toString();
+};
+
+export const getGenreParent = (genre: string) => {
+  return GENRE_PARENT_MAP[genre] || "Other";
+};
+
+export const getPlacingLabel = (placing: number, t: (key: string) => string) => {
+  void t;
+  if (placing === 100) {
+    return "SF";
+  }
+  if (placing > 100) {
+    return `SF${placing - 100}`;
+  }
+  return placing.toString();
+};

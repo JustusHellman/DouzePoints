@@ -1,0 +1,498 @@
+import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { GameType, MasterSong } from '../data/types.ts';
+import { useTranslation } from '../context/LanguageContext.tsx';
+import { getDayString } from '../utils/daily.ts';
+import { getStoredStats } from '../utils/stats.ts';
+import { reportShareClick } from '../utils/firebaseService.ts';
+import { CountdownTimer } from './CountdownTimer.tsx';
+import { PointsDistribution } from './PointsDistribution.tsx';
+import { getPlacingLabel } from '../data/constants.tsx';
+import { soundManager } from '../utils/sounds.ts';
+import { isDailyPackCapReached } from '../utils/cards.ts';
+
+interface GameScoreCardProps {
+  won: boolean;
+  points: number;
+  pointsLabel: string;
+  pointsColor: string;
+  historyEmoji: string;
+  gameTitle: string;
+  song?: MasterSong;
+  attempts: number;
+  maxAttempts: number;
+  onClose: () => void;
+  onReturn: () => void;
+  onShare?: () => void;
+  extraInfo?: React.ReactNode;
+  gameType?: GameType;
+  mode?: 'daily' | 'infinite';
+  streak?: number;
+  runScore?: number;
+  runStreak?: number;
+  onContinue?: () => void;
+  onTryAgain?: () => void;
+  hideShare?: boolean;
+  packEarned?: boolean;
+}
+
+const PerformanceLogRenderer: React.FC<{ 
+  history: string; 
+  title: string; 
+  attempts: number; 
+  won: boolean 
+}> = ({ history, title, attempts, won }) => {
+  const { t } = useTranslation();
+  const isArena = title.toLowerCase().includes('arena');
+  const isGuess = title.toLowerCase().includes('guess');
+
+  if (isArena) {
+    const rows = history.trim().split('\n');
+    const headers = ['Y', 'R', 'C', 'G', 'S', 'X']; 
+    return (
+      <div className="flex flex-col items-center gap-1.5 w-full max-w-[180px] mx-auto">
+        <div className="grid grid-cols-6 gap-1.5 w-full border-b border-white/10 pb-1.5 px-1">
+          {headers.map((h, i) => (
+            <div key={i} className="text-[8px] sm:text-[10px] font-black text-gray-500 text-center tracking-widest uppercase">{h}</div>
+          ))}
+        </div>
+        <div className="flex flex-col gap-1.5 w-full px-1">
+          {rows.map((row, i) => (
+            <div key={i} className="grid grid-cols-6 gap-1.5 items-center">
+              {Array.from(row).map((emoji, j) => (
+                <span key={j} className="text-[14px] sm:text-[16px] leading-none text-center filter drop-shadow-sm grayscale-[0.2]">{emoji}</span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (isGuess) {
+    return (
+      <div className="flex flex-col items-center py-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          {[...Array(6)].map((_, i) => {
+            const stepNum = i + 1;
+            const isTarget = stepNum === attempts && won;
+            const isIncorrect = stepNum <= attempts && (!won || stepNum < attempts);
+            
+            return (
+              <React.Fragment key={i}>
+                <div className={`
+                  w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center border-2 transition-all duration-700 relative
+                  ${isTarget ? 'bg-green-500 border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.5)] z-10 scale-110' : 
+                    isIncorrect ? 'bg-red-500/20 border-red-500/40 opacity-80' : 
+                    'bg-gray-950 border-white/5 opacity-40'}
+                `}>
+                  {isTarget && (
+                    <>
+                      <div className="absolute inset-0 bg-green-400 rounded-full animate-ping opacity-20"></div>
+                      <span className="text-[10px] sm:text-[12px] font-black text-black">✓</span>
+                    </>
+                  )}
+                  {isIncorrect && <span className="text-[10px] sm:text-[12px] font-black text-red-500/60">✕</span>}
+                  {!isTarget && !isIncorrect && <span className="text-[8px] sm:text-[10px] font-black text-gray-700">{stepNum}</span>}
+                </div>
+                {i < 5 && (
+                  <div className={`h-[1px] w-3 sm:w-4 ${stepNum < attempts ? 'bg-red-500/20' : 'bg-white/5'}`}></div>
+                )}
+              </React.Fragment>
+            );
+          })}
+        </div>
+        <p className="mt-4 text-[8px] sm:text-[10px] font-black text-gray-600 uppercase tracking-widest italic">
+          {won ? `${t('scorecard.breakthrough')} ${attempts}` : t('scorecard.signalLost')}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="font-mono text-lg sm:text-xl tracking-[0.2em] whitespace-pre-line leading-tight text-center px-4">
+      {history}
+    </div>
+  );
+};
+
+export const GameScoreCard: React.FC<GameScoreCardProps> = ({
+  won,
+  points,
+  pointsLabel,
+  pointsColor,
+  historyEmoji,
+  gameTitle,
+  song,
+  attempts,
+  maxAttempts,
+  onClose,
+  onReturn,
+  onShare,
+  extraInfo,
+  gameType,
+  mode = 'daily',
+  streak = 0,
+  runScore,
+  runStreak,
+  onContinue,
+  onTryAgain,
+  hideShare = false,
+  packEarned
+}) => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [showCopied, setShowCopied] = useState(false);
+
+  const distribution = useMemo(() => {
+    if (!gameType) return null;
+    const stats = getStoredStats();
+    let key: 'word_game' | 'artists' | 'links' | 'guesser' | 'arena' | 'refrain';
+    switch(gameType) {
+      case GameType.WORD_GAME: key = 'word_game'; break;
+      case GameType.ARTIST_WORD_GAME: key = 'artists'; break;
+      case GameType.LINKS_GAME: key = 'links'; break;
+      case GameType.GUESSER: key = 'guesser'; break;
+      case GameType.ARENA: key = 'arena'; break;
+      case GameType.REFRAIN_GAME: key = 'refrain'; break;
+      default: return null;
+    }
+    return stats[key].distribution;
+  }, [gameType]);
+
+  const displayHistory = historyEmoji || [...Array(maxAttempts)].map((_, i) => (
+    i < attempts ? (won && i === attempts - 1 ? '🟩' : '⬛') : '⬜'
+  )).join(' ');
+
+  const handleShare = () => {
+    soundManager.play('click');
+    reportShareClick(mode === 'infinite' ? `GameScoreCard_Infinite_${gameTitle.replace(/\s+/g, '')}` : `GameScoreCard_${gameTitle.replace(/\s+/g, '')}`);
+    if (onShare) {
+      onShare();
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 2000);
+      return;
+    }
+
+    let headline = "";
+    if (!won) headline = t('scorecard.headlines.nulPoints');
+    else if (points === 12) headline = t('scorecard.headlines.douzePoints');
+    else if (points >= 8) headline = t('scorecard.headlines.greatPerformance');
+    else headline = t('scorecard.headlines.qualified');
+
+    const gamePaths: Record<string, string> = {
+      'EuroSong': '/euro-song',
+      'EuroArtist': '/euro-artist',
+      'EuroRefrain': '/euro-refrain',
+      'EuroLinks': '/euro-links',
+      'EuroGuess': '/euro-guess',
+      'EuroArena': '/euro-arena'
+    };
+    const gamePath = gamePaths[gameTitle] || '';
+    const shareText = `✨ DOUZE POINTS ✨\n${headline}\n\n${gameTitle} • ${getDayString()}\n${t('scorecard.score')}: ${points} ${t('common.pointsShort')} • ${attempts}/${maxAttempts} ${t('common.steps')}\n\n${displayHistory}\n\n${window.location.origin}${gamePath}`;
+    
+    navigator.clipboard.writeText(shareText).then(() => {
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 2000);
+    });
+  };
+
+  const theme = (() => {
+    if (points === 12) return {
+      card: "shadow-[0_0_40px_rgba(251,191,36,0.1)] border-t-yellow-500/40",
+      header: "from-yellow-500/10 via-yellow-600/5 to-transparent",
+      badge: "bg-yellow-500 text-black"
+    };
+    if (points >= 8) return {
+      card: "shadow-[0_0_40px_rgba(236,72,153,0.1)] border-t-pink-500/40",
+      header: "from-pink-500/10 via-pink-600/5 to-transparent",
+      badge: "bg-pink-500 text-white"
+    };
+    return {
+      card: "shadow-[0_0_40px_rgba(59,130,246,0.1)] border-t-blue-500/40",
+      header: "from-blue-500/10 via-blue-600/5 to-transparent",
+      badge: "bg-blue-500 text-white"
+    };
+  })();
+
+  // Simplified to always use search query for maximum reliability
+  const getWatchUrl = (s: MasterSong) => {
+    const query = encodeURIComponent(`Eurovision ${s.year} ${s.country} ${s.artist} ${s.title} Live`);
+    return `https://www.youtube.com/results?search_query=${query}`;
+  };
+
+  const isPackEarned = useMemo(() => {
+    if (typeof packEarned === 'boolean') {
+      return packEarned;
+    }
+
+    if (mode === 'infinite') {
+      const isStreakMultiple = won && (runStreak ?? streak ?? 0) > 0 && (runStreak ?? streak ?? 0) % 5 === 0;
+      return isStreakMultiple && !isDailyPackCapReached();
+    }
+
+    if (gameType) {
+      const stats = getStoredStats();
+      let key: 'word_game' | 'artists' | 'links' | 'guesser' | 'arena' | 'refrain' | null = null;
+      switch(gameType) {
+        case GameType.WORD_GAME: key = 'word_game'; break;
+        case GameType.ARTIST_WORD_GAME: key = 'artists'; break;
+        case GameType.LINKS_GAME: key = 'links'; break;
+        case GameType.GUESSER: key = 'guesser'; break;
+        case GameType.ARENA: key = 'arena'; break;
+        case GameType.REFRAIN_GAME: key = 'refrain'; break;
+        default: key = null;
+      }
+      if (key && stats[key]?.dailyCompletion) {
+        if (typeof stats[key].dailyCompletion?.packAwarded === 'boolean') {
+          return stats[key].dailyCompletion!.packAwarded!;
+        }
+      }
+    }
+
+    return !isDailyPackCapReached();
+  }, [packEarned, mode, won, runStreak, streak, gameType]);
+
+  return (
+    <div className="w-full max-w-md mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out py-1 flex justify-center">
+      <div className={`bg-[#0b0b18] border border-white/10 rounded-[2rem] w-fit min-w-[280px] relative flex flex-col overflow-hidden ${theme.card}`}>
+        
+        <button 
+          onClick={onClose} 
+          className="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors p-2 z-[20] hover:bg-white/5 rounded-full"
+          aria-label={t('common.close')}
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+
+        <div className={`px-6 pt-6 pb-5 text-center border-b border-white/5 bg-gradient-to-b ${theme.header} rounded-t-[2rem] relative`}>
+          {/* Tilted Stamp Straddling the Dividing Line */}
+          {isPackEarned && (
+            <button 
+              onClick={() => {
+                soundManager.play('click');
+                navigate('/euro-collection', { state: { tab: 'packs' } });
+              }}
+              className="absolute -bottom-7 left-4 sm:left-6 z-30 transform -rotate-10 hover:-rotate-3 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus-visible:outline-none group"
+            >
+              <div className="bg-gradient-to-r from-amber-400 via-pink-500 to-indigo-500 p-[1.5px] rounded-xl shadow-[0_4px_15px_rgba(251,191,36,0.4)]">
+                <div className="bg-[#0e0c24] px-2.5 py-1 rounded-[10.5px] flex items-center gap-2 border border-amber-300/40">
+                  {/* Exact micro replica of EuroCollection Foil Pack */}
+                  <div className="relative w-4 h-5.5 rounded-[3.5px] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-[1px] shadow-sm shrink-0">
+                    <div className="w-full h-full bg-[#0b0b18] rounded-[2.5px] flex items-center justify-center relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/30 to-transparent pointer-events-none" />
+                      <span className="text-[8px] font-sans font-black italic text-transparent bg-clip-text bg-gradient-to-br from-indigo-400 via-purple-300 to-pink-400 -rotate-12 leading-none">
+                        12
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col text-left pr-0.5">
+                    <span className="text-[8px] font-black text-amber-300 uppercase tracking-wider leading-none">
+                      {t('eurocollection.packEarnedStamp') || "+1 PACK EARNED!"}
+                    </span>
+                    <span className="text-[6.5px] font-bold text-gray-400 group-hover:text-white uppercase tracking-tight leading-none mt-0.5">
+                      {t('eurocollection.tapToOpen') || "TAP TO OPEN ➔"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </button>
+          )}
+
+          <div className="flex justify-center mb-1.5">
+            <span className={`px-2 py-0.5 rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] ${theme.badge}`}>
+              {t('scorecard.performanceVerdict')}
+            </span>
+          </div>
+          <h3 className={`text-3xl sm:text-4xl md:text-5xl font-black italic uppercase tracking-tighter mb-0.5 ${pointsColor} leading-tight`}>
+            {pointsLabel}
+          </h3>
+          <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.4em] text-gray-500">
+            {gameTitle} • {mode === 'infinite' ? t('infinite.title') : t('scorecard.dailyResult')}
+          </p>
+
+          {mode === 'infinite' && (
+            <div className="mt-4 flex flex-col items-center gap-3">
+              {won && (
+                <button 
+                  onClick={() => {
+                    soundManager.play('click');
+                    onContinue?.();
+                  }} 
+                  className="w-full max-w-[200px] bg-pink-600 text-white py-3 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-pink-600/20 flex items-center justify-center gap-2"
+                >
+                  {t('infinite.continueRun')}
+                </button>
+              )}
+              <div className="flex justify-center gap-2 w-full">
+                <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl flex flex-col items-center flex-1">
+                  <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-0.5">{t('infinite.streak')}</span>
+                  <span className="text-lg font-black text-pink-500 leading-none">{isNaN(runStreak ?? streak) ? 0 : (runStreak ?? streak)}</span>
+                </div>
+                <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl flex flex-col items-center flex-1">
+                  <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest mb-0.5">{t('infinite.currentScore')}</span>
+                  <span className="text-lg font-black text-yellow-500 leading-none">{isNaN(runScore ?? points) ? 0 : (runScore ?? points)}</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {!hideShare && mode === 'infinite' && (
+            <div className="mt-5">
+              <button 
+                onClick={handleShare} 
+                className="w-full bg-white text-black hover:bg-gray-200 py-4 rounded-xl font-black uppercase text-[11px] sm:text-[12px] tracking-[0.15em] transition-all flex items-center justify-center gap-2 active:scale-95 shadow-xl shadow-white/10"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                {showCopied ? t('scorecard.resultsCopied') : t('scorecard.shareResult')}
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="px-5 sm:px-8 py-5 space-y-5">
+          {song && (
+            <div className="bg-white/[0.02] p-5 sm:p-6 rounded-3xl border border-white/5 relative z-10 overflow-hidden shadow-lg">
+               <div className="flex flex-col gap-1 mb-4">
+                 <p className="text-[8px] sm:text-[10px] text-pink-500 font-black uppercase tracking-[0.4em]">{t('scorecard.revealedEntry')}</p>
+                 <div className="flex justify-between items-start gap-4">
+                    <div className="flex-1">
+                       <h4 className="text-xl sm:text-2xl md:text-3xl font-black text-white uppercase tracking-tighter leading-none">{song.title}</h4>
+                       <p className="text-sm sm:text-base font-bold text-gray-400 uppercase tracking-tight">{song.artist}</p>
+                    </div>
+                    <a 
+                      href={getWatchUrl(song)} 
+                      target="_blank" rel="noopener noreferrer" 
+                      className="bg-[#ff0000] px-3 py-2 rounded-lg text-[8px] sm:text-[10px] font-black text-white transition-all hover:bg-[#cc0000] flex flex-col items-center gap-1 shadow-lg shadow-red-600/10"
+                    >
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                      {t('scorecard.watch')}
+                    </a>
+                 </div>
+               </div>
+
+               <div className="grid grid-cols-3 gap-3 border-t border-white/10 pt-4 mb-4">
+                  <div className="flex flex-col">
+                    <span className="text-[8px] sm:text-[10px] font-black text-gray-600 uppercase tracking-widest">{t('scorecard.origin')}</span>
+                    <span className="text-xs sm:text-sm font-black text-white uppercase truncate">{t(`metadata.countries.${song.country}`)}</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[8px] sm:text-[10px] font-black text-gray-600 uppercase tracking-widest">{t('scorecard.year')}</span>
+                    <span className="text-xs sm:text-sm font-black text-white uppercase">{song.year}</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[8px] sm:text-[10px] font-black text-gray-600 uppercase tracking-widest">{t('scorecard.placing')}</span>
+                    <span className="text-xs sm:text-sm font-black text-yellow-500 uppercase flex items-center gap-1">
+                      {song.placing === 1 ? '🏆' : song.placing < 100 ? '#' : ''} {getPlacingLabel(song.placing, t)}
+                    </span>
+                  </div>
+               </div>
+
+               <div className="bg-black/30 p-3 sm:p-4 rounded-xl border border-white/5">
+                  <span className="text-[8px] sm:text-[10px] font-black text-gray-600 uppercase tracking-[0.3em] block mb-1">{t('scorecard.greenroomGossip')}</span>
+                  <p className="text-xs sm:text-sm font-bold text-gray-300 leading-tight italic">"{song.fact}"</p>
+               </div>
+            </div>
+          )}
+
+          {distribution && mode !== 'infinite' && (
+            <div className="animate-in fade-in duration-1000 delay-300">
+              <PointsDistribution distribution={distribution} />
+            </div>
+          )}
+
+          <div className="text-center">
+            <p className="text-[8px] sm:text-[10px] text-gray-600 font-black uppercase tracking-[0.4em] mb-3">{t('scorecard.performanceLog')}</p>
+            <div className="bg-black/40 p-4 rounded-2xl border border-white/10 inline-block mx-auto min-w-[180px] shadow-inner text-white mb-4">
+              <PerformanceLogRenderer 
+                history={displayHistory} 
+                title={gameTitle} 
+                attempts={attempts} 
+                won={won} 
+              />
+            </div>
+            
+            {!hideShare && mode !== 'infinite' && (
+              <button 
+                onClick={handleShare} 
+                className="w-full bg-white text-black hover:bg-gray-200 py-4 rounded-xl font-black uppercase text-[11px] sm:text-[12px] tracking-[0.15em] transition-all flex items-center justify-center gap-2 active:scale-95 shadow-xl shadow-white/10"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                {showCopied ? t('scorecard.resultsCopied') : t('scorecard.shareResult')}
+              </button>
+            )}
+
+
+          </div>
+
+          {extraInfo && (
+             <div className="animate-in fade-in duration-700 pt-1">
+                {extraInfo}
+             </div>
+          )}
+
+          {mode !== 'infinite' && (
+            <div className="pt-4 border-t border-white/5 flex flex-col items-center gap-3">
+               <CountdownTimer label={t('scorecard.nextGame')} />
+               
+               {gameType !== GameType.REFRAIN_GAME && gameType !== GameType.LINKS_GAME && (
+                 <button 
+                   onClick={() => {
+                     soundManager.play('click');
+                     navigate('/', { state: { scrollTo: 'encore' } });
+                   }}
+                   className="w-full bg-gradient-to-r from-pink-500/30 to-purple-500/30 border-2 border-pink-500/60 hover:border-pink-400 hover:from-pink-500/50 hover:to-purple-500/50 text-pink-100 py-4 px-6 rounded-xl flex items-center justify-between transition-all group shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:shadow-[0_0_30px_rgba(236,72,153,0.6)] relative overflow-hidden transform hover:-translate-y-1 active:translate-y-0"
+                 >
+                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
+                   <div className="flex flex-col text-left relative z-10">
+                     <span className="text-[11px] font-black uppercase tracking-[0.25em] text-pink-300 mb-1 drop-shadow-md animate-pulse">{t('infinite.cantWait') || "Can't wait?"}</span>
+                     <span className="text-base font-black text-white drop-shadow-lg tracking-wide">{t('infinite.playUnlimited') || "Try Infinite Mode!"}</span>
+                   </div>
+                   <div className="w-12 h-12 rounded-full bg-pink-500/40 flex items-center justify-center group-hover:bg-pink-500/60 transition-colors shadow-xl shadow-pink-500/40 relative z-10 border border-pink-400/50 group-hover:scale-110">
+                     <svg className="w-6 h-6 text-pink-200 translate-x-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
+                   </div>
+                 </button>
+               )}
+            </div>
+          )}
+        </div>
+
+        <div className="p-5 border-t border-white/5 bg-black/40 flex flex-col gap-2">
+           {mode === 'infinite' && !won && (
+             <button 
+               onClick={() => {
+                 soundManager.play('click');
+                 onTryAgain?.();
+               }} 
+               className="w-full bg-pink-600 text-white py-4 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:scale-[1.01] active:scale-[0.98] transition-all shadow-xl shadow-pink-600/20 flex items-center justify-center gap-2 mb-1"
+             >
+               {t('infinite.tryAgain')}
+             </button>
+           )}
+
+           <button 
+             onClick={() => {
+               soundManager.play('click');
+               onReturn();
+             }} 
+             className={`w-full py-4 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:scale-[1.01] active:scale-[0.98] transition-all shadow-xl flex items-center justify-center gap-2 ${mode === 'infinite' && won ? 'bg-white/10 text-white border border-white/10' : 'bg-white text-black shadow-white/10'}`}
+           >
+             {mode === 'infinite' ? t('infinite.exitToEncore') : t('common.returnToGreenroom')}
+           </button>
+           
+           <button 
+             onClick={() => {
+               soundManager.play('click');
+               onClose();
+             }} 
+             className="w-full bg-white/5 border border-white/10 text-white/50 py-3 rounded-full font-black uppercase text-[7px] tracking-[0.2em] hover:text-white transition-all"
+           >
+             {t('scorecard.reviewBoard')}
+           </button>
+        </div>
+      </div>
+    </div>
+  );
+};
