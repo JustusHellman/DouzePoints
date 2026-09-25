@@ -51,8 +51,6 @@ jobs:
           path: './dist'
 
   deploy-github-pages:
-    # Only run the deploy job on manual trigger
-    if: github.event_name == 'workflow_dispatch'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -64,8 +62,7 @@ jobs:
         uses: actions/deploy-pages@v4
 
   deploy-firebase:
-    # Separate job for Firebase rules deployment
-    if: github.event_name == 'workflow_dispatch'
+    # Deploy Firestore rules to the production database
     runs-on: ubuntu-latest
     needs: build
     steps:

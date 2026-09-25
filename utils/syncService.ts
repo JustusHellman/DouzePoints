@@ -96,7 +96,7 @@ const performMigrateUserToFirestore = async (userId: string) => {
   if (userDoc.exists()) {
     // Sequential login to an existing profile:
     // - Avatar: The CLOUD profile avatar is authoritative across devices and syncs to local.
-    // - Cards: We take the union of cards (max unique cards preserved so guest unlocks aren't lost).
+    // - Cards: Dominant Collection rule (highest count of cards wins completely to prevent incognito farming).
     // - Confetti & Packs Opened: Math.max(cloud, local).
     // - Available Packs: Authoritatively from the cloud (never farmed/duplicated from incognito sessions).
     // - Stats & Infinite Records: Math.max resolution across all metrics.

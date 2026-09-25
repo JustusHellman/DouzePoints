@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect, useLayoutEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { flushSync } from 'react-dom';
+import { flushSync, createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useEuroCards, SCRAP_VALUES, CRAFT_VALUES } from '../hooks/useEuroCards';
 import { OpenedCard, CardRarity, MasterSong, EuroCard } from '../data/types';
@@ -508,39 +508,42 @@ export const EuroCollectionGame: React.FC<{ onReturn: () => void }> = () => {
         )}
       </main>
 
-      <AnimatePresence>
-        {errorMsg && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={(e) => { if (e.target === e.currentTarget) setErrorMsg(null); }}
-            className="fixed inset-0 top-12 md:top-16 z-[500] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
-          >
+      {typeof document !== 'undefined' && createPortal(
+        <AnimatePresence>
+          {errorMsg && (
             <motion.div
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="bg-[#1a1a2e] border border-red-500/30 rounded-3xl p-8 max-w-md w-full shadow-2xl text-center relative overflow-hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={(e) => { if (e.target === e.currentTarget) setErrorMsg(null); }}
+              className="fixed inset-0 z-[700] flex items-center justify-center bg-black/70 backdrop-blur-md p-4 overflow-y-auto"
             >
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-pink-500" />
-              <div className="w-16 h-16 rounded-full bg-red-500/20 mx-auto flex items-center justify-center mb-6">
-                <span className="text-3xl">⚠️</span>
-              </div>
-              <h3 className="text-2xl font-black text-white mb-4 tracking-tight">Oops!</h3>
-              <p className="text-red-200/80 font-medium mb-4 leading-relaxed">
-                {errorMsg}
-              </p>
-              <button
-                onClick={() => setErrorMsg(null)}
-                className="px-8 py-3 bg-red-500/20 hover:bg-red-500/40 text-red-100 font-black tracking-widest uppercase rounded-full transition-all cursor-pointer"
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                className="bg-[#1a1a2e] border border-red-500/30 rounded-3xl p-8 max-w-md w-full shadow-2xl text-center relative overflow-hidden my-auto"
               >
-                Understood
-              </button>
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-pink-500" />
+                <div className="w-16 h-16 rounded-full bg-red-500/20 mx-auto flex items-center justify-center mb-6">
+                  <span className="text-3xl">⚠️</span>
+                </div>
+                <h3 className="text-2xl font-black text-white mb-4 tracking-tight">Oops!</h3>
+                <p className="text-red-200/80 font-medium mb-4 leading-relaxed">
+                  {errorMsg}
+                </p>
+                <button
+                  onClick={() => setErrorMsg(null)}
+                  className="px-8 py-3 bg-red-500/20 hover:bg-red-500/40 text-red-100 font-black tracking-widest uppercase rounded-full transition-all cursor-pointer"
+                >
+                  Understood
+                </button>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
       <HowToPlayModal 
         isOpen={showHelp} 
         onClose={() => setShowHelp(false)} 
